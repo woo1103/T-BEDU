@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>관리</h1>
+
+<!-- 지점 관리 -->
+<section class="manage-section">
+    <h2>지점 관리</h2>
+    <form action="{{ url_for('branch_add') }}" method="post" class="inline-form">
+        <input type="text" name="name" placeholder="지점 이름" required>
+        <button type="submit" class="btn btn-add">추가</button>
+    </form>
+    <table>
+        <thead><tr><th>지점명</th><th>작업</th></tr></thead>
+        <tbody>
+        {% for b in branches %}
+        <tr>
+            <td>
+                <form action="{{ url_for('branch_edit', id=b.id) }}" method="post" class="inline-form">
+                    <input type="text" name="name" value="{{ b.name }}" required>
+                    <button type="submit" class="btn btn-edit">수정</button>
+                </form>
+            </td>
+            <td>
+                <form action="{{ url_for('branch_delete', id=b.id) }}" method="post"
+                      onsubmit="return confirm('지점을 삭제하시겠습니까? (학생 기록은 보존됩니다)')">
+                    <button type="submit" class="btn btn-delete">삭제</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<!-- 반 관리 -->
+<section class="manage-section">
+    <h2>반 관리</h2>
+    <form action="{{ url_for('class_add') }}" method="post" class="inline-form">
+        <select name="branch_id" required>
+            <option value="">지점 선택</option>
+            {% for b in branches %}
+            <option value="{{ b.id }}">{{ b.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="name" placeholder="반 이름" required>
+        <button type="submit" class="btn btn-add">추가</button>
+    </form>
+    <table>
+        <thead><tr><th>지점</th><th>반명</th><th>작업</th></tr></thead>
+        <tbody>
+        {% for c in classes %}
+        <tr>
+            <td>{{ c.branch_name }}</td>
+            <td>
+                <form action="{{ url_for('class_edit', id=c.id) }}" method="post" class="inline-form">
+                    <select name="branch_id">
+                        {% for b in branches %}
+                        <option value="{{ b.id }}" {% if b.id == c.branch_id %}selected{% endif %}>{{ b.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="name" value="{{ c.name }}" required>
+                    <button type="submit" class="btn btn-edit">수정</button>
+                </form>
+            </td>
+            <td>
+                <form action="{{ url_for('class_delete', id=c.id) }}" method="post"
+                      onsubmit="return confirm('반을 삭제하시겠습니까? (학생 기록은 보존됩니다)')">
+                    <button type="submit" class="btn btn-delete">삭제</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<!-- 학생 관리 -->
+<section class="manage-section">
+    <h2>학생 관리</h2>
+    <form action="{{ url_for('student_add') }}" method="post" class="inline-form" id="student-add-form">
+        <select name="branch_id" id="add-branch-select" required onchange="loadClassesForAdd(this.value)">
+            <option value="">지점 선택</option>
+            {% for b in branches %}
+            <option value="{{ b.id }}">{{ b.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="class_id" id="add-class-select" required>
+            <option value="">반 선택</option>
+        </select>
+        <input type="text" name="name" placeholder="학생 이름" required>
+        <button type="submit" class="btn btn-add">추가</button>
+    </form>
+    <table>
+        <thead><tr><th>지점</th><th>반</th><th>이름</th><th>작업</th></tr></thead>
+        <tbody>
+        {% for s in students %}
+        <tr>
+            <td>{{ s.branch_name or '-' }}</td>
+            <td>{{ s.class_name or '-' }}</td>
+            <td>
+                <form action="{{ url_for('student_edit', id=s.id) }}" method="post" class="inline-form">
+                    <select name="branch_id" onchange="loadClassesForEdit(this, this.value)">
+                        <option value="">지점</option>
+                        {% for b in branches %}
+                        <option value="{{ b.id }}" {% if b.id == s.branch_id %}selected{% endif %}>{{ b.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="class_id" class="edit-class-select" data-current="{{ s.class_id or '' }}">
+                        <option value="">반</option>
+                        {% for c in classes %}
+                        {% if c.branch_id == s.branch_id %}
+                        <option value="{{ c.id }}" {% if c.id == s.class_id %}selected{% endif %}>{{ c.name }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="name" value="{{ s.name }}" required>
+                    <button type="submit" class="btn btn-edit">수정</button>
+                </form>
+            </td>
+            <td>
+                <form action="{{ url_for('student_delete', id=s.id) }}" method="post"
+                      onsubmit="return confirm('학생을 삭제하시겠습니까? (출석 기록도 함께 삭제됩니다)')">
+                    <button type="submit" class="btn btn-delete">삭제</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function loadClassesForAdd(branchId) {
+    const select = document.getElementById('add-class-select');
+    select.innerHTML = '<option value="">반 선택</option>';
+    if (!branchId) return;
+    fetch('/api/classes/' + branchId)
+        .then(r => r.json())
+        .then(data => {
+            data.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            });
+        });
+}
+
+function loadClassesForEdit(el, branchId) {
+    const form = el.closest('form');
+    const select = form.querySelector('.edit-class-select');
+    const currentId = select.dataset.current;
+    select.innerHTML = '<option value="">반</option>';
+    if (!branchId) return;
+    fetch('/api/classes/' + branchId)
+        .then(r => r.json())
+        .then(data => {
+            data.forEach(c => {
+                const selected = (c.id == currentId) ? 'selected' : '';
+                select.innerHTML += `<option value="${c.id}" ${selected}>${c.name}</option>`;
+            });
+        });
+}
+</script>
+{% endblock %}

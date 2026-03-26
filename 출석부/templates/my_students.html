@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>학생 관리</h1>
+
+<!-- 학생 추가 -->
+<section class="manage-section">
+    <h2>학생 추가</h2>
+    <form action="{{ url_for('student_add') }}" method="post" class="inline-form">
+        <select name="branch_id" id="add-branch-select" required onchange="loadClassesForAdd(this.value)">
+            <option value="">지점 선택</option>
+            {% for b in branches %}
+            <option value="{{ b.id }}">{{ b.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="class_id" id="add-class-select" required>
+            <option value="">반 선택</option>
+            {% for c in classes %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="name" placeholder="학생 이름" required>
+        <button type="submit" class="btn btn-add">추가</button>
+    </form>
+</section>
+
+<!-- 학생 목록 -->
+<section class="manage-section">
+    <h2>학생 목록</h2>
+    {% if students %}
+    <table>
+        <thead><tr><th>지점</th><th>반</th><th>이름</th><th>작업</th></tr></thead>
+        <tbody>
+        {% for s in students %}
+        <tr>
+            <td>{{ s.branch_name or '-' }}</td>
+            <td>{{ s.class_name or '-' }}</td>
+            <td>
+                <form action="{{ url_for('student_edit', id=s.id) }}" method="post" class="inline-form">
+                    <input type="hidden" name="branch_id" value="{{ s.branch_id or '' }}">
+                    <input type="hidden" name="class_id" value="{{ s.class_id or '' }}">
+                    <input type="text" name="name" value="{{ s.name }}" required>
+                    <button type="submit" class="btn btn-edit">수정</button>
+                </form>
+            </td>
+            <td>
+                <form action="{{ url_for('student_delete', id=s.id) }}" method="post"
+                      onsubmit="return confirm('학생을 삭제하시겠습니까?')">
+                    <button type="submit" class="btn btn-delete">삭제</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-msg">담당 반에 등록된 학생이 없습니다.</p>
+    {% endif %}
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function loadClassesForAdd(branchId) {
+    const select = document.getElementById('add-class-select');
+    select.innerHTML = '<option value="">반 선택</option>';
+    if (!branchId) return;
+    fetch('/api/classes/' + branchId)
+        .then(r => r.json())
+        .then(data => {
+            data.forEach(c => {
+                select.innerHTML += '<option value="' + c.id + '">' + c.name + '</option>';
+            });
+        });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>담당자 관리</h1>
+
+<!-- 담당자 추가 -->
+<section class="manage-section">
+    <h2>담당자 추가</h2>
+    <form action="{{ url_for('user_add') }}" method="post" class="inline-form">
+        <input type="text" name="name" placeholder="이름" required>
+        <input type="text" name="username" placeholder="아이디" required>
+        <input type="password" name="password" placeholder="비밀번호" required>
+        <button type="submit" class="btn btn-add">추가</button>
+    </form>
+</section>
+
+<!-- 담당자 목록 -->
+{% for u in users %}
+<section class="manage-section">
+    <h2>{{ u.name }} ({{ u.username }})</h2>
+
+    <!-- 비밀번호 초기화 -->
+    <div style="margin-bottom: 1rem;">
+        <form action="{{ url_for('user_reset_password', id=u.id) }}" method="post" class="inline-form">
+            <input type="password" name="new_password" placeholder="새 비밀번호" required>
+            <button type="submit" class="btn btn-edit">비밀번호 변경</button>
+        </form>
+        <form action="{{ url_for('user_delete', id=u.id) }}" method="post" class="inline-form" style="margin-top: 0.5rem;"
+              onsubmit="return confirm('담당자를 삭제하시겠습니까?')">
+            <button type="submit" class="btn btn-delete">담당자 삭제</button>
+        </form>
+    </div>
+
+    <!-- 배정된 반 -->
+    <h3>담당 반</h3>
+    {% if user_classes[u.id] %}
+    <table>
+        <thead><tr><th>지점</th><th>반</th><th>작업</th></tr></thead>
+        <tbody>
+        {% for c in user_classes[u.id] %}
+        <tr>
+            <td>{{ c.branch_name or '-' }}</td>
+            <td>{{ c.name }}</td>
+            <td>
+                <form action="{{ url_for('user_unassign', user_id=u.id, class_id=c.id) }}" method="post">
+                    <button type="submit" class="btn btn-delete">해제</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #888; margin-bottom: 0.5rem;">배정된 반이 없습니다.</p>
+    {% endif %}
+
+    <!-- 반 배정 -->
+    <form action="{{ url_for('user_assign', user_id=u.id) }}" method="post" class="inline-form" style="margin-top: 0.5rem;">
+        <select name="class_id" required>
+            <option value="">반 선택</option>
+            {% for c in classes %}
+            <option value="{{ c.id }}">{{ c.branch_name }} - {{ c.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-add">반 배정</button>
+    </form>
+</section>
+{% endfor %}
+
+{% if not users %}
+<p class="empty-msg">등록된 담당자가 없습니다.</p>
+{% endif %}
+
+{% endblock %}

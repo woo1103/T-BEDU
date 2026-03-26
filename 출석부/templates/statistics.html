@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>학생별 통계</h1>
+
+<form class="filter-form" method="get" action="{{ url_for('statistics') }}">
+    <div class="filter-row">
+        <label>지점:
+            <select name="branch_id" onchange="this.form.querySelector('[name=class_id]').value=''; this.form.querySelector('[name=student_id]').value=''; this.form.submit()">
+                <option value="">선택</option>
+                {% for b in branches %}
+                <option value="{{ b.id }}" {% if sel_branch|string == b.id|string %}selected{% endif %}>{{ b.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>반:
+            <select name="class_id" onchange="this.form.querySelector('[name=student_id]').value=''; this.form.submit()">
+                <option value="">선택</option>
+                {% for c in classes %}
+                <option value="{{ c.id }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>학생:
+            <select name="student_id" onchange="this.form.submit()">
+                <option value="">선택</option>
+                {% for s in students %}
+                <option value="{{ s.id }}" {% if sel_student|string == s.id|string %}selected{% endif %}>{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+    <div class="filter-row">
+        <label>연도:
+            <select name="year" onchange="this.form.submit()">
+                {% for y in years %}
+                <option value="{{ y }}" {% if sel_year|string == y|string %}selected{% endif %}>{{ y }}년</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>월:
+            <select name="month" onchange="this.form.submit()">
+                {% for m in months %}
+                <option value="{{ m }}" {% if sel_month|string == m|string %}selected{% endif %}>{{ m }}월</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+</form>
+
+{% if stats %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>출석 통계</h3>
+        <div class="stat-row"><span>정상등원</span><span>{{ stats.normal }}회 ({{ stats.normal_pct }}%)</span></div>
+        <div class="stat-row"><span>지각</span><span>{{ stats.late }}회 ({{ stats.late_pct }}%)</span></div>
+        <div class="stat-row"><span>결석</span><span>{{ stats.absent }}회 ({{ stats.absent_pct }}%)</span></div>
+        <div class="stat-row total"><span>총 기록</span><span>{{ stats.total }}회</span></div>
+    </div>
+
+    <div class="stat-card">
+        <h3>숙제 통계</h3>
+        <div class="stat-row"><span>완료</span><span>{{ stats.hw_done }}회 ({{ stats.hw_done_pct }}%)</span></div>
+        <div class="stat-row"><span>미완료</span><span>{{ stats.hw_not }}회 ({{ stats.hw_not_pct }}%)</span></div>
+    </div>
+
+    <div class="stat-card wide">
+        <h3>주간별 추이</h3>
+        <table>
+            <thead><tr><th>주차</th><th>출석률</th><th>숙제 완료율</th></tr></thead>
+            <tbody>
+            {% for w in stats.weekly %}
+            <tr>
+                <td>{{ w.week }}주차</td>
+                <td>{{ w.attendance_rate }}%</td>
+                <td>{{ w.homework_rate }}%</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% elif sel_student %}
+<p class="empty-msg">해당 기간에 출석 기록이 없습니다.</p>
+{% else %}
+<p class="empty-msg">지점, 반, 학생을 선택하세요.</p>
+{% endif %}
+
+{% endblock %}
