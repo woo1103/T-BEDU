@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>결산서</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-msg">
+    {% for msg in messages %}
+    <p>{{ msg }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<!-- 연도 선택 -->
+<form class="filter-form" method="get" action="{{ url_for('settlement') }}">
+    <div class="filter-row">
+        <label>연도:
+            <select name="year" onchange="this.form.submit()">
+                {% for y in years %}
+                <option value="{{ y }}" {% if sel_year|string == y|string %}selected{% endif %}>{{ y }}년</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>보기:
+            <select name="view" onchange="this.form.submit()">
+                <option value="monthly" {% if sel_view == 'monthly' %}selected{% endif %}>월별</option>
+                <option value="quarterly" {% if sel_view == 'quarterly' %}selected{% endif %}>분기별</option>
+                <option value="yearly" {% if sel_view == 'yearly' %}selected{% endif %}>연간</option>
+            </select>
+        </label>
+    </div>
+</form>
+
+<!-- 결산 입력 -->
+<div class="manage-section">
+    <h2>결산 데이터 입력</h2>
+    <form method="post" action="{{ url_for('settlement_save') }}">
+        <input type="hidden" name="year" value="{{ sel_year }}">
+        <div class="settlement-form">
+            <div class="filter-row">
+                <label>월:
+                    <select name="month" required>
+                        {% for m in range(1, 13) %}
+                        <option value="{{ m }}">{{ m }}월</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>반:
+                    <select name="class_id" id="settlementClass" required onchange="updateSettlementBranch()">
+                        <option value="">선택</option>
+                        {% for c in classes %}
+                        <option value="{{ c.id }}" data-branch-id="{{ c.branch_id }}">{{ c.branch_name }} - {{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <input type="hidden" name="branch_id" id="settlementBranch">
+                <label>담당:
+                    <select name="user_id" required>
+                        <option value="">선택</option>
+                        {% for t in teachers %}
+                        <option value="{{ t.id }}">{{ t.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <div class="filter-row">
+                <label>월초 재원생:
+                    <input type="number" name="start_count" min="0" value="0" required>
+                </label>
+                <label>신규:
+                    <input type="number" name="new_count" min="0" value="0" required>
+                </label>
+                <label>휴원:
+                    <input type="number" name="leave_count" min="0" value="0" required>
+                </label>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-add">저장</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 입력된 결산 데이터 목록 -->
+{% if settlements %}
+<div class="manage-section">
+    <h2>{{ sel_year }}년 입력 데이터</h2>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>월</th>
+                    <th>지점</th>
+                    <th>반</th>
+                    <th>담당</th>
+                    <th>월초</th>
+                    <th>신규</th>
+                    <th>휴원</th>
+                    <th>순증</th>
+                    <th>월말</th>
+                    <th>휴원율</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for s in settlements %}
+            {% set end_count = s.start_count + s.new_count - s.leave_count %}
+            {% set leave_rate = (s.leave_count / s.start_count * 100)|round(1) if s.start_count > 0 else 0 %}
+            <tr>
+                <td>{{ s.month }}월</td>
+                <td>{{ s.branch_name }}</td>
+                <td>{{ s.class_name }}</td>
+                <td>{{ s.teacher_name }}</td>
+                <td>{{ s.start_count }}</td>
+                <td class="text-blue">+{{ s.new_count }}</td>
+                <td class="text-red">-{{ s.leave_count }}</td>
+                <td class="{% if s.new_count - s.leave_count >= 0 %}text-blue{% else %}text-red{% endif %}">{{ s.new_count - s.leave_count }}</td>
+                <td><strong>{{ end_count }}</strong></td>
+                <td>{{ leave_rate }}%</td>
+                <td>
+                    <form method="post" action="{{ url_for('settlement_delete', id=s.id) }}" style="display:inline" onsubmit="return confirm('삭제하시겠습니까?')">
+                        <button type="submit" class="btn btn-delete">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- 담당 선생님별 통계 -->
+{% if teacher_monthly %}
+<div class="manage-section">
+    <h2>담당 선생님별 통계 ({{ sel_year }}년)</h2>
+    {% for tid, tdata in teacher_monthly.items() %}
+    <h3 style="margin-top:1.5rem; margin-bottom:0.5rem;">{{ tdata.name }}</h3>
+
+    {% if sel_view == 'monthly' %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>월</th><th>월초</th><th>신규</th><th>휴원</th><th>순증</th><th>월말</th><th>휴원율</th></tr>
+            </thead>
+            <tbody>
+            {% for m in range(1, 13) %}
+            {% if m in tdata.months %}
+            {% set d = tdata.months[m] %}
+            <tr>
+                <td>{{ m }}월</td><td>{{ d.start }}</td>
+                <td class="text-blue">+{{ d.new }}</td>
+                <td class="text-red">-{{ d.leave }}</td>
+                <td class="{% if d.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ d.net }}</td>
+                <td><strong>{{ d.end }}</strong></td>
+                <td>{{ d.leave_rate }}%</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            <tr class="row-total">
+                <td><strong>연간</strong></td>
+                <td>{{ tdata.yearly.start }}</td>
+                <td class="text-blue">+{{ tdata.yearly.new }}</td>
+                <td class="text-red">-{{ tdata.yearly.leave }}</td>
+                <td class="{% if tdata.yearly.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ tdata.yearly.net }}</td>
+                <td><strong>{{ tdata.yearly.end }}</strong></td>
+                <td>{{ tdata.yearly.leave_rate }}%</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    {% elif sel_view == 'quarterly' %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>분기</th><th>월초 합</th><th>신규</th><th>휴원</th><th>순증</th><th>월말 합</th><th>휴원율</th></tr>
+            </thead>
+            <tbody>
+            {% for q in range(1, 5) %}
+            {% if q in tdata.quarterly %}
+            {% set d = tdata.quarterly[q] %}
+            <tr>
+                <td>{{ q }}분기</td><td>{{ d.start }}</td>
+                <td class="text-blue">+{{ d.new }}</td>
+                <td class="text-red">-{{ d.leave }}</td>
+                <td class="{% if d.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ d.net }}</td>
+                <td><strong>{{ d.end }}</strong></td>
+                <td>{{ d.leave_rate }}%</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% elif sel_view == 'yearly' %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>구분</th><th>월초 합</th><th>신규</th><th>휴원</th><th>순증</th><th>월말 합</th><th>휴원율</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ sel_year }}년 누적</td>
+                <td>{{ tdata.yearly.start }}</td>
+                <td class="text-blue">+{{ tdata.yearly.new }}</td>
+                <td class="text-red">-{{ tdata.yearly.leave }}</td>
+                <td class="{% if tdata.yearly.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ tdata.yearly.net }}</td>
+                <td><strong>{{ tdata.yearly.end }}</strong></td>
+                <td>{{ tdata.yearly.leave_rate }}%</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- 지점별 통계 -->
+{% if branch_monthly %}
+<div class="manage-section">
+    <h2>지점별 통계 ({{ sel_year }}년)</h2>
+    {% for bid, bdata in branch_monthly.items() %}
+    <h3 style="margin-top:1.5rem; margin-bottom:0.5rem;">{{ bdata.name }}</h3>
+
+    {% if sel_view == 'monthly' %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>월</th><th>월초</th><th>신규</th><th>휴원</th><th>순증</th><th>월말</th><th>휴원율</th></tr>
+            </thead>
+            <tbody>
+            {% for m in range(1, 13) %}
+            {% if m in bdata.months %}
+            {% set d = bdata.months[m] %}
+            <tr>
+                <td>{{ m }}월</td><td>{{ d.start }}</td>
+                <td class="text-blue">+{{ d.new }}</td>
+                <td class="text-red">-{{ d.leave }}</td>
+                <td class="{% if d.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ d.net }}</td>
+                <td><strong>{{ d.end }}</strong></td>
+                <td>{{ d.leave_rate }}%</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            <tr class="row-total">
+                <td><strong>연간</strong></td>
+                <td>{{ bdata.yearly.start }}</td>
+                <td class="text-blue">+{{ bdata.yearly.new }}</td>
+                <td class="text-red">-{{ bdata.yearly.leave }}</td>
+                <td class="{% if bdata.yearly.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ bdata.yearly.net }}</td>
+                <td><strong>{{ bdata.yearly.end }}</strong></td>
+                <td>{{ bdata.yearly.leave_rate }}%</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    {% elif sel_view == 'quarterly' %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>분기</th><th>월초 합</th><th>신규</th><th>휴원</th><th>순증</th><th>월말 합</th><th>휴원율</th></tr>
+            </thead>
+            <tbody>
+            {% for q in range(1, 5) %}
+            {% if q in bdata.quarterly %}
+            {% set d = bdata.quarterly[q] %}
+            <tr>
+                <td>{{ q }}분기</td><td>{{ d.start }}</td>
+                <td class="text-blue">+{{ d.new }}</td>
+                <td class="text-red">-{{ d.leave }}</td>
+                <td class="{% if d.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ d.net }}</td>
+                <td><strong>{{ d.end }}</strong></td>
+                <td>{{ d.leave_rate }}%</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% elif sel_view == 'yearly' %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>구분</th><th>월초 합</th><th>신규</th><th>휴원</th><th>순증</th><th>월말 합</th><th>휴원율</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ sel_year }}년 누적</td>
+                <td>{{ bdata.yearly.start }}</td>
+                <td class="text-blue">+{{ bdata.yearly.new }}</td>
+                <td class="text-red">-{{ bdata.yearly.leave }}</td>
+                <td class="{% if bdata.yearly.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ bdata.yearly.net }}</td>
+                <td><strong>{{ bdata.yearly.end }}</strong></td>
+                <td>{{ bdata.yearly.leave_rate }}%</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function updateSettlementBranch() {
+    var sel = document.getElementById('settlementClass');
+    var opt = sel.options[sel.selectedIndex];
+    document.getElementById('settlementBranch').value = opt.dataset.branchId || '';
+}
+</script>
+{% endblock %}

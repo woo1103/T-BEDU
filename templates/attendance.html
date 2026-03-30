@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>출석부</h1>
+
+<form class="filter-form" method="get" action="{{ url_for('attendance') }}">
+    <div class="filter-row">
+        <label>날짜:
+            <input type="date" name="date" value="{{ sel_date }}" onchange="this.form.submit()">
+        </label>
+        <label>지점:
+            <select name="branch_id" onchange="this.form.querySelector('[name=class_id]').value=''; this.form.submit()">
+                <option value="">선택</option>
+                {% for b in branches %}
+                <option value="{{ b.id }}" {% if sel_branch|string == b.id|string %}selected{% endif %}>{{ b.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>반:
+            <select name="class_id" onchange="this.form.submit()">
+                <option value="">선택</option>
+                {% for c in classes %}
+                <option value="{{ c.id }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+</form>
+
+{% if students %}
+<form method="post" action="{{ url_for('attendance_save') }}">
+    <input type="hidden" name="date" value="{{ sel_date }}">
+    <input type="hidden" name="branch_id" value="{{ sel_branch }}">
+    <input type="hidden" name="class_id" value="{{ sel_class }}">
+
+    <div class="table-responsive">
+        <table class="attendance-table">
+            <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>출석</th>
+                    <th>사유</th>
+                    <th>숙제</th>
+                    <th>미완료 대책</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for s in students %}
+            {% set r = records.get(s.id, {}) %}
+            <tr>
+                <td class="student-name">{{ s.name }}</td>
+                <td>
+                    <input type="hidden" name="student_ids" value="{{ s.id }}">
+                    <select name="status_{{ s.id }}">
+                        <option value="정상등원" {% if r.get('status','정상등원') == '정상등원' %}selected{% endif %}>정상등원</option>
+                        <option value="지각" {% if r.get('status') == '지각' %}selected{% endif %}>지각</option>
+                        <option value="결석" {% if r.get('status') == '결석' %}selected{% endif %}>결석</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" name="reason_{{ s.id }}" value="{{ r.get('reason', '') }}" placeholder="사유 입력">
+                </td>
+                <td>
+                    <select name="homework_{{ s.id }}">
+                        <option value="완료" {% if r.get('homework','완료') == '완료' %}selected{% endif %}>완료</option>
+                        <option value="미완료" {% if r.get('homework') == '미완료' %}selected{% endif %}>미완료</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" name="homework_action_{{ s.id }}" value="{{ r.get('homework_action', '') }}" placeholder="대책 입력">
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-save">저장</button>
+    </div>
+</form>
+{% elif sel_class %}
+<p class="empty-msg">등록된 학생이 없습니다. <a href="{{ url_for('manage') }}">관리</a>에서 학생을 추가하세요.</p>
+{% else %}
+<p class="empty-msg">지점과 반을 선택하세요.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TNBEDU">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon-192.png') }}">
+    <title>TNBEDU</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">학원 출석부</div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">홈</a>
+            <a href="{{ url_for('attendance') }}" class="{% if request.endpoint == 'attendance' %}active{% endif %}">출석부</a>
+            <a href="{{ url_for('lesson_plan') }}" class="{% if request.endpoint == 'lesson_plan' %}active{% endif %}">수업계획서</a>
+            <a href="{{ url_for('statistics') }}" class="{% if request.endpoint == 'statistics' %}active{% endif %}">학생별 통계</a>
+            <a href="{{ url_for('reports') }}" class="{% if request.endpoint == 'reports' %}active{% endif %}">보고서</a>
+            {% if session.get('role') == 'admin' %}
+            <a href="{{ url_for('manage') }}" class="{% if request.endpoint == 'manage' %}active{% endif %}">관리</a>
+            <a href="{{ url_for('users') }}" class="{% if request.endpoint == 'users' %}active{% endif %}">담당자 관리</a>
+            <a href="{{ url_for('settlement') }}" class="{% if request.endpoint == 'settlement' %}active{% endif %}">결산서</a>
+            {% else %}
+            <a href="{{ url_for('my_students') }}" class="{% if request.endpoint == 'my_students' %}active{% endif %}">학생 관리</a>
+            {% endif %}
+        </div>
+        <div class="nav-user">
+            <span class="user-info">{{ session.get('name', '') }} ({{ '관리자' if session.get('role') == 'admin' else '담당자' }})</span>
+            <a href="{{ url_for('logout') }}" class="btn-logout">로그아웃</a>
+        </div>
+    </nav>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/static/service-worker.js');
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

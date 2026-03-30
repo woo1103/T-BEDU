@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ student.name }} - 학생 상세</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-msg">
+    {% for msg in messages %}
+    <p>{{ msg }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<div class="detail-info">
+    <p><strong>지점:</strong> {{ student.branch_name or '-' }} | <strong>반:</strong> {{ student.class_name or '-' }}</p>
+</div>
+
+<!-- 인적사항 -->
+<section class="manage-section">
+    <h2>인적사항</h2>
+    <form method="post" action="{{ url_for('student_update_info', id=student.id) }}">
+        <div class="info-grid">
+            <div class="form-group">
+                <label>등록일</label>
+                <input type="date" name="registration_date" value="{{ student.registration_date or '' }}">
+            </div>
+            <div class="form-group">
+                <label>학생 전화번호</label>
+                <input type="tel" name="phone" value="{{ student.phone or '' }}" placeholder="010-0000-0000">
+            </div>
+            <div class="form-group">
+                <label>학부모 전화번호</label>
+                <input type="tel" name="parent_phone" value="{{ student.parent_phone or '' }}" placeholder="010-0000-0000">
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>특이사항</label>
+                <textarea name="notes" rows="3" placeholder="특이사항을 입력하세요">{{ student.notes or '' }}</textarea>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-save">인적사항 저장</button>
+        </div>
+    </form>
+</section>
+
+<!-- 학부모 상담보고서 -->
+<section class="manage-section">
+    <h2>학부모 상담보고서</h2>
+
+    <!-- 상담 작성 -->
+    <form method="post" action="{{ url_for('consultation_add', id=student.id) }}" style="margin-bottom:1.5rem;">
+        <div class="filter-row">
+            <label>연도:
+                <select name="year">
+                    {% for y in range(2024, 2028) %}
+                    <option value="{{ y }}" {% if y == now_year %}selected{% endif %}>{{ y }}년</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>월:
+                <select name="month">
+                    {% for m in range(1, 13) %}
+                    <option value="{{ m }}" {% if m == now_month %}selected{% endif %}>{{ m }}월</option>
+                    {% endfor %}
+                </select>
+            </label>
+        </div>
+        <div class="form-group" style="margin-top:0.8rem;">
+            <textarea name="content" rows="4" placeholder="상담 내용을 입력하세요" required></textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-add">상담보고서 등록</button>
+        </div>
+    </form>
+
+    <!-- 상담 기록 목록 -->
+    {% if consultations %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>기간</th><th>상담 내용</th><th>관리</th></tr>
+            </thead>
+            <tbody>
+            {% for c in consultations %}
+            <tr>
+                <td style="white-space:nowrap;">{{ c.year }}년 {{ c.month }}월</td>
+                <td style="white-space:pre-wrap;">{{ c.content }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('consultation_delete', student_id=student.id, id=c.id) }}"
+                          onsubmit="return confirm('삭제하시겠습니까?')">
+                        <button type="submit" class="btn btn-delete">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-msg">등록된 상담보고서가 없습니다.</p>
+    {% endif %}
+</section>
+
+<div class="form-actions" style="margin-top:1rem;">
+    <button class="btn btn-save" onclick="window.print()">이 페이지 PDF 출력</button>
+</div>
+{% endblock %}
