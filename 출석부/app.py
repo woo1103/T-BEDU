@@ -1,8 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, session, g, flash
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session, g, flash, make_response
 from models import get_db, init_db, hash_password
 from datetime import datetime, date
 from functools import wraps
-import requests as http_requests
 import json
 import os
 
@@ -507,74 +506,11 @@ def lesson_plan_delete(id):
     return redirect(request.referrer or url_for('lesson_plan'))
 
 
-# ─── 카카오 알림톡 설정 ───
-KAKAO_API_URL = 'https://kapi.kakao.com/v2/api/talk/memo/default/send'
-
-def get_kakao_token():
-    """카카오 토큰을 DB 설정에서 가져오기"""
-    db = get_db()
-    row = db.execute("SELECT value FROM settings WHERE key = 'kakao_token'").fetchone()
-    db.close()
-    return row['value'] if row else None
-
-
-def send_kakao_message(token, message):
-    """카카오톡 메시지 전송"""
-    headers = {
-        'Authorization': f'Bearer {token}',
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-    template = {
-        'object_type': 'text',
-        'text': message,
-        'link': {
-            'web_url': '',
-            'mobile_web_url': ''
-        }
-    }
-    data = {'template_object': json.dumps(template)}
-    try:
-        resp = http_requests.post(KAKAO_API_URL, headers=headers, data=data, timeout=10)
-        return resp.status_code == 200
-    except Exception:
-        return False
-
-
-def format_homework_message(plan, class_name, teacher_name, branch_name):
-    """숙제 알림 메시지 포맷"""
-    msg = f"📚 [{branch_name}] {class_name} 숙제 안내\n"
-    msg += f"━━━━━━━━━━━━━━━\n"
-    msg += f"📅 날짜: {plan['date']}\n"
-    msg += f"👨‍🏫 담당: {teacher_name}\n\n"
-    msg += f"📖 수업내용:\n{plan['content']}\n\n"
-    msg += f"✏️ 숙제:\n{plan['homework']}\n"
-    msg += f"━━━━━━━━━━━━━━━\n"
-    msg += f"T&B Education"
-    return msg
-
-
-@app.route('/kakao-settings', methods=['GET', 'POST'])
-@admin_required
-def kakao_settings():
-    db = get_db()
-    if request.method == 'POST':
-        token = request.form.get('kakao_token', '').strip()
-        if token:
-            db.execute('''
-                INSERT INTO settings (key, value) VALUES ('kakao_token', ?)
-                ON CONFLICT(key) DO UPDATE SET value=?
-            ''', (token, token))
-            db.commit()
-            flash('카카오톡 토큰이 저장되었습니다.')
-    current_token = db.execute("SELECT value FROM settings WHERE key = 'kakao_token'").fetchone()
-    db.close()
-    return render_template('kakao_settings.html',
-                           current_token=current_token['value'] if current_token else '')
-
-
-@app.route('/lesson-plan/send/<int:id>', methods=['POST'])
+# ─── 공지 포맷 API ───
+@app.route('/api/lesson-plan/notice/<int:id>')
 @login_required
-def lesson_plan_send(id):
+def lesson_plan_notice(id):
+    """수업계획서에서 공지 포맷 텍스트 반환"""
     db = get_db()
     plan = db.execute('''
         SELECT lesson_plan.*, user.name as teacher_name,
@@ -585,33 +521,20 @@ def lesson_plan_send(id):
         JOIN branch ON class.branch_id = branch.id
         WHERE lesson_plan.id = ?
     ''', (id,)).fetchone()
-
-    if not plan:
-        db.close()
-        flash('수업계획서를 찾을 수 없습니다.')
-        return redirect(url_for('lesson_plan'))
-
-    allowed = get_user_classes(db)
-    if allowed is not None and plan['class_id'] not in allowed:
-        db.close()
-        return redirect(url_for('lesson_plan'))
-
-    token = db.execute("SELECT value FROM settings WHERE key = 'kakao_token'").fetchone()
     db.close()
 
-    if not token:
-        flash('카카오톡 토큰이 설정되지 않았습니다. 관리자에게 문의하세요.')
-        return redirect(request.referrer or url_for('lesson_plan'))
+    if not plan:
+        return jsonify({'error': 'not found'}), 404
 
-    message = format_homework_message(plan, plan['class_name'], plan['teacher_name'], plan['branch_name'])
-    success = send_kakao_message(token['value'], message)
-
-    if success:
-        flash('숙제가 카카오톡으로 전송되었습니다!')
-    else:
-        flash('카카오톡 전송에 실패했습니다. 토큰을 확인해주세요.')
-
-    return redirect(request.referrer or url_for('lesson_plan'))
+    msg = f"[{plan['branch_name']}] {plan['class_name']} 숙제 안내\n"
+    msg += f"━━━━━━━━━━━━━━━\n"
+    msg += f"날짜: {plan['date']}\n"
+    msg += f"담당: {plan['teacher_name']}\n\n"
+    msg += f"수업내용:\n{plan['content']}\n\n"
+    msg += f"숙제:\n{plan['homework']}\n"
+    msg += f"━━━━━━━━━━━━━━━\n"
+    msg += f"T&B Education"
+    return jsonify({'message': msg})
 
 
 # ─── 출석부 ───
@@ -797,6 +720,206 @@ def statistics():
                            stats=stats, years=years, months=months,
                            sel_branch=sel_branch, sel_class=sel_class,
                            sel_student=sel_student, sel_year=sel_year, sel_month=sel_month)
+
+
+# ─── 학생 상세 (인적사항 + 상담보고서) ───
+@app.route('/student/<int:id>')
+@login_required
+def student_detail(id):
+    db = get_db()
+    student = db.execute('''
+        SELECT student.*, class.name as class_name, branch.name as branch_name
+        FROM student
+        LEFT JOIN class ON student.class_id = class.id
+        LEFT JOIN branch ON student.branch_id = branch.id
+        WHERE student.id = ?
+    ''', (id,)).fetchone()
+    if not student:
+        db.close()
+        return redirect(url_for('index'))
+
+    allowed = get_user_classes(db)
+    if allowed is not None and student['class_id'] not in allowed:
+        db.close()
+        return redirect(url_for('index'))
+
+    consultations = db.execute('''
+        SELECT * FROM parent_consultation
+        WHERE student_id = ?
+        ORDER BY year DESC, month DESC
+    ''', (id,)).fetchall()
+
+    db.close()
+    return render_template('student_detail.html', student=student, consultations=consultations,
+                           now_year=date.today().year, now_month=date.today().month)
+
+
+@app.route('/student/<int:id>/update-info', methods=['POST'])
+@login_required
+def student_update_info(id):
+    db = get_db()
+    student = db.execute('SELECT * FROM student WHERE id = ?', (id,)).fetchone()
+    if not student:
+        db.close()
+        return redirect(url_for('index'))
+
+    allowed = get_user_classes(db)
+    if allowed is not None and student['class_id'] not in allowed:
+        db.close()
+        return redirect(url_for('index'))
+
+    registration_date = request.form.get('registration_date', '')
+    phone = request.form.get('phone', '').strip()
+    parent_phone = request.form.get('parent_phone', '').strip()
+    notes = request.form.get('notes', '').strip()
+
+    db.execute('''
+        UPDATE student SET registration_date=?, phone=?, parent_phone=?, notes=?
+        WHERE id=?
+    ''', (registration_date, phone, parent_phone, notes, id))
+    db.commit()
+    db.close()
+    flash('인적사항이 저장되었습니다.')
+    return redirect(url_for('student_detail', id=id))
+
+
+@app.route('/student/<int:id>/consultation/add', methods=['POST'])
+@login_required
+def consultation_add(id):
+    year = int(request.form.get('year'))
+    month = int(request.form.get('month'))
+    content = request.form.get('content', '').strip()
+
+    if content:
+        db = get_db()
+        try:
+            db.execute('''
+                INSERT INTO parent_consultation (student_id, year, month, content)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(student_id, year, month)
+                DO UPDATE SET content=?, updated_at=CURRENT_TIMESTAMP
+            ''', (id, year, month, content, content))
+            db.commit()
+            flash('상담보고서가 저장되었습니다.')
+        except Exception:
+            flash('저장 중 오류가 발생했습니다.')
+        db.close()
+    return redirect(url_for('student_detail', id=id))
+
+
+@app.route('/student/<int:student_id>/consultation/delete/<int:id>', methods=['POST'])
+@login_required
+def consultation_delete(student_id, id):
+    db = get_db()
+    db.execute('DELETE FROM parent_consultation WHERE id = ?', (id,))
+    db.commit()
+    db.close()
+    flash('상담보고서가 삭제되었습니다.')
+    return redirect(url_for('student_detail', id=student_id))
+
+
+# ─── 보고서 센터 ───
+@app.route('/reports')
+@login_required
+def reports():
+    db = get_db()
+    allowed = get_user_classes(db)
+    branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+
+    sel_branch = request.args.get('branch_id', '')
+    sel_class = request.args.get('class_id', '')
+    sel_type = request.args.get('type', '')  # attendance, lesson, settlement, consultation
+
+    classes = []
+    report_data = None
+
+    if sel_branch:
+        if allowed is None:
+            classes = db.execute('SELECT * FROM class WHERE branch_id = ? ORDER BY name',
+                                 (sel_branch,)).fetchall()
+        else:
+            placeholders = ','.join('?' * len(allowed)) if allowed else '0'
+            classes = db.execute(
+                f'SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY name',
+                [sel_branch] + allowed).fetchall()
+
+    if sel_class and sel_type:
+        if allowed is not None and int(sel_class) not in allowed:
+            db.close()
+            return redirect(url_for('reports'))
+
+        sel_year = request.args.get('year', str(date.today().year))
+        sel_month = request.args.get('month', str(date.today().month))
+
+        class_info = db.execute('''
+            SELECT class.*, branch.name as branch_name
+            FROM class JOIN branch ON class.branch_id = branch.id
+            WHERE class.id = ?
+        ''', (sel_class,)).fetchone()
+
+        if sel_type == 'attendance':
+            month_str = f"{sel_year}-{int(sel_month):02d}"
+            records = db.execute('''
+                SELECT attendance.*, student.name as student_name
+                FROM attendance
+                JOIN student ON attendance.student_id = student.id
+                WHERE student.class_id = ? AND attendance.date LIKE ?
+                ORDER BY attendance.date, student.name
+            ''', (sel_class, f"{month_str}%")).fetchall()
+            report_data = {'type': 'attendance', 'records': records, 'class': class_info,
+                           'year': sel_year, 'month': sel_month}
+
+        elif sel_type == 'lesson':
+            month_str = f"{sel_year}-{int(sel_month):02d}"
+            plans = db.execute('''
+                SELECT lesson_plan.*, user.name as teacher_name
+                FROM lesson_plan
+                JOIN user ON lesson_plan.user_id = user.id
+                WHERE lesson_plan.class_id = ? AND lesson_plan.date LIKE ?
+                ORDER BY lesson_plan.date
+            ''', (sel_class, f"{month_str}%")).fetchall()
+            report_data = {'type': 'lesson', 'plans': plans, 'class': class_info,
+                           'year': sel_year, 'month': sel_month}
+
+        elif sel_type == 'consultation':
+            students = db.execute('''
+                SELECT student.*, parent_consultation.year as c_year,
+                       parent_consultation.month as c_month, parent_consultation.content as c_content
+                FROM student
+                LEFT JOIN parent_consultation ON student.id = parent_consultation.student_id
+                    AND parent_consultation.year = ? AND parent_consultation.month = ?
+                WHERE student.class_id = ?
+                ORDER BY student.name
+            ''', (sel_year, sel_month, sel_class)).fetchall()
+            report_data = {'type': 'consultation', 'students': students, 'class': class_info,
+                           'year': sel_year, 'month': sel_month}
+
+        elif sel_type == 'settlement' and session.get('role') == 'admin':
+            settlements = db.execute('''
+                SELECT settlement.*, branch.name as branch_name,
+                       class.name as class_name, user.name as teacher_name
+                FROM settlement
+                JOIN branch ON settlement.branch_id = branch.id
+                JOIN class ON settlement.class_id = class.id
+                JOIN user ON settlement.user_id = user.id
+                WHERE settlement.year = ?
+                ORDER BY settlement.month, branch.name, class.name
+            ''', (sel_year,)).fetchall()
+            report_data = {'type': 'settlement', 'settlements': settlements,
+                           'year': sel_year}
+
+    db.close()
+
+    years = list(range(2024, date.today().year + 2))
+    months = list(range(1, 13))
+
+    return render_template('reports.html',
+                           branches=branches, classes=classes,
+                           report_data=report_data, years=years, months=months,
+                           sel_branch=sel_branch, sel_class=sel_class,
+                           sel_type=sel_type,
+                           sel_year=request.args.get('year', str(date.today().year)),
+                           sel_month=request.args.get('month', str(date.today().month)))
 
 
 # ─── 결산서 (관리자 전용) ───

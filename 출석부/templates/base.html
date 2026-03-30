@@ -20,11 +20,11 @@
             <a href="{{ url_for('attendance') }}" class="{% if request.endpoint == 'attendance' %}active{% endif %}">출석부</a>
             <a href="{{ url_for('lesson_plan') }}" class="{% if request.endpoint == 'lesson_plan' %}active{% endif %}">수업계획서</a>
             <a href="{{ url_for('statistics') }}" class="{% if request.endpoint == 'statistics' %}active{% endif %}">학생별 통계</a>
+            <a href="{{ url_for('reports') }}" class="{% if request.endpoint == 'reports' %}active{% endif %}">보고서</a>
             {% if session.get('role') == 'admin' %}
             <a href="{{ url_for('manage') }}" class="{% if request.endpoint == 'manage' %}active{% endif %}">관리</a>
             <a href="{{ url_for('users') }}" class="{% if request.endpoint == 'users' %}active{% endif %}">담당자 관리</a>
             <a href="{{ url_for('settlement') }}" class="{% if request.endpoint == 'settlement' %}active{% endif %}">결산서</a>
-            <a href="{{ url_for('kakao_settings') }}" class="{% if request.endpoint == 'kakao_settings' %}active{% endif %}">카톡 설정</a>
             {% else %}
             <a href="{{ url_for('my_students') }}" class="{% if request.endpoint == 'my_students' %}active{% endif %}">학생 관리</a>
             {% endif %}

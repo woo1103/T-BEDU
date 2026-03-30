@@ -16,6 +16,10 @@
             <h2>학생별 통계</h2>
             <p>주간/월간 출석률 및 숙제 완료율</p>
         </a>
+        <a href="{{ url_for('reports') }}" class="card">
+            <h2>보고서</h2>
+            <p>출석부/수업계획서/상담보고서 조회 및 PDF 출력</p>
+        </a>
         {% if session.get('role') == 'admin' %}
         <a href="{{ url_for('settlement') }}" class="card">
             <h2>결산서</h2>

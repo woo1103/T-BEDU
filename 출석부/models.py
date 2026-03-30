@@ -40,6 +40,10 @@ def init_db():
             class_id INTEGER,
             branch_id INTEGER,
             name TEXT NOT NULL,
+            registration_date TEXT DEFAULT '',
+            phone TEXT DEFAULT '',
+            parent_phone TEXT DEFAULT '',
+            notes TEXT DEFAULT '',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (class_id) REFERENCES class(id) ON DELETE SET NULL,
             FOREIGN KEY (branch_id) REFERENCES branch(id) ON DELETE SET NULL
@@ -95,6 +99,18 @@ def init_db():
             value TEXT NOT NULL
         );
 
+        CREATE TABLE IF NOT EXISTS parent_consultation (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER NOT NULL,
+            year INTEGER NOT NULL,
+            month INTEGER NOT NULL,
+            content TEXT NOT NULL DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE,
+            UNIQUE(student_id, year, month)
+        );
+
         CREATE TABLE IF NOT EXISTS settlement (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             year INTEGER NOT NULL,
@@ -114,6 +130,25 @@ def init_db():
         );
     ''')
 
+    conn.commit()
+
+    # 기존 student 테이블에 컬럼 추가 (마이그레이션)
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN registration_date TEXT DEFAULT ''")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN phone TEXT DEFAULT ''")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN parent_phone TEXT DEFAULT ''")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN notes TEXT DEFAULT ''")
+    except Exception:
+        pass
     conn.commit()
 
     # 기본 관리자 계정 생성

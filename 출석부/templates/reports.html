@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>보고서</h1>
+
+<form class="filter-form" method="get" action="{{ url_for('reports') }}">
+    <div class="filter-row">
+        <label>지점:
+            <select name="branch_id" onchange="this.form.querySelector('[name=class_id]').value=''; this.form.submit()">
+                <option value="">선택</option>
+                {% for b in branches %}
+                <option value="{{ b.id }}" {% if sel_branch|string == b.id|string %}selected{% endif %}>{{ b.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>반:
+            <select name="class_id" onchange="this.form.submit()">
+                <option value="">선택</option>
+                {% for c in classes %}
+                <option value="{{ c.id }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>보고서 유형:
+            <select name="type" onchange="this.form.submit()">
+                <option value="">선택</option>
+                <option value="attendance" {% if sel_type == 'attendance' %}selected{% endif %}>출석부</option>
+                <option value="lesson" {% if sel_type == 'lesson' %}selected{% endif %}>수업계획서</option>
+                <option value="consultation" {% if sel_type == 'consultation' %}selected{% endif %}>학부모 상담보고서</option>
+                {% if session.get('role') == 'admin' %}
+                <option value="settlement" {% if sel_type == 'settlement' %}selected{% endif %}>결산서</option>
+                {% endif %}
+            </select>
+        </label>
+    </div>
+    <div class="filter-row">
+        <label>연도:
+            <select name="year" onchange="this.form.submit()">
+                {% for y in years %}
+                <option value="{{ y }}" {% if sel_year|string == y|string %}selected{% endif %}>{{ y }}년</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>월:
+            <select name="month" onchange="this.form.submit()">
+                {% for m in months %}
+                <option value="{{ m }}" {% if sel_month|string == m|string %}selected{% endif %}>{{ m }}월</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+</form>
+
+{% if report_data %}
+<div class="report-container" id="printArea">
+    <div class="report-header">
+        <h2 class="print-title">
+            {% if report_data.type == 'attendance' %}
+            {{ report_data.class.branch_name }} - {{ report_data.class.name }} | {{ report_data.year }}년 {{ report_data.month }}월 출석부
+            {% elif report_data.type == 'lesson' %}
+            {{ report_data.class.branch_name }} - {{ report_data.class.name }} | {{ report_data.year }}년 {{ report_data.month }}월 수업계획서
+            {% elif report_data.type == 'consultation' %}
+            {{ report_data.class.branch_name }} - {{ report_data.class.name }} | {{ report_data.year }}년 {{ report_data.month }}월 학부모 상담보고서
+            {% elif report_data.type == 'settlement' %}
+            {{ report_data.year }}년 결산서
+            {% endif %}
+        </h2>
+    </div>
+
+    {% if report_data.type == 'attendance' %}
+    {% if report_data.records %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>날짜</th><th>학생</th><th>출석</th><th>사유</th><th>숙제</th><th>미완료 대책</th></tr>
+            </thead>
+            <tbody>
+            {% for r in report_data.records %}
+            <tr>
+                <td>{{ r.date }}</td>
+                <td class="student-name">{{ r.student_name }}</td>
+                <td>{{ r.status }}</td>
+                <td>{{ r.reason or '' }}</td>
+                <td>{{ r.homework }}</td>
+                <td>{{ r.homework_action or '' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-msg">해당 기간에 출석 기록이 없습니다.</p>
+    {% endif %}
+
+    {% elif report_data.type == 'lesson' %}
+    {% if report_data.plans %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>날짜</th><th>담당자</th><th>수업내용</th><th>숙제</th></tr>
+            </thead>
+            <tbody>
+            {% for p in report_data.plans %}
+            <tr>
+                <td class="plan-date">{{ p.date }}</td>
+                <td>{{ p.teacher_name }}</td>
+                <td class="plan-content">{{ p.content }}</td>
+                <td class="plan-homework">{{ p.homework }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-msg">해당 기간에 수업계획서가 없습니다.</p>
+    {% endif %}
+
+    {% elif report_data.type == 'consultation' %}
+    {% set has_data = false %}
+    {% for s in report_data.students %}
+        {% if s.c_content %}{% set has_data = true %}{% endif %}
+    {% endfor %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>학생</th><th>전화번호</th><th>학부모 전화번호</th><th>상담 내용</th></tr>
+            </thead>
+            <tbody>
+            {% for s in report_data.students %}
+            <tr>
+                <td class="student-name">{{ s.name }}</td>
+                <td>{{ s.phone or '-' }}</td>
+                <td>{{ s.parent_phone or '-' }}</td>
+                <td style="white-space:pre-wrap;">{{ s.c_content or '-' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% elif report_data.type == 'settlement' %}
+    {% if report_data.settlements %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>월</th><th>지점</th><th>반</th><th>담당</th><th>월초</th><th>신규</th><th>휴원</th><th>순증</th><th>월말</th><th>휴원율</th></tr>
+            </thead>
+            <tbody>
+            {% for s in report_data.settlements %}
+            {% set end_count = s.start_count + s.new_count - s.leave_count %}
+            {% set leave_rate = (s.leave_count / s.start_count * 100)|round(1) if s.start_count > 0 else 0 %}
+            <tr>
+                <td>{{ s.month }}월</td>
+                <td>{{ s.branch_name }}</td>
+                <td>{{ s.class_name }}</td>
+                <td>{{ s.teacher_name }}</td>
+                <td>{{ s.start_count }}</td>
+                <td class="text-blue">+{{ s.new_count }}</td>
+                <td class="text-red">-{{ s.leave_count }}</td>
+                <td class="{% if s.new_count - s.leave_count >= 0 %}text-blue{% else %}text-red{% endif %}">{{ s.new_count - s.leave_count }}</td>
+                <td><strong>{{ end_count }}</strong></td>
+                <td>{{ leave_rate }}%</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-msg">해당 연도에 결산 데이터가 없습니다.</p>
+    {% endif %}
+    {% endif %}
+</div>
+
+<div class="form-actions no-print" style="margin-top:1rem;">
+    <button class="btn btn-save" onclick="window.print()">PDF 출력 / 인쇄</button>
+</div>
+
+{% else %}
+<p class="empty-msg">지점, 반, 보고서 유형을 선택하세요.</p>
+{% endif %}
+{% endblock %}
