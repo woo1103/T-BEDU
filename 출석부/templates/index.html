@@ -8,10 +8,20 @@
             <h2>출석부</h2>
             <p>날짜별 출석 및 숙제 현황 입력</p>
         </a>
+        <a href="{{ url_for('lesson_plan') }}" class="card">
+            <h2>수업계획서</h2>
+            <p>수업 내용 및 숙제 계획 관리</p>
+        </a>
         <a href="{{ url_for('statistics') }}" class="card">
             <h2>학생별 통계</h2>
             <p>주간/월간 출석률 및 숙제 완료율</p>
         </a>
+        {% if session.get('role') == 'admin' %}
+        <a href="{{ url_for('settlement') }}" class="card">
+            <h2>결산서</h2>
+            <p>월별 휴원/신규 통계 및 분석</p>
+        </a>
+        {% endif %}
         <a href="{{ url_for('manage') }}" class="card">
             <h2>관리</h2>
             <p>지점, 반, 학생 추가/수정/삭제</p>
