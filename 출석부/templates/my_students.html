@@ -28,7 +28,7 @@
     <h2>학생 목록</h2>
     {% if students %}
     <table>
-        <thead><tr><th>지점</th><th>반</th><th>이름</th><th>작업</th></tr></thead>
+        <thead><tr><th>지점</th><th>반</th><th>이름</th><th>상세</th><th>작업</th></tr></thead>
         <tbody>
         {% for s in students %}
         <tr>
@@ -42,6 +42,7 @@
                     <button type="submit" class="btn btn-edit">수정</button>
                 </form>
             </td>
+            <td><a href="{{ url_for('student_detail', id=s.id) }}" class="btn btn-edit">상세</a></td>
             <td>
                 <form action="{{ url_for('student_delete', id=s.id) }}" method="post"
                       onsubmit="return confirm('학생을 삭제하시겠습니까?')">

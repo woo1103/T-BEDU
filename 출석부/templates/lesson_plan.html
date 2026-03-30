@@ -87,9 +87,7 @@
                 <td class="plan-homework">{{ p.homework }}</td>
                 <td class="plan-actions">
                     {% if p.homework %}
-                    <form method="post" action="{{ url_for('lesson_plan_send', id=p.id) }}" style="display:inline" onsubmit="return confirm('숙제를 카카오톡으로 전송하시겠습니까?')">
-                        <button type="submit" class="btn btn-kakao">카톡 전송</button>
-                    </form>
+                    <button class="btn btn-kakao" onclick="copyNotice({{ p.id }})">공지 복사</button>
                     {% endif %}
                     {% if session.get('role') == 'admin' or session.get('user_id') == p.user_id %}
                     <button class="btn btn-edit" onclick="editPlan(this.closest('tr'))">수정</button>
@@ -111,6 +109,18 @@
 {% else %}
 <p class="empty-msg">지점과 반을 선택하세요.</p>
 {% endif %}
+
+<!-- 공지 복사 모달 -->
+<div id="noticeModal" class="modal" style="display:none" onclick="if(event.target===this)closeNoticeModal()">
+    <div class="modal-content">
+        <h2>공지 복사</h2>
+        <textarea id="noticeText" rows="12" readonly style="width:100%;font-size:0.95rem;"></textarea>
+        <div class="form-actions" style="margin-top:0.8rem;">
+            <button class="btn btn-add" onclick="copyFromTextarea()">복사하기</button>
+            <button class="btn btn-delete" onclick="closeNoticeModal()">닫기</button>
+        </div>
+    </div>
+</div>
 
 <!-- 수정 모달 -->
 <div id="editModal" class="modal" style="display:none">
@@ -143,6 +153,33 @@
 
 {% block scripts %}
 <script>
+function copyNotice(planId) {
+    fetch('/api/lesson-plan/notice/' + planId)
+        .then(r => r.json())
+        .then(data => {
+            if (data.message) {
+                navigator.clipboard.writeText(data.message).then(() => {
+                    alert('공지가 클립보드에 복사되었습니다!\n카카오톡에 붙여넣기 하세요.');
+                }).catch(() => {
+                    // fallback: 모달로 보여주기
+                    document.getElementById('noticeText').value = data.message;
+                    document.getElementById('noticeModal').style.display = 'flex';
+                });
+            }
+        });
+}
+
+function closeNoticeModal() {
+    document.getElementById('noticeModal').style.display = 'none';
+}
+
+function copyFromTextarea() {
+    var ta = document.getElementById('noticeText');
+    ta.select();
+    document.execCommand('copy');
+    alert('복사되었습니다!');
+}
+
 function editPlan(row) {
     document.getElementById('editForm').action = '/lesson-plan/edit/' + row.dataset.id;
     document.getElementById('editDate').value = row.dataset.date;

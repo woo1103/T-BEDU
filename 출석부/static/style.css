@@ -570,6 +570,109 @@ th {
     justify-content: center;
 }
 
+/* 학생 상세 */
+.detail-info {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.info-grid .form-group input,
+.info-grid .form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
+.info-grid .form-group textarea {
+    resize: vertical;
+}
+
+/* 보고서 */
+.report-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.report-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid #2c3e50;
+}
+
+.print-title {
+    color: #2c3e50;
+    font-size: 1.2rem;
+}
+
+/* 인쇄용 스타일 */
+@media print {
+    .navbar, .filter-form, .no-print, .form-actions, .btn-logout, .nav-user, .flash-msg {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        font-size: 11pt;
+    }
+
+    .container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .manage-section, .report-container, .detail-info {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+    }
+
+    table {
+        box-shadow: none;
+        font-size: 10pt;
+    }
+
+    th, td {
+        border: 1px solid #333;
+        padding: 0.4rem;
+    }
+
+    .report-header {
+        text-align: center;
+        border-bottom: 2px solid #000;
+        margin-bottom: 1rem;
+    }
+
+    .print-title {
+        font-size: 16pt;
+        color: #000;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 16pt;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card, .manage-section {
+        page-break-inside: avoid;
+    }
+}
+
 /* 모바일 대응 */
 @media (max-width: 600px) {
     .navbar {
