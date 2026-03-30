@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>수업계획서</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-msg">
+    {% for msg in messages %}
+    <p>{{ msg }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<form class="filter-form" method="get" action="{{ url_for('lesson_plan') }}">
+    <div class="filter-row">
+        <label>지점:
+            <select name="branch_id" onchange="this.form.querySelector('[name=class_id]').value=''; this.form.submit()">
+                <option value="">선택</option>
+                {% for b in branches %}
+                <option value="{{ b.id }}" {% if sel_branch|string == b.id|string %}selected{% endif %}>{{ b.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>반:
+            <select name="class_id" onchange="this.form.submit()">
+                <option value="">선택</option>
+                {% for c in classes %}
+                <option value="{{ c.id }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>날짜:
+            <input type="date" name="date" value="{{ sel_date }}" onchange="this.form.submit()">
+        </label>
+    </div>
+</form>
+
+{% if sel_class %}
+<!-- 수업계획서 작성 폼 -->
+<div class="manage-section">
+    <h2>새 수업계획서 작성</h2>
+    <form method="post" action="{{ url_for('lesson_plan_add') }}">
+        <input type="hidden" name="branch_id" value="{{ sel_branch }}">
+        <input type="hidden" name="class_id" value="{{ sel_class }}">
+        <div class="plan-form">
+            <div class="form-group">
+                <label>날짜</label>
+                <input type="date" name="date" required>
+            </div>
+            <div class="form-group">
+                <label>수업내용</label>
+                <textarea name="content" rows="3" placeholder="수업 내용을 입력하세요" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>숙제</label>
+                <textarea name="homework" rows="2" placeholder="숙제를 입력하세요"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-add">등록</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 수업계획서 목록 -->
+{% if plans %}
+<div class="manage-section">
+    <h2>수업계획서 목록</h2>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>날짜</th>
+                    <th>담당자</th>
+                    <th>수업내용</th>
+                    <th>숙제</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for p in plans %}
+            <tr data-id="{{ p.id }}" data-date="{{ p.date }}" data-content="{{ p.content|e }}" data-homework="{{ p.homework|e }}">
+                <td class="plan-date">{{ p.date }}</td>
+                <td>{{ p.teacher_name }}</td>
+                <td class="plan-content">{{ p.content }}</td>
+                <td class="plan-homework">{{ p.homework }}</td>
+                <td class="plan-actions">
+                    {% if p.homework %}
+                    <form method="post" action="{{ url_for('lesson_plan_send', id=p.id) }}" style="display:inline" onsubmit="return confirm('숙제를 카카오톡으로 전송하시겠습니까?')">
+                        <button type="submit" class="btn btn-kakao">카톡 전송</button>
+                    </form>
+                    {% endif %}
+                    {% if session.get('role') == 'admin' or session.get('user_id') == p.user_id %}
+                    <button class="btn btn-edit" onclick="editPlan(this.closest('tr'))">수정</button>
+                    <form method="post" action="{{ url_for('lesson_plan_delete', id=p.id) }}" style="display:inline" onsubmit="return confirm('삭제하시겠습니까?')">
+                        <button type="submit" class="btn btn-delete">삭제</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<p class="empty-msg">등록된 수업계획서가 없습니다.</p>
+{% endif %}
+
+{% else %}
+<p class="empty-msg">지점과 반을 선택하세요.</p>
+{% endif %}
+
+<!-- 수정 모달 -->
+<div id="editModal" class="modal" style="display:none">
+    <div class="modal-content">
+        <h2>수업계획서 수정</h2>
+        <form id="editForm" method="post">
+            <input type="hidden" name="branch_id" value="{{ sel_branch }}">
+            <input type="hidden" name="class_id" value="{{ sel_class }}">
+            <div class="form-group">
+                <label>날짜</label>
+                <input type="date" name="date" id="editDate" required>
+            </div>
+            <div class="form-group">
+                <label>수업내용</label>
+                <textarea name="content" id="editContent" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>숙제</label>
+                <textarea name="homework" id="editHomework" rows="2"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-save">저장</button>
+                <button type="button" class="btn btn-delete" onclick="closeModal()">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function editPlan(row) {
+    document.getElementById('editForm').action = '/lesson-plan/edit/' + row.dataset.id;
+    document.getElementById('editDate').value = row.dataset.date;
+    document.getElementById('editContent').value = row.dataset.content;
+    document.getElementById('editHomework').value = row.dataset.homework;
+    document.getElementById('editModal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
+
+document.getElementById('editModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+</script>
+{% endblock %}

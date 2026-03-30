@@ -420,6 +420,156 @@ th {
     color: white;
 }
 
+/* 플래시 메시지 */
+.flash-msg {
+    background: #d4edda;
+    color: #155724;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    border: 1px solid #c3e6cb;
+}
+
+.flash-msg p {
+    margin: 0;
+}
+
+/* 카카오 버튼 */
+.btn-kakao {
+    background: #FEE500;
+    color: #3C1E1E;
+    font-weight: 600;
+}
+
+.btn-kakao:hover {
+    background: #E6CF00;
+}
+
+/* 수업계획서 */
+.plan-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.plan-form textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.plan-form input[type="date"] {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.plan-content, .plan-homework {
+    white-space: pre-wrap;
+    max-width: 300px;
+}
+
+.plan-date {
+    white-space: nowrap;
+}
+
+.plan-actions {
+    white-space: nowrap;
+}
+
+.plan-actions .btn {
+    margin: 0.1rem;
+}
+
+/* 결산서 */
+.settlement-form .filter-row {
+    margin-bottom: 0.8rem;
+}
+
+.settlement-form input[type="number"] {
+    width: 80px;
+    padding: 0.4rem 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.text-blue {
+    color: #2980b9;
+    font-weight: 600;
+}
+
+.text-red {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.row-total {
+    background: #f0f4f8;
+    font-weight: bold;
+}
+
+.row-total td {
+    border-top: 2px solid #ccc;
+}
+
+/* 모달 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.modal-content h2 {
+    margin-bottom: 1rem;
+}
+
+.modal-content .form-group {
+    margin-bottom: 1rem;
+}
+
+.modal-content textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.modal-content input[type="date"] {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.modal-content .form-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
 /* 모바일 대응 */
 @media (max-width: 600px) {
     .navbar {

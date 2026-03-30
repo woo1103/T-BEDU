@@ -76,6 +76,42 @@ def init_db():
             FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE,
             UNIQUE(student_id, date)
         );
+
+        CREATE TABLE IF NOT EXISTS lesson_plan (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            class_id INTEGER NOT NULL,
+            date TEXT NOT NULL,
+            content TEXT NOT NULL DEFAULT '',
+            homework TEXT NOT NULL DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+            FOREIGN KEY (class_id) REFERENCES class(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS settings (
+            key TEXT PRIMARY KEY,
+            value TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS settlement (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            year INTEGER NOT NULL,
+            month INTEGER NOT NULL,
+            branch_id INTEGER NOT NULL,
+            class_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            start_count INTEGER NOT NULL DEFAULT 0,
+            new_count INTEGER NOT NULL DEFAULT 0,
+            leave_count INTEGER NOT NULL DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (branch_id) REFERENCES branch(id) ON DELETE CASCADE,
+            FOREIGN KEY (class_id) REFERENCES class(id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+            UNIQUE(year, month, class_id, user_id)
+        );
     ''')
 
     conn.commit()
