@@ -1,7 +1,7 @@
 {
     "name": "TNBEDU",
     "short_name": "TNBEDU",
-    "description": "TNB Hub - 학원 관리 플랫폼",
+    "description": "T&B Hub - 학원 관리 플랫폼",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#f5f7fa",
