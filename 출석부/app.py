@@ -183,8 +183,11 @@ def student_add():
         if allowed is not None and int(class_id) not in allowed:
             db.close()
             return redirect(url_for('my_students'))
-        db.execute('INSERT INTO student (name, class_id, branch_id) VALUES (?, ?, ?)',
-                   (name, class_id, branch_id))
+        cursor = db.execute('INSERT INTO student (name, class_id, branch_id, status) VALUES (?, ?, ?, ?)',
+                   (name, class_id, branch_id, 'active'))
+        student_id = cursor.lastrowid
+        db.execute('INSERT INTO student_change_log (student_id, change_type, change_date) VALUES (?, ?, ?)',
+                   (student_id, 'new', date.today().isoformat()))
         db.commit()
         db.close()
     if session.get('role') == 'admin':
@@ -223,12 +226,122 @@ def student_delete(id):
     if allowed is not None and student and student['class_id'] not in allowed:
         db.close()
         return redirect(url_for('my_students'))
+    db.execute('INSERT INTO student_change_log (student_id, change_type, change_date) VALUES (?, ?, ?)',
+               (id, 'delete', date.today().isoformat()))
     db.execute('DELETE FROM student WHERE id = ?', (id,))
     db.commit()
     db.close()
     if session.get('role') == 'admin':
         return redirect(url_for('manage'))
     return redirect(url_for('my_students'))
+
+
+@app.route('/student/leave/<int:id>', methods=['POST'])
+@login_required
+def student_leave(id):
+    """학생 휴원 처리"""
+    db = get_db()
+    allowed = get_user_classes(db)
+    student = db.execute('SELECT * FROM student WHERE id = ?', (id,)).fetchone()
+    if not student:
+        db.close()
+        return redirect(url_for('index'))
+    if allowed is not None and student['class_id'] not in allowed:
+        db.close()
+        return redirect(url_for('my_students'))
+    db.execute('UPDATE student SET status = ? WHERE id = ?', ('on_leave', id))
+    db.execute('INSERT INTO student_change_log (student_id, change_type, change_date) VALUES (?, ?, ?)',
+               (id, 'leave', date.today().isoformat()))
+    db.commit()
+    db.close()
+    flash(f'{student["name"]} 학생이 휴원 처리되었습니다.')
+    if session.get('role') == 'admin':
+        return redirect(url_for('manage'))
+    return redirect(url_for('my_students'))
+
+
+@app.route('/student/reregister/<int:id>', methods=['POST'])
+@login_required
+def student_reregister(id):
+    """휴원 학생 재등록 처리"""
+    db = get_db()
+    allowed = get_user_classes(db)
+    student = db.execute('SELECT * FROM student WHERE id = ?', (id,)).fetchone()
+    if not student:
+        db.close()
+        return redirect(url_for('index'))
+    if allowed is not None and student['class_id'] not in allowed:
+        db.close()
+        return redirect(url_for('my_students'))
+    db.execute('UPDATE student SET status = ? WHERE id = ?', ('active', id))
+    db.execute('INSERT INTO student_change_log (student_id, change_type, change_date) VALUES (?, ?, ?)',
+               (id, 're_register', date.today().isoformat()))
+    db.commit()
+    db.close()
+    flash(f'{student["name"]} 학생이 재등록 처리되었습니다.')
+    if session.get('role') == 'admin':
+        return redirect(url_for('manage'))
+    return redirect(url_for('my_students'))
+
+
+# ─── 변경이력 관리 (관리자) ───
+@app.route('/student/change-log/<int:student_id>')
+@login_required
+def student_change_log(student_id):
+    db = get_db()
+    logs = db.execute('''
+        SELECT student_change_log.*, student.name as student_name
+        FROM student_change_log
+        JOIN student ON student_change_log.student_id = student.id
+        WHERE student_id = ?
+        ORDER BY change_date DESC, created_at DESC
+    ''', (student_id,)).fetchall()
+    student = db.execute('SELECT * FROM student WHERE id = ?', (student_id,)).fetchone()
+    db.close()
+    return jsonify([dict(l) for l in logs])
+
+
+@app.route('/student/change-log/delete/<int:id>', methods=['POST'])
+@admin_required
+def change_log_delete(id):
+    db = get_db()
+    db.execute('DELETE FROM student_change_log WHERE id = ?', (id,))
+    db.commit()
+    db.close()
+    flash('변경이력이 삭제되었습니다.')
+    return redirect(request.referrer or url_for('index'))
+
+
+@app.route('/student/change-log/edit/<int:id>', methods=['POST'])
+@admin_required
+def change_log_edit(id):
+    change_type = request.form.get('change_type', '').strip()
+    change_date = request.form.get('change_date', '').strip()
+    notes = request.form.get('notes', '').strip()
+    if change_type and change_date:
+        db = get_db()
+        db.execute('UPDATE student_change_log SET change_type=?, change_date=?, notes=? WHERE id=?',
+                   (change_type, change_date, notes, id))
+        db.commit()
+        db.close()
+        flash('변경이력이 수정되었습니다.')
+    return redirect(request.referrer or url_for('index'))
+
+
+@app.route('/student/change-log/add/<int:student_id>', methods=['POST'])
+@admin_required
+def change_log_add(student_id):
+    change_type = request.form.get('change_type', '').strip()
+    change_date = request.form.get('change_date', '').strip()
+    notes = request.form.get('notes', '').strip()
+    if change_type and change_date:
+        db = get_db()
+        db.execute('INSERT INTO student_change_log (student_id, change_type, change_date, notes) VALUES (?, ?, ?, ?)',
+                   (student_id, change_type, change_date, notes))
+        db.commit()
+        db.close()
+        flash('변경이력이 추가되었습니다.')
+    return redirect(request.referrer or url_for('index'))
 
 
 # ─── 담당자용 학생 관리 ───
@@ -569,7 +682,7 @@ def attendance():
                 db.close()
                 return redirect(url_for('attendance'))
 
-            students = db.execute('SELECT * FROM student WHERE class_id = ? ORDER BY name',
+            students = db.execute("SELECT * FROM student WHERE class_id = ? AND status = 'active' ORDER BY name",
                                   (sel_class,)).fetchall()
             for s in students:
                 row = db.execute('SELECT * FROM attendance WHERE student_id = ? AND date = ?',
@@ -749,8 +862,31 @@ def student_detail(id):
         ORDER BY year DESC, month DESC
     ''', (id,)).fetchall()
 
+    scores_raw = db.execute('''
+        SELECT * FROM student_score WHERE student_id = ?
+        ORDER BY year DESC, semester DESC, exam_type, mock_month
+    ''', (id,)).fetchall()
+    scores = [dict(s) for s in scores_raw]
+
+    # 그래프용 (시간순 오름차순)
+    scores_chart = db.execute('''
+        SELECT * FROM student_score WHERE student_id = ?
+        ORDER BY year, semester, exam_type, mock_month
+    ''', (id,)).fetchall()
+    scores_chart = [dict(s) for s in scores_chart]
+
+    change_logs = db.execute('''
+        SELECT * FROM student_change_log WHERE student_id = ?
+        ORDER BY change_date DESC, created_at DESC
+    ''', (id,)).fetchall()
+
+    # 고3 여부 확인 (반 이름에 '고3' 포함)
+    is_senior = student['class_name'] and '고3' in student['class_name']
+
     db.close()
     return render_template('student_detail.html', student=student, consultations=consultations,
+                           scores=scores, scores_chart=scores_chart,
+                           change_logs=change_logs, is_senior=is_senior,
                            now_year=date.today().year, now_month=date.today().month)
 
 
@@ -816,6 +952,83 @@ def consultation_delete(student_id, id):
     db.close()
     flash('상담보고서가 삭제되었습니다.')
     return redirect(url_for('student_detail', id=student_id))
+
+
+# ─── 성적 관리 ───
+@app.route('/student/<int:student_id>/score/add', methods=['POST'])
+@login_required
+def score_add(student_id):
+    year = int(request.form.get('year'))
+    semester = int(request.form.get('semester'))
+    exam_type = request.form.get('exam_type', '').strip()
+    subject = request.form.get('subject', '수학').strip()
+    expected_score = request.form.get('expected_score', '').strip()
+    target_score = request.form.get('target_score', '').strip()
+    actual_score = request.form.get('actual_score', '').strip()
+    grade = request.form.get('grade', '').strip()
+    mock_month = request.form.get('mock_month', '').strip()
+
+    db = get_db()
+    db.execute('''
+        INSERT INTO student_score (student_id, year, semester, exam_type, subject,
+                                   expected_score, target_score, actual_score, grade, mock_month)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (student_id, year, semester, exam_type, subject,
+          float(expected_score) if expected_score else None,
+          float(target_score) if target_score else None,
+          float(actual_score) if actual_score else None,
+          grade,
+          int(mock_month) if mock_month else None))
+    db.commit()
+    db.close()
+    flash('성적이 등록되었습니다.')
+    return redirect(url_for('student_detail', id=student_id))
+
+
+@app.route('/student/<int:student_id>/score/edit/<int:id>', methods=['POST'])
+@login_required
+def score_edit(student_id, id):
+    expected_score = request.form.get('expected_score', '').strip()
+    target_score = request.form.get('target_score', '').strip()
+    actual_score = request.form.get('actual_score', '').strip()
+    grade = request.form.get('grade', '').strip()
+
+    db = get_db()
+    db.execute('''
+        UPDATE student_score SET expected_score=?, target_score=?, actual_score=?, grade=?,
+               updated_at=CURRENT_TIMESTAMP WHERE id=?
+    ''', (float(expected_score) if expected_score else None,
+          float(target_score) if target_score else None,
+          float(actual_score) if actual_score else None,
+          grade, id))
+    db.commit()
+    db.close()
+    flash('성적이 수정되었습니다.')
+    return redirect(url_for('student_detail', id=student_id))
+
+
+@app.route('/student/<int:student_id>/score/delete/<int:id>', methods=['POST'])
+@login_required
+def score_delete(student_id, id):
+    db = get_db()
+    db.execute('DELETE FROM student_score WHERE id = ?', (id,))
+    db.commit()
+    db.close()
+    flash('성적이 삭제되었습니다.')
+    return redirect(url_for('student_detail', id=student_id))
+
+
+@app.route('/api/student/<int:student_id>/scores')
+@login_required
+def api_student_scores(student_id):
+    """성적 데이터 JSON API (그래프용)"""
+    db = get_db()
+    scores = db.execute('''
+        SELECT * FROM student_score WHERE student_id = ?
+        ORDER BY year, semester, exam_type, mock_month
+    ''', (student_id,)).fetchall()
+    db.close()
+    return jsonify([dict(s) for s in scores])
 
 
 # ─── 보고서 센터 ───
@@ -1021,6 +1234,32 @@ def settlement():
         branch_monthly[bid]['quarterly'] = {q: add_leave_rate(d) for q, d in calc_quarterly(branch_monthly[bid]['months']).items()}
         branch_monthly[bid]['yearly'] = add_leave_rate(calc_yearly(branch_monthly[bid]['months']))
 
+    # 변경이력 기반 자동 집계 (참고용)
+    change_log_stats = {}
+    change_logs = db.execute('''
+        SELECT student_change_log.*, student.class_id, student.branch_id
+        FROM student_change_log
+        JOIN student ON student_change_log.student_id = student.id
+        WHERE student_change_log.change_date LIKE ?
+    ''', (f"{sel_year}%",)).fetchall()
+
+    for log in change_logs:
+        if not log['class_id']:
+            continue
+        try:
+            log_month = int(log['change_date'].split('-')[1])
+        except (IndexError, ValueError):
+            continue
+        key = (log_month, log['class_id'])
+        if key not in change_log_stats:
+            change_log_stats[key] = {'new': 0, 'leave': 0, 're_register': 0}
+        if log['change_type'] == 'new':
+            change_log_stats[key]['new'] += 1
+        elif log['change_type'] == 'leave':
+            change_log_stats[key]['leave'] += 1
+        elif log['change_type'] == 're_register':
+            change_log_stats[key]['re_register'] += 1
+
     # 입력용 데이터
     classes = db.execute('''
         SELECT class.*, branch.name as branch_name, branch.id as branch_id
@@ -1043,6 +1282,7 @@ def settlement():
                            branches=branches, classes=classes, teachers=teachers,
                            teacher_monthly=teacher_monthly, branch_monthly=branch_monthly,
                            existing=existing, settlements=settlements,
+                           change_log_stats=change_log_stats,
                            sel_year=sel_year, sel_view=sel_view, years=years)
 
 

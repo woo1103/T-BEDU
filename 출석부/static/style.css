@@ -599,6 +599,60 @@ th {
     resize: vertical;
 }
 
+/* 상태 배지 */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-leave {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-reregister {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.badge-delete {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* 휴원 버튼 */
+.btn-leave {
+    background: #f39c12;
+    color: white;
+}
+
+.btn-leave:hover {
+    background: #e67e22;
+}
+
+/* 휴원 학생 행 */
+.row-leave {
+    background: #fff9e6;
+    opacity: 0.85;
+}
+
+/* 성적 입력 폼 */
+.score-form .filter-row input[type="number"],
+.score-form .filter-row input[type="text"] {
+    padding: 0.4rem 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
 /* 보고서 */
 .report-container {
     background: white;

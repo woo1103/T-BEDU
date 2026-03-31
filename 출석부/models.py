@@ -44,6 +44,7 @@ def init_db():
             phone TEXT DEFAULT '',
             parent_phone TEXT DEFAULT '',
             notes TEXT DEFAULT '',
+            status TEXT NOT NULL DEFAULT 'active',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (class_id) REFERENCES class(id) ON DELETE SET NULL,
             FOREIGN KEY (branch_id) REFERENCES branch(id) ON DELETE SET NULL
@@ -99,6 +100,33 @@ def init_db():
             value TEXT NOT NULL
         );
 
+        CREATE TABLE IF NOT EXISTS student_change_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER NOT NULL,
+            change_type TEXT NOT NULL,
+            change_date TEXT NOT NULL,
+            notes TEXT DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS student_score (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER NOT NULL,
+            year INTEGER NOT NULL,
+            semester INTEGER NOT NULL,
+            exam_type TEXT NOT NULL,
+            subject TEXT NOT NULL DEFAULT '수학',
+            expected_score REAL DEFAULT NULL,
+            target_score REAL DEFAULT NULL,
+            actual_score REAL DEFAULT NULL,
+            grade TEXT DEFAULT '',
+            mock_month INTEGER DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE
+        );
+
         CREATE TABLE IF NOT EXISTS parent_consultation (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             student_id INTEGER NOT NULL,
@@ -147,6 +175,10 @@ def init_db():
         pass
     try:
         cursor.execute("ALTER TABLE student ADD COLUMN notes TEXT DEFAULT ''")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN status TEXT NOT NULL DEFAULT 'active'")
     except Exception:
         pass
     conn.commit()

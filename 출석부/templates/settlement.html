@@ -82,6 +82,35 @@
     </form>
 </div>
 
+<!-- 변경이력 기반 자동 집계 (참고) -->
+{% if change_log_stats %}
+<div class="manage-section">
+    <h2>{{ sel_year }}년 변경이력 자동 집계 (참고용)</h2>
+    <p style="color:#888; font-size:0.9rem; margin-bottom:1rem;">학생 등록/휴원/재등록 버튼 사용 시 자동 기록됩니다. 결산 입력 시 참고하세요.</p>
+    <div class="table-responsive">
+        <table>
+            <thead><tr><th>월</th><th>반</th><th>신규</th><th>휴원</th><th>재등록</th><th>순증</th></tr></thead>
+            <tbody>
+            {% for (month, class_id), stats in change_log_stats.items()|sort %}
+            <tr>
+                <td>{{ month }}월</td>
+                <td>
+                    {% for c in classes %}{% if c.id == class_id %}{{ c.branch_name }} - {{ c.name }}{% endif %}{% endfor %}
+                </td>
+                <td class="text-blue">+{{ stats.new }}</td>
+                <td class="text-red">-{{ stats.leave }}</td>
+                <td class="text-blue">+{{ stats.re_register }}</td>
+                <td class="{% if stats.new + stats.re_register - stats.leave >= 0 %}text-blue{% else %}text-red{% endif %}">
+                    {{ stats.new + stats.re_register - stats.leave }}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
 <!-- 입력된 결산 데이터 목록 -->
 {% if settlements %}
 <div class="manage-section">

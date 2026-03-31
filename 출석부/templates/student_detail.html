@@ -13,7 +13,16 @@
 {% endwith %}
 
 <div class="detail-info">
-    <p><strong>지점:</strong> {{ student.branch_name or '-' }} | <strong>반:</strong> {{ student.class_name or '-' }}</p>
+    <p>
+        <strong>지점:</strong> {{ student.branch_name or '-' }} |
+        <strong>반:</strong> {{ student.class_name or '-' }} |
+        <strong>상태:</strong>
+        {% if student.status == 'on_leave' %}
+        <span class="badge badge-leave">휴원</span>
+        {% else %}
+        <span class="badge badge-active">재원</span>
+        {% endif %}
+    </p>
 </div>
 
 <!-- 인적사항 -->
@@ -43,6 +52,176 @@
         </div>
     </form>
 </section>
+
+<!-- 성적 관리 -->
+<section class="manage-section">
+    <h2>성적 관리</h2>
+
+    <!-- 성적 입력 -->
+    <form method="post" action="{{ url_for('score_add', student_id=student.id) }}" class="score-form">
+        <div class="filter-row">
+            <label>연도:
+                <select name="year">
+                    {% for y in range(2024, 2028) %}
+                    <option value="{{ y }}" {% if y == now_year %}selected{% endif %}>{{ y }}년</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>학기:
+                <select name="semester" id="scoreSemester">
+                    <option value="1">1학기</option>
+                    <option value="2">2학기</option>
+                </select>
+            </label>
+            <label>시험유형:
+                <select name="exam_type" id="scoreExamType" onchange="toggleMockMonth()">
+                    <option value="midterm">중간고사</option>
+                    <option value="final">기말고사</option>
+                    {% if is_senior %}
+                    <option value="mock">모의고사</option>
+                    {% endif %}
+                </select>
+            </label>
+            {% if is_senior %}
+            <label id="mockMonthLabel" style="display:none;">월:
+                <select name="mock_month">
+                    {% for m in range(1, 13) %}
+                    <option value="{{ m }}">{{ m }}월</option>
+                    {% endfor %}
+                </select>
+            </label>
+            {% endif %}
+        </div>
+        <div class="filter-row" style="margin-top:0.5rem;">
+            <label>과목:
+                <input type="text" name="subject" value="수학" style="width:80px;">
+            </label>
+            <label>예상점수:
+                <input type="number" name="expected_score" step="0.1" min="0" max="100" style="width:80px;" placeholder="-">
+            </label>
+            <label>목표점수:
+                <input type="number" name="target_score" step="0.1" min="0" max="100" style="width:80px;" placeholder="-">
+            </label>
+            <label>실제점수:
+                <input type="number" name="actual_score" step="0.1" min="0" max="100" style="width:80px;" placeholder="-">
+            </label>
+            <label>등급:
+                <select name="grade" style="width:70px;">
+                    <option value="">-</option>
+                    <option value="1">1등급</option>
+                    <option value="2">2등급</option>
+                    <option value="3">3등급</option>
+                    <option value="4">4등급</option>
+                    <option value="5">5등급</option>
+                    <option value="6">6등급</option>
+                    <option value="7">7등급</option>
+                    <option value="8">8등급</option>
+                    <option value="9">9등급</option>
+                </select>
+            </label>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-add">성적 등록</button>
+        </div>
+    </form>
+
+    <!-- 성적 목록 -->
+    {% if scores %}
+    <div class="table-responsive" style="margin-top:1.5rem;">
+        <table>
+            <thead>
+                <tr>
+                    <th>연도</th><th>학기</th><th>시험</th><th>과목</th>
+                    <th>예상</th><th>목표</th><th>실제</th><th>등급</th><th>관리</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for s in scores %}
+            <tr>
+                <td>{{ s.year }}</td>
+                <td>{{ s.semester }}학기</td>
+                <td>
+                    {% if s.exam_type == 'midterm' %}중간고사
+                    {% elif s.exam_type == 'final' %}기말고사
+                    {% elif s.exam_type == 'mock' %}모의고사({{ s.mock_month }}월)
+                    {% endif %}
+                </td>
+                <td>{{ s.subject }}</td>
+                <td>{{ s.expected_score if s.expected_score is not none else '-' }}</td>
+                <td>{{ s.target_score if s.target_score is not none else '-' }}</td>
+                <td><strong>{{ s.actual_score if s.actual_score is not none else '-' }}</strong></td>
+                <td>{{ s.grade + '등급' if s.grade else '-' }}</td>
+                <td style="white-space:nowrap;">
+                    <button class="btn btn-edit" onclick="openScoreEditModal({{ s.id }}, {{ s.expected_score if s.expected_score is not none else 'null' }}, {{ s.target_score if s.target_score is not none else 'null' }}, {{ s.actual_score if s.actual_score is not none else 'null' }}, '{{ s.grade }}')">수정</button>
+                    <form method="post" action="{{ url_for('score_delete', student_id=student.id, id=s.id) }}"
+                          style="display:inline" onsubmit="return confirm('삭제하시겠습니까?')">
+                        <button type="submit" class="btn btn-delete">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-msg" style="margin-top:1rem;">등록된 성적이 없습니다.</p>
+    {% endif %}
+</section>
+
+<!-- 성적 수정 모달 -->
+<div id="scoreEditModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h2>성적 수정</h2>
+        <form method="post" id="scoreEditForm">
+            <div class="form-group">
+                <label>예상점수</label>
+                <input type="number" name="expected_score" id="editExpected" step="0.1" min="0" max="100">
+            </div>
+            <div class="form-group">
+                <label>목표점수</label>
+                <input type="number" name="target_score" id="editTarget" step="0.1" min="0" max="100">
+            </div>
+            <div class="form-group">
+                <label>실제점수</label>
+                <input type="number" name="actual_score" id="editActual" step="0.1" min="0" max="100">
+            </div>
+            <div class="form-group">
+                <label>등급</label>
+                <select name="grade" id="editGrade">
+                    <option value="">-</option>
+                    <option value="1">1등급</option>
+                    <option value="2">2등급</option>
+                    <option value="3">3등급</option>
+                    <option value="4">4등급</option>
+                    <option value="5">5등급</option>
+                    <option value="6">6등급</option>
+                    <option value="7">7등급</option>
+                    <option value="8">8등급</option>
+                    <option value="9">9등급</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-save">저장</button>
+                <button type="button" class="btn btn-delete" onclick="closeScoreEditModal()">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 성적 추이 그래프 -->
+{% if scores %}
+<section class="manage-section">
+    <h2>성적 추이 그래프</h2>
+    <div style="max-width:800px; margin:0 auto;">
+        <canvas id="scoreChart" height="300"></canvas>
+    </div>
+    {% if scores|selectattr('grade')|list %}
+    <div style="max-width:800px; margin:1.5rem auto 0;">
+        <canvas id="gradeChart" height="250"></canvas>
+    </div>
+    {% endif %}
+</section>
+{% endif %}
 
 <!-- 학부모 상담보고서 -->
 <section class="manage-section">
@@ -102,7 +281,263 @@
     {% endif %}
 </section>
 
+<!-- 변경이력 -->
+<section class="manage-section">
+    <h2>변경이력</h2>
+
+    {% if session.role == 'admin' %}
+    <form method="post" action="{{ url_for('change_log_add', student_id=student.id) }}" class="inline-form" style="margin-bottom:1rem;">
+        <select name="change_type" required>
+            <option value="">유형 선택</option>
+            <option value="new">신규등록</option>
+            <option value="leave">휴원</option>
+            <option value="re_register">재등록</option>
+        </select>
+        <input type="date" name="change_date" required>
+        <input type="text" name="notes" placeholder="비고 (선택)">
+        <button type="submit" class="btn btn-add">이력 추가</button>
+    </form>
+    {% endif %}
+
+    {% if change_logs %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>날짜</th><th>유형</th><th>비고</th>
+                {% if session.role == 'admin' %}<th>관리</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for l in change_logs %}
+            <tr>
+                <td>{{ l.change_date }}</td>
+                <td>
+                    {% if l.change_type == 'new' %}<span class="badge badge-active">신규등록</span>
+                    {% elif l.change_type == 'leave' %}<span class="badge badge-leave">휴원</span>
+                    {% elif l.change_type == 're_register' %}<span class="badge badge-reregister">재등록</span>
+                    {% elif l.change_type == 'delete' %}<span class="badge badge-delete">삭제</span>
+                    {% else %}{{ l.change_type }}
+                    {% endif %}
+                </td>
+                <td>{{ l.notes or '-' }}</td>
+                {% if session.role == 'admin' %}
+                <td style="white-space:nowrap;">
+                    <form method="post" action="{{ url_for('change_log_delete', id=l.id) }}"
+                          style="display:inline" onsubmit="return confirm('이력을 삭제하시겠습니까?')">
+                        <button type="submit" class="btn btn-delete">삭제</button>
+                    </form>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-msg">변경이력이 없습니다.</p>
+    {% endif %}
+</section>
+
 <div class="form-actions" style="margin-top:1rem;">
     <button class="btn btn-save" onclick="window.print()">이 페이지 PDF 출력</button>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+// 모의고사 월 표시 토글
+function toggleMockMonth() {
+    var sel = document.getElementById('scoreExamType');
+    var label = document.getElementById('mockMonthLabel');
+    if (label) {
+        label.style.display = (sel.value === 'mock') ? '' : 'none';
+    }
+}
+
+// 성적 수정 모달
+function openScoreEditModal(scoreId, expected, target, actual, grade) {
+    document.getElementById('scoreEditForm').action = '/student/{{ student.id }}/score/edit/' + scoreId;
+    document.getElementById('editExpected').value = (expected !== null) ? expected : '';
+    document.getElementById('editTarget').value = (target !== null) ? target : '';
+    document.getElementById('editActual').value = (actual !== null) ? actual : '';
+    document.getElementById('editGrade').value = grade || '';
+    document.getElementById('scoreEditModal').style.display = 'flex';
+}
+
+function closeScoreEditModal() {
+    document.getElementById('scoreEditModal').style.display = 'none';
+}
+
+// 성적 그래프
+{% if scores %}
+(function() {
+    var scores = {{ scores_chart|tojson }};
+
+    // 정규시험만 (중간/기말)
+    var regularScores = scores.filter(function(s) { return s.exam_type !== 'mock'; });
+    var mockScores = scores.filter(function(s) { return s.exam_type === 'mock'; });
+
+    // 라벨 생성
+    var labels = regularScores.map(function(s) {
+        var examName = s.exam_type === 'midterm' ? '중간' : '기말';
+        return s.year + ' ' + s.semester + '학기 ' + examName;
+    });
+
+    if (labels.length > 0) {
+        var ctx = document.getElementById('scoreChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: '예상점수',
+                        data: regularScores.map(function(s) { return s.expected_score; }),
+                        borderColor: '#f39c12',
+                        backgroundColor: 'rgba(243,156,18,0.1)',
+                        borderDash: [5, 5],
+                        tension: 0.3,
+                        spanGaps: true
+                    },
+                    {
+                        label: '목표점수',
+                        data: regularScores.map(function(s) { return s.target_score; }),
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52,152,219,0.1)',
+                        borderDash: [10, 5],
+                        tension: 0.3,
+                        spanGaps: true
+                    },
+                    {
+                        label: '실제점수',
+                        data: regularScores.map(function(s) { return s.actual_score; }),
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231,76,60,0.15)',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        fill: true,
+                        spanGaps: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: '정규시험 성적 추이', font: { size: 16 } },
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: { min: 0, max: 100, title: { display: true, text: '점수' } }
+                }
+            }
+        });
+    }
+
+    // 등급 그래프
+    var gradeScores = scores.filter(function(s) { return s.grade; });
+    if (gradeScores.length > 0) {
+        var gradeLabels = gradeScores.map(function(s) {
+            if (s.exam_type === 'mock') return s.year + ' ' + s.mock_month + '월 모의';
+            var examName = s.exam_type === 'midterm' ? '중간' : '기말';
+            return s.year + ' ' + s.semester + '학기 ' + examName;
+        });
+        var gradeCtx = document.getElementById('gradeChart');
+        if (gradeCtx) {
+            new Chart(gradeCtx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: gradeLabels,
+                    datasets: [{
+                        label: '등급',
+                        data: gradeScores.map(function(s) { return parseInt(s.grade); }),
+                        backgroundColor: gradeScores.map(function(s) {
+                            var g = parseInt(s.grade);
+                            if (g <= 2) return '#27ae60';
+                            if (g <= 4) return '#3498db';
+                            if (g <= 6) return '#f39c12';
+                            return '#e74c3c';
+                        }),
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: { display: true, text: '등급 추이', font: { size: 16 } },
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { reverse: true, min: 1, max: 9, title: { display: true, text: '등급' },
+                             ticks: { stepSize: 1 } }
+                    }
+                }
+            });
+        }
+    }
+
+    // 모의고사 그래프 (고3)
+    if (mockScores.length > 0) {
+        // 모의고사 차트를 위한 캔버스 동적 생성
+        var section = document.querySelector('#scoreChart').closest('.manage-section');
+        var mockDiv = document.createElement('div');
+        mockDiv.style.maxWidth = '800px';
+        mockDiv.style.margin = '1.5rem auto 0';
+        var mockCanvas = document.createElement('canvas');
+        mockCanvas.height = 300;
+        mockDiv.appendChild(mockCanvas);
+        section.appendChild(mockDiv);
+
+        var mockLabels = mockScores.map(function(s) {
+            return s.year + '년 ' + s.mock_month + '월';
+        });
+
+        new Chart(mockCanvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: mockLabels,
+                datasets: [
+                    {
+                        label: '예상점수',
+                        data: mockScores.map(function(s) { return s.expected_score; }),
+                        borderColor: '#f39c12',
+                        borderDash: [5, 5],
+                        tension: 0.3,
+                        spanGaps: true
+                    },
+                    {
+                        label: '목표점수',
+                        data: mockScores.map(function(s) { return s.target_score; }),
+                        borderColor: '#3498db',
+                        borderDash: [10, 5],
+                        tension: 0.3,
+                        spanGaps: true
+                    },
+                    {
+                        label: '실제점수',
+                        data: mockScores.map(function(s) { return s.actual_score; }),
+                        borderColor: '#9b59b6',
+                        backgroundColor: 'rgba(155,89,182,0.15)',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        fill: true,
+                        spanGaps: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: '모의고사 성적 추이', font: { size: 16 } },
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: { min: 0, max: 100, title: { display: true, text: '점수' } }
+                }
+            }
+        });
+    }
+})();
+{% endif %}
+</script>
 {% endblock %}
