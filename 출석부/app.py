@@ -178,15 +178,32 @@ def class_delete(id):
 @login_required
 def student_add():
     name = request.form.get('name', '').strip()
-    class_id = request.form.get('class_id')
     branch_id = request.form.get('branch_id')
+    subject = request.form.get('subject', '').strip()
+    grade = request.form.get('grade', '').strip()
+    days = request.form.get('days', '').strip()
     change_type = request.form.get('change_type', 'new').strip()
-    if name and class_id and branch_id:
+    
+    if name and branch_id and subject and grade:
+        class_name = f"{grade} ({subject})"
+        if days:
+            class_name += f" ({days})"
+            
         db = get_db()
         allowed = get_user_classes(db)
-        if allowed is not None and int(class_id) not in allowed:
-            db.close()
-            return redirect(url_for('my_students'))
+        
+        class_row = db.execute('SELECT id FROM class WHERE name = ? AND branch_id = ?', (class_name, branch_id)).fetchone()
+        if class_row:
+            class_id = class_row['id']
+            if allowed is not None and int(class_id) not in allowed:
+                db.close()
+                return redirect(url_for('my_students'))
+        else:
+            cursor = db.execute('INSERT INTO class (name, branch_id) VALUES (?, ?)', (class_name, branch_id))
+            class_id = cursor.lastrowid
+            if allowed is not None:
+                db.execute('INSERT INTO user_class (user_id, class_id) VALUES (?, ?)', (session['user_id'], class_id))
+                
         cursor = db.execute('INSERT INTO student (name, class_id, branch_id, status) VALUES (?, ?, ?, ?)',
                    (name, class_id, branch_id, 'active'))
         student_id = cursor.lastrowid
