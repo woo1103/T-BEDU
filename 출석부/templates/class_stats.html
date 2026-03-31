@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>반 별 통계</h1>
+
+<form class="filter-form" method="get" action="{{ url_for('class_stats') }}">
+    <div class="filter-row">
+        <label>지점:
+            <select name="branch_id" onchange="this.form.querySelector('[name=class_id]').value=''; this.form.submit()">
+                <option value="">선택</option>
+                {% for b in branches %}
+                <option value="{{ b.id }}" {% if sel_branch|string == b.id|string %}selected{% endif %}>{{ b.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>반:
+            <select name="class_id" onchange="this.form.submit()">
+                <option value="">선택</option>
+                {% for c in classes %}
+                <option value="{{ c.id }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>년도:
+            <select name="year" onchange="this.form.submit()">
+                {% for y in years %}
+                <option value="{{ y }}" {% if sel_year|string == y|string %}selected{% endif %}>{{ y }}년</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>월:
+            <select name="month" onchange="this.form.submit()">
+                {% for m in months %}
+                <option value="{{ m }}" {% if sel_month|string == m|string %}selected{% endif %}>{{ m }}월</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+</form>
+
+{% if sel_class %}
+<!-- 월간 요약 -->
+{% set total_present = [] %}
+{% set total_late = [] %}
+{% set total_absent = [] %}
+{% set total_days = [] %}
+{% for day, data in daily_data.items() %}
+    {% if data.total > 0 %}
+        {% if total_days.append(1) %}{% endif %}
+        {% if total_present.append(data.present) %}{% endif %}
+        {% if total_late.append(data.late) %}{% endif %}
+        {% if total_absent.append(data.absent) %}{% endif %}
+    {% endif %}
+{% endfor %}
+
+<section class="manage-section">
+    <h2>{{ sel_year }}년 {{ sel_month }}월 요약 (재원 {{ students|length }}명)</h2>
+    <div style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:1rem;">
+        <div style="background:#e8f5e9; padding:0.8rem 1.2rem; border-radius:8px;">
+            <strong>수업일수</strong><br>{{ total_days|length }}일
+        </div>
+        <div style="background:#e3f2fd; padding:0.8rem 1.2rem; border-radius:8px;">
+            <strong>총 출석</strong><br>{{ total_present|sum }}명
+        </div>
+        <div style="background:#fff3e0; padding:0.8rem 1.2rem; border-radius:8px;">
+            <strong>총 지각</strong><br>{{ total_late|sum }}명
+        </div>
+        <div style="background:#ffebee; padding:0.8rem 1.2rem; border-radius:8px;">
+            <strong>총 결석</strong><br>{{ total_absent|sum }}명
+        </div>
+    </div>
+</section>
+
+<!-- 캘린더형 일별 통계 -->
+<section class="manage-section">
+    <h2>일별 현황</h2>
+    <div class="table-responsive">
+        <table class="calendar-table">
+            <thead>
+                <tr>
+                    <th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for week in month_days %}
+            <tr>
+                {% for day in week %}
+                <td class="cal-cell {% if day == 0 %}cal-empty{% elif day in daily_data %}cal-has-data{% endif %}">
+                    {% if day != 0 %}
+                    <div class="cal-day">{{ day }}</div>
+                    {% if day in daily_data %}
+                    {% set d = daily_data[day] %}
+                    <div class="cal-stats">
+                        {% if d.total > 0 %}
+                        <span class="cal-present" title="출석">{{ d.present }}</span>
+                        {% if d.late > 0 %}<span class="cal-late" title="지각">{{ d.late }}</span>{% endif %}
+                        {% if d.absent > 0 %}<span class="cal-absent" title="결석">{{ d.absent }}</span>{% endif %}
+                        {% endif %}
+                    </div>
+                    {% if d.content %}
+                    <div class="cal-content" title="{{ d.content }}">{{ d.content[:20] }}{% if d.content|length > 20 %}...{% endif %}</div>
+                    {% endif %}
+                    {% if d.homework %}
+                    <div class="cal-homework" title="{{ d.homework }}">HW: {{ d.homework[:15] }}{% if d.homework|length > 15 %}...{% endif %}</div>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- 리스트형 상세 -->
+<section class="manage-section">
+    <h2>상세 목록</h2>
+    {% set has_data = false %}
+    {% for day in range(1, 32) %}
+    {% if day in daily_data %}
+    {% set has_data = true %}
+    {% set d = daily_data[day] %}
+    <div style="border:1px solid #ddd; border-radius:8px; padding:0.8rem; margin-bottom:0.8rem; background:#fafbfc;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+            <strong style="font-size:1.05rem;">{{ sel_year }}-{{ '%02d'|format(sel_month|int) }}-{{ '%02d'|format(day) }}</strong>
+            <div>
+                {% if d.total > 0 %}
+                <span class="badge badge-active">출석 {{ d.present }}</span>
+                {% if d.late > 0 %}<span class="badge badge-leave">지각 {{ d.late }}</span>{% endif %}
+                {% if d.absent > 0 %}<span class="badge" style="background:#e53935;color:#fff;">결석 {{ d.absent }}</span>{% endif %}
+                {% endif %}
+            </div>
+        </div>
+        {% if d.content %}
+        <div style="margin-top:0.3rem; color:#333;"><strong>수업내용:</strong> {{ d.content }}</div>
+        {% endif %}
+        {% if d.homework %}
+        <div style="margin-top:0.3rem; color:#555;"><strong>숙제:</strong> {{ d.homework }}</div>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% if not daily_data %}
+    <p class="empty-msg">해당 월에 기록된 데이터가 없습니다.</p>
+    {% endif %}
+</section>
+
+{% else %}
+<p class="empty-msg">지점과 반을 선택하세요.</p>
+{% endif %}
+
+{% endblock %}

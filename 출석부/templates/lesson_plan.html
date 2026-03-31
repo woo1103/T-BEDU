@@ -48,9 +48,28 @@
                 <label>날짜</label>
                 <input type="date" name="date" required>
             </div>
+            <!-- 교육과정 선택 -->
+            <div class="form-group">
+                <label>교육과정에서 선택 (선택사항)</label>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <select id="curSubject" onchange="loadCurGrades()" style="width:100px;">
+                        <option value="">과목</option>
+                    </select>
+                    <select id="curGrade" onchange="loadCurMajors()" style="width:100px;">
+                        <option value="">학년</option>
+                    </select>
+                    <select id="curMajor" onchange="loadCurMinors()" style="width:200px;">
+                        <option value="">대단원</option>
+                    </select>
+                    <select id="curMinor" style="width:200px;">
+                        <option value="">소단원</option>
+                    </select>
+                    <button type="button" class="btn btn-add" onclick="applyCurriculum()">적용</button>
+                </div>
+            </div>
             <div class="form-group">
                 <label>수업내용</label>
-                <textarea name="content" rows="3" placeholder="수업 내용을 입력하세요" required></textarea>
+                <textarea name="content" id="addContent" rows="3" placeholder="수업 내용을 입력하세요 (교육과정에서 선택하거나 직접 입력)" required></textarea>
             </div>
             <div class="form-group">
                 <label>숙제</label>
@@ -133,6 +152,25 @@
                 <label>날짜</label>
                 <input type="date" name="date" id="editDate" required>
             </div>
+            <!-- 교육과정 선택 (수정용) -->
+            <div class="form-group">
+                <label>교육과정에서 선택</label>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <select id="editCurSubject" onchange="loadCurGrades('edit')" style="width:100px;">
+                        <option value="">과목</option>
+                    </select>
+                    <select id="editCurGrade" onchange="loadCurMajors('edit')" style="width:100px;">
+                        <option value="">학년</option>
+                    </select>
+                    <select id="editCurMajor" onchange="loadCurMinors('edit')" style="width:200px;">
+                        <option value="">대단원</option>
+                    </select>
+                    <select id="editCurMinor" style="width:200px;">
+                        <option value="">소단원</option>
+                    </select>
+                    <button type="button" class="btn btn-add" onclick="applyCurriculum('edit')">적용</button>
+                </div>
+            </div>
             <div class="form-group">
                 <label>수업내용</label>
                 <textarea name="content" id="editContent" rows="3" required></textarea>
@@ -153,6 +191,96 @@
 
 {% block scripts %}
 <script>
+// 교육과정 연동
+function getPrefix(mode) {
+    return mode === 'edit' ? 'editCur' : 'cur';
+}
+
+function loadCurSubjects() {
+    fetch('/api/curriculum').then(r => r.json()).then(data => {
+        ['cur', 'editCur'].forEach(function(prefix) {
+            var sel = document.getElementById(prefix + 'Subject');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">과목</option>';
+            data.forEach(function(s) {
+                sel.innerHTML += '<option value="' + s + '">' + s + '</option>';
+            });
+        });
+    });
+}
+
+function loadCurGrades(mode) {
+    var prefix = getPrefix(mode);
+    var subject = document.getElementById(prefix + 'Subject').value;
+    var gradeSel = document.getElementById(prefix + 'Grade');
+    var majorSel = document.getElementById(prefix + 'Major');
+    var minorSel = document.getElementById(prefix + 'Minor');
+    gradeSel.innerHTML = '<option value="">학년</option>';
+    majorSel.innerHTML = '<option value="">대단원</option>';
+    minorSel.innerHTML = '<option value="">소단원</option>';
+    if (!subject) return;
+    fetch('/api/curriculum?subject=' + encodeURIComponent(subject))
+        .then(r => r.json()).then(data => {
+            data.forEach(function(g) {
+                gradeSel.innerHTML += '<option value="' + g + '">' + g + '</option>';
+            });
+        });
+}
+
+function loadCurMajors(mode) {
+    var prefix = getPrefix(mode);
+    var subject = document.getElementById(prefix + 'Subject').value;
+    var grade = document.getElementById(prefix + 'Grade').value;
+    var majorSel = document.getElementById(prefix + 'Major');
+    var minorSel = document.getElementById(prefix + 'Minor');
+    majorSel.innerHTML = '<option value="">대단원</option>';
+    minorSel.innerHTML = '<option value="">소단원</option>';
+    if (!grade) return;
+    fetch('/api/curriculum?subject=' + encodeURIComponent(subject) + '&grade=' + encodeURIComponent(grade))
+        .then(r => r.json()).then(data => {
+            data.forEach(function(m) {
+                majorSel.innerHTML += '<option value="' + m + '">' + m + '</option>';
+            });
+        });
+}
+
+function loadCurMinors(mode) {
+    var prefix = getPrefix(mode);
+    var subject = document.getElementById(prefix + 'Subject').value;
+    var grade = document.getElementById(prefix + 'Grade').value;
+    var major = document.getElementById(prefix + 'Major').value;
+    var minorSel = document.getElementById(prefix + 'Minor');
+    minorSel.innerHTML = '<option value="">소단원</option>';
+    if (!major) return;
+    fetch('/api/curriculum?subject=' + encodeURIComponent(subject) + '&grade=' + encodeURIComponent(grade) + '&unit_major=' + encodeURIComponent(major))
+        .then(r => r.json()).then(data => {
+            data.forEach(function(m) {
+                minorSel.innerHTML += '<option value="' + m + '">' + m + '</option>';
+            });
+        });
+}
+
+function applyCurriculum(mode) {
+    var prefix = getPrefix(mode);
+    var major = document.getElementById(prefix + 'Major').value;
+    var minor = document.getElementById(prefix + 'Minor').value;
+    if (!major) { alert('대단원을 선택하세요.'); return; }
+
+    var text = major;
+    if (minor) text += ' > ' + minor;
+
+    var targetId = mode === 'edit' ? 'editContent' : 'addContent';
+    var textarea = document.getElementById(targetId);
+    if (textarea.value) {
+        textarea.value += '\n' + text;
+    } else {
+        textarea.value = text;
+    }
+}
+
+// 페이지 로드 시 교육과정 과목 로드
+document.addEventListener('DOMContentLoaded', loadCurSubjects);
+
 function copyNotice(planId) {
     fetch('/api/lesson-plan/notice/' + planId)
         .then(r => r.json())

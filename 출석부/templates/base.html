@@ -20,9 +20,11 @@
             <a href="{{ url_for('tuition') }}" class="{% if request.endpoint == 'tuition' %}active{% endif %}">원비명부</a>
             <a href="{{ url_for('lesson_plan') }}" class="{% if request.endpoint == 'lesson_plan' %}active{% endif %}">수업계획서</a>
             <a href="{{ url_for('statistics') }}" class="{% if request.endpoint == 'statistics' %}active{% endif %}">학생별 통계</a>
+            <a href="{{ url_for('class_stats') }}" class="{% if request.endpoint == 'class_stats' %}active{% endif %}">반 별 통계</a>
             <a href="{{ url_for('reports') }}" class="{% if request.endpoint == 'reports' %}active{% endif %}">보고서</a>
             {% if session.get('role') == 'admin' %}
             <a href="{{ url_for('manage') }}" class="{% if request.endpoint == 'manage' %}active{% endif %}">관리</a>
+            <a href="{{ url_for('curriculum') }}" class="{% if request.endpoint == 'curriculum' %}active{% endif %}">교육과정</a>
             <a href="{{ url_for('users') }}" class="{% if request.endpoint == 'users' %}active{% endif %}">담당자 관리</a>
             <a href="{{ url_for('settlement') }}" class="{% if request.endpoint == 'settlement' %}active{% endif %}">결산서</a>
             {% else %}

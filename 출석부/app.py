@@ -1722,6 +1722,186 @@ def tuition_save():
     flash('원비 명부가 업데이트 되었습니다.')
     return redirect(url_for('tuition', year=year, month=month, search_name=search_name, branch_id=branch_id))
 
+# ─── 교육과정 관리 ───
+@app.route('/curriculum')
+@admin_required
+def curriculum():
+    db = get_db()
+    items = db.execute('''
+        SELECT * FROM curriculum ORDER BY subject, grade, unit_major, unit_minor
+    ''').fetchall()
+    db.close()
+    return render_template('curriculum.html', items=items)
+
+
+@app.route('/curriculum/add', methods=['POST'])
+@admin_required
+def curriculum_add():
+    subject = request.form.get('subject', '').strip()
+    grade = request.form.get('grade', '').strip()
+    unit_major = request.form.get('unit_major', '').strip()
+    unit_minor = request.form.get('unit_minor', '').strip()
+    if subject and grade and unit_major:
+        db = get_db()
+        db.execute('INSERT INTO curriculum (subject, grade, unit_major, unit_minor) VALUES (?, ?, ?, ?)',
+                   (subject, grade, unit_major, unit_minor))
+        db.commit()
+        db.close()
+        flash('교육과정이 추가되었습니다.')
+    return redirect(url_for('curriculum'))
+
+
+@app.route('/curriculum/delete/<int:id>', methods=['POST'])
+@admin_required
+def curriculum_delete(id):
+    db = get_db()
+    db.execute('DELETE FROM curriculum WHERE id = ?', (id,))
+    db.commit()
+    db.close()
+    return redirect(url_for('curriculum'))
+
+
+@app.route('/api/curriculum')
+@login_required
+def api_curriculum():
+    subject = request.args.get('subject', '')
+    grade = request.args.get('grade', '')
+    unit_major = request.args.get('unit_major', '')
+    db = get_db()
+
+    if not subject:
+        subjects = db.execute('SELECT DISTINCT subject FROM curriculum ORDER BY subject').fetchall()
+        db.close()
+        return jsonify([r['subject'] for r in subjects])
+
+    if not grade:
+        grades = db.execute('SELECT DISTINCT grade FROM curriculum WHERE subject = ? ORDER BY grade',
+                            (subject,)).fetchall()
+        db.close()
+        return jsonify([r['grade'] for r in grades])
+
+    if not unit_major:
+        majors = db.execute('SELECT DISTINCT unit_major FROM curriculum WHERE subject = ? AND grade = ? ORDER BY unit_major',
+                            (subject, grade)).fetchall()
+        db.close()
+        return jsonify([r['unit_major'] for r in majors])
+
+    minors = db.execute('SELECT DISTINCT unit_minor FROM curriculum WHERE subject = ? AND grade = ? AND unit_major = ? AND unit_minor != "" ORDER BY unit_minor',
+                        (subject, grade, unit_major)).fetchall()
+    db.close()
+    return jsonify([r['unit_minor'] for r in minors])
+
+
+# ─── 반 별 통계 ───
+@app.route('/class-stats')
+@login_required
+def class_stats():
+    import calendar as cal_mod
+
+    sel_branch = request.args.get('branch_id', '')
+    sel_class = request.args.get('class_id', '')
+    sel_year = request.args.get('year', str(date.today().year))
+    sel_month = request.args.get('month', str(date.today().month))
+
+    db = get_db()
+
+    if session.get('role') == 'admin':
+        branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+    else:
+        branches = db.execute('''
+            SELECT DISTINCT b.* FROM branch b
+            JOIN class c ON c.branch_id = b.id
+            JOIN user_class uc ON uc.class_id = c.id
+            WHERE uc.user_id = ?
+            ORDER BY b.name
+        ''', (session['user_id'],)).fetchall()
+
+    classes = []
+    if sel_branch:
+        if session.get('role') == 'admin':
+            classes = db.execute('''
+                SELECT class.*, branch.name as branch_name
+                FROM class JOIN branch ON class.branch_id = branch.id
+                WHERE class.branch_id = ? ORDER BY class.name
+            ''', (sel_branch,)).fetchall()
+        else:
+            classes = db.execute('''
+                SELECT class.*, branch.name as branch_name
+                FROM class JOIN branch ON class.branch_id = branch.id
+                JOIN user_class uc ON uc.class_id = class.id
+                WHERE class.branch_id = ? AND uc.user_id = ?
+                ORDER BY class.name
+            ''', (sel_branch, session['user_id'])).fetchall()
+
+    daily_data = {}
+    students = []
+    if sel_class:
+        year_int = int(sel_year)
+        month_int = int(sel_month)
+        days_in_month = cal_mod.monthrange(year_int, month_int)[1]
+
+        students = db.execute('''
+            SELECT id, name FROM student
+            WHERE class_id = ? AND status = 'active'
+            ORDER BY name
+        ''', (sel_class,)).fetchall()
+
+        for day in range(1, days_in_month + 1):
+            d = f"{year_int}-{month_int:02d}-{day:02d}"
+
+            att = db.execute('''
+                SELECT a.status FROM attendance a
+                JOIN student s ON a.student_id = s.id
+                WHERE s.class_id = ? AND a.date = ? AND s.status = 'active'
+            ''', (sel_class, d)).fetchall()
+
+            plan = db.execute('''
+                SELECT lp.content, lp.homework, u.name as teacher_name
+                FROM lesson_plan lp
+                JOIN user u ON lp.user_id = u.id
+                WHERE lp.class_id = ? AND lp.date = ?
+            ''', (sel_class, d)).fetchall()
+
+            if att or plan:
+                total = len(att)
+                present = sum(1 for a in att if a['status'] == '정상등원')
+                late = sum(1 for a in att if a['status'] == '지각')
+                absent = sum(1 for a in att if a['status'] == '결석')
+
+                plan_contents = []
+                plan_homeworks = []
+                for p in plan:
+                    if p['content']:
+                        plan_contents.append(p['content'])
+                    if p['homework']:
+                        plan_homeworks.append(p['homework'])
+
+                daily_data[day] = {
+                    'total': total,
+                    'present': present,
+                    'late': late,
+                    'absent': absent,
+                    'content': '\n'.join(plan_contents),
+                    'homework': '\n'.join(plan_homeworks),
+                }
+
+    db.close()
+
+    years = list(range(2024, date.today().year + 2))
+    months = list(range(1, 13))
+
+    cal = cal_mod.Calendar(firstweekday=6)
+    month_days = cal.monthdayscalendar(int(sel_year), int(sel_month))
+
+    return render_template('class_stats.html',
+                           branches=branches, classes=classes,
+                           sel_branch=sel_branch, sel_class=sel_class,
+                           sel_year=sel_year, sel_month=sel_month,
+                           years=years, months=months,
+                           daily_data=daily_data, month_days=month_days,
+                           students=students)
+
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>교육과정 관리</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-msg">
+    {% for msg in messages %}
+    <p>{{ msg }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<!-- 교육과정 추가 -->
+<section class="manage-section">
+    <h2>교육과정 추가</h2>
+    <form action="{{ url_for('curriculum_add') }}" method="post" class="inline-form" style="flex-wrap: wrap; gap: 0.5rem;">
+        <select name="subject" required>
+            <option value="">과목</option>
+            <option value="수학">수학</option>
+            <option value="영어">영어</option>
+            <option value="국어">국어</option>
+            <option value="사회">사회</option>
+            <option value="과학">과학</option>
+        </select>
+        <input type="text" name="grade" placeholder="학년 (예: 고1, 중2)" required style="width:120px;">
+        <input type="text" name="unit_major" placeholder="대단원" required style="width:200px;">
+        <input type="text" name="unit_minor" placeholder="소단원 (선택)" style="width:200px;">
+        <button type="submit" class="btn btn-add">추가</button>
+    </form>
+    <p style="color:#888; font-size:0.85rem; margin-top:0.3rem;">
+        소단원은 비워두면 대단원만 등록됩니다. 수업계획서에서 선택할 수 있습니다.
+    </p>
+</section>
+
+<!-- 교육과정 목록 -->
+<section class="manage-section">
+    <h2>등록된 교육과정</h2>
+
+    <!-- 필터 -->
+    <div style="margin-bottom: 1rem;">
+        <select id="filterSubject" onchange="filterCurriculum()" style="padding:0.4rem;">
+            <option value="">전체 과목</option>
+            <option value="수학">수학</option>
+            <option value="영어">영어</option>
+            <option value="국어">국어</option>
+            <option value="사회">사회</option>
+            <option value="과학">과학</option>
+        </select>
+        <select id="filterGrade" onchange="filterCurriculum()" style="padding:0.4rem;">
+            <option value="">전체 학년</option>
+        </select>
+    </div>
+
+    {% if items %}
+    <div class="table-responsive">
+        <table id="curriculumTable">
+            <thead>
+                <tr>
+                    <th>과목</th>
+                    <th>학년</th>
+                    <th>대단원</th>
+                    <th>소단원</th>
+                    <th>작업</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+            <tr data-subject="{{ item.subject }}" data-grade="{{ item.grade }}">
+                <td>{{ item.subject }}</td>
+                <td>{{ item.grade }}</td>
+                <td>{{ item.unit_major }}</td>
+                <td>{{ item.unit_minor or '-' }}</td>
+                <td>
+                    <form action="{{ url_for('curriculum_delete', id=item.id) }}" method="post"
+                          onsubmit="return confirm('삭제하시겠습니까?')" style="display:inline;">
+                        <button type="submit" class="btn btn-delete">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-msg">등록된 교육과정이 없습니다.</p>
+    {% endif %}
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function filterCurriculum() {
+    var subj = document.getElementById('filterSubject').value;
+    var grade = document.getElementById('filterGrade').value;
+    var rows = document.querySelectorAll('#curriculumTable tbody tr');
+
+    // 학년 필터 옵션 업데이트
+    var gradeSet = new Set();
+    rows.forEach(function(row) {
+        if (!subj || row.dataset.subject === subj) {
+            gradeSet.add(row.dataset.grade);
+        }
+    });
+    var gradeSelect = document.getElementById('filterGrade');
+    var currentGrade = gradeSelect.value;
+    gradeSelect.innerHTML = '<option value="">전체 학년</option>';
+    Array.from(gradeSet).sort().forEach(function(g) {
+        gradeSelect.innerHTML += '<option value="' + g + '"' + (g === currentGrade ? ' selected' : '') + '>' + g + '</option>';
+    });
+
+    rows.forEach(function(row) {
+        var show = true;
+        if (subj && row.dataset.subject !== subj) show = false;
+        if (grade && row.dataset.grade !== grade) show = false;
+        row.style.display = show ? '' : 'none';
+    });
+}
+</script>
+{% endblock %}

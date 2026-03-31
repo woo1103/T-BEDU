@@ -99,6 +99,15 @@ def init_db():
             FOREIGN KEY (class_id) REFERENCES class(id) ON DELETE CASCADE
         );
 
+        CREATE TABLE IF NOT EXISTS curriculum (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            subject TEXT NOT NULL,
+            grade TEXT NOT NULL,
+            unit_major TEXT NOT NULL,
+            unit_minor TEXT NOT NULL DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
         CREATE TABLE IF NOT EXISTS settings (
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL
