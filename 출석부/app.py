@@ -895,7 +895,13 @@ def student_detail(id):
     is_senior = student['class_name'] and '고3' in student['class_name']
 
     # 형제 정보 및 선택을 위한 전체 학생 목록
-    all_students = db.execute("SELECT id, name, branch_id FROM student WHERE status='active' AND id != ? ORDER BY name", (id,)).fetchall()
+    all_students = db.execute('''
+        SELECT student.id, student.name, student.branch_id, branch.name as branch_name
+        FROM student
+        LEFT JOIN branch ON student.branch_id = branch.id
+        WHERE student.status='active' AND student.id != ?
+        ORDER BY student.name
+    ''', (id,)).fetchall()
     sibling = None
     if 'sibling_id' in student.keys() and student['sibling_id']:
         sibling = db.execute("SELECT id, name FROM student WHERE id = ?", (student['sibling_id'],)).fetchone()
