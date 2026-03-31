@@ -1242,35 +1242,6 @@ def settlement():
         branch_monthly[bid]['quarterly'] = {q: add_leave_rate(d) for q, d in calc_quarterly(branch_monthly[bid]['months']).items()}
         branch_monthly[bid]['yearly'] = add_leave_rate(calc_yearly(branch_monthly[bid]['months']))
 
-    # 변경이력 기반 자동 집계 (참고용)
-    change_log_stats = []
-    _cls_tmp = {}
-    change_logs_raw = db.execute('''
-        SELECT student_change_log.*, student.class_id, student.branch_id
-        FROM student_change_log
-        JOIN student ON student_change_log.student_id = student.id
-        WHERE student_change_log.change_date LIKE ?
-    ''', (f"{sel_year}%",)).fetchall()
-
-    for log in change_logs_raw:
-        if not log['class_id']:
-            continue
-        try:
-            log_month = int(log['change_date'].split('-')[1])
-        except (IndexError, ValueError):
-            continue
-        key = (log_month, log['class_id'])
-        if key not in _cls_tmp:
-            _cls_tmp[key] = {'month': log_month, 'class_id': log['class_id'], 'register': 0, 'leave': 0, 're_register': 0}
-        if log['change_type'] == 'register':
-            _cls_tmp[key]['register'] += 1
-        elif log['change_type'] == 'leave':
-            _cls_tmp[key]['leave'] += 1
-        elif log['change_type'] == 're_register':
-            _cls_tmp[key]['re_register'] += 1
-
-    change_log_stats = sorted(_cls_tmp.values(), key=lambda x: (x['month'], x['class_id']))
-
     # 입력용 데이터
     classes = db.execute('''
         SELECT class.*, branch.name as branch_name, branch.id as branch_id
@@ -1279,6 +1250,105 @@ def settlement():
     ''').fetchall()
 
     teachers = db.execute("SELECT * FROM user WHERE role = 'teacher' ORDER BY name").fetchall()
+
+    # ── 자동 집계: 월초/월말 인원 계산 ──
+    # 1) 반별 현재 active 학생 수
+    class_active_counts = {}
+    for c in classes:
+        cnt = db.execute("SELECT COUNT(*) as cnt FROM student WHERE class_id = ? AND status = 'active'",
+                         (c['id'],)).fetchone()
+        class_active_counts[c['id']] = cnt['cnt'] if cnt else 0
+
+    # 2) 모든 변경이력 (해당 연도 이후) - 역산용
+    all_change_logs = db.execute('''
+        SELECT student_change_log.*, student.class_id
+        FROM student_change_log
+        JOIN student ON student_change_log.student_id = student.id
+        WHERE student_change_log.change_date >= ?
+        ORDER BY student_change_log.change_date
+    ''', (f"{sel_year}-01-01",)).fetchall()
+
+    # 3) 반별/월별 변경 집계
+    class_month_changes = {}
+    for log in all_change_logs:
+        cid = log['class_id']
+        if not cid:
+            continue
+        try:
+            log_date = log['change_date']
+            log_year = int(log_date.split('-')[0])
+            log_month = int(log_date.split('-')[1])
+        except (IndexError, ValueError):
+            continue
+        key = (cid, log_year, log_month)
+        if key not in class_month_changes:
+            class_month_changes[key] = {'register': 0, 'leave': 0, 're_register': 0}
+        if log['change_type'] == 'register':
+            class_month_changes[key]['register'] += 1
+        elif log['change_type'] == 'leave':
+            class_month_changes[key]['leave'] += 1
+        elif log['change_type'] == 're_register':
+            class_month_changes[key]['re_register'] += 1
+
+    # 4) 월초 인원 역산: 현재 active 수에서 이후 변경분을 빼서 계산
+    #    월초(M) = 현재active - (M월~현재까지 등록+재등록) + (M월~현재까지 휴원)
+    import calendar
+    from datetime import date as date_cls
+    today = date_cls.today()
+    current_year = today.year
+    current_month = today.month
+
+    auto_settlement = []
+    int_year = int(sel_year)
+
+    for c in classes:
+        cid = c['id']
+        current_active = class_active_counts.get(cid, 0)
+
+        # 해당 연도 각 월에 대해 월초 인원 계산
+        for m in range(1, 13):
+            # 해당 월의 변경사항
+            changes = class_month_changes.get((cid, int_year, m), {'register': 0, 'leave': 0, 're_register': 0})
+
+            # 이 달에 변경이 하나도 없으면 스킵
+            if changes['register'] == 0 and changes['leave'] == 0 and changes['re_register'] == 0:
+                continue
+
+            # 월초 인원 = 현재 active - (이번 달 포함 이후의 순증 합계)
+            net_after = 0
+            for future_m in range(m, 13):
+                fc = class_month_changes.get((cid, int_year, future_m), {'register': 0, 'leave': 0, 're_register': 0})
+                net_after += fc['register'] + fc['re_register'] - fc['leave']
+            # 내년 이후 변경분도 고려
+            if int_year < current_year:
+                for fy in range(int_year + 1, current_year + 1):
+                    for fm in range(1, 13):
+                        if fy == current_year and fm > current_month:
+                            break
+                        fc = class_month_changes.get((cid, fy, fm), {'register': 0, 'leave': 0, 're_register': 0})
+                        net_after += fc['register'] + fc['re_register'] - fc['leave']
+
+            start_count = current_active - net_after
+            reg = changes['register']
+            rereg = changes['re_register']
+            leave = changes['leave']
+            net = reg + rereg - leave
+            end_count = start_count + net
+
+            auto_settlement.append({
+                'month': m,
+                'class_id': cid,
+                'branch_name': c['branch_name'],
+                'class_name': c['name'],
+                'start_count': start_count,
+                'register': reg,
+                're_register': rereg,
+                'leave': leave,
+                'net': net,
+                'end_count': end_count
+            })
+
+    auto_settlement.sort(key=lambda x: (x['month'], x['branch_name'], x['class_name']))
 
     # 기존 입력된 결산 데이터 (수정용)
     existing = {}
@@ -1293,7 +1363,7 @@ def settlement():
                            branches=branches, classes=classes, teachers=teachers,
                            teacher_monthly=teacher_monthly, branch_monthly=branch_monthly,
                            existing=existing, settlements=settlements,
-                           change_log_stats=change_log_stats,
+                           auto_settlement=auto_settlement,
                            sel_year=sel_year, sel_view=sel_view, years=years)
 
 

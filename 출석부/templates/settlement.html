@@ -82,29 +82,45 @@
     </form>
 </div>
 
-<!-- 변경이력 기반 자동 집계 (참고) -->
-{% if change_log_stats %}
+<!-- 자동 집계 (월초/월말 인원) -->
+{% if auto_settlement %}
 <div class="manage-section">
-    <h2>{{ sel_year }}년 변경이력 자동 집계 (참고용)</h2>
-    <p style="color:#888; font-size:0.9rem; margin-bottom:1rem;">학생 등록/휴원/재등록 버튼 사용 시 자동 기록됩니다. 결산 입력 시 참고하세요.</p>
+    <h2>{{ sel_year }}년 자동 집계</h2>
+    <p style="color:#888; font-size:0.9rem; margin-bottom:1rem;">등록/휴원/재등록 버튼 기록 기반 자동 계산. 월초 인원 = 매월 1일 23:59 기준 재원생 수.</p>
     <div class="table-responsive">
         <table>
-            <thead><tr><th>월</th><th>반</th><th>등록</th><th>휴원</th><th>재등록</th><th>순증</th></tr></thead>
+            <thead>
+                <tr><th>월</th><th>지점 - 반</th><th>월초</th><th>등록</th><th>재등록</th><th>휴원</th><th>순증</th><th>월말</th></tr>
+            </thead>
             <tbody>
-            {% for item in change_log_stats %}
+            {% set ns = namespace(t_start=0, t_reg=0, t_rereg=0, t_leave=0, t_net=0, t_end=0) %}
+            {% for item in auto_settlement %}
+            {% set ns.t_start = ns.t_start + item.start_count %}
+            {% set ns.t_reg = ns.t_reg + item.register %}
+            {% set ns.t_rereg = ns.t_rereg + item.re_register %}
+            {% set ns.t_leave = ns.t_leave + item.leave %}
+            {% set ns.t_net = ns.t_net + item.net %}
+            {% set ns.t_end = ns.t_end + item.end_count %}
             <tr>
                 <td>{{ item.month }}월</td>
-                <td>
-                    {% for c in classes %}{% if c.id == item.class_id %}{{ c.branch_name }} - {{ c.name }}{% endif %}{% endfor %}
-                </td>
+                <td>{{ item.branch_name }} - {{ item.class_name }}</td>
+                <td>{{ item.start_count }}</td>
                 <td class="text-blue">+{{ item.register }}</td>
-                <td class="text-red">-{{ item.leave }}</td>
                 <td class="text-blue">+{{ item.re_register }}</td>
-                <td class="{% if item.register + item.re_register - item.leave >= 0 %}text-blue{% else %}text-red{% endif %}">
-                    {{ item.register + item.re_register - item.leave }}
-                </td>
+                <td class="text-red">-{{ item.leave }}</td>
+                <td class="{% if item.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ item.net }}</td>
+                <td><strong>{{ item.end_count }}</strong></td>
             </tr>
             {% endfor %}
+            <tr class="row-total">
+                <td colspan="2"><strong>총 인원</strong></td>
+                <td>{{ ns.t_start }}</td>
+                <td class="text-blue">+{{ ns.t_reg }}</td>
+                <td class="text-blue">+{{ ns.t_rereg }}</td>
+                <td class="text-red">-{{ ns.t_leave }}</td>
+                <td class="{% if ns.t_net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ ns.t_net }}</td>
+                <td><strong>{{ ns.t_end }}</strong></td>
+            </tr>
             </tbody>
         </table>
     </div>
