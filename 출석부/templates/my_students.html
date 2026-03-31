@@ -29,8 +29,14 @@
             {% endfor %}
         </select>
         <input type="text" name="name" placeholder="학생 이름" required>
-        <button type="submit" class="btn btn-add">추가</button>
+        <input type="hidden" name="change_type" value="new" id="addChangeType">
+        <button type="submit" class="btn btn-add" onclick="document.getElementById('addChangeType').value='new'">추가</button>
+        <button type="submit" class="btn btn-register" onclick="document.getElementById('addChangeType').value='register'">등록</button>
+        <button type="submit" class="btn btn-reregister-btn" onclick="document.getElementById('addChangeType').value='re_register'">재등록</button>
     </form>
+    <p style="color:#888; font-size:0.85rem; margin-top:0.3rem;">
+        추가: 단순 추가 | 등록: 신규등록(결산 순증+1) | 재등록: 휴원복귀(결산 순증+1)
+    </p>
 </section>
 
 <!-- 재원 학생 목록 -->

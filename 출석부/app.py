@@ -8,6 +8,9 @@ import os
 app = Flask(__name__)
 app.secret_key = 'tnbedu-attendance-secret-key-2026'
 
+# WSGI 환경에서도 DB 초기화 보장
+init_db()
+
 
 # ─── 로그인 체크 ───
 def login_required(f):
@@ -177,6 +180,7 @@ def student_add():
     name = request.form.get('name', '').strip()
     class_id = request.form.get('class_id')
     branch_id = request.form.get('branch_id')
+    change_type = request.form.get('change_type', 'new').strip()
     if name and class_id and branch_id:
         db = get_db()
         allowed = get_user_classes(db)
@@ -186,8 +190,10 @@ def student_add():
         cursor = db.execute('INSERT INTO student (name, class_id, branch_id, status) VALUES (?, ?, ?, ?)',
                    (name, class_id, branch_id, 'active'))
         student_id = cursor.lastrowid
+        # change_type: 'new' = 단순추가, 'register' = 신규등록(결산반영), 're_register' = 재등록(결산반영)
+        log_type = change_type if change_type in ('register', 're_register') else 'new'
         db.execute('INSERT INTO student_change_log (student_id, change_type, change_date) VALUES (?, ?, ?)',
-                   (student_id, 'new', date.today().isoformat()))
+                   (student_id, log_type, date.today().isoformat()))
         db.commit()
         db.close()
     if session.get('role') == 'admin':
@@ -1235,15 +1241,16 @@ def settlement():
         branch_monthly[bid]['yearly'] = add_leave_rate(calc_yearly(branch_monthly[bid]['months']))
 
     # 변경이력 기반 자동 집계 (참고용)
-    change_log_stats = {}
-    change_logs = db.execute('''
+    change_log_stats = []
+    _cls_tmp = {}
+    change_logs_raw = db.execute('''
         SELECT student_change_log.*, student.class_id, student.branch_id
         FROM student_change_log
         JOIN student ON student_change_log.student_id = student.id
         WHERE student_change_log.change_date LIKE ?
     ''', (f"{sel_year}%",)).fetchall()
 
-    for log in change_logs:
+    for log in change_logs_raw:
         if not log['class_id']:
             continue
         try:
@@ -1251,14 +1258,16 @@ def settlement():
         except (IndexError, ValueError):
             continue
         key = (log_month, log['class_id'])
-        if key not in change_log_stats:
-            change_log_stats[key] = {'new': 0, 'leave': 0, 're_register': 0}
-        if log['change_type'] == 'new':
-            change_log_stats[key]['new'] += 1
+        if key not in _cls_tmp:
+            _cls_tmp[key] = {'month': log_month, 'class_id': log['class_id'], 'register': 0, 'leave': 0, 're_register': 0}
+        if log['change_type'] == 'register':
+            _cls_tmp[key]['register'] += 1
         elif log['change_type'] == 'leave':
-            change_log_stats[key]['leave'] += 1
+            _cls_tmp[key]['leave'] += 1
         elif log['change_type'] == 're_register':
-            change_log_stats[key]['re_register'] += 1
+            _cls_tmp[key]['re_register'] += 1
+
+    change_log_stats = sorted(_cls_tmp.values(), key=lambda x: (x['month'], x['class_id']))
 
     # 입력용 데이터
     classes = db.execute('''
