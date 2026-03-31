@@ -67,17 +67,7 @@
         {% for c in classes %}
         <tr>
             <td>{{ c.branch_name }}</td>
-            <td>
-                <form action="{{ url_for('class_edit', id=c.id) }}" method="post" class="inline-form">
-                    <select name="branch_id">
-                        {% for b in branches %}
-                        <option value="{{ b.id }}" {% if b.id == c.branch_id %}selected{% endif %}>{{ b.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <input type="text" name="name" value="{{ c.name }}" required>
-                    <button type="submit" class="btn btn-edit">수정</button>
-                </form>
-            </td>
+            <td>{{ c.name }}</td>
             <td>
                 <form action="{{ url_for('class_delete', id=c.id) }}" method="post"
                       onsubmit="return confirm('반을 삭제하시겠습니까? (학생 기록은 보존됩니다)')">
@@ -94,16 +84,19 @@
 <section class="manage-section">
     <h2>재원 학생 관리</h2>
     <form action="{{ url_for('student_add') }}" method="post" class="inline-form" id="student-add-form">
-        <select name="branch_id" id="add-branch-select" required onchange="loadClassesForAdd(this.value)">
+        <select name="branch_id" id="add-branch-select" required>
             <option value="">지점 선택</option>
             {% for b in branches %}
             <option value="{{ b.id }}">{{ b.name }}</option>
             {% endfor %}
         </select>
-        <select name="class_id" id="add-class-select" required>
-            <option value="">반 선택</option>
+        <select name="subject" required>
+            <option value="영어">영어</option>
+            <option value="수학">수학</option>
         </select>
-        <input type="text" name="name" placeholder="학생 이름" required>
+        <input type="text" name="grade" placeholder="학교/학년 (예: 서천고1)" required style="width: 150px;">
+        <input type="text" name="days" placeholder="요일 (예: 화,목)" style="width: 100px;">
+        <input type="text" name="name" placeholder="학생 이름" required style="width: 120px;">
         <input type="hidden" name="change_type" value="new" id="addChangeType">
         <button type="submit" class="btn btn-add" onclick="document.getElementById('addChangeType').value='new'">추가</button>
         <button type="submit" class="btn btn-register" onclick="document.getElementById('addChangeType').value='register'">등록</button>
