@@ -897,7 +897,7 @@ def student_detail(id):
     # 형제 정보 및 선택을 위한 전체 학생 목록
     all_students = db.execute("SELECT id, name, branch_id FROM student WHERE status='active' AND id != ? ORDER BY name", (id,)).fetchall()
     sibling = None
-    if student.get('sibling_id'):
+    if 'sibling_id' in student.keys() and student['sibling_id']:
         sibling = db.execute("SELECT id, name FROM student WHERE id = ?", (student['sibling_id'],)).fetchone()
 
     db.close()
