@@ -179,34 +179,20 @@ def class_delete(id):
 def student_add():
     name = request.form.get('name', '').strip()
     branch_id = request.form.get('branch_id')
-    subject = request.form.get('subject', '').strip()
-    grade = request.form.get('grade', '').strip()
-    days = request.form.get('days', '').strip()
+    class_id = request.form.get('class_id')
     change_type = request.form.get('change_type', 'new').strip()
     
-    if name and branch_id and subject and grade:
-        class_name = f"{grade} ({subject})"
-        if days:
-            class_name += f" ({days})"
-            
+    if name and class_id and branch_id:
         db = get_db()
         allowed = get_user_classes(db)
-        
-        class_row = db.execute('SELECT id FROM class WHERE name = ? AND branch_id = ?', (class_name, branch_id)).fetchone()
-        if class_row:
-            class_id = class_row['id']
-            if allowed is not None and int(class_id) not in allowed:
-                db.close()
-                return redirect(url_for('my_students'))
-        else:
-            cursor = db.execute('INSERT INTO class (name, branch_id) VALUES (?, ?)', (class_name, branch_id))
-            class_id = cursor.lastrowid
-            if allowed is not None:
-                db.execute('INSERT INTO user_class (user_id, class_id) VALUES (?, ?)', (session['user_id'], class_id))
-                
+        if allowed is not None and int(class_id) not in allowed:
+            db.close()
+            return redirect(url_for('my_students'))
+            
         cursor = db.execute('INSERT INTO student (name, class_id, branch_id, status) VALUES (?, ?, ?, ?)',
                    (name, class_id, branch_id, 'active'))
         student_id = cursor.lastrowid
+        
         # change_type: 'new' = 단순추가, 'register' = 신규등록(결산반영), 're_register' = 재등록(결산반영)
         log_type = change_type if change_type in ('register', 're_register') else 'new'
         db.execute('INSERT INTO student_change_log (student_id, change_type, change_date) VALUES (?, ?, ?)',
