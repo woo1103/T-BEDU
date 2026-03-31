@@ -215,11 +215,6 @@
     <div style="max-width:800px; margin:0 auto;">
         <canvas id="scoreChart" height="300"></canvas>
     </div>
-    {% if scores|selectattr('grade')|list %}
-    <div style="max-width:800px; margin:1.5rem auto 0;">
-        <canvas id="gradeChart" height="250"></canvas>
-    </div>
-    {% endif %}
 </section>
 {% endif %}
 
@@ -376,11 +371,11 @@ function closeScoreEditModal() {
 (function() {
     var scores = {{ scores_chart|tojson }};
 
-    // 정규시험만 (중간/기말)
+    // 정규시험만 (중간/기말) - DB에서 이미 연도→학기→중간→기말 순 정렬됨
     var regularScores = scores.filter(function(s) { return s.exam_type !== 'mock'; });
     var mockScores = scores.filter(function(s) { return s.exam_type === 'mock'; });
 
-    // 라벨 생성
+    // 라벨: 2024 1학기 중간 → 2024 1학기 기말 → 2024 2학기 중간 → ...
     var labels = regularScores.map(function(s) {
         var examName = s.exam_type === 'midterm' ? '중간' : '기말';
         return s.year + ' ' + s.semester + '학기 ' + examName;
@@ -436,51 +431,8 @@ function closeScoreEditModal() {
         });
     }
 
-    // 등급 그래프
-    var gradeScores = scores.filter(function(s) { return s.grade; });
-    if (gradeScores.length > 0) {
-        var gradeLabels = gradeScores.map(function(s) {
-            if (s.exam_type === 'mock') return s.year + ' ' + s.mock_month + '월 모의';
-            var examName = s.exam_type === 'midterm' ? '중간' : '기말';
-            return s.year + ' ' + s.semester + '학기 ' + examName;
-        });
-        var gradeCtx = document.getElementById('gradeChart');
-        if (gradeCtx) {
-            new Chart(gradeCtx.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: gradeLabels,
-                    datasets: [{
-                        label: '등급',
-                        data: gradeScores.map(function(s) { return parseInt(s.grade); }),
-                        backgroundColor: gradeScores.map(function(s) {
-                            var g = parseInt(s.grade);
-                            if (g <= 2) return '#27ae60';
-                            if (g <= 4) return '#3498db';
-                            if (g <= 6) return '#f39c12';
-                            return '#e74c3c';
-                        }),
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: { display: true, text: '등급 추이', font: { size: 16 } },
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: { reverse: true, min: 1, max: 9, title: { display: true, text: '등급' },
-                             ticks: { stepSize: 1 } }
-                    }
-                }
-            });
-        }
-    }
-
     // 모의고사 그래프 (고3)
     if (mockScores.length > 0) {
-        // 모의고사 차트를 위한 캔버스 동적 생성
         var section = document.querySelector('#scoreChart').closest('.manage-section');
         var mockDiv = document.createElement('div');
         mockDiv.style.maxWidth = '800px';
