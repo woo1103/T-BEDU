@@ -42,9 +42,49 @@
                 <label>학부모 전화번호</label>
                 <input type="tel" name="parent_phone" value="{{ student.parent_phone or '' }}" placeholder="010-0000-0000">
             </div>
+            <div class="form-group">
+                <label>등원 요일 (예: 월,수)</label>
+                <input type="text" name="class_schedule" value="{{ student.class_schedule or '' }}" placeholder="월,수 반">
+            </div>
             <div class="form-group" style="grid-column: 1 / -1;">
                 <label>특이사항</label>
                 <textarea name="notes" rows="3" placeholder="특이사항을 입력하세요">{{ student.notes or '' }}</textarea>
+            </div>
+        </div>
+        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+        <h3>원비 및 형제 설정</h3>
+        <div class="info-grid">
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>형제 학생 선택</label>
+                <select name="sibling_id" id="siblingSelect" style="width: 100%; max-width: 400px; padding: 0.5rem;">
+                    <option value="">-- 형제 없음 --</option>
+                    {% for s in all_students %}
+                    <option value="{{ s.id }}" {% if student.sibling_id == s.id %}selected{% endif %}>{{ s.name }} ({{ s.branch_name or '지점미정' }})</option>
+                    {% endfor %}
+                </select>
+                {% if sibling %}
+                <small style="color: #666; display: block; margin-top: 5px;">현재 설정된 형제: <strong>{{ sibling.name }}</strong></small>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label>수강료 (원)</label>
+                <input type="number" name="tuition_fee" value="{{ student.tuition_fee or 0 }}" required>
+            </div>
+            <div class="form-group">
+                <label>교재비 (원)</label>
+                <input type="number" name="book_fee" value="{{ student.book_fee or 0 }}" required>
+            </div>
+            <div class="form-group">
+                <label>기타 비용 (원)</label>
+                <input type="number" name="etc_fee" value="{{ student.etc_fee or 0 }}" required>
+            </div>
+            <div class="form-group">
+                <label>특강비 (원 - 할인제외)</label>
+                <input type="number" name="special_fee" value="{{ student.special_fee or 0 }}" required>
+            </div>
+            <div class="form-group">
+                <label>수강료 할인율 (%)</label>
+                <input type="number" name="discount_rate" id="discountRate" value="{{ student.discount_rate or 0 }}" min="0" max="100" required>
             </div>
         </div>
         <div class="form-actions">
@@ -343,6 +383,15 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script>
+document.getElementById('siblingSelect').addEventListener('change', function() {
+    if(this.value) {
+        let dr = document.getElementById('discountRate');
+        if(dr.value === '0' || dr.value === '') {
+            dr.value = '5';
+        }
+    }
+});
+
 // 모의고사 월 표시 토글
 function toggleMockMonth() {
     var sel = document.getElementById('scoreExamType');

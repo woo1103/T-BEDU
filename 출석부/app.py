@@ -891,11 +891,18 @@ def student_detail(id):
     # 고3 여부 확인 (반 이름에 '고3' 포함)
     is_senior = student['class_name'] and '고3' in student['class_name']
 
+    # 형제 정보 및 선택을 위한 전체 학생 목록
+    all_students = db.execute("SELECT id, name, branch_id FROM student WHERE status='active' AND id != ? ORDER BY name", (id,)).fetchall()
+    sibling = None
+    if student.get('sibling_id'):
+        sibling = db.execute("SELECT id, name FROM student WHERE id = ?", (student['sibling_id'],)).fetchone()
+
     db.close()
     return render_template('student_detail.html', student=student, consultations=consultations,
                            scores=scores, scores_chart=scores_chart,
                            change_logs=change_logs, is_senior=is_senior,
-                           now_year=date.today().year, now_month=date.today().month)
+                           now_year=date.today().year, now_month=date.today().month,
+                           all_students=all_students, sibling=sibling)
 
 
 @app.route('/student/<int:id>/update-info', methods=['POST'])
@@ -917,10 +924,27 @@ def student_update_info(id):
     parent_phone = request.form.get('parent_phone', '').strip()
     notes = request.form.get('notes', '').strip()
 
+    tuition_fee_str = request.form.get('tuition_fee')
+    tuition_fee = int(tuition_fee_str) if tuition_fee_str and tuition_fee_str.lstrip('-').isdigit() else 0
+    book_fee_str = request.form.get('book_fee')
+    book_fee = int(book_fee_str) if book_fee_str and book_fee_str.lstrip('-').isdigit() else 0
+    etc_fee_str = request.form.get('etc_fee')
+    etc_fee = int(etc_fee_str) if etc_fee_str and etc_fee_str.lstrip('-').isdigit() else 0
+    special_fee_str = request.form.get('special_fee')
+    special_fee = int(special_fee_str) if special_fee_str and special_fee_str.lstrip('-').isdigit() else 0
+    discount_rate_str = request.form.get('discount_rate')
+    discount_rate = int(discount_rate_str) if discount_rate_str and discount_rate_str.lstrip('-').isdigit() else 0
+    sibling_id_val = request.form.get('sibling_id')
+    sibling_id = int(sibling_id_val) if sibling_id_val and sibling_id_val.isdigit() else None
+    
+    class_schedule = request.form.get('class_schedule', '').strip()
+
     db.execute('''
-        UPDATE student SET registration_date=?, phone=?, parent_phone=?, notes=?
+        UPDATE student SET registration_date=?, phone=?, parent_phone=?, notes=?,
+               tuition_fee=?, book_fee=?, etc_fee=?, special_fee=?, discount_rate=?, sibling_id=?, class_schedule=?
         WHERE id=?
-    ''', (registration_date, phone, parent_phone, notes, id))
+    ''', (registration_date, phone, parent_phone, notes, 
+          tuition_fee, book_fee, etc_fee, special_fee, discount_rate, sibling_id, class_schedule, id))
     db.commit()
     db.close()
     flash('인적사항이 저장되었습니다.')
@@ -1494,6 +1518,108 @@ def settlement_delete(id):
     flash('결산 데이터가 삭제되었습니다.')
     return redirect(url_for('settlement', year=year))
 
+
+# ─── 원비명부 (Tuition Ledger) ───
+@app.route('/tuition', methods=['GET'])
+@login_required
+def tuition():
+    db = get_db()
+    sel_year = request.args.get('year', str(date.today().year))
+    sel_month = request.args.get('month', str(date.today().month))
+    sel_branch = request.args.get('branch_id', '')
+    search_name = request.args.get('search_name', '').strip()
+
+    branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+
+    query = '''
+        SELECT s.*, b.name as branch_name, c.name as class_name
+        FROM student s
+        LEFT JOIN branch b ON s.branch_id = b.id
+        LEFT JOIN class c ON s.class_id = c.id
+        WHERE s.status = 'active'
+    '''
+    params = []
+
+    if search_name:
+        query += ' AND s.name LIKE ?'
+        params.append(f'%{search_name}%')
+    elif sel_branch:
+        query += ' AND s.branch_id = ?'
+        params.append(sel_branch)
+
+    query += ' ORDER BY b.name, c.name, s.name'
+    students = db.execute(query, params).fetchall()
+
+    ledgers = {}
+    total_by_branch = {}
+    total_all = 0
+
+    for s in students:
+        l = db.execute('SELECT * FROM tuition_ledger WHERE student_id=? AND year=? AND month=?', (s['id'], sel_year, sel_month)).fetchone()
+        if l:
+            item = dict(l)
+        else:
+            tuition_fee = s['tuition_fee'] or 0
+            book_fee = s['book_fee'] or 0
+            etc_fee = s['etc_fee'] or 0
+            special_fee = s['special_fee'] or 0
+            discount_rate = s['discount_rate'] or 0
+            total_amt = int(tuition_fee * (1 - discount_rate / 100.0)) + book_fee + etc_fee + special_fee
+            item = {
+                'id': None, 'student_id': s['id'], 'year': sel_year, 'month': sel_month,
+                'tuition_fee': tuition_fee, 'book_fee': book_fee, 'etc_fee': etc_fee,
+                'special_fee': special_fee, 'discount_rate': discount_rate, 'total_amount': total_amt,
+                'is_paid': 0, 'note': ''
+            }
+        ledgers[s['id']] = item
+
+        if session.get('role') == 'admin':
+            if item['is_paid']:
+                b_name = s['branch_name'] or '미지정'
+                total_by_branch[b_name] = total_by_branch.get(b_name, 0) + item['total_amount']
+                total_all += item['total_amount']
+
+    db.close()
+    
+    years = list(range(2024, date.today().year + 2))
+    months = list(range(1, 13))
+
+    return render_template('tuition.html', branches=branches, students=students, ledgers=ledgers,
+                           years=years, months=months, sel_year=sel_year, sel_month=sel_month,
+                           sel_branch=sel_branch, search_name=search_name,
+                           total_by_branch=total_by_branch, total_all=total_all)
+
+@app.route('/tuition/save', methods=['POST'])
+@login_required
+def tuition_save():
+    student_id = request.form.get('student_id')
+    year = request.form.get('year')
+    month = request.form.get('month')
+    is_paid = 1 if request.form.get('is_paid') == 'on' else 0
+    note = request.form.get('note', '').strip()
+
+    tuition_fee = int(request.form.get('tuition_fee', 0))
+    book_fee = int(request.form.get('book_fee', 0))
+    etc_fee = int(request.form.get('etc_fee', 0))
+    special_fee = int(request.form.get('special_fee', 0))
+    discount_rate = int(request.form.get('discount_rate', 0))
+    total_amount = int(request.form.get('total_amount', 0))
+
+    db = get_db()
+    db.execute('''
+        INSERT INTO tuition_ledger (student_id, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, note)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(student_id, year, month)
+        DO UPDATE SET is_paid=?, note=?, updated_at=CURRENT_TIMESTAMP
+    ''', (student_id, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, note, is_paid, note))
+
+    db.commit()
+    db.close()
+    
+    search_name = request.form.get('search_name', '')
+    branch_id = request.form.get('branch_id', '')
+    flash('원비 명부가 업데이트 되었습니다.')
+    return redirect(url_for('tuition', year=year, month=month, search_name=search_name, branch_id=branch_id))
 
 if __name__ == '__main__':
     init_db()
