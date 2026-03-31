@@ -194,6 +194,7 @@ th {
     cursor: pointer;
     font-size: 0.85rem;
     transition: background 0.2s;
+    white-space: nowrap;
 }
 
 .btn-add {
@@ -606,6 +607,7 @@ th {
     border-radius: 12px;
     font-size: 0.8rem;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .badge-active {
