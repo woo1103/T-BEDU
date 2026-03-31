@@ -156,6 +156,23 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
             UNIQUE(year, month, class_id, user_id)
         );
+        CREATE TABLE IF NOT EXISTS tuition_ledger (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER NOT NULL,
+            year INTEGER NOT NULL,
+            month INTEGER NOT NULL,
+            tuition_fee INTEGER DEFAULT 0,
+            book_fee INTEGER DEFAULT 0,
+            etc_fee INTEGER DEFAULT 0,
+            special_fee INTEGER DEFAULT 0,
+            discount_rate INTEGER DEFAULT 0,
+            total_amount INTEGER DEFAULT 0,
+            is_paid BOOLEAN DEFAULT 0,
+            note TEXT DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE,
+            UNIQUE(student_id, year, month)
+        );
     ''')
 
     conn.commit()
@@ -179,6 +196,34 @@ def init_db():
         pass
     try:
         cursor.execute("ALTER TABLE student ADD COLUMN status TEXT NOT NULL DEFAULT 'active'")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN tuition_fee INTEGER DEFAULT 0")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN book_fee INTEGER DEFAULT 0")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN etc_fee INTEGER DEFAULT 0")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN special_fee INTEGER DEFAULT 0")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN discount_rate INTEGER DEFAULT 0")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN sibling_id INTEGER DEFAULT NULL")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE student ADD COLUMN class_schedule TEXT DEFAULT ''")
     except Exception:
         pass
     conn.commit()
