@@ -490,6 +490,45 @@ def user_reset_password(id):
     return redirect(url_for('users'))
 
 
+@app.route('/admin/update-account', methods=['POST'])
+@admin_required
+def admin_update_account():
+    current_password = request.form.get('current_password', '')
+    new_username = request.form.get('new_username', '').strip()
+    new_password = request.form.get('new_password', '')
+
+    db = get_db()
+    admin = db.execute('SELECT * FROM user WHERE id = ?', (session['user_id'],)).fetchone()
+
+    if not admin or admin['password'] != hash_password(current_password):
+        flash('현재 비밀번호가 일치하지 않습니다.')
+        db.close()
+        return redirect(url_for('users'))
+
+    if new_username:
+        existing = db.execute('SELECT id FROM user WHERE username = ? AND id != ?',
+                              (new_username, session['user_id'])).fetchone()
+        if existing:
+            flash('이미 사용 중인 아이디입니다.')
+            db.close()
+            return redirect(url_for('users'))
+        db.execute('UPDATE user SET username = ? WHERE id = ?', (new_username, session['user_id']))
+        session['username'] = new_username
+
+    if new_password:
+        db.execute('UPDATE user SET password = ? WHERE id = ?',
+                   (hash_password(new_password), session['user_id']))
+
+    db.commit()
+    db.close()
+
+    if new_username or new_password:
+        flash('관리자 계정이 변경되었습니다.')
+    else:
+        flash('변경할 내용이 없습니다.')
+    return redirect(url_for('users'))
+
+
 # ─── API ───
 @app.route('/api/classes/<int:branch_id>')
 @login_required

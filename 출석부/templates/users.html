@@ -2,6 +2,31 @@
 {% block content %}
 <h1>담당자 관리</h1>
 
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-msg">
+    {% for msg in messages %}
+    <p>{{ msg }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<!-- 관리자 계정 관리 -->
+<section class="manage-section">
+    <h2>내 계정 관리 (관리자)</h2>
+    <form action="{{ url_for('admin_update_account') }}" method="post" class="inline-form" style="flex-wrap: wrap; gap: 0.5rem;"
+          onsubmit="return confirm('계정 정보를 변경하시겠습니까?')">
+        <input type="password" name="current_password" placeholder="현재 비밀번호 *" required>
+        <input type="text" name="new_username" placeholder="새 아이디 (변경 시 입력)">
+        <input type="password" name="new_password" placeholder="새 비밀번호 (변경 시 입력)">
+        <button type="submit" class="btn btn-edit">변경</button>
+    </form>
+    <p style="color:#888; font-size:0.85rem; margin-top:0.3rem;">
+        변경하려는 항목만 입력하세요. 빈칸은 기존 값이 유지됩니다.
+    </p>
+</section>
+
 <!-- 담당자 추가 -->
 <section class="manage-section">
     <h2>담당자 추가</h2>
