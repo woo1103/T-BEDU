@@ -89,19 +89,19 @@
     <p style="color:#888; font-size:0.9rem; margin-bottom:1rem;">학생 등록/휴원/재등록 버튼 사용 시 자동 기록됩니다. 결산 입력 시 참고하세요.</p>
     <div class="table-responsive">
         <table>
-            <thead><tr><th>월</th><th>반</th><th>신규</th><th>휴원</th><th>재등록</th><th>순증</th></tr></thead>
+            <thead><tr><th>월</th><th>반</th><th>등록</th><th>휴원</th><th>재등록</th><th>순증</th></tr></thead>
             <tbody>
-            {% for (month, class_id), stats in change_log_stats.items()|sort %}
+            {% for item in change_log_stats %}
             <tr>
-                <td>{{ month }}월</td>
+                <td>{{ item.month }}월</td>
                 <td>
-                    {% for c in classes %}{% if c.id == class_id %}{{ c.branch_name }} - {{ c.name }}{% endif %}{% endfor %}
+                    {% for c in classes %}{% if c.id == item.class_id %}{{ c.branch_name }} - {{ c.name }}{% endif %}{% endfor %}
                 </td>
-                <td class="text-blue">+{{ stats.new }}</td>
-                <td class="text-red">-{{ stats.leave }}</td>
-                <td class="text-blue">+{{ stats.re_register }}</td>
-                <td class="{% if stats.new + stats.re_register - stats.leave >= 0 %}text-blue{% else %}text-red{% endif %}">
-                    {{ stats.new + stats.re_register - stats.leave }}
+                <td class="text-blue">+{{ item.register }}</td>
+                <td class="text-red">-{{ item.leave }}</td>
+                <td class="text-blue">+{{ item.re_register }}</td>
+                <td class="{% if item.register + item.re_register - item.leave >= 0 %}text-blue{% else %}text-red{% endif %}">
+                    {{ item.register + item.re_register - item.leave }}
                 </td>
             </tr>
             {% endfor %}
