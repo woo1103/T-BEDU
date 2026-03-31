@@ -133,9 +133,13 @@
                 </tr>
             </thead>
             <tbody>
+            {% set ns = namespace(total_start=0, total_new=0, total_leave=0) %}
             {% for s in settlements %}
             {% set end_count = s.start_count + s.new_count - s.leave_count %}
             {% set leave_rate = (s.leave_count / s.start_count * 100)|round(1) if s.start_count > 0 else 0 %}
+            {% set ns.total_start = ns.total_start + s.start_count %}
+            {% set ns.total_new = ns.total_new + s.new_count %}
+            {% set ns.total_leave = ns.total_leave + s.leave_count %}
             <tr>
                 <td>{{ s.month }}월</td>
                 <td>{{ s.branch_name }}</td>
@@ -154,6 +158,16 @@
                 </td>
             </tr>
             {% endfor %}
+            <tr class="row-total">
+                <td colspan="4"><strong>총 인원</strong></td>
+                <td>{{ ns.total_start }}</td>
+                <td class="text-blue">+{{ ns.total_new }}</td>
+                <td class="text-red">-{{ ns.total_leave }}</td>
+                <td class="{% if ns.total_new - ns.total_leave >= 0 %}text-blue{% else %}text-red{% endif %}">{{ ns.total_new - ns.total_leave }}</td>
+                <td><strong>{{ ns.total_start + ns.total_new - ns.total_leave }}</strong></td>
+                <td>{{ ((ns.total_leave / ns.total_start * 100)|round(1)) if ns.total_start > 0 else 0 }}%</td>
+                <td></td>
+            </tr>
             </tbody>
         </table>
     </div>
