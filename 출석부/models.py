@@ -31,6 +31,10 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             branch_id INTEGER NOT NULL,
             name TEXT NOT NULL,
+            subject TEXT DEFAULT '',
+            grade_level TEXT DEFAULT '',
+            class_number TEXT DEFAULT '',
+            day_schedule TEXT DEFAULT '',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (branch_id) REFERENCES branch(id) ON DELETE SET NULL
         );
@@ -168,6 +172,7 @@ def init_db():
             discount_rate INTEGER DEFAULT 0,
             total_amount INTEGER DEFAULT 0,
             is_paid BOOLEAN DEFAULT 0,
+            paid_date TEXT DEFAULT '',
             note TEXT DEFAULT '',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE,
@@ -175,6 +180,25 @@ def init_db():
         );
     ''')
 
+    conn.commit()
+
+    # 기존 class 테이블에 컬럼 추가 (마이그레이션)
+    try:
+        cursor.execute("ALTER TABLE class ADD COLUMN subject TEXT DEFAULT ''")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE class ADD COLUMN grade_level TEXT DEFAULT ''")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE class ADD COLUMN class_number TEXT DEFAULT ''")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE class ADD COLUMN day_schedule TEXT DEFAULT ''")
+    except Exception:
+        pass
     conn.commit()
 
     # 기존 student 테이블에 컬럼 추가 (마이그레이션)
@@ -224,6 +248,13 @@ def init_db():
         pass
     try:
         cursor.execute("ALTER TABLE student ADD COLUMN class_schedule TEXT DEFAULT ''")
+    except Exception:
+        pass
+    conn.commit()
+
+    # 기존 tuition_ledger 테이블에 컬럼 추가 (마이그레이션)
+    try:
+        cursor.execute("ALTER TABLE tuition_ledger ADD COLUMN paid_date TEXT DEFAULT ''")
     except Exception:
         pass
     conn.commit()

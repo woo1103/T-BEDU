@@ -52,16 +52,31 @@
             <option value="{{ b.id }}">{{ b.name }}</option>
             {% endfor %}
         </select>
-        <input type="text" name="name" placeholder="반 이름" required>
+        <select name="subject" required>
+            <option value="">과목</option>
+            <option value="수학">수학</option>
+            <option value="영어">영어</option>
+        </select>
+        <input type="text" name="grade_level" placeholder="학년" required style="width:80px;">
+        <input type="text" name="class_number" placeholder="반" required style="width:80px;">
+        <input type="text" name="day_schedule" placeholder="요일" style="width:100px;">
         <button type="submit" class="btn btn-add">추가</button>
     </form>
     <table>
-        <thead><tr><th>지점</th><th>반명</th><th>작업</th></tr></thead>
+        <thead><tr><th>지점</th><th>과목</th><th>학년</th><th>반</th><th>요일</th><th>작업</th></tr></thead>
         <tbody>
         {% for c in classes %}
         <tr>
             <td>{{ c.branch_name }}</td>
-            <td>{{ c.name }}</td>
+            <td>{{ c.subject or '-' }}</td>
+            <td>{{ c.grade_level or '-' }}</td>
+            <td>{{ c.class_number or c.name }}</td>
+            <td>
+                <form action="{{ url_for('class_edit', id=c.id) }}" method="post" class="inline-form">
+                    <input type="text" name="day_schedule" value="{{ c.day_schedule or '' }}" placeholder="요일" style="width:100px;">
+                    <button type="submit" class="btn btn-edit">수정</button>
+                </form>
+            </td>
             <td>
                 <form action="{{ url_for('class_delete', id=c.id) }}" method="post"
                       onsubmit="return confirm('반을 삭제하시겠습니까? (학생 기록은 보존됩니다)')">
@@ -94,15 +109,21 @@
         <button type="submit" class="btn btn-reregister-btn" onclick="document.getElementById('addChangeType').value='re_register'">재등록</button>
     </form>
     <p style="color:#888; font-size:0.85rem; margin-top:0.3rem;">
+        반 선택 시 과목-학년-반-요일이 표시됩니다.
+    </p>
+    <p style="color:#888; font-size:0.85rem; margin-top:0.3rem;">
         추가: 단순 추가 | 등록: 신규등록(결산 순증+1) | 재등록: 휴원복귀(결산 순증+1)
     </p>
     <table>
-        <thead><tr><th>지점</th><th>반</th><th>이름</th><th>상태</th><th>상세</th><th>작업</th></tr></thead>
+        <thead><tr><th>지점</th><th>과목</th><th>학년</th><th>반</th><th>요일</th><th>이름</th><th>상태</th><th>상세</th><th>작업</th></tr></thead>
         <tbody>
         {% for s in students %}
         <tr class="{% if s.status == 'on_leave' %}row-leave{% endif %}">
             <td>{{ s.branch_name or '-' }}</td>
-            <td>{{ s.class_name or '-' }}</td>
+            <td>{{ s.class_subject or '-' }}</td>
+            <td>{{ s.class_grade_level or '-' }}</td>
+            <td>{{ s.class_class_number or s.class_name or '-' }}</td>
+            <td>{{ s.class_day_schedule or '-' }}</td>
             <td>
                 <form action="{{ url_for('student_edit', id=s.id) }}" method="post" class="inline-form">
                     <input type="hidden" name="branch_id" value="{{ s.branch_id or '' }}">
@@ -146,6 +167,15 @@
 
 {% block scripts %}
 <script>
+function formatClassName(c) {
+    let parts = [];
+    if (c.subject) parts.push(c.subject);
+    if (c.grade_level) parts.push(c.grade_level);
+    if (c.class_number) parts.push(c.class_number);
+    if (c.day_schedule) parts.push('(' + c.day_schedule + ')');
+    return parts.length > 0 ? parts.join(' ') : c.name;
+}
+
 function loadClassesForAdd(branchId) {
     const select = document.getElementById('add-class-select');
     select.innerHTML = '<option value="">반 선택</option>';
@@ -154,7 +184,7 @@ function loadClassesForAdd(branchId) {
         .then(r => r.json())
         .then(data => {
             data.forEach(c => {
-                select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                select.innerHTML += `<option value="${c.id}">${formatClassName(c)}</option>`;
             });
         });
 }

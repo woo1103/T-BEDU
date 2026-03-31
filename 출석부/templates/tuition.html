@@ -67,6 +67,7 @@
                             <th class="text-center text-nowrap">할인율</th>
                             <th class="text-end text-nowrap">결제금액</th>
                             <th class="text-center text-nowrap">결제처리</th>
+                            <th class="text-center text-nowrap">결제일</th>
                             <th class="text-center">비고</th>
                             <th class="text-end pe-3">저장</th>
                         </tr>
@@ -107,6 +108,13 @@
                                                {% if ledger.is_paid %}checked{% endif %} onchange="this.form.submit()">
                                     </div>
                                 </td>
+                                <td class="text-center text-nowrap">
+                                    {% if ledger.is_paid and ledger.paid_date %}
+                                    <small class="text-success">{{ ledger.paid_date }}</small>
+                                    {% else %}
+                                    <small class="text-muted">-</small>
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <input type="text" name="note" class="form-control form-control-sm border-0 bg-light" value="{{ ledger.note }}" placeholder="비고 입력">
                                 </td>
@@ -117,7 +125,7 @@
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="10" class="text-center py-5">검색 결과가 없습니다. 학생 검색 시 전체 학생 조회가 가능합니다.</td>
+                            <td colspan="12" class="text-center py-5">검색 결과가 없습니다. 학생 검색 시 전체 학생 조회가 가능합니다.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

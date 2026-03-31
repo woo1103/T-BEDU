@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session, g, flash, make_response
 from models import get_db, init_db, hash_password
-from datetime import datetime, date
+from datetime import datetime, date, timezone, timedelta
 from functools import wraps
 import json
 import os
@@ -88,7 +88,9 @@ def manage():
         ORDER BY branch.name, class.name
     ''').fetchall()
     students = db.execute('''
-        SELECT student.*, class.name as class_name, branch.name as branch_name
+        SELECT student.*, class.name as class_name, branch.name as branch_name,
+               class.subject as class_subject, class.grade_level as class_grade_level,
+               class.class_number as class_class_number, class.day_schedule as class_day_schedule
         FROM student
         LEFT JOIN class ON student.class_id = class.id
         LEFT JOIN branch ON student.branch_id = branch.id
@@ -140,11 +142,16 @@ def branch_delete(id):
 @app.route('/class/add', methods=['POST'])
 @admin_required
 def class_add():
-    name = request.form.get('name', '').strip()
     branch_id = request.form.get('branch_id')
-    if name and branch_id:
+    subject = request.form.get('subject', '').strip()
+    grade_level = request.form.get('grade_level', '').strip()
+    class_number = request.form.get('class_number', '').strip()
+    day_schedule = request.form.get('day_schedule', '').strip()
+    if branch_id and subject and grade_level and class_number:
+        name = f"{subject} {grade_level} {class_number}"
         db = get_db()
-        db.execute('INSERT INTO class (name, branch_id) VALUES (?, ?)', (name, branch_id))
+        db.execute('INSERT INTO class (name, branch_id, subject, grade_level, class_number, day_schedule) VALUES (?, ?, ?, ?, ?, ?)',
+                   (name, branch_id, subject, grade_level, class_number, day_schedule))
         db.commit()
         db.close()
     return redirect(url_for('manage'))
@@ -153,13 +160,11 @@ def class_add():
 @app.route('/class/edit/<int:id>', methods=['POST'])
 @admin_required
 def class_edit(id):
-    name = request.form.get('name', '').strip()
-    branch_id = request.form.get('branch_id')
-    if name:
-        db = get_db()
-        db.execute('UPDATE class SET name = ?, branch_id = ? WHERE id = ?', (name, branch_id, id))
-        db.commit()
-        db.close()
+    day_schedule = request.form.get('day_schedule', '').strip()
+    db = get_db()
+    db.execute('UPDATE class SET day_schedule = ? WHERE id = ?', (day_schedule, id))
+    db.commit()
+    db.close()
     return redirect(url_for('manage'))
 
 
@@ -373,7 +378,9 @@ def my_students():
             ORDER BY branch.name, class.name
         ''', allowed).fetchall()
         students = db.execute(f'''
-            SELECT student.*, class.name as class_name, branch.name as branch_name
+            SELECT student.*, class.name as class_name, branch.name as branch_name,
+                   class.subject as class_subject, class.grade_level as class_grade_level,
+                   class.class_number as class_class_number, class.day_schedule as class_day_schedule
             FROM student
             LEFT JOIN class ON student.class_id = class.id
             LEFT JOIN branch ON student.branch_id = branch.id
@@ -850,7 +857,9 @@ def statistics():
 def student_detail(id):
     db = get_db()
     student = db.execute('''
-        SELECT student.*, class.name as class_name, branch.name as branch_name
+        SELECT student.*, class.name as class_name, branch.name as branch_name,
+               class.subject as class_subject, class.grade_level as class_grade_level,
+               class.class_number as class_class_number, class.day_schedule as class_day_schedule
         FROM student
         LEFT JOIN class ON student.class_id = class.id
         LEFT JOIN branch ON student.branch_id = branch.id
@@ -864,6 +873,17 @@ def student_detail(id):
     if allowed is not None and student['class_id'] not in allowed:
         db.close()
         return redirect(url_for('index'))
+
+    # 관리자용: 지점/반 변경을 위한 목록
+    branches = []
+    classes_list = []
+    if session.get('role') == 'admin':
+        branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+        classes_list = db.execute('''
+            SELECT class.*, branch.name as branch_name
+            FROM class JOIN branch ON class.branch_id = branch.id
+            ORDER BY branch.name, class.name
+        ''').fetchall()
 
     consultations = db.execute('''
         SELECT * FROM parent_consultation
@@ -911,7 +931,8 @@ def student_detail(id):
                            scores=scores, scores_chart=scores_chart,
                            change_logs=change_logs, is_senior=is_senior,
                            now_year=date.today().year, now_month=date.today().month,
-                           all_students=all_students, sibling=sibling)
+                           all_students=all_students, sibling=sibling,
+                           branches=branches, classes_list=classes_list)
 
 
 @app.route('/student/<int:id>/update-info', methods=['POST'])
@@ -945,14 +966,22 @@ def student_update_info(id):
     discount_rate = int(discount_rate_str) if discount_rate_str and discount_rate_str.lstrip('-').isdigit() else 0
     sibling_id_val = request.form.get('sibling_id')
     sibling_id = int(sibling_id_val) if sibling_id_val and sibling_id_val.isdigit() else None
-    
+
     class_schedule = request.form.get('class_schedule', '').strip()
+
+    # 관리자인 경우 지점/반 변경 처리
+    if session.get('role') == 'admin':
+        new_branch_id = request.form.get('admin_branch_id')
+        new_class_id = request.form.get('admin_class_id')
+        if new_branch_id and new_class_id:
+            db.execute('UPDATE student SET branch_id=?, class_id=? WHERE id=?',
+                       (int(new_branch_id), int(new_class_id), id))
 
     db.execute('''
         UPDATE student SET registration_date=?, phone=?, parent_phone=?, notes=?,
                tuition_fee=?, book_fee=?, etc_fee=?, special_fee=?, discount_rate=?, sibling_id=?, class_schedule=?
         WHERE id=?
-    ''', (registration_date, phone, parent_phone, notes, 
+    ''', (registration_date, phone, parent_phone, notes,
           tuition_fee, book_fee, etc_fee, special_fee, discount_rate, sibling_id, class_schedule, id))
     db.commit()
     db.close()
@@ -1615,12 +1644,36 @@ def tuition_save():
     total_amount = int(request.form.get('total_amount', 0))
 
     db = get_db()
-    db.execute('''
-        INSERT INTO tuition_ledger (student_id, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, note)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(student_id, year, month)
-        DO UPDATE SET is_paid=?, note=?, updated_at=CURRENT_TIMESTAMP
-    ''', (student_id, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, note, is_paid, note))
+    KST = timezone(timedelta(hours=9))
+    now_kst = datetime.now(KST).strftime('%Y-%m-%d')
+
+    # 이미 결제 완료(is_paid=1)된 레코드가 있으면 금액은 건드리지 않고 note만 업데이트
+    existing = db.execute(
+        'SELECT is_paid, paid_date FROM tuition_ledger WHERE student_id=? AND year=? AND month=?',
+        (student_id, year, month)).fetchone()
+
+    if existing and existing['is_paid'] == 1 and is_paid == 1:
+        # 이미 결제완료 상태 → 금액 변경 없이 메모만 업데이트
+        db.execute('''
+            UPDATE tuition_ledger SET note=?, updated_at=CURRENT_TIMESTAMP
+            WHERE student_id=? AND year=? AND month=?
+        ''', (note, student_id, year, month))
+    elif is_paid == 0 and existing:
+        # 결제 취소 → paid_date 초기화
+        db.execute('''
+            UPDATE tuition_ledger SET tuition_fee=?, book_fee=?, etc_fee=?, special_fee=?, discount_rate=?, total_amount=?, is_paid=0, paid_date='', note=?, updated_at=CURRENT_TIMESTAMP
+            WHERE student_id=? AND year=? AND month=?
+        ''', (tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, note, student_id, year, month))
+    else:
+        # 신규 저장 또는 미결제→결제 전환 시 해당 시점 금액으로 확정
+        paid_date = now_kst if is_paid else ''
+        db.execute('''
+            INSERT INTO tuition_ledger (student_id, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(student_id, year, month)
+            DO UPDATE SET tuition_fee=?, book_fee=?, etc_fee=?, special_fee=?, discount_rate=?, total_amount=?, is_paid=?, paid_date=?, note=?, updated_at=CURRENT_TIMESTAMP
+        ''', (student_id, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note,
+              tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note))
 
     db.commit()
     db.close()

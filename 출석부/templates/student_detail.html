@@ -15,7 +15,10 @@
 <div class="detail-info">
     <p>
         <strong>지점:</strong> {{ student.branch_name or '-' }} |
-        <strong>반:</strong> {{ student.class_name or '-' }} |
+        <strong>과목:</strong> {{ student.class_subject or '-' }} |
+        <strong>학년:</strong> {{ student.class_grade_level or '-' }} |
+        <strong>반:</strong> {{ student.class_class_number or student.class_name or '-' }} |
+        <strong>요일:</strong> {{ student.class_day_schedule or '-' }} |
         <strong>상태:</strong>
         {% if student.status == 'on_leave' %}
         <span class="badge badge-leave">휴원</span>
@@ -29,6 +32,32 @@
 <section class="manage-section">
     <h2>인적사항</h2>
     <form method="post" action="{{ url_for('student_update_info', id=student.id) }}">
+        {% if session.role == 'admin' %}
+        <h3>센터 / 반 변경 (관리자 전용)</h3>
+        <div class="info-grid" style="margin-bottom: 1rem;">
+            <div class="form-group">
+                <label>지점</label>
+                <select name="admin_branch_id" id="adminBranchSelect" onchange="loadClassesForDetail(this.value)">
+                    <option value="">지점 선택</option>
+                    {% for b in branches %}
+                    <option value="{{ b.id }}" {% if student.branch_id == b.id %}selected{% endif %}>{{ b.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>반 (과목-학년-반-요일)</label>
+                <select name="admin_class_id" id="adminClassSelect">
+                    <option value="">반 선택</option>
+                    {% for c in classes_list %}
+                    <option value="{{ c.id }}" data-branch="{{ c.branch_id }}" {% if student.class_id == c.id %}selected{% endif %}>
+                        {{ c.branch_name }} - {{ c.subject or '' }} {{ c.grade_level or '' }} {{ c.class_number or c.name }} {% if c.day_schedule %}({{ c.day_schedule }}){% endif %}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ddd;">
+        {% endif %}
         <div class="info-grid">
             <div class="form-group">
                 <label>등록일</label>
@@ -383,6 +412,23 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script>
+// 관리자: 지점 변경 시 반 필터링
+function loadClassesForDetail(branchId) {
+    var select = document.getElementById('adminClassSelect');
+    if (!select) return;
+    var options = select.querySelectorAll('option');
+    options.forEach(function(opt) {
+        if (!opt.value) return; // 기본 옵션 유지
+        opt.style.display = (opt.dataset.branch === branchId) ? '' : 'none';
+        if (opt.dataset.branch !== branchId && opt.selected) opt.selected = false;
+    });
+}
+// 초기 로드 시 현재 지점 기준 필터
+(function() {
+    var bs = document.getElementById('adminBranchSelect');
+    if (bs && bs.value) loadClassesForDetail(bs.value);
+})();
+
 document.getElementById('siblingSelect').addEventListener('change', function() {
     if(this.value) {
         let dr = document.getElementById('discountRate');
