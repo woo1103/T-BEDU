@@ -190,7 +190,7 @@
                 <td>{{ s.expected_score if s.expected_score is not none else '-' }}</td>
                 <td>{{ s.target_score if s.target_score is not none else '-' }}</td>
                 <td><strong>{{ s.actual_score if s.actual_score is not none else '-' }}</strong></td>
-                <td>{{ s.grade + '등급' if s.grade else '-' }}</td>
+                <td>{{ s.grade ~ '등급' if s.grade else '-' }}</td>
                 <td style="white-space:nowrap;">
                     <button class="btn btn-edit" onclick="openScoreEditModal({{ s.id }}, {{ s.expected_score if s.expected_score is not none else 'null' }}, {{ s.target_score if s.target_score is not none else 'null' }}, {{ s.actual_score if s.actual_score is not none else 'null' }}, '{{ s.grade }}')">수정</button>
                     <form method="post" action="{{ url_for('score_delete', student_id=student.id, id=s.id) }}"
