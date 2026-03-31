@@ -1350,6 +1350,94 @@ def settlement():
 
     auto_settlement.sort(key=lambda x: (x['month'], x['branch_name'], x['class_name']))
 
+    # ── 지점별 자동 집계 (동일 학생 이름 중복 제거) ──
+    # 1) 지점별 현재 active 학생 수 (이름 기준 중복 제거)
+    branch_active_distinct = {}
+    for b in branches:
+        cnt = db.execute("SELECT COUNT(DISTINCT name) as cnt FROM student WHERE branch_id = ? AND status = 'active'",
+                         (b['id'],)).fetchone()
+        branch_active_distinct[b['id']] = cnt['cnt'] if cnt else 0
+
+    # 2) 변경이력을 지점/월별로 학생 이름 기준 중복 제거 집계
+    branch_change_logs = db.execute('''
+        SELECT student_change_log.change_type, student_change_log.change_date,
+               student.name as student_name, student.branch_id
+        FROM student_change_log
+        JOIN student ON student_change_log.student_id = student.id
+        WHERE student_change_log.change_date >= ?
+          AND student.branch_id IS NOT NULL
+    ''', (f"{sel_year}-01-01",)).fetchall()
+
+    # (branch_id, year, month) -> {'register': set(names), 'leave': set(names), 're_register': set(names)}
+    branch_month_names = {}
+    for log in branch_change_logs:
+        bid = log['branch_id']
+        try:
+            log_year = int(log['change_date'].split('-')[0])
+            log_month = int(log['change_date'].split('-')[1])
+        except (IndexError, ValueError):
+            continue
+        key = (bid, log_year, log_month)
+        if key not in branch_month_names:
+            branch_month_names[key] = {'register': set(), 'leave': set(), 're_register': set()}
+        sname = log['student_name']
+        if log['change_type'] == 'register':
+            branch_month_names[key]['register'].add(sname)
+        elif log['change_type'] == 'leave':
+            branch_month_names[key]['leave'].add(sname)
+        elif log['change_type'] == 're_register':
+            branch_month_names[key]['re_register'].add(sname)
+
+    # 3) 지점별 월초/월말 역산
+    auto_branch_settlement = []
+    branch_name_map = {b['id']: b['name'] for b in branches}
+
+    for b in branches:
+        bid = b['id']
+        current_active = branch_active_distinct.get(bid, 0)
+
+        for m in range(1, 13):
+            changes = branch_month_names.get((bid, int_year, m))
+            if not changes:
+                continue
+            reg = len(changes['register'])
+            rereg = len(changes['re_register'])
+            leave = len(changes['leave'])
+            if reg == 0 and rereg == 0 and leave == 0:
+                continue
+
+            # 월초 역산: 현재 distinct active - 이번달 이후 순증
+            net_after = 0
+            for future_m in range(m, 13):
+                fc = branch_month_names.get((bid, int_year, future_m))
+                if fc:
+                    net_after += len(fc['register']) + len(fc['re_register']) - len(fc['leave'])
+            if int_year < current_year:
+                for fy in range(int_year + 1, current_year + 1):
+                    for fm in range(1, 13):
+                        if fy == current_year and fm > current_month:
+                            break
+                        fc = branch_month_names.get((bid, fy, fm))
+                        if fc:
+                            net_after += len(fc['register']) + len(fc['re_register']) - len(fc['leave'])
+
+            start_count = current_active - net_after
+            net = reg + rereg - leave
+            end_count = start_count + net
+
+            auto_branch_settlement.append({
+                'month': m,
+                'branch_name': b['name'],
+                'start_count': start_count,
+                'register': reg,
+                're_register': rereg,
+                'leave': leave,
+                'net': net,
+                'end_count': end_count
+            })
+
+    auto_branch_settlement.sort(key=lambda x: (x['month'], x['branch_name']))
+
     # 기존 입력된 결산 데이터 (수정용)
     existing = {}
     for s in settlements:
@@ -1364,6 +1452,7 @@ def settlement():
                            teacher_monthly=teacher_monthly, branch_monthly=branch_monthly,
                            existing=existing, settlements=settlements,
                            auto_settlement=auto_settlement,
+                           auto_branch_settlement=auto_branch_settlement,
                            sel_year=sel_year, sel_view=sel_view, years=years)
 
 
