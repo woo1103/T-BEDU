@@ -874,10 +874,12 @@ def student_detail(id):
     ''', (id,)).fetchall()
     scores = [dict(s) for s in scores_raw]
 
-    # 그래프용 (시간순 오름차순)
+    # 그래프용 (시간순 오름차순: 연도 → 학기 → 중간(1)/기말(2) 순)
     scores_chart = db.execute('''
         SELECT * FROM student_score WHERE student_id = ?
-        ORDER BY year, semester, exam_type, mock_month
+        ORDER BY year, semester,
+            CASE exam_type WHEN 'midterm' THEN 1 WHEN 'final' THEN 2 WHEN 'mock' THEN 3 END,
+            mock_month
     ''', (id,)).fetchall()
     scores_chart = [dict(s) for s in scores_chart]
 
