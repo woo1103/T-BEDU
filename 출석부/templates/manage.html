@@ -2,6 +2,16 @@
 {% block content %}
 <h1>관리</h1>
 
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-msg">
+    {% for msg in messages %}
+    <p>{{ msg }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
 <!-- 지점 관리 -->
 <section class="manage-section">
     <h2>지점 관리</h2>
@@ -76,7 +86,7 @@
 
 <!-- 학생 관리 -->
 <section class="manage-section">
-    <h2>학생 관리</h2>
+    <h2>재원 학생 관리</h2>
     <form action="{{ url_for('student_add') }}" method="post" class="inline-form" id="student-add-form">
         <select name="branch_id" id="add-branch-select" required onchange="loadClassesForAdd(this.value)">
             <option value="">지점 선택</option>
@@ -91,10 +101,10 @@
         <button type="submit" class="btn btn-add">추가</button>
     </form>
     <table>
-        <thead><tr><th>지점</th><th>반</th><th>이름</th><th>상세</th><th>작업</th></tr></thead>
+        <thead><tr><th>지점</th><th>반</th><th>이름</th><th>상태</th><th>상세</th><th>작업</th></tr></thead>
         <tbody>
         {% for s in students %}
-        <tr>
+        <tr class="{% if s.status == 'on_leave' %}row-leave{% endif %}">
             <td>{{ s.branch_name or '-' }}</td>
             <td>{{ s.class_name or '-' }}</td>
             <td>
@@ -117,10 +127,28 @@
                     <button type="submit" class="btn btn-edit">수정</button>
                 </form>
             </td>
-            <td><a href="{{ url_for('student_detail', id=s.id) }}" class="btn btn-edit">상세</a></td>
             <td>
-                <form action="{{ url_for('student_delete', id=s.id) }}" method="post"
-                      onsubmit="return confirm('학생을 삭제하시겠습니까? (출석 기록도 함께 삭제됩니다)')">
+                {% if s.status == 'on_leave' %}
+                <span class="badge badge-leave">휴원</span>
+                {% else %}
+                <span class="badge badge-active">재원</span>
+                {% endif %}
+            </td>
+            <td><a href="{{ url_for('student_detail', id=s.id) }}" class="btn btn-edit">상세</a></td>
+            <td style="white-space:nowrap;">
+                {% if s.status == 'on_leave' %}
+                <form action="{{ url_for('student_reregister', id=s.id) }}" method="post" style="display:inline"
+                      onsubmit="return confirm('{{ s.name }} 학생을 재등록 하시겠습니까?')">
+                    <button type="submit" class="btn btn-add">재등록</button>
+                </form>
+                {% else %}
+                <form action="{{ url_for('student_leave', id=s.id) }}" method="post" style="display:inline"
+                      onsubmit="return confirm('{{ s.name }} 학생을 휴원 처리하시겠습니까?')">
+                    <button type="submit" class="btn btn-leave">휴원</button>
+                </form>
+                {% endif %}
+                <form action="{{ url_for('student_delete', id=s.id) }}" method="post" style="display:inline"
+                      onsubmit="return confirm('{{ s.name }} 학생을 완전히 삭제하시겠습니까? (출석 기록도 함께 삭제됩니다)')">
                     <button type="submit" class="btn btn-delete">삭제</button>
                 </form>
             </td>
