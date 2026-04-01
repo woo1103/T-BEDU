@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T&B Hub 사용 가이드</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            color: #2c3e50;
+        }
+
+        .poster {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 2.5rem 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+        }
+        .header-logo {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 0.3rem;
+            position: relative;
+        }
+        .header-sub {
+            font-size: 1.1rem;
+            font-weight: 300;
+            opacity: 0.9;
+            letter-spacing: 4px;
+            position: relative;
+        }
+        .header-desc {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            position: relative;
+        }
+
+        /* ===== ROLE TABS ===== */
+        .role-section {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: -1.2rem auto 0;
+            position: relative;
+            z-index: 10;
+            padding: 0 2rem;
+        }
+        .role-tab {
+            flex: 1;
+            max-width: 280px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: default;
+        }
+        .role-teacher {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+        .role-admin {
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            color: white;
+        }
+        .role-tab small {
+            display: block;
+            font-weight: 400;
+            font-size: 0.78rem;
+            margin-top: 0.2rem;
+            opacity: 0.9;
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content {
+            padding: 2rem 2.5rem 2.5rem;
+        }
+
+        /* ===== LOGIN SECTION ===== */
+        .login-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 16px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 2px solid #dee2e6;
+        }
+        .login-section h2 {
+            font-size: 1.2rem;
+            color: #495057;
+            margin-bottom: 1rem;
+        }
+        .login-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .login-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .login-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .login-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #495057;
+        }
+        .login-arrow {
+            font-size: 1.5rem;
+            color: #adb5bd;
+            font-weight: bold;
+        }
+        .login-note {
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: #868e96;
+            background: white;
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+        }
+
+        /* ===== DUAL GUIDE LAYOUT ===== */
+        .dual-guide {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .guide-column {
+            position: relative;
+        }
+
+        .guide-column-title {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 0.7rem 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .guide-column-title.teacher {
+            background: linear-gradient(135deg, #d5f5e3, #a9dfbf);
+            color: #1e8449;
+        }
+        .guide-column-title.admin {
+            background: linear-gradient(135deg, #fdebd0, #f9e79f);
+            color: #b7600a;
+        }
+
+        /* ===== STEP CARDS ===== */
+        .step-card {
+            background: white;
+            border-radius: 14px;
+            padding: 1.2rem 1.3rem;
+            margin-bottom: 0.8rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+            border-left: 4px solid;
+            transition: transform 0.2s;
+        }
+        .step-card.teacher-card {
+            border-left-color: #27ae60;
+        }
+        .step-card.admin-card {
+            border-left-color: #e67e22;
+        }
+
+        .step-num {
+            position: absolute;
+            top: -8px;
+            left: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: white;
+        }
+        .step-num.teacher-num { background: #27ae60; }
+        .step-num.admin-num { background: #e67e22; }
+
+        .step-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            margin-left: 1.8rem;
+        }
+
+        .step-body {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+        }
+
+        .step-visual {
+            flex-shrink: 0;
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: #f8f9fa;
+        }
+
+        .step-desc {
+            flex: 1;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: #555;
+        }
+        .step-desc strong {
+            color: #2c3e50;
+        }
+
+        .step-connector {
+            text-align: center;
+            color: #ced4da;
+            font-size: 0.9rem;
+            margin: -0.2rem 0;
+            line-height: 1;
+        }
+
+        /* ===== MINI MOCKUP ===== */
+        .mini-mock {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 0.5rem 0.6rem;
+            margin-top: 0.5rem;
+            font-size: 0.7rem;
+            border: 1px solid #e9ecef;
+        }
+        .mini-mock-row {
+            display: flex;
+            gap: 0.3rem;
+            margin-bottom: 0.3rem;
+            align-items: center;
+        }
+        .mm-select {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.65rem;
+            color: #868e96;
+        }
+        .mm-input {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.65rem;
+            color: #adb5bd;
+            flex: 1;
+        }
+        .mm-btn {
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: white;
+        }
+        .mm-btn-blue { background: #3498db; }
+        .mm-btn-green { background: #27ae60; }
+        .mm-tag {
+            display: inline-block;
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+        .mm-tag-green { background: #d5f5e3; color: #1e8449; }
+        .mm-tag-orange { background: #fdebd0; color: #b7600a; }
+        .mm-tag-red { background: #fadbd8; color: #c0392b; }
+        .mm-tag-blue { background: #d4efdf; color: #1a5276; }
+
+        .mm-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.6rem;
+        }
+        .mm-table th {
+            background: #e9ecef;
+            padding: 0.2rem 0.3rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        .mm-table td {
+            padding: 0.15rem 0.3rem;
+            border-bottom: 1px solid #f1f3f5;
+        }
+
+        /* ===== FEATURE GRID ===== */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .feature-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 0.6rem 0.4rem;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        .feature-icon {
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+        }
+        .feature-name {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .feature-sub {
+            font-size: 0.6rem;
+            color: #868e96;
+            margin-top: 0.1rem;
+        }
+
+        /* ===== TIP BOX ===== */
+        .tip-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 0.4rem 0.6rem;
+            font-size: 0.7rem;
+            margin-top: 0.4rem;
+            color: #856404;
+        }
+        .tip-box::before {
+            content: 'TIP ';
+            font-weight: 800;
+        }
+
+        /* ===== MENU MAP ===== */
+        .menu-map {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-top: 2rem;
+            color: white;
+        }
+        .menu-map h3 {
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .menu-bar {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .menu-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 0.5rem 0.7rem;
+            text-align: center;
+            min-width: 80px;
+            transition: background 0.2s;
+        }
+        .menu-item.highlight-green {
+            background: rgba(39, 174, 96, 0.3);
+            border: 1px solid rgba(39, 174, 96, 0.5);
+        }
+        .menu-item.highlight-orange {
+            background: rgba(230, 126, 34, 0.3);
+            border: 1px solid rgba(230, 126, 34, 0.5);
+        }
+        .menu-icon {
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+        }
+        .menu-name {
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+        .menu-role {
+            font-size: 0.58rem;
+            opacity: 0.7;
+            margin-top: 0.1rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            font-size: 0.75rem;
+            color: #868e96;
+        }
+
+        /* ===== FLOW ARROW BETWEEN SECTIONS ===== */
+        .section-divider {
+            text-align: center;
+            padding: 0.8rem 0;
+            font-size: 1.2rem;
+            color: #ced4da;
+        }
+
+        /* ===== DAILY WORKFLOW ===== */
+        .daily-flow {
+            background: linear-gradient(135deg, #ebf5fb, #d6eaf8);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-top: 2rem;
+            border: 2px solid #aed6f1;
+        }
+        .daily-flow h3 {
+            text-align: center;
+            font-size: 1rem;
+            color: #1a5276;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .daily-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+        }
+        .daily-step {
+            background: white;
+            border-radius: 12px;
+            padding: 0.7rem 0.8rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            min-width: 100px;
+        }
+        .daily-step-icon {
+            font-size: 1.4rem;
+            margin-bottom: 0.3rem;
+        }
+        .daily-step-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .daily-step-sub {
+            font-size: 0.62rem;
+            color: #7f8c8d;
+            margin-top: 0.1rem;
+        }
+        .daily-arrow {
+            font-size: 1.2rem;
+            color: #85c1e9;
+            font-weight: bold;
+        }
+
+        /* ===== BACK BUTTON ===== */
+        .back-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(44,62,80,0.8);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+        .back-btn:hover {
+            background: rgba(44,62,80,1);
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            body { background: white; }
+            .poster { box-shadow: none; }
+            .back-btn { display: none; }
+            .step-card { break-inside: avoid; }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .dual-guide {
+                grid-template-columns: 1fr;
+            }
+            .content { padding: 1.5rem 1rem; }
+            .header { padding: 2rem 1.5rem 1.5rem; }
+            .daily-steps { flex-direction: column; }
+            .daily-arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+
+<a href="/" class="back-btn">&larr; 돌아가기</a>
+
+<div class="poster">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="header-logo">T&B Hub</div>
+        <div class="header-sub">사 용 가 이 드</div>
+        <div class="header-desc">처음 사용하는 분도 쉽게 따라할 수 있는 단계별 안내서</div>
+    </div>
+
+    <!-- ===== ROLE TABS ===== -->
+    <div class="role-section">
+        <div class="role-tab role-teacher">
+            담당자 (선생님)
+            <small>출석 입력 / 수업계획 / 통계</small>
+        </div>
+        <div class="role-tab role-admin">
+            관리자 (원장님)
+            <small>지점·반 관리 / 결산 / 전체 관리</small>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- ===== LOGIN ===== -->
+        <div class="login-section">
+            <h2>STEP 0 &mdash; 로그인</h2>
+            <div class="login-flow">
+                <div class="login-step">
+                    <div class="login-icon">🌐</div>
+                    <div class="login-label">사이트 접속</div>
+                </div>
+                <div class="login-arrow">&rarr;</div>
+                <div class="login-step">
+                    <div class="login-icon">👤</div>
+                    <div class="login-label">아이디 입력</div>
+                </div>
+                <div class="login-arrow">&rarr;</div>
+                <div class="login-step">
+                    <div class="login-icon">🔑</div>
+                    <div class="login-label">비밀번호 입력</div>
+                </div>
+                <div class="login-arrow">&rarr;</div>
+                <div class="login-step">
+                    <div class="login-icon" style="background: #d5f5e3;">✅</div>
+                    <div class="login-label">로그인 완료!</div>
+                </div>
+            </div>
+            <div class="login-note">관리자에게 받은 아이디 / 비밀번호를 입력하세요</div>
+        </div>
+
+        <!-- ===== DUAL GUIDE ===== -->
+        <div class="dual-guide">
+
+            <!-- ===== 담당자 COLUMN ===== -->
+            <div class="guide-column">
+                <div class="guide-column-title teacher">🧑‍🏫 담당자 가이드 (매일 사용)</div>
+
+                <!-- Step 1: 출석부 -->
+                <div class="step-card teacher-card">
+                    <div class="step-num teacher-num">1</div>
+                    <div class="step-title">출석부 입력</div>
+                    <div class="step-body">
+                        <div class="step-visual">📋</div>
+                        <div class="step-desc">
+                            <strong>날짜 / 지점 / 반</strong>을 선택한 뒤<br>
+                            각 학생의 출석 상태와 숙제 여부를 체크하고 <strong>저장</strong>
+                        </div>
+                    </div>
+                    <div class="mini-mock">
+                        <div class="mini-mock-row">
+                            <span class="mm-select">📅 날짜</span>
+                            <span class="mm-select">🏢 지점</span>
+                            <span class="mm-select">📚 반</span>
+                        </div>
+                        <table class="mm-table">
+                            <tr><th>학생</th><th>출석</th><th>숙제</th></tr>
+                            <tr><td>홍길동</td><td><span class="mm-tag mm-tag-green">정상등원</span></td><td><span class="mm-tag mm-tag-blue">완료</span></td></tr>
+                            <tr><td>김철수</td><td><span class="mm-tag mm-tag-orange">지각</span></td><td><span class="mm-tag mm-tag-red">미완료</span></td></tr>
+                        </table>
+                        <div style="text-align:right; margin-top:0.3rem;">
+                            <span class="mm-btn mm-btn-blue">저장</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-connector">▼</div>
+
+                <!-- Step 2: 수업계획서 -->
+                <div class="step-card teacher-card">
+                    <div class="step-num teacher-num">2</div>
+                    <div class="step-title">수업계획서 작성</div>
+                    <div class="step-body">
+                        <div class="step-visual">📝</div>
+                        <div class="step-desc">
+                            <strong>교육과정 선택</strong> 또는 <strong>직접 입력</strong>으로 수업내용 작성<br>
+                            숙제 입력 후 <strong>등록</strong>
+                        </div>
+                    </div>
+                    <div class="mini-mock">
+                        <div class="mini-mock-row">
+                            <span class="mm-select">과목</span>
+                            <span class="mm-select">학년</span>
+                            <span class="mm-select">대단원</span>
+                            <span class="mm-select">소단원</span>
+                            <span class="mm-btn mm-btn-green">적용</span>
+                        </div>
+                        <div class="mini-mock-row">
+                            <span class="mm-input">수업내용 (자동입력 or 직접작성)</span>
+                        </div>
+                        <div class="mini-mock-row">
+                            <span class="mm-input">숙제</span>
+                            <span class="mm-btn mm-btn-blue">등록</span>
+                        </div>
+                    </div>
+                    <div class="tip-box">등록 후 <strong>공지 복사</strong> 버튼 → 카카오톡에 바로 붙여넣기!</div>
+                </div>
+
+                <div class="step-connector">▼</div>
+
+                <!-- Step 3: 통계 -->
+                <div class="step-card teacher-card">
+                    <div class="step-num teacher-num">3</div>
+                    <div class="step-title">통계 확인</div>
+                    <div class="step-body">
+                        <div class="step-visual">📊</div>
+                        <div class="step-desc">
+                            <strong>학생별 통계</strong> — 출석률, 숙제 완료율<br>
+                            <strong>반 별 통계</strong> — 캘린더형 일별 현황
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-connector">▼</div>
+
+                <!-- Step 4: 기타 기능 -->
+                <div class="step-card teacher-card">
+                    <div class="step-num teacher-num">4</div>
+                    <div class="step-title">추가 기능</div>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon">💰</div>
+                            <div class="feature-name">원비명부</div>
+                            <div class="feature-sub">월별 수납 관리</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">📄</div>
+                            <div class="feature-name">보고서</div>
+                            <div class="feature-sub">상담보고서 작성</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">👨‍🎓</div>
+                            <div class="feature-name">학생 관리</div>
+                            <div class="feature-sub">학생 추가/수정</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 관리자 COLUMN ===== -->
+            <div class="guide-column">
+                <div class="guide-column-title admin">🔧 관리자 가이드 (초기 설정)</div>
+
+                <!-- Step 1: 지점 & 반 -->
+                <div class="step-card admin-card">
+                    <div class="step-num admin-num">1</div>
+                    <div class="step-title">지점 & 반 등록</div>
+                    <div class="step-body">
+                        <div class="step-visual">🏢</div>
+                        <div class="step-desc">
+                            <strong>관리</strong> 메뉴에서<br>
+                            ① 지점 이름 등록<br>
+                            ② 반 등록 (과목/학년/반/요일)
+                        </div>
+                    </div>
+                    <div class="mini-mock">
+                        <div style="font-size:0.65rem; font-weight:600; margin-bottom:0.2rem;">지점 추가</div>
+                        <div class="mini-mock-row">
+                            <span class="mm-input">지점 이름</span>
+                            <span class="mm-btn mm-btn-green">추가</span>
+                        </div>
+                        <div style="font-size:0.65rem; font-weight:600; margin:0.3rem 0 0.2rem;">반 추가</div>
+                        <div class="mini-mock-row">
+                            <span class="mm-select">지점</span>
+                            <span class="mm-select">과목</span>
+                            <span class="mm-input" style="width:40px; flex:none;">학년</span>
+                            <span class="mm-input" style="width:30px; flex:none;">반</span>
+                            <span class="mm-input" style="width:50px; flex:none;">요일</span>
+                            <span class="mm-btn mm-btn-green">추가</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-connector">▼</div>
+
+                <!-- Step 2: 담당자 등록 -->
+                <div class="step-card admin-card">
+                    <div class="step-num admin-num">2</div>
+                    <div class="step-title">담당자 등록 & 반 배정</div>
+                    <div class="step-body">
+                        <div class="step-visual">🧑‍🏫</div>
+                        <div class="step-desc">
+                            <strong>담당자 관리</strong> 메뉴에서<br>
+                            ① 선생님 계정 생성 (이름/ID/PW)<br>
+                            ② 담당 반 배정
+                        </div>
+                    </div>
+                    <div class="mini-mock">
+                        <div class="mini-mock-row">
+                            <span class="mm-input">이름</span>
+                            <span class="mm-input">아이디</span>
+                            <span class="mm-input">비밀번호</span>
+                            <span class="mm-btn mm-btn-green">추가</span>
+                        </div>
+                        <div class="mini-mock-row" style="margin-top:0.3rem;">
+                            <span style="font-size:0.65rem;">김선생 →</span>
+                            <span class="mm-select">반 선택</span>
+                            <span class="mm-btn mm-btn-green">배정</span>
+                        </div>
+                    </div>
+                    <div class="tip-box">담당자는 배정된 반의 학생만 관리할 수 있습니다</div>
+                </div>
+
+                <div class="step-connector">▼</div>
+
+                <!-- Step 3: 학생 등록 -->
+                <div class="step-card admin-card">
+                    <div class="step-num admin-num">3</div>
+                    <div class="step-title">학생 등록</div>
+                    <div class="step-body">
+                        <div class="step-visual">👨‍🎓</div>
+                        <div class="step-desc">
+                            <strong>관리 → 재원 학생 관리</strong>에서<br>
+                            지점/반 선택 후 학생 이름 입력
+                        </div>
+                    </div>
+                    <div class="mini-mock">
+                        <div class="mini-mock-row">
+                            <span class="mm-select">지점</span>
+                            <span class="mm-select">반</span>
+                            <span class="mm-input">학생 이름</span>
+                        </div>
+                        <div class="mini-mock-row" style="margin-top:0.2rem;">
+                            <span class="mm-btn mm-btn-green">추가</span>
+                            <span class="mm-btn" style="background:#3498db;">등록(신규)</span>
+                            <span class="mm-btn" style="background:#e67e22;">재등록</span>
+                        </div>
+                        <div style="font-size:0.58rem; color:#999; margin-top:0.2rem;">
+                            추가=단순추가 | 등록=신규(결산+1) | 재등록=복귀(결산+1)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-connector">▼</div>
+
+                <!-- Step 4: 관리자 전용 기능 -->
+                <div class="step-card admin-card">
+                    <div class="step-num admin-num">4</div>
+                    <div class="step-title">관리자 전용 기능</div>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon">📚</div>
+                            <div class="feature-name">교육과정</div>
+                            <div class="feature-sub">과목/단원 등록</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">📈</div>
+                            <div class="feature-name">결산서</div>
+                            <div class="feature-sub">월별 인원 증감</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🔐</div>
+                            <div class="feature-name">내 계정</div>
+                            <div class="feature-sub">ID/PW 변경</div>
+                        </div>
+                    </div>
+                    <div class="tip-box">관리자는 담당자의 모든 기능도 사용할 수 있습니다</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== DAILY WORKFLOW ===== -->
+        <div class="daily-flow">
+            <h3>📅 매일 이렇게 사용하세요 (담당자 일일 루틴)</h3>
+            <div class="daily-steps">
+                <div class="daily-step">
+                    <div class="daily-step-icon">🔑</div>
+                    <div class="daily-step-label">로그인</div>
+                </div>
+                <div class="daily-arrow">&rarr;</div>
+                <div class="daily-step">
+                    <div class="daily-step-icon">📝</div>
+                    <div class="daily-step-label">수업계획서</div>
+                    <div class="daily-step-sub">수업 전 작성</div>
+                </div>
+                <div class="daily-arrow">&rarr;</div>
+                <div class="daily-step">
+                    <div class="daily-step-icon">📋</div>
+                    <div class="daily-step-label">출석부</div>
+                    <div class="daily-step-sub">수업 후 입력</div>
+                </div>
+                <div class="daily-arrow">&rarr;</div>
+                <div class="daily-step">
+                    <div class="daily-step-icon">📊</div>
+                    <div class="daily-step-label">통계 확인</div>
+                    <div class="daily-step-sub">필요시 조회</div>
+                </div>
+                <div class="daily-arrow">&rarr;</div>
+                <div class="daily-step">
+                    <div class="daily-step-icon">✅</div>
+                    <div class="daily-step-label">완료!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MENU MAP ===== -->
+        <div class="menu-map">
+            <h3>🗂️ 메뉴 한눈에 보기</h3>
+            <div class="menu-bar">
+                <div class="menu-item highlight-green">
+                    <div class="menu-icon">📋</div>
+                    <div class="menu-name">출석부</div>
+                    <div class="menu-role">공통</div>
+                </div>
+                <div class="menu-item highlight-green">
+                    <div class="menu-icon">💰</div>
+                    <div class="menu-name">원비명부</div>
+                    <div class="menu-role">공통</div>
+                </div>
+                <div class="menu-item highlight-green">
+                    <div class="menu-icon">📝</div>
+                    <div class="menu-name">수업계획서</div>
+                    <div class="menu-role">공통</div>
+                </div>
+                <div class="menu-item highlight-green">
+                    <div class="menu-icon">📊</div>
+                    <div class="menu-name">학생별 통계</div>
+                    <div class="menu-role">공통</div>
+                </div>
+                <div class="menu-item highlight-green">
+                    <div class="menu-icon">📅</div>
+                    <div class="menu-name">반 별 통계</div>
+                    <div class="menu-role">공통</div>
+                </div>
+                <div class="menu-item highlight-green">
+                    <div class="menu-icon">📄</div>
+                    <div class="menu-name">보고서</div>
+                    <div class="menu-role">공통</div>
+                </div>
+                <div class="menu-item highlight-orange">
+                    <div class="menu-icon">🔧</div>
+                    <div class="menu-name">관리</div>
+                    <div class="menu-role">관리자 전용</div>
+                </div>
+                <div class="menu-item highlight-orange">
+                    <div class="menu-icon">📚</div>
+                    <div class="menu-name">교육과정</div>
+                    <div class="menu-role">관리자 전용</div>
+                </div>
+                <div class="menu-item highlight-orange">
+                    <div class="menu-icon">👥</div>
+                    <div class="menu-name">담당자 관리</div>
+                    <div class="menu-role">관리자 전용</div>
+                </div>
+                <div class="menu-item highlight-orange">
+                    <div class="menu-icon">📈</div>
+                    <div class="menu-name">결산서</div>
+                    <div class="menu-role">관리자 전용</div>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top:0.8rem; font-size:0.72rem; opacity:0.7;">
+                <span style="display:inline-block; width:10px; height:10px; background:rgba(39,174,96,0.5); border-radius:3px; margin-right:3px;"></span> 초록 = 담당자 + 관리자 공통 &nbsp;&nbsp;
+                <span style="display:inline-block; width:10px; height:10px; background:rgba(230,126,34,0.5); border-radius:3px; margin-right:3px;"></span> 주황 = 관리자 전용
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        T&B Hub 사용 가이드 &middot; 궁금한 점은 관리자에게 문의하세요
+    </div>
+
+</div>
+
+</body>
+</html>

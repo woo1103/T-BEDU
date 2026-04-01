@@ -266,6 +266,12 @@ def init_db():
         cursor.execute("ALTER TABLE tuition_ledger ADD COLUMN paid_date TEXT DEFAULT ''")
     except Exception:
         pass
+
+    # 기존 curriculum 테이블에 user_id 컬럼 추가 (마이그레이션)
+    try:
+        cursor.execute("ALTER TABLE curriculum ADD COLUMN user_id INTEGER DEFAULT NULL")
+    except Exception:
+        pass
     conn.commit()
 
     # 기본 관리자 계정 생성

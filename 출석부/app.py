@@ -8,6 +8,24 @@ import os
 app = Flask(__name__)
 app.secret_key = 'tnbedu-attendance-secret-key-2026'
 
+# 학년 정렬 헬퍼 (Python용, 초1→고3 순서)
+def grade_sort_key(grade_str):
+    if not grade_str:
+        return (4, grade_str or '')
+    if grade_str.startswith('초'):
+        return (1, grade_str)
+    if grade_str.startswith('중'):
+        return (2, grade_str)
+    if grade_str.startswith('고'):
+        return (3, grade_str)
+    return (4, grade_str)
+
+# 학년 정렬 SQL (초1→고3 순서)
+GRADE_SORT_CLASS = "CASE WHEN class.grade_level LIKE '초%' THEN 1 WHEN class.grade_level LIKE '중%' THEN 2 WHEN class.grade_level LIKE '고%' THEN 3 ELSE 4 END, class.grade_level"
+GRADE_SORT_PLAIN = "CASE WHEN grade_level LIKE '초%' THEN 1 WHEN grade_level LIKE '중%' THEN 2 WHEN grade_level LIKE '고%' THEN 3 ELSE 4 END, grade_level"
+GRADE_SORT_CURR = "CASE WHEN c.grade LIKE '초%' THEN 1 WHEN c.grade LIKE '중%' THEN 2 WHEN c.grade LIKE '고%' THEN 3 ELSE 4 END, c.grade"
+GRADE_SORT_CURR_PLAIN = "CASE WHEN grade LIKE '초%' THEN 1 WHEN grade LIKE '중%' THEN 2 WHEN grade LIKE '고%' THEN 3 ELSE 4 END, grade"
+
 # WSGI 환경에서도 DB 초기화 보장
 init_db()
 
@@ -81,20 +99,20 @@ def index():
 @admin_required
 def manage():
     db = get_db()
-    branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
-    classes = db.execute('''
+    branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
+    classes = db.execute(f'''
         SELECT class.*, branch.name as branch_name
         FROM class JOIN branch ON class.branch_id = branch.id
-        ORDER BY branch.name, class.name
+        ORDER BY branch.id, {GRADE_SORT_CLASS}, class.name
     ''').fetchall()
-    students = db.execute('''
+    students = db.execute(f'''
         SELECT student.*, class.name as class_name, branch.name as branch_name,
                class.subject as class_subject, class.grade_level as class_grade_level,
                class.class_number as class_class_number, class.day_schedule as class_day_schedule
         FROM student
         LEFT JOIN class ON student.class_id = class.id
         LEFT JOIN branch ON student.branch_id = branch.id
-        ORDER BY branch.name, class.name, student.name
+        ORDER BY branch.id, {GRADE_SORT_CLASS}, class.name, student.name
     ''').fetchall()
     db.close()
     return render_template('manage.html', branches=branches, classes=classes, students=students)
@@ -367,7 +385,7 @@ def my_students():
     if allowed is None:
         return redirect(url_for('manage'))
 
-    branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+    branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
 
     if allowed:
         placeholders = ','.join('?' * len(allowed))
@@ -375,7 +393,7 @@ def my_students():
             SELECT class.*, branch.name as branch_name
             FROM class JOIN branch ON class.branch_id = branch.id
             WHERE class.id IN ({placeholders})
-            ORDER BY branch.name, class.name
+            ORDER BY branch.id, {GRADE_SORT_CLASS}, class.name
         ''', allowed).fetchall()
         students = db.execute(f'''
             SELECT student.*, class.name as class_name, branch.name as branch_name,
@@ -385,7 +403,7 @@ def my_students():
             LEFT JOIN class ON student.class_id = class.id
             LEFT JOIN branch ON student.branch_id = branch.id
             WHERE student.class_id IN ({placeholders})
-            ORDER BY class.name, student.name
+            ORDER BY branch.id, {GRADE_SORT_CLASS}, class.name, student.name
         ''', allowed).fetchall()
     else:
         classes = []
@@ -401,11 +419,11 @@ def my_students():
 def users():
     db = get_db()
     user_list = db.execute("SELECT * FROM user WHERE role = 'teacher' ORDER BY name").fetchall()
-    branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
-    classes = db.execute('''
+    branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
+    classes = db.execute(f'''
         SELECT class.*, branch.name as branch_name
         FROM class JOIN branch ON class.branch_id = branch.id
-        ORDER BY branch.name, class.name
+        ORDER BY branch.id, {GRADE_SORT_CLASS}, class.name
     ''').fetchall()
 
     # 각 담당자별 배정된 반 목록
@@ -536,11 +554,11 @@ def api_classes(branch_id):
     db = get_db()
     allowed = get_user_classes(db)
     if allowed is None:
-        classes = db.execute('SELECT * FROM class WHERE branch_id = ? ORDER BY name', (branch_id,)).fetchall()
+        classes = db.execute(f"SELECT * FROM class WHERE branch_id = ? ORDER BY {GRADE_SORT_PLAIN}, name", (branch_id,)).fetchall()
     else:
         placeholders = ','.join('?' * len(allowed)) if allowed else '0'
         classes = db.execute(
-            f'SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY name',
+            f"SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY {GRADE_SORT_PLAIN}, name",
             [branch_id] + allowed).fetchall()
     db.close()
     return jsonify([dict(c) for c in classes])
@@ -561,7 +579,7 @@ def api_students(class_id):
 def lesson_plan():
     db = get_db()
     allowed = get_user_classes(db)
-    branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+    branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
 
     sel_branch = request.args.get('branch_id', '')
     sel_class = request.args.get('class_id', '')
@@ -572,12 +590,12 @@ def lesson_plan():
 
     if sel_branch:
         if allowed is None:
-            classes = db.execute('SELECT * FROM class WHERE branch_id = ? ORDER BY name',
+            classes = db.execute(f"SELECT * FROM class WHERE branch_id = ? ORDER BY {GRADE_SORT_PLAIN}, name",
                                  (sel_branch,)).fetchall()
         else:
             placeholders = ','.join('?' * len(allowed)) if allowed else '0'
             classes = db.execute(
-                f'SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY name',
+                f"SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY {GRADE_SORT_PLAIN}, name",
                 [sel_branch] + allowed).fetchall()
 
     if sel_class:
@@ -711,7 +729,7 @@ def lesson_plan_notice(id):
 def attendance():
     db = get_db()
     allowed = get_user_classes(db)
-    branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+    branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
 
     sel_date = request.args.get('date', date.today().isoformat())
     sel_branch = request.args.get('branch_id', '')
@@ -723,12 +741,12 @@ def attendance():
 
     if sel_branch:
         if allowed is None:
-            classes = db.execute('SELECT * FROM class WHERE branch_id = ? ORDER BY name',
+            classes = db.execute(f"SELECT * FROM class WHERE branch_id = ? ORDER BY {GRADE_SORT_PLAIN}, name",
                                  (sel_branch,)).fetchall()
         else:
             placeholders = ','.join('?' * len(allowed)) if allowed else '0'
             classes = db.execute(
-                f'SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY name',
+                f"SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY {GRADE_SORT_PLAIN}, name",
                 [sel_branch] + allowed).fetchall()
 
         if sel_class:
@@ -802,7 +820,7 @@ def attendance_delete(id):
 def statistics():
     db = get_db()
     allowed = get_user_classes(db)
-    branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+    branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
 
     sel_branch = request.args.get('branch_id', '')
     sel_class = request.args.get('class_id', '')
@@ -816,12 +834,12 @@ def statistics():
 
     if sel_branch:
         if allowed is None:
-            classes = db.execute('SELECT * FROM class WHERE branch_id = ? ORDER BY name',
+            classes = db.execute(f"SELECT * FROM class WHERE branch_id = ? ORDER BY {GRADE_SORT_PLAIN}, name",
                                  (sel_branch,)).fetchall()
         else:
             placeholders = ','.join('?' * len(allowed)) if allowed else '0'
             classes = db.execute(
-                f'SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY name',
+                f"SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY {GRADE_SORT_PLAIN}, name",
                 [sel_branch] + allowed).fetchall()
 
     if sel_class:
@@ -917,11 +935,11 @@ def student_detail(id):
     branches = []
     classes_list = []
     if session.get('role') == 'admin':
-        branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
-        classes_list = db.execute('''
+        branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
+        classes_list = db.execute(f'''
             SELECT class.*, branch.name as branch_name
             FROM class JOIN branch ON class.branch_id = branch.id
-            ORDER BY branch.name, class.name
+            ORDER BY branch.id, {GRADE_SORT_CLASS}, class.name
         ''').fetchall()
 
     consultations = db.execute('''
@@ -1146,7 +1164,7 @@ def api_student_scores(student_id):
 def reports():
     db = get_db()
     allowed = get_user_classes(db)
-    branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+    branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
 
     sel_branch = request.args.get('branch_id', '')
     sel_class = request.args.get('class_id', '')
@@ -1157,12 +1175,12 @@ def reports():
 
     if sel_branch:
         if allowed is None:
-            classes = db.execute('SELECT * FROM class WHERE branch_id = ? ORDER BY name',
+            classes = db.execute(f"SELECT * FROM class WHERE branch_id = ? ORDER BY {GRADE_SORT_PLAIN}, name",
                                  (sel_branch,)).fetchall()
         else:
             placeholders = ','.join('?' * len(allowed)) if allowed else '0'
             classes = db.execute(
-                f'SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY name',
+                f"SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY {GRADE_SORT_PLAIN}, name",
                 [sel_branch] + allowed).fetchall()
 
     if sel_class and sel_type:
@@ -1217,7 +1235,7 @@ def reports():
                            'year': sel_year, 'month': sel_month}
 
         elif sel_type == 'settlement' and session.get('role') == 'admin':
-            settlements = db.execute('''
+            settlements = db.execute(f'''
                 SELECT settlement.*, branch.name as branch_name,
                        class.name as class_name, user.name as teacher_name
                 FROM settlement
@@ -1225,7 +1243,7 @@ def reports():
                 JOIN class ON settlement.class_id = class.id
                 JOIN user ON settlement.user_id = user.id
                 WHERE settlement.year = ?
-                ORDER BY settlement.month, branch.name, class.name
+                ORDER BY settlement.month, branch.id, {GRADE_SORT_CLASS}, class.name
             ''', (sel_year,)).fetchall()
             report_data = {'type': 'settlement', 'settlements': settlements,
                            'year': sel_year}
@@ -1249,19 +1267,19 @@ def reports():
 @admin_required
 def settlement():
     db = get_db()
-    branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+    branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
     sel_year = request.args.get('year', str(date.today().year))
     sel_view = request.args.get('view', 'monthly')  # monthly, quarterly, yearly
 
     # 전체 결산 데이터 조회
-    settlements = db.execute('''
+    settlements = db.execute(f'''
         SELECT settlement.*, branch.name as branch_name, class.name as class_name, user.name as teacher_name
         FROM settlement
         JOIN branch ON settlement.branch_id = branch.id
         JOIN class ON settlement.class_id = class.id
         JOIN user ON settlement.user_id = user.id
         WHERE settlement.year = ?
-        ORDER BY settlement.month, branch.name, class.name
+        ORDER BY settlement.month, branch.id, {GRADE_SORT_CLASS}, class.name
     ''', (sel_year,)).fetchall()
 
     # ── 월별 통계 (담당 선생님별) ──
@@ -1344,10 +1362,10 @@ def settlement():
         branch_monthly[bid]['yearly'] = add_leave_rate(calc_yearly(branch_monthly[bid]['months']))
 
     # 입력용 데이터
-    classes = db.execute('''
+    classes = db.execute(f'''
         SELECT class.*, branch.name as branch_name, branch.id as branch_id
         FROM class JOIN branch ON class.branch_id = branch.id
-        ORDER BY branch.name, class.name
+        ORDER BY branch.id, {GRADE_SORT_CLASS}, class.name
     ''').fetchall()
 
     teachers = db.execute("SELECT * FROM user WHERE role = 'teacher' ORDER BY name").fetchall()
@@ -1439,6 +1457,8 @@ def settlement():
             auto_settlement.append({
                 'month': m,
                 'class_id': cid,
+                'branch_id': c['branch_id'],
+                'grade_level': c.get('grade_level', ''),
                 'branch_name': c['branch_name'],
                 'class_name': c['name'],
                 'start_count': start_count,
@@ -1449,7 +1469,7 @@ def settlement():
                 'end_count': end_count
             })
 
-    auto_settlement.sort(key=lambda x: (x['month'], x['branch_name'], x['class_name']))
+    auto_settlement.sort(key=lambda x: (x['month'], x['branch_id'], grade_sort_key(x.get('grade_level', '')), x['class_name']))
 
     # ── 지점별 자동 집계 (동일 학생 이름 중복 제거) ──
     # 1) 지점별 현재 active 학생 수 (이름 기준 중복 제거)
@@ -1528,6 +1548,7 @@ def settlement():
 
             auto_branch_settlement.append({
                 'month': m,
+                'branch_id': b['id'],
                 'branch_name': b['name'],
                 'start_count': start_count,
                 'register': reg,
@@ -1537,7 +1558,7 @@ def settlement():
                 'end_count': end_count
             })
 
-    auto_branch_settlement.sort(key=lambda x: (x['month'], x['branch_name']))
+    auto_branch_settlement.sort(key=lambda x: (x['month'], x['branch_id']))
 
     # 기존 입력된 결산 데이터 (수정용)
     existing = {}
@@ -1606,7 +1627,7 @@ def tuition():
     sel_branch = request.args.get('branch_id', '')
     search_name = request.args.get('search_name', '').strip()
 
-    branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+    branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
 
     query = '''
         SELECT s.*, b.name as branch_name, c.name as class_name
@@ -1722,20 +1743,29 @@ def tuition_save():
     flash('원비 명부가 업데이트 되었습니다.')
     return redirect(url_for('tuition', year=year, month=month, search_name=search_name, branch_id=branch_id))
 
+# ─── 사용 가이드 ───
+@app.route('/guide')
+@login_required
+def guide():
+    return render_template('visual_guide.html')
+
+
 # ─── 교육과정 관리 ───
 @app.route('/curriculum')
-@admin_required
+@login_required
 def curriculum():
     db = get_db()
-    items = db.execute('''
-        SELECT * FROM curriculum ORDER BY subject, grade, unit_major, unit_minor
+    items = db.execute(f'''
+        SELECT c.*, u.name as creator_name FROM curriculum c
+        LEFT JOIN user u ON c.user_id = u.id
+        ORDER BY c.subject, {GRADE_SORT_CURR}, c.unit_major, c.unit_minor
     ''').fetchall()
     db.close()
     return render_template('curriculum.html', items=items)
 
 
 @app.route('/curriculum/add', methods=['POST'])
-@admin_required
+@login_required
 def curriculum_add():
     subject = request.form.get('subject', '').strip()
     grade = request.form.get('grade', '').strip()
@@ -1743,8 +1773,8 @@ def curriculum_add():
     unit_minor = request.form.get('unit_minor', '').strip()
     if subject and grade and unit_major:
         db = get_db()
-        db.execute('INSERT INTO curriculum (subject, grade, unit_major, unit_minor) VALUES (?, ?, ?, ?)',
-                   (subject, grade, unit_major, unit_minor))
+        db.execute('INSERT INTO curriculum (subject, grade, unit_major, unit_minor, user_id) VALUES (?, ?, ?, ?, ?)',
+                   (subject, grade, unit_major, unit_minor, session.get('user_id')))
         db.commit()
         db.close()
         flash('교육과정이 추가되었습니다.')
@@ -1752,11 +1782,19 @@ def curriculum_add():
 
 
 @app.route('/curriculum/delete/<int:id>', methods=['POST'])
-@admin_required
+@login_required
 def curriculum_delete(id):
     db = get_db()
-    db.execute('DELETE FROM curriculum WHERE id = ?', (id,))
-    db.commit()
+    item = db.execute('SELECT user_id FROM curriculum WHERE id = ?', (id,)).fetchone()
+    if item is None:
+        db.close()
+        return redirect(url_for('curriculum'))
+    # 관리자는 모두 삭제 가능, 담당자는 본인 등록건만 삭제 가능
+    if session.get('role') == 'admin' or item['user_id'] == session.get('user_id'):
+        db.execute('DELETE FROM curriculum WHERE id = ?', (id,))
+        db.commit()
+    else:
+        flash('본인이 등록한 교육과정만 삭제할 수 있습니다.')
     db.close()
     return redirect(url_for('curriculum'))
 
@@ -1775,7 +1813,7 @@ def api_curriculum():
         return jsonify([r['subject'] for r in subjects])
 
     if not grade:
-        grades = db.execute('SELECT DISTINCT grade FROM curriculum WHERE subject = ? ORDER BY grade',
+        grades = db.execute(f'SELECT DISTINCT grade FROM curriculum WHERE subject = ? ORDER BY {GRADE_SORT_CURR_PLAIN}',
                             (subject,)).fetchall()
         db.close()
         return jsonify([r['grade'] for r in grades])
@@ -1806,7 +1844,7 @@ def class_stats():
     db = get_db()
 
     if session.get('role') == 'admin':
-        branches = db.execute('SELECT * FROM branch ORDER BY name').fetchall()
+        branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
     else:
         branches = db.execute('''
             SELECT DISTINCT b.* FROM branch b
@@ -1819,18 +1857,18 @@ def class_stats():
     classes = []
     if sel_branch:
         if session.get('role') == 'admin':
-            classes = db.execute('''
+            classes = db.execute(f'''
                 SELECT class.*, branch.name as branch_name
                 FROM class JOIN branch ON class.branch_id = branch.id
-                WHERE class.branch_id = ? ORDER BY class.name
+                WHERE class.branch_id = ? ORDER BY {GRADE_SORT_CLASS}, class.name
             ''', (sel_branch,)).fetchall()
         else:
-            classes = db.execute('''
+            classes = db.execute(f'''
                 SELECT class.*, branch.name as branch_name
                 FROM class JOIN branch ON class.branch_id = branch.id
                 JOIN user_class uc ON uc.class_id = class.id
                 WHERE class.branch_id = ? AND uc.user_id = ?
-                ORDER BY class.name
+                ORDER BY {GRADE_SORT_CLASS}, class.name
             ''', (sel_branch, session['user_id'])).fetchall()
 
     daily_data = {}

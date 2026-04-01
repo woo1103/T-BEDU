@@ -14,7 +14,7 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="nav-brand">T&amp;B Hub</div>
+        <a href="{{ url_for('index') }}" class="nav-brand" style="text-decoration:none; color:white;">T&amp;B Hub</a>
         <div class="nav-links">
             <a href="{{ url_for('attendance') }}" class="{% if request.endpoint == 'attendance' %}active{% endif %}">출석부</a>
             <a href="{{ url_for('tuition') }}" class="{% if request.endpoint == 'tuition' %}active{% endif %}">원비명부</a>
@@ -22,9 +22,9 @@
             <a href="{{ url_for('statistics') }}" class="{% if request.endpoint == 'statistics' %}active{% endif %}">학생별 통계</a>
             <a href="{{ url_for('class_stats') }}" class="{% if request.endpoint == 'class_stats' %}active{% endif %}">반 별 통계</a>
             <a href="{{ url_for('reports') }}" class="{% if request.endpoint == 'reports' %}active{% endif %}">보고서</a>
+            <a href="{{ url_for('curriculum') }}" class="{% if request.endpoint == 'curriculum' %}active{% endif %}">교육과정</a>
             {% if session.get('role') == 'admin' %}
             <a href="{{ url_for('manage') }}" class="{% if request.endpoint == 'manage' %}active{% endif %}">관리</a>
-            <a href="{{ url_for('curriculum') }}" class="{% if request.endpoint == 'curriculum' %}active{% endif %}">교육과정</a>
             <a href="{{ url_for('users') }}" class="{% if request.endpoint == 'users' %}active{% endif %}">담당자 관리</a>
             <a href="{{ url_for('settlement') }}" class="{% if request.endpoint == 'settlement' %}active{% endif %}">결산서</a>
             {% else %}
@@ -32,6 +32,7 @@
             {% endif %}
         </div>
         <div class="nav-user">
+            <a href="{{ url_for('guide') }}" class="{% if request.endpoint == 'guide' %}active{% endif %}" style="margin-right:0.5rem; font-size:0.85rem;">사용 가이드</a>
             <span class="user-info">{{ session.get('name', '') }} ({{ '관리자' if session.get('role') == 'admin' else '담당자' }})</span>
             <a href="{{ url_for('logout') }}" class="btn-logout">로그아웃</a>
         </div>

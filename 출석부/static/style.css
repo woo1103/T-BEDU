@@ -898,3 +898,215 @@ th {
         display: none;
     }
 }
+
+/* 사용 가이드 */
+.guide-section {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.guide-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-left: 5px solid #3498db;
+}
+
+.guide-card-admin {
+    border-left-color: #e74c3c;
+}
+
+.guide-header {
+    display: inline-block;
+    background: #3498db;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    margin-bottom: 0.5rem;
+}
+
+.guide-header-admin {
+    background: #e74c3c;
+}
+
+.guide-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 0.8rem;
+}
+
+.guide-visual {
+    margin-bottom: 1rem;
+}
+
+.guide-mockup {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.guide-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: #444;
+}
+
+.guide-arrow {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #bbb;
+    margin: 0.5rem 0;
+}
+
+.guide-tab-btn {
+    font-size: 1rem;
+    padding: 0.6rem 1.5rem;
+}
+
+.guide-tab-btn.active {
+    opacity: 1;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.guide-tab-btn:not(.active) {
+    opacity: 0.6;
+}
+
+/* 가이드 목업 요소 */
+.mock-input {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    color: #999;
+    margin-bottom: 0.3rem;
+}
+
+.mock-select {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.mock-btn-blue {
+    display: inline-block;
+    background: #3498db;
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.mock-btn-green {
+    display: inline-block;
+    background: #27ae60;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.mock-btn-orange {
+    display: inline-block;
+    background: #f39c12;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.mock-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.mock-table th {
+    background: #ecf0f1;
+    padding: 0.3rem 0.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+}
+
+.mock-table td {
+    padding: 0.3rem 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.mock-tag-green {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+}
+
+.mock-tag-orange {
+    background: #fff3e0;
+    color: #e65100;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+}
+
+.mock-tag-blue {
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+}
+
+.mock-tag-red {
+    background: #ffebee;
+    color: #c62828;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+}
+
+.mock-feature-box {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0.8rem;
+    text-align: center;
+    min-width: 100px;
+    font-size: 0.8rem;
+}
+
+.mock-feature-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.mock-cal-cell {
+    background: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 4px;
+    padding: 0.2rem 0.4rem;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    min-width: 30px;
+}
+
+.mock-box {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+}
