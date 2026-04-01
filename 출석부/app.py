@@ -1647,7 +1647,7 @@ def tuition():
         query += ' AND s.branch_id = ?'
         params.append(sel_branch)
 
-    query += ' ORDER BY b.name, c.name, s.name'
+    query += ' ORDER BY s.name, b.name, c.name'
     students = db.execute(query, params).fetchall()
 
     ledgers = {}
@@ -1679,12 +1679,22 @@ def tuition():
                 total_by_branch[b_name] = total_by_branch.get(b_name, 0) + item['total_amount']
                 total_all += item['total_amount']
 
+    # 같은 이름+같은 지점 학생 그룹핑 (과목별 합계 표시용)
+    from collections import OrderedDict
+    student_groups = OrderedDict()
+    for s in students:
+        group_key = (s['name'], s['branch_id'] or 0)
+        if group_key not in student_groups:
+            student_groups[group_key] = []
+        student_groups[group_key].append(s)
+
     db.close()
-    
+
     years = list(range(2024, date.today().year + 2))
     months = list(range(1, 13))
 
     return render_template('tuition.html', branches=branches, students=students, ledgers=ledgers,
+                           student_groups=student_groups,
                            years=years, months=months, sel_year=sel_year, sel_month=sel_month,
                            sel_branch=sel_branch, search_name=search_name,
                            total_by_branch=total_by_branch, total_all=total_all)

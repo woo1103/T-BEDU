@@ -73,7 +73,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for s in students %}
+                        {% for group_key, group_students in student_groups.items() %}
+                        {% for s in group_students %}
                         {% set ledger = ledgers[s.id] %}
                         <tr>
                             <form method="POST" action="{{ url_for('tuition_save') }}">
@@ -88,7 +89,7 @@
                                 <input type="hidden" name="special_fee" value="{{ ledger.special_fee }}">
                                 <input type="hidden" name="discount_rate" value="{{ ledger.discount_rate }}">
                                 <input type="hidden" name="total_amount" value="{{ ledger.total_amount }}">
-                                
+
                                 <td class="ps-3" style="white-space:nowrap;"><small class="text-muted d-block">{{ s.branch_name }}</small><div>{{ s.class_name }} <span class="badge bg-secondary">{{ s.class_schedule }}</span></div></td>
                                 <td style="white-space:nowrap;">
                                     <strong>{{ s.name }}</strong>
@@ -123,6 +124,29 @@
                                 </td>
                             </form>
                         </tr>
+                        {% endfor %}
+                        {% if group_students|length > 1 %}
+                        <tr style="background:#f0f4f8; border-top:2px solid #ccc;">
+                            <td class="ps-3" style="white-space:nowrap;"></td>
+                            <td style="white-space:nowrap;"><strong>{{ group_students[0].name }} 합계</strong></td>
+                            {% set ns = namespace(sum_tuition=0, sum_book=0, sum_etc=0, sum_special=0, sum_total=0) %}
+                            {% for gs in group_students %}
+                                {% set gl = ledgers[gs.id] %}
+                                {% set ns.sum_tuition = ns.sum_tuition + gl.tuition_fee %}
+                                {% set ns.sum_book = ns.sum_book + gl.book_fee %}
+                                {% set ns.sum_etc = ns.sum_etc + gl.etc_fee %}
+                                {% set ns.sum_special = ns.sum_special + (gl.special_fee or 0) %}
+                                {% set ns.sum_total = ns.sum_total + gl.total_amount %}
+                            {% endfor %}
+                            <td class="text-end fw-bold">{{ "{:,}".format(ns.sum_tuition) }}</td>
+                            <td class="text-end fw-bold">{{ "{:,}".format(ns.sum_book) }}</td>
+                            <td class="text-end fw-bold">{{ "{:,}".format(ns.sum_etc) }}</td>
+                            <td class="text-end fw-bold">{{ "{:,}".format(ns.sum_special) }}</td>
+                            <td></td>
+                            <td class="text-end fw-bold text-danger">{{ "{:,}".format(ns.sum_total) }} 원</td>
+                            <td colspan="4"></td>
+                        </tr>
+                        {% endif %}
                         {% else %}
                         <tr>
                             <td colspan="12" class="text-center py-5">검색 결과가 없습니다. 학생 검색 시 전체 학생 조회가 가능합니다.</td>
