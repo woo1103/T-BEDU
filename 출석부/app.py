@@ -1759,7 +1759,9 @@ def tuition_save():
 @app.route('/guide')
 @login_required
 def guide():
-    return render_template('visual_guide.html')
+    if session.get('role') == 'admin':
+        return render_template('guide_admin.html')
+    return render_template('guide_teacher.html')
 
 
 # ─── 교육과정 관리 ───

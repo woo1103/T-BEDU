@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width:900px; margin:0 auto;">
+
+<h1>담당자 사용 가이드</h1>
+<p style="color:#888; margin-bottom:2rem;">담당자 계정으로 로그인 시에만 확인 가능한 페이지입니다.</p>
+
+<!-- 1. 로그인 -->
+<section class="manage-section">
+    <h2>1. 로그인</h2>
+    <div style="line-height:2;">
+        <ol>
+            <li>관리자에게 받은 <strong>아이디</strong>와 <strong>비밀번호</strong>로 로그인합니다</li>
+            <li>로그인 후 자신에게 배정된 반의 학생만 확인/관리할 수 있습니다</li>
+            <li>비밀번호 변경이 필요하면 관리자에게 요청하세요</li>
+        </ol>
+    </div>
+</section>
+
+<!-- 2. 학생 등록 -->
+<section class="manage-section">
+    <h2>2. 학생 등록 방법</h2>
+    <div style="line-height:2;">
+        <p><strong>경로:</strong> 상단 메뉴 &gt; <strong>학생 관리</strong></p>
+        <ol>
+            <li>지점 선택 &gt; 반 선택 &gt; 학생 이름 입력</li>
+            <li>등록 유형을 선택하세요:
+                <ul style="margin-left:1.5rem;">
+                    <li><span class="badge badge-active">추가</span> : 단순 추가 (기존 재원생을 시스템에 처음 등록할 때)</li>
+                    <li><span class="badge badge-register">등록</span> : 신규 등록 (새로 원에 등록한 학생. 결산서에 +1 반영)</li>
+                    <li><span class="badge badge-reregister">재등록</span> : 휴원 복귀 (휴원했다가 돌아온 학생. 결산서에 +1 반영)</li>
+                </ul>
+            </li>
+        </ol>
+        <div style="background:#fff3cd; padding:0.8rem; border-radius:6px; margin-top:0.5rem;">
+            <strong>참고:</strong> 수학+영어 두 과목을 듣는 학생은 각 반에 <strong>각각 등록</strong>해 주세요.<br>
+            원비명부에서 자동으로 과목별 금액이 합산됩니다.
+        </div>
+    </div>
+</section>
+
+<!-- 3. 반 정보 수정 -->
+<section class="manage-section">
+    <h2>3. 반 정보 수정</h2>
+    <div style="line-height:2;">
+        <p><strong>경로:</strong> 상단 메뉴 &gt; <strong>학생 관리</strong> &gt; 상단 "반 정보 수정" 섹션</p>
+        <ul>
+            <li>자신에게 배정된 반의 <strong>과목, 학년, 반 이름, 요일</strong>을 수정할 수 있습니다</li>
+            <li>수정 후 <span class="badge badge-register">수정</span> 버튼 클릭</li>
+        </ul>
+    </div>
+</section>
+
+<!-- 4. 학생 상세 기록 -->
+<section class="manage-section">
+    <h2>4. 학생 상세 기록 방법</h2>
+    <div style="line-height:2;">
+        <p><strong>경로:</strong> 학생 관리 &gt; 학생 이름 옆 <span class="badge badge-register">상세</span> 클릭</p>
+
+        <h3 style="margin-top:1rem;">인적사항</h3>
+        <ul>
+            <li><strong>등록일:</strong> 학생의 원 등록일</li>
+            <li><strong>전화번호:</strong> 학생 본인 / 학부모 전화번호</li>
+            <li><strong>등원 요일:</strong> 예) 월,수 또는 화,목</li>
+            <li><strong>특이사항:</strong> 학생에 대한 메모</li>
+            <li><strong>원비 설정:</strong> 수강료, 교재비, 기타, 특강비, 할인율 입력</li>
+            <li><strong>형제 설정:</strong> 형제 학생 선택 시 할인율 자동 5% 적용</li>
+        </ul>
+        <p>입력 후 <span class="badge badge-register">인적사항 저장</span> 클릭</p>
+
+        <h3 style="margin-top:1rem;">성적 관리</h3>
+        <table style="margin-top:0.5rem;">
+            <thead>
+                <tr><th>시험 유형</th><th>입력 항목</th><th>그래프</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>중간고사 / 기말고사</td>
+                    <td>연도, 학기, 과목, 예상/목표/실제 점수, 등급</td>
+                    <td>내신시험 성적추이 그래프</td>
+                </tr>
+                <tr>
+                    <td>모의고사 (고3만)</td>
+                    <td>연도, 월, 예상/목표/실제 점수, 등급</td>
+                    <td>모의고사 성적추이 그래프</td>
+                </tr>
+                <tr>
+                    <td>월말평가</td>
+                    <td>연도, 월, 점수</td>
+                    <td>월말평가 성적추이 그래프</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin-top:1.5rem;">학부모 상담보고서</h3>
+        <ul>
+            <li>연도/월 선택 &gt; 상담 내용 작성 &gt; <span class="badge badge-active">상담보고서 등록</span></li>
+            <li>매월 학부모 상담 후 기록을 남기세요</li>
+        </ul>
+    </div>
+</section>
+
+<!-- 5. 출석부 -->
+<section class="manage-section">
+    <h2>5. 출석부 작성</h2>
+    <div style="line-height:2;">
+        <p><strong>경로:</strong> 상단 메뉴 &gt; <strong>출석부</strong></p>
+        <ol>
+            <li><strong>담당자</strong> 선택 (본인 선택 또는 전체)</li>
+            <li><strong>날짜</strong> 선택 (기본: 오늘)</li>
+            <li><strong>지점</strong> 선택</li>
+            <li><strong>과목(반)</strong> 선택</li>
+            <li>학생별로 입력:
+                <ul style="margin-left:1.5rem;">
+                    <li><strong>출석:</strong> 정상등원 / 지각 / 결석</li>
+                    <li><strong>사유:</strong> 지각/결석 사유 (선택)</li>
+                    <li><strong>숙제:</strong> 완료 / 미완료</li>
+                    <li><strong>미완료 대책:</strong> 숙제 미완료 시 대책 기록</li>
+                </ul>
+            </li>
+            <li><span class="badge badge-register">저장</span> 클릭</li>
+        </ol>
+    </div>
+</section>
+
+<!-- 6. 수업계획서 -->
+<section class="manage-section">
+    <h2>6. 수업계획서 작성</h2>
+    <div style="line-height:2;">
+        <p><strong>경로:</strong> 상단 메뉴 &gt; <strong>수업계획서</strong></p>
+        <ol>
+            <li>지점 &gt; 반 선택</li>
+            <li>날짜 선택 &gt; 수업내용 입력 &gt; 숙제 입력</li>
+            <li><span class="badge badge-active">등록</span> 클릭</li>
+            <li>등록된 계획서에서 <strong>카카오 공지</strong> 버튼으로 학부모 안내 메시지 복사 가능</li>
+        </ol>
+    </div>
+</section>
+
+<!-- 7. 원비명부 -->
+<section class="manage-section">
+    <h2>7. 원비명부</h2>
+    <div style="line-height:2;">
+        <p><strong>경로:</strong> 상단 메뉴 &gt; <strong>원비명부</strong></p>
+        <ul>
+            <li>학생 상세에서 설정한 수강료/교재비가 <strong>자동으로 표시</strong>됩니다</li>
+            <li>여러 과목 수강 학생은 과목별 행 + 합계 행이 표시됩니다</li>
+            <li>결제처리 스위치를 ON으로 전환하면 결제 완료 처리됩니다</li>
+            <li>비고란에 메모를 남길 수 있습니다</li>
+        </ul>
+    </div>
+</section>
+
+<!-- 8. 통계 확인 -->
+<section class="manage-section">
+    <h2>8. 통계 확인</h2>
+    <div style="line-height:2;">
+        <ul>
+            <li><strong>학생별 통계:</strong> 지점 &gt; 반 &gt; 학생 &gt; 연도/월 선택 &gt; 출석률, 숙제 완료율, 주간별 추이 확인</li>
+            <li><strong>반 별 통계:</strong> 지점 &gt; 반 선택 &gt; 월간 요약, 캘린더형 일별 현황, 상세 목록 확인</li>
+            <li>각 통계 페이지에서 담당자 이름이 표시됩니다</li>
+        </ul>
+    </div>
+</section>
+
+<!-- 9. 학생 휴원/삭제 -->
+<section class="manage-section">
+    <h2>9. 학생 휴원 및 삭제</h2>
+    <div style="line-height:2;">
+        <p><strong>경로:</strong> 학생 관리 페이지</p>
+        <ul>
+            <li><span class="btn btn-leave" style="font-size:0.8rem;">휴원</span> : 학생을 휴원 처리합니다. 결산서에 -1 반영. 기록은 보존됩니다.</li>
+            <li><span class="btn btn-add" style="font-size:0.8rem;">재등록</span> : 휴원 학생을 복귀시킵니다. 결산서에 +1 반영.</li>
+            <li><span class="btn btn-delete" style="font-size:0.8rem;">삭제</span> : 학생을 완전히 삭제합니다. <strong>모든 출석/성적 기록이 함께 삭제되므로 주의하세요!</strong></li>
+        </ul>
+    </div>
+</section>
+
+<!-- 10. 교육과정 -->
+<section class="manage-section">
+    <h2>10. 교육과정 등록</h2>
+    <div style="line-height:2;">
+        <p><strong>경로:</strong> 상단 메뉴 &gt; <strong>교육과정</strong></p>
+        <ul>
+            <li>과목/학년/대단원/소단원을 등록하면 수업계획서 작성 시 활용 가능</li>
+            <li>본인이 등록한 교육과정만 삭제 가능합니다</li>
+        </ul>
+    </div>
+</section>
+
+<div class="form-actions" style="margin-top:1rem; margin-bottom:2rem;">
+    <button class="btn btn-save" onclick="window.print()">이 페이지 PDF 출력</button>
+</div>
+
+</div>
+{% endblock %}

@@ -32,7 +32,7 @@
             {% endif %}
         </div>
         <div class="nav-user">
-            <a href="{{ url_for('guide') }}" class="{% if request.endpoint == 'guide' %}active{% endif %}" style="margin-right:0.5rem; font-size:0.85rem;">사용 가이드</a>
+            <a href="{{ url_for('guide') }}" class="{% if request.endpoint == 'guide' %}active{% endif %}" style="margin-right:0.5rem; font-size:0.85rem; color:#bdc3c7;">사용 가이드</a>
             <span class="user-info">{{ session.get('name', '') }} ({{ '관리자' if session.get('role') == 'admin' else '담당자' }})</span>
             <a href="{{ url_for('logout') }}" class="btn-logout">로그아웃</a>
         </div>
