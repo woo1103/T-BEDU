@@ -3,12 +3,12 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>원비 명부 <small class="text-muted fs-6">결제 관리</small></h2>
-        <form class="d-flex" method="GET" action="{{ url_for('tuition') }}">
-            <input type="text" name="search_name" class="form-control me-2" placeholder="이름 검색(전담당가능)" value="{{ search_name }}">
-            <select name="year" class="form-select me-2" style="width: 100px;">
+        <form class="d-flex flex-nowrap" method="GET" action="{{ url_for('tuition') }}">
+            <input type="text" name="search_name" class="form-control me-2" style="min-width:120px;" placeholder="이름 검색(전담당가능)" value="{{ search_name }}">
+            <select name="year" class="form-select me-2" style="min-width:90px; width:auto;">
                 {% for y in years %}<option value="{{ y }}" {% if y|string == sel_year %}selected{% endif %}>{{ y }}년</option>{% endfor %}
             </select>
-            <select name="month" class="form-select me-2" style="width: 100px;">
+            <select name="month" class="form-select me-2" style="min-width:80px; width:auto;">
                 {% for m in months %}<option value="{{ m }}" {% if m|string == sel_month %}selected{% endif %}>{{ m }}월</option>{% endfor %}
             </select>
             {% if session.get('role') == 'admin' %}
@@ -55,7 +55,7 @@
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0" style="white-space:nowrap;">
                     <thead class="table-light">
                         <tr>
                             <th class="ps-3 text-nowrap">지점/반/등원일</th>
@@ -68,8 +68,8 @@
                             <th class="text-end text-nowrap">결제금액</th>
                             <th class="text-center text-nowrap">결제처리</th>
                             <th class="text-center text-nowrap">결제일</th>
-                            <th class="text-center">비고</th>
-                            <th class="text-end pe-3">저장</th>
+                            <th class="text-center text-nowrap">비고</th>
+                            <th class="text-end pe-3 text-nowrap">저장</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,8 +89,8 @@
                                 <input type="hidden" name="discount_rate" value="{{ ledger.discount_rate }}">
                                 <input type="hidden" name="total_amount" value="{{ ledger.total_amount }}">
                                 
-                                <td class="ps-3"><small class="text-muted d-block">{{ s.branch_name }}</small><div>{{ s.class_name }} <span class="badge bg-secondary">{{ s.class_schedule }}</span></div></td>
-                                <td>
+                                <td class="ps-3" style="white-space:nowrap;"><small class="text-muted d-block">{{ s.branch_name }}</small><div>{{ s.class_name }} <span class="badge bg-secondary">{{ s.class_schedule }}</span></div></td>
+                                <td style="white-space:nowrap;">
                                     <strong>{{ s.name }}</strong>
                                     {% if ledger.is_paid %}
                                     <span class="badge bg-success ms-1"><i class="bi bi-check-circle-fill"></i> 완료</span>

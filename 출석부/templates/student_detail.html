@@ -277,12 +277,101 @@
     </div>
 </div>
 
-<!-- 성적 추이 그래프 -->
+<!-- 내신시험 성적추이 그래프 -->
 {% if scores %}
 <section class="manage-section">
-    <h2>성적 추이 그래프</h2>
+    <h2>내신시험 성적추이 그래프</h2>
     <div style="max-width:800px; margin:0 auto;">
         <canvas id="scoreChart" height="300"></canvas>
+    </div>
+</section>
+{% endif %}
+
+<!-- 월말평가 -->
+<section class="manage-section">
+    <h2>월말평가</h2>
+
+    <!-- 월말평가 입력 -->
+    <form method="post" action="{{ url_for('score_add', student_id=student.id) }}" class="score-form">
+        <div class="filter-row">
+            <label>연도:
+                <select name="year">
+                    {% for y in range(2024, 2028) %}
+                    <option value="{{ y }}" {% if y == now_year %}selected{% endif %}>{{ y }}년</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>월:
+                <select name="mock_month">
+                    {% for m in range(1, 13) %}
+                    <option value="{{ m }}" {% if m == now_month %}selected{% endif %}>{{ m }}월</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <input type="hidden" name="exam_type" value="monthly_eval">
+            <input type="hidden" name="semester" value="1">
+            <label>점수:
+                <input type="number" name="actual_score" step="0.1" min="0" max="100" style="width:80px;" placeholder="점수" required>
+            </label>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-add">월말평가 등록</button>
+        </div>
+    </form>
+
+    <!-- 월말평가 목록 -->
+    {% if monthly_evals %}
+    <div class="table-responsive" style="margin-top:1.5rem;">
+        <table>
+            <thead>
+                <tr><th>연도</th><th>월</th><th>점수</th><th>관리</th></tr>
+            </thead>
+            <tbody>
+            {% for e in monthly_evals %}
+            <tr>
+                <td>{{ e.year }}</td>
+                <td>{{ e.mock_month }}월</td>
+                <td><strong>{{ e.actual_score if e.actual_score is not none else '-' }}</strong></td>
+                <td style="white-space:nowrap;">
+                    <button class="btn btn-edit" onclick="openMonthlyEvalModal({{ e.id }}, {{ e.actual_score if e.actual_score is not none else 'null' }})">수정</button>
+                    <form method="post" action="{{ url_for('score_delete', student_id=student.id, id=e.id) }}"
+                          style="display:inline" onsubmit="return confirm('삭제하시겠습니까?')">
+                        <button type="submit" class="btn btn-delete">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-msg" style="margin-top:1rem;">등록된 월말평가가 없습니다.</p>
+    {% endif %}
+</section>
+
+<!-- 월말평가 수정 모달 -->
+<div id="monthlyEvalModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h2>월말평가 수정</h2>
+        <form method="post" id="monthlyEvalForm">
+            <div class="form-group">
+                <label>점수</label>
+                <input type="number" name="actual_score" id="editMonthlyScore" step="0.1" min="0" max="100">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-save">저장</button>
+                <button type="button" class="btn btn-delete" onclick="closeMonthlyEvalModal()">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 월말평가 성적추이 그래프 -->
+{% if monthly_evals %}
+<section class="manage-section">
+    <h2>월말평가 성적추이 그래프</h2>
+    <div style="max-width:800px; margin:0 auto;">
+        <canvas id="monthlyEvalChart" height="300"></canvas>
     </div>
 </section>
 {% endif %}
@@ -461,6 +550,54 @@ function closeScoreEditModal() {
     document.getElementById('scoreEditModal').style.display = 'none';
 }
 
+// 월말평가 수정 모달
+function openMonthlyEvalModal(scoreId, actual) {
+    document.getElementById('monthlyEvalForm').action = '/student/{{ student.id }}/score/edit/' + scoreId;
+    document.getElementById('editMonthlyScore').value = (actual !== null) ? actual : '';
+    document.getElementById('monthlyEvalModal').style.display = 'flex';
+}
+
+function closeMonthlyEvalModal() {
+    document.getElementById('monthlyEvalModal').style.display = 'none';
+}
+
+// 월말평가 그래프
+{% if monthly_evals %}
+(function() {
+    var evals = {{ monthly_evals_chart|tojson }};
+    if (evals.length > 0) {
+        var labels = evals.map(function(e) { return e.year + '년 ' + e.mock_month + '월'; });
+        var ctx = document.getElementById('monthlyEvalChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '월말평가 점수',
+                    data: evals.map(function(e) { return e.actual_score; }),
+                    borderColor: '#8e44ad',
+                    backgroundColor: 'rgba(142,68,173,0.15)',
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: true,
+                    spanGaps: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: '월말평가 성적추이', font: { size: 16 } },
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: { min: 0, max: 100, title: { display: true, text: '점수' } }
+                }
+            }
+        });
+    }
+})();
+{% endif %}
+
 // 성적 그래프
 {% if scores %}
 (function() {
@@ -516,7 +653,7 @@ function closeScoreEditModal() {
             options: {
                 responsive: true,
                 plugins: {
-                    title: { display: true, text: '정규시험 성적 추이', font: { size: 16 } },
+                    title: { display: true, text: '내신시험 성적추이', font: { size: 16 } },
                     legend: { position: 'bottom' }
                 },
                 scales: {

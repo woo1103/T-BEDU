@@ -4,6 +4,14 @@
 
 <form class="filter-form" method="get" action="{{ url_for('attendance') }}">
     <div class="filter-row">
+        <label>담당자:
+            <select name="teacher_id" onchange="this.form.querySelector('[name=class_id]').value=''; this.form.submit()">
+                <option value="">전체</option>
+                {% for t in teachers %}
+                <option value="{{ t.id }}" {% if sel_teacher|string == t.id|string %}selected{% endif %}>{{ t.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
         <label>날짜:
             <input type="date" name="date" value="{{ sel_date }}" onchange="this.form.submit()">
         </label>
@@ -15,7 +23,7 @@
                 {% endfor %}
             </select>
         </label>
-        <label>반:
+        <label>과목(반):
             <select name="class_id" onchange="this.form.submit()">
                 <option value="">선택</option>
                 {% for c in classes %}

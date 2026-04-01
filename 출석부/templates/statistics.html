@@ -47,6 +47,12 @@
     </div>
 </form>
 
+{% if stat_teachers %}
+<div style="background:white; padding:0.8rem 1.2rem; border-radius:8px; margin-bottom:1rem; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+    <strong>담당자:</strong> {{ stat_teachers|map(attribute='name')|join(', ') }}
+</div>
+{% endif %}
+
 {% if stats %}
 <div class="stats-grid">
     <div class="stat-card">

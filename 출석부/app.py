@@ -176,14 +176,29 @@ def class_add():
 
 
 @app.route('/class/edit/<int:id>', methods=['POST'])
-@admin_required
+@login_required
 def class_edit(id):
+    subject = request.form.get('subject', '').strip()
+    grade_level = request.form.get('grade_level', '').strip()
+    class_number = request.form.get('class_number', '').strip()
     day_schedule = request.form.get('day_schedule', '').strip()
     db = get_db()
-    db.execute('UPDATE class SET day_schedule = ? WHERE id = ?', (day_schedule, id))
+    # 담당자 권한 체크
+    allowed = get_user_classes(db)
+    if allowed is not None and int(id) not in allowed:
+        db.close()
+        return redirect(url_for('my_students'))
+    if subject and grade_level and class_number:
+        name = f"{subject} {grade_level} {class_number}"
+        db.execute('UPDATE class SET name=?, subject=?, grade_level=?, class_number=?, day_schedule=? WHERE id=?',
+                   (name, subject, grade_level, class_number, day_schedule, id))
+    else:
+        db.execute('UPDATE class SET day_schedule = ? WHERE id = ?', (day_schedule, id))
     db.commit()
     db.close()
-    return redirect(url_for('manage'))
+    if session.get('role') == 'admin':
+        return redirect(url_for('manage'))
+    return redirect(url_for('my_students'))
 
 
 @app.route('/class/delete/<int:id>', methods=['POST'])
@@ -729,8 +744,12 @@ def lesson_plan_notice(id):
 def attendance():
     db = get_db()
     allowed = get_user_classes(db)
+
+    # 담당자 목록
+    teachers = db.execute("SELECT * FROM user WHERE role = 'teacher' ORDER BY name").fetchall()
     branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
 
+    sel_teacher = request.args.get('teacher_id', '')
     sel_date = request.args.get('date', date.today().isoformat())
     sel_branch = request.args.get('branch_id', '')
     sel_class = request.args.get('class_id', '')
@@ -738,6 +757,12 @@ def attendance():
     classes = []
     students = []
     records = {}
+
+    # 담당자 선택 시 해당 담당자의 반 필터링
+    teacher_class_ids = []
+    if sel_teacher:
+        rows = db.execute('SELECT class_id FROM user_class WHERE user_id = ?', (sel_teacher,)).fetchall()
+        teacher_class_ids = [r['class_id'] for r in rows]
 
     if sel_branch:
         if allowed is None:
@@ -748,6 +773,10 @@ def attendance():
             classes = db.execute(
                 f"SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY {GRADE_SORT_PLAIN}, name",
                 [sel_branch] + allowed).fetchall()
+
+        # 담당자 필터 적용
+        if sel_teacher and teacher_class_ids:
+            classes = [c for c in classes if c['id'] in teacher_class_ids]
 
         if sel_class:
             # 담당자 권한 체크
@@ -766,8 +795,9 @@ def attendance():
     db.close()
     return render_template('attendance.html',
                            branches=branches, classes=classes, students=students,
-                           records=records,
-                           sel_date=sel_date, sel_branch=sel_branch, sel_class=sel_class)
+                           records=records, teachers=teachers,
+                           sel_date=sel_date, sel_branch=sel_branch, sel_class=sel_class,
+                           sel_teacher=sel_teacher)
 
 
 @app.route('/attendance/save', methods=['POST'])
@@ -831,6 +861,7 @@ def statistics():
     classes = []
     students = []
     stats = None
+    stat_teachers = []
 
     if sel_branch:
         if allowed is None:
@@ -848,6 +879,12 @@ def statistics():
             return redirect(url_for('statistics'))
         students = db.execute('SELECT * FROM student WHERE class_id = ? ORDER BY name',
                               (sel_class,)).fetchall()
+        stat_teachers = db.execute('''
+            SELECT u.name FROM user u
+            JOIN user_class uc ON u.id = uc.user_id
+            WHERE uc.class_id = ?
+            ORDER BY u.name
+        ''', (sel_class,)).fetchall()
 
     if sel_student and sel_year and sel_month:
         month_str = f"{sel_year}-{int(sel_month):02d}"
@@ -905,7 +942,8 @@ def statistics():
                            branches=branches, classes=classes, students=students,
                            stats=stats, years=years, months=months,
                            sel_branch=sel_branch, sel_class=sel_class,
-                           sel_student=sel_student, sel_year=sel_year, sel_month=sel_month)
+                           sel_student=sel_student, sel_year=sel_year, sel_month=sel_month,
+                           stat_teachers=stat_teachers)
 
 
 # ─── 학생 상세 (인적사항 + 상담보고서) ───
@@ -949,19 +987,33 @@ def student_detail(id):
     ''', (id,)).fetchall()
 
     scores_raw = db.execute('''
-        SELECT * FROM student_score WHERE student_id = ?
+        SELECT * FROM student_score WHERE student_id = ? AND exam_type != 'monthly_eval'
         ORDER BY year DESC, semester DESC, exam_type, mock_month
     ''', (id,)).fetchall()
     scores = [dict(s) for s in scores_raw]
 
     # 그래프용 (시간순 오름차순: 연도 → 학기 → 중간(1)/기말(2) 순)
     scores_chart = db.execute('''
-        SELECT * FROM student_score WHERE student_id = ?
+        SELECT * FROM student_score WHERE student_id = ? AND exam_type != 'monthly_eval'
         ORDER BY year, semester,
             CASE exam_type WHEN 'midterm' THEN 1 WHEN 'final' THEN 2 WHEN 'mock' THEN 3 END,
             mock_month
     ''', (id,)).fetchall()
     scores_chart = [dict(s) for s in scores_chart]
+
+    # 월말평가 데이터
+    monthly_evals = db.execute('''
+        SELECT * FROM student_score WHERE student_id = ? AND exam_type = 'monthly_eval'
+        ORDER BY year DESC, mock_month DESC
+    ''', (id,)).fetchall()
+    monthly_evals = [dict(s) for s in monthly_evals]
+
+    # 월말평가 그래프용 (시간순 오름차순)
+    monthly_evals_chart = db.execute('''
+        SELECT * FROM student_score WHERE student_id = ? AND exam_type = 'monthly_eval'
+        ORDER BY year, mock_month
+    ''', (id,)).fetchall()
+    monthly_evals_chart = [dict(s) for s in monthly_evals_chart]
 
     change_logs = db.execute('''
         SELECT * FROM student_change_log WHERE student_id = ?
@@ -986,6 +1038,7 @@ def student_detail(id):
     db.close()
     return render_template('student_detail.html', student=student, consultations=consultations,
                            scores=scores, scores_chart=scores_chart,
+                           monthly_evals=monthly_evals, monthly_evals_chart=monthly_evals_chart,
                            change_logs=change_logs, is_senior=is_senior,
                            now_year=date.today().year, now_month=date.today().month,
                            all_students=all_students, sibling=sibling,
@@ -1370,24 +1423,21 @@ def settlement():
 
     teachers = db.execute("SELECT * FROM user WHERE role = 'teacher' ORDER BY name").fetchall()
 
-    # ── 자동 집계: 월초/월말 인원 계산 ──
-    # 1) 반별 현재 active 학생 수
-    class_active_counts = {}
-    for c in classes:
-        cnt = db.execute("SELECT COUNT(*) as cnt FROM student WHERE class_id = ? AND status = 'active'",
-                         (c['id'],)).fetchone()
-        class_active_counts[c['id']] = cnt['cnt'] if cnt else 0
+    # ── 자동 집계: 월초/월말 인원 계산 (누적 추가 기반) ──
+    # 모든 변경이력을 처음부터 가져와서 누적 계산
+    import calendar
+    from datetime import date as date_cls
 
-    # 2) 모든 변경이력 (해당 연도 이후) - 역산용
     all_change_logs = db.execute('''
-        SELECT student_change_log.*, student.class_id
+        SELECT student_change_log.*, student.class_id, student.branch_id as student_branch_id
         FROM student_change_log
         JOIN student ON student_change_log.student_id = student.id
-        WHERE student_change_log.change_date >= ?
         ORDER BY student_change_log.change_date
-    ''', (f"{sel_year}-01-01",)).fetchall()
+    ''').fetchall()
 
-    # 3) 반별/월별 변경 집계
+    int_year = int(sel_year)
+
+    # 반별/월별 변경 집계 (전체 기간)
     class_month_changes = {}
     for log in all_change_logs:
         cid = log['class_id']
@@ -1401,58 +1451,35 @@ def settlement():
             continue
         key = (cid, log_year, log_month)
         if key not in class_month_changes:
-            class_month_changes[key] = {'register': 0, 'leave': 0, 're_register': 0}
-        if log['change_type'] == 'register':
-            class_month_changes[key]['register'] += 1
-        elif log['change_type'] == 'leave':
-            class_month_changes[key]['leave'] += 1
-        elif log['change_type'] == 're_register':
-            class_month_changes[key]['re_register'] += 1
+            class_month_changes[key] = {'new': 0, 'register': 0, 'leave': 0, 're_register': 0}
+        ct = log['change_type']
+        if ct in class_month_changes[key]:
+            class_month_changes[key][ct] += 1
 
-    # 4) 월초 인원 역산: 현재 active 수에서 이후 변경분을 빼서 계산
-    #    월초(M) = 현재active - (M월~현재까지 등록+재등록) + (M월~현재까지 휴원)
-    import calendar
-    from datetime import date as date_cls
-    today = date_cls.today()
-    current_year = today.year
-    current_month = today.month
-
+    # 반별 월초인원 = 해당 월 이전까지 누적 (new + register + re_register - leave)
     auto_settlement = []
-    int_year = int(sel_year)
-
     for c in classes:
         cid = c['id']
-        current_active = class_active_counts.get(cid, 0)
-
-        # 해당 연도 각 월에 대해 월초 인원 계산
         for m in range(1, 13):
-            # 해당 월의 변경사항
-            changes = class_month_changes.get((cid, int_year, m), {'register': 0, 'leave': 0, 're_register': 0})
-
-            # 이 달에 변경이 하나도 없으면 스킵
-            if changes['register'] == 0 and changes['leave'] == 0 and changes['re_register'] == 0:
+            # 이번 달 변경사항
+            changes = class_month_changes.get((cid, int_year, m), {'new': 0, 'register': 0, 'leave': 0, 're_register': 0})
+            if changes['register'] == 0 and changes['leave'] == 0 and changes['re_register'] == 0 and changes['new'] == 0:
                 continue
 
-            # 월초 인원 = 현재 active - (이번 달 포함 이후의 순증 합계)
-            net_after = 0
-            for future_m in range(m, 13):
-                fc = class_month_changes.get((cid, int_year, future_m), {'register': 0, 'leave': 0, 're_register': 0})
-                net_after += fc['register'] + fc['re_register'] - fc['leave']
-            # 내년 이후 변경분도 고려
-            if int_year < current_year:
-                for fy in range(int_year + 1, current_year + 1):
-                    for fm in range(1, 13):
-                        if fy == current_year and fm > current_month:
-                            break
-                        fc = class_month_changes.get((cid, fy, fm), {'register': 0, 'leave': 0, 're_register': 0})
-                        net_after += fc['register'] + fc['re_register'] - fc['leave']
+            # 월초 = 해당 월 이전까지 누적
+            cumulative = 0
+            for prev_y in range(2024, int_year + 1):
+                end_m = 13 if prev_y < int_year else m
+                for prev_m in range(1, end_m):
+                    pc = class_month_changes.get((cid, prev_y, prev_m), {'new': 0, 'register': 0, 'leave': 0, 're_register': 0})
+                    cumulative += pc['new'] + pc['register'] + pc['re_register'] - pc['leave']
 
-            start_count = current_active - net_after
+            start_count = cumulative
             reg = changes['register']
             rereg = changes['re_register']
             leave = changes['leave']
             net = reg + rereg - leave
-            end_count = start_count + net
+            end_count = start_count + changes['new'] + net
 
             auto_settlement.append({
                 'month': m,
@@ -1465,6 +1492,7 @@ def settlement():
                 'register': reg,
                 're_register': rereg,
                 'leave': leave,
+                'new_add': changes['new'],
                 'net': net,
                 'end_count': end_count
             })
@@ -1472,27 +1500,12 @@ def settlement():
     auto_settlement.sort(key=lambda x: (x['month'], x['branch_id'], grade_sort_key(x.get('grade_level', '')), x['class_name']))
 
     # ── 지점별 자동 집계 (동일 학생 이름 중복 제거) ──
-    # 1) 지점별 현재 active 학생 수 (이름 기준 중복 제거)
-    branch_active_distinct = {}
-    for b in branches:
-        cnt = db.execute("SELECT COUNT(DISTINCT name) as cnt FROM student WHERE branch_id = ? AND status = 'active'",
-                         (b['id'],)).fetchone()
-        branch_active_distinct[b['id']] = cnt['cnt'] if cnt else 0
-
-    # 2) 변경이력을 지점/월별로 학생 이름 기준 중복 제거 집계
-    branch_change_logs = db.execute('''
-        SELECT student_change_log.change_type, student_change_log.change_date,
-               student.name as student_name, student.branch_id
-        FROM student_change_log
-        JOIN student ON student_change_log.student_id = student.id
-        WHERE student_change_log.change_date >= ?
-          AND student.branch_id IS NOT NULL
-    ''', (f"{sel_year}-01-01",)).fetchall()
-
-    # (branch_id, year, month) -> {'register': set(names), 'leave': set(names), 're_register': set(names)}
+    # 지점/월별로 학생 이름 기준 중복 제거 집계 (전체 기간)
     branch_month_names = {}
-    for log in branch_change_logs:
-        bid = log['branch_id']
+    for log in all_change_logs:
+        bid = log['student_branch_id']
+        if not bid:
+            continue
         try:
             log_year = int(log['change_date'].split('-')[0])
             log_month = int(log['change_date'].split('-')[1])
@@ -1500,23 +1513,16 @@ def settlement():
             continue
         key = (bid, log_year, log_month)
         if key not in branch_month_names:
-            branch_month_names[key] = {'register': set(), 'leave': set(), 're_register': set()}
-        sname = log['student_name']
-        if log['change_type'] == 'register':
-            branch_month_names[key]['register'].add(sname)
-        elif log['change_type'] == 'leave':
-            branch_month_names[key]['leave'].add(sname)
-        elif log['change_type'] == 're_register':
-            branch_month_names[key]['re_register'].add(sname)
+            branch_month_names[key] = {'new': set(), 'register': set(), 'leave': set(), 're_register': set()}
+        # student_change_log has student_id, get student name via the join
+        sname = str(log['student_id'])  # use student_id for uniqueness
+        ct = log['change_type']
+        if ct in branch_month_names[key]:
+            branch_month_names[key][ct].add(sname)
 
-    # 3) 지점별 월초/월말 역산
     auto_branch_settlement = []
-    branch_name_map = {b['id']: b['name'] for b in branches}
-
     for b in branches:
         bid = b['id']
-        current_active = branch_active_distinct.get(bid, 0)
-
         for m in range(1, 13):
             changes = branch_month_names.get((bid, int_year, m))
             if not changes:
@@ -1524,27 +1530,22 @@ def settlement():
             reg = len(changes['register'])
             rereg = len(changes['re_register'])
             leave = len(changes['leave'])
-            if reg == 0 and rereg == 0 and leave == 0:
+            new_add = len(changes['new'])
+            if reg == 0 and rereg == 0 and leave == 0 and new_add == 0:
                 continue
 
-            # 월초 역산: 현재 distinct active - 이번달 이후 순증
-            net_after = 0
-            for future_m in range(m, 13):
-                fc = branch_month_names.get((bid, int_year, future_m))
-                if fc:
-                    net_after += len(fc['register']) + len(fc['re_register']) - len(fc['leave'])
-            if int_year < current_year:
-                for fy in range(int_year + 1, current_year + 1):
-                    for fm in range(1, 13):
-                        if fy == current_year and fm > current_month:
-                            break
-                        fc = branch_month_names.get((bid, fy, fm))
-                        if fc:
-                            net_after += len(fc['register']) + len(fc['re_register']) - len(fc['leave'])
+            # 월초 = 해당 월 이전까지 누적 (이름 기준 중복 제거)
+            cumulative = 0
+            for prev_y in range(2024, int_year + 1):
+                end_m = 13 if prev_y < int_year else m
+                for prev_m in range(1, end_m):
+                    pc = branch_month_names.get((bid, prev_y, prev_m))
+                    if pc:
+                        cumulative += len(pc['new']) + len(pc['register']) + len(pc['re_register']) - len(pc['leave'])
 
-            start_count = current_active - net_after
+            start_count = cumulative
             net = reg + rereg - leave
-            end_count = start_count + net
+            end_count = start_count + new_add + net
 
             auto_branch_settlement.append({
                 'month': m,
@@ -1554,6 +1555,7 @@ def settlement():
                 'register': reg,
                 're_register': rereg,
                 'leave': leave,
+                'new_add': new_add,
                 'net': net,
                 'end_count': end_count
             })
@@ -1873,7 +1875,16 @@ def class_stats():
 
     daily_data = {}
     students = []
+    class_teachers = []
     if sel_class:
+        # 해당 반 담당자 조회
+        class_teachers = db.execute('''
+            SELECT u.name FROM user u
+            JOIN user_class uc ON u.id = uc.user_id
+            WHERE uc.class_id = ?
+            ORDER BY u.name
+        ''', (sel_class,)).fetchall()
+
         year_int = int(sel_year)
         month_int = int(sel_month)
         days_in_month = cal_mod.monthrange(year_int, month_int)[1]
@@ -1937,7 +1948,7 @@ def class_stats():
                            sel_year=sel_year, sel_month=sel_month,
                            years=years, months=months,
                            daily_data=daily_data, month_days=month_days,
-                           students=students)
+                           students=students, class_teachers=class_teachers)
 
 
 if __name__ == '__main__':

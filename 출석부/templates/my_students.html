@@ -12,6 +12,27 @@
 {% endif %}
 {% endwith %}
 
+<!-- 반 정보 수정 -->
+<section class="manage-section">
+    <h2>반 정보 수정</h2>
+    {% for c in classes %}
+    <form action="{{ url_for('class_edit', id=c.id) }}" method="post" class="inline-form" style="margin-bottom:0.5rem;">
+        <span style="font-weight:600; min-width:80px;">{{ c.branch_name }}</span>
+        <select name="subject" required style="width:80px;">
+            <option value="수학" {% if c.subject == '수학' %}selected{% endif %}>수학</option>
+            <option value="영어" {% if c.subject == '영어' %}selected{% endif %}>영어</option>
+            <option value="국어" {% if c.subject == '국어' %}selected{% endif %}>국어</option>
+            <option value="사회" {% if c.subject == '사회' %}selected{% endif %}>사회</option>
+            <option value="과학" {% if c.subject == '과학' %}selected{% endif %}>과학</option>
+        </select>
+        <input type="text" name="grade_level" value="{{ c.grade_level or '' }}" placeholder="학년" required style="width:70px;">
+        <input type="text" name="class_number" value="{{ c.class_number or c.name }}" placeholder="반" required style="width:70px;">
+        <input type="text" name="day_schedule" value="{{ c.day_schedule or '' }}" placeholder="요일" style="width:80px;">
+        <button type="submit" class="btn btn-edit">수정</button>
+    </form>
+    {% endfor %}
+</section>
+
 <!-- 학생 추가 -->
 <section class="manage-section">
     <h2>학생 추가</h2>

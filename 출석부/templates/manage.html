@@ -66,17 +66,23 @@
         <button type="submit" class="btn btn-add">추가</button>
     </form>
     <table>
-        <thead><tr><th>지점</th><th>과목</th><th>학년</th><th>반</th><th>요일</th><th>작업</th></tr></thead>
+        <thead><tr><th>지점</th><th>과목 / 학년 / 반 / 요일</th><th>수정</th><th>삭제</th></tr></thead>
         <tbody>
         {% for c in classes %}
         <tr>
             <td>{{ c.branch_name }}</td>
-            <td>{{ c.subject or '-' }}</td>
-            <td>{{ c.grade_level or '-' }}</td>
-            <td>{{ c.class_number or c.name }}</td>
-            <td>
+            <td colspan="2">
                 <form action="{{ url_for('class_edit', id=c.id) }}" method="post" class="inline-form">
-                    <input type="text" name="day_schedule" value="{{ c.day_schedule or '' }}" placeholder="요일" style="width:100px;">
+                    <select name="subject" required style="width:80px;">
+                        <option value="수학" {% if c.subject == '수학' %}selected{% endif %}>수학</option>
+                        <option value="영어" {% if c.subject == '영어' %}selected{% endif %}>영어</option>
+                        <option value="국어" {% if c.subject == '국어' %}selected{% endif %}>국어</option>
+                        <option value="사회" {% if c.subject == '사회' %}selected{% endif %}>사회</option>
+                        <option value="과학" {% if c.subject == '과학' %}selected{% endif %}>과학</option>
+                    </select>
+                    <input type="text" name="grade_level" value="{{ c.grade_level or '' }}" placeholder="학년" required style="width:70px;">
+                    <input type="text" name="class_number" value="{{ c.class_number or c.name }}" placeholder="반" required style="width:70px;">
+                    <input type="text" name="day_schedule" value="{{ c.day_schedule or '' }}" placeholder="요일" style="width:80px;">
                     <button type="submit" class="btn btn-edit">수정</button>
                 </form>
             </td>
