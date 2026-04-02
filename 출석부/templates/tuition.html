@@ -58,7 +58,7 @@
                 <table class="table table-hover align-middle mb-0" style="white-space:nowrap;">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-3 text-nowrap">지점/반/등원일</th>
+                            <th class="ps-3 text-nowrap">지점/학년/등원일</th>
                             <th class="text-nowrap">이름</th>
                             <th class="text-end text-nowrap">수강료</th>
                             <th class="text-end text-nowrap">교재비</th>
@@ -74,11 +74,27 @@
                     </thead>
                     <tbody>
                         {% for group_key, group_students in student_groups.items() %}
-                        {% for s in group_students %}
+                        {% set s = group_students[0] %}
                         {% set ledger = ledgers[s.id] %}
+                        {% if group_students|length > 1 %}
+                            {% set ns = namespace(sum_tuition=0, sum_book=0, sum_etc=0, sum_special=0, sum_total=0, all_paid=true, last_paid_date='') %}
+                            {% for gs in group_students %}
+                                {% set gl = ledgers[gs.id] %}
+                                {% set ns.sum_tuition = ns.sum_tuition + gl.tuition_fee %}
+                                {% set ns.sum_book = ns.sum_book + gl.book_fee %}
+                                {% set ns.sum_etc = ns.sum_etc + gl.etc_fee %}
+                                {% set ns.sum_special = ns.sum_special + (gl.special_fee or 0) %}
+                                {% set ns.sum_total = ns.sum_total + gl.total_amount %}
+                                {% if not gl.is_paid %}{% set ns.all_paid = false %}{% endif %}
+                                {% if gl.is_paid and gl.paid_date %}{% set ns.last_paid_date = gl.paid_date %}{% endif %}
+                            {% endfor %}
+                        {% endif %}
                         <tr>
                             <form method="POST" action="{{ url_for('tuition_save') }}">
                                 <input type="hidden" name="student_id" value="{{ s.id }}">
+                                {% for gs in group_students[1:] %}
+                                <input type="hidden" name="extra_student_ids" value="{{ gs.id }}">
+                                {% endfor %}
                                 <input type="hidden" name="year" value="{{ sel_year }}">
                                 <input type="hidden" name="month" value="{{ sel_month }}">
                                 <input type="hidden" name="search_name" value="{{ search_name }}">
@@ -90,30 +106,56 @@
                                 <input type="hidden" name="discount_rate" value="{{ ledger.discount_rate }}">
                                 <input type="hidden" name="total_amount" value="{{ ledger.total_amount }}">
 
-                                <td class="ps-3" style="white-space:nowrap;"><small class="text-muted d-block">{{ s.branch_name }}</small><div>{{ s.class_name }} <span class="badge bg-secondary">{{ s.class_schedule }}</span></div></td>
+                                <td class="ps-3" style="white-space:nowrap;">
+                                    <small class="text-muted d-block">{{ s.branch_name }}</small>
+                                    <div>{{ s.class_grade_level or '' }} <span class="badge bg-secondary">{{ s.registration_date or '' }}</span></div>
+                                </td>
                                 <td style="white-space:nowrap;">
                                     <strong>{{ s.name }}</strong>
-                                    {% if ledger.is_paid %}
-                                    <span class="badge bg-success ms-1"><i class="bi bi-check-circle-fill"></i> 완료</span>
+                                    {% if group_students|length > 1 %}
+                                        {% if ns.all_paid %}
+                                        <span class="badge bg-success ms-1"><i class="bi bi-check-circle-fill"></i> 완료</span>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if ledger.is_paid %}
+                                        <span class="badge bg-success ms-1"><i class="bi bi-check-circle-fill"></i> 완료</span>
+                                        {% endif %}
                                     {% endif %}
                                 </td>
+                                {% if group_students|length > 1 %}
+                                <td class="text-end">{{ "{:,}".format(ns.sum_tuition) }}</td>
+                                <td class="text-end">{{ "{:,}".format(ns.sum_book) }}</td>
+                                <td class="text-end">{{ "{:,}".format(ns.sum_etc) }}</td>
+                                <td class="text-end">{{ "{:,}".format(ns.sum_special) }}</td>
+                                <td class="text-center">{{ ledger.discount_rate }}%</td>
+                                <td class="text-danger fw-bold text-end">{{ "{:,}".format(ns.sum_total) }} 원</td>
+                                {% else %}
                                 <td class="text-end">{{ "{:,}".format(ledger.tuition_fee) }}</td>
                                 <td class="text-end">{{ "{:,}".format(ledger.book_fee) }}</td>
                                 <td class="text-end">{{ "{:,}".format(ledger.etc_fee) }}</td>
                                 <td class="text-end">{{ "{:,}".format(ledger.special_fee|default(0)) }}</td>
                                 <td class="text-center">{{ ledger.discount_rate }}%</td>
                                 <td class="text-danger fw-bold text-end">{{ "{:,}".format(ledger.total_amount) }} 원</td>
+                                {% endif %}
                                 <td class="text-center">
                                     <div class="form-check form-switch d-flex justify-content-center m-0 p-0">
                                         <input class="form-check-input ms-0 me-2 mt-1" type="checkbox" name="is_paid" style="width: 2.5em; height: 1.25em; cursor: pointer;"
-                                               {% if ledger.is_paid %}checked{% endif %} onchange="this.form.submit()">
+                                               {% if group_students|length > 1 %}{% if ns.all_paid %}checked{% endif %}{% else %}{% if ledger.is_paid %}checked{% endif %}{% endif %} onchange="this.form.submit()">
                                     </div>
                                 </td>
                                 <td class="text-center text-nowrap">
-                                    {% if ledger.is_paid and ledger.paid_date %}
-                                    <small class="text-success">{{ ledger.paid_date }}</small>
+                                    {% if group_students|length > 1 %}
+                                        {% if ns.all_paid and ns.last_paid_date %}
+                                        <small class="text-success">{{ ns.last_paid_date }}</small>
+                                        {% else %}
+                                        <small class="text-muted">-</small>
+                                        {% endif %}
                                     {% else %}
-                                    <small class="text-muted">-</small>
+                                        {% if ledger.is_paid and ledger.paid_date %}
+                                        <small class="text-success">{{ ledger.paid_date }}</small>
+                                        {% else %}
+                                        <small class="text-muted">-</small>
+                                        {% endif %}
                                     {% endif %}
                                 </td>
                                 <td>
@@ -124,32 +166,9 @@
                                 </td>
                             </form>
                         </tr>
-                        {% endfor %}
-                        {% if group_students|length > 1 %}
-                        <tr style="background:#f0f4f8; border-top:2px solid #ccc;">
-                            <td class="ps-3" style="white-space:nowrap;"></td>
-                            <td style="white-space:nowrap;"><strong>{{ group_students[0].name }} 합계</strong></td>
-                            {% set ns = namespace(sum_tuition=0, sum_book=0, sum_etc=0, sum_special=0, sum_total=0) %}
-                            {% for gs in group_students %}
-                                {% set gl = ledgers[gs.id] %}
-                                {% set ns.sum_tuition = ns.sum_tuition + gl.tuition_fee %}
-                                {% set ns.sum_book = ns.sum_book + gl.book_fee %}
-                                {% set ns.sum_etc = ns.sum_etc + gl.etc_fee %}
-                                {% set ns.sum_special = ns.sum_special + (gl.special_fee or 0) %}
-                                {% set ns.sum_total = ns.sum_total + gl.total_amount %}
-                            {% endfor %}
-                            <td class="text-end fw-bold">{{ "{:,}".format(ns.sum_tuition) }}</td>
-                            <td class="text-end fw-bold">{{ "{:,}".format(ns.sum_book) }}</td>
-                            <td class="text-end fw-bold">{{ "{:,}".format(ns.sum_etc) }}</td>
-                            <td class="text-end fw-bold">{{ "{:,}".format(ns.sum_special) }}</td>
-                            <td></td>
-                            <td class="text-end fw-bold text-danger">{{ "{:,}".format(ns.sum_total) }} 원</td>
-                            <td colspan="4"></td>
-                        </tr>
-                        {% endif %}
                         {% else %}
                         <tr>
-                            <td colspan="12" class="text-center py-5">검색 결과가 없습니다. 학생 검색 시 전체 학생 조회가 가능합니다.</td>
+                            <td colspan="11" class="text-center py-5">검색 결과가 없습니다. 학생 검색 시 전체 학생 조회가 가능합니다.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

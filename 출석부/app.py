@@ -1632,7 +1632,8 @@ def tuition():
     branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
 
     query = '''
-        SELECT s.*, b.name as branch_name, c.name as class_name
+        SELECT s.*, b.name as branch_name, c.name as class_name,
+               c.grade_level as class_grade_level
         FROM student s
         LEFT JOIN branch b ON s.branch_id = b.id
         LEFT JOIN class c ON s.class_id = c.id
@@ -1703,49 +1704,52 @@ def tuition():
 @login_required
 def tuition_save():
     student_id = request.form.get('student_id')
+    extra_ids = request.form.getlist('extra_student_ids')
+    all_student_ids = [student_id] + extra_ids
     year = request.form.get('year')
     month = request.form.get('month')
     is_paid = 1 if request.form.get('is_paid') == 'on' else 0
     note = request.form.get('note', '').strip()
 
-    tuition_fee = int(request.form.get('tuition_fee', 0))
-    book_fee = int(request.form.get('book_fee', 0))
-    etc_fee = int(request.form.get('etc_fee', 0))
-    special_fee = int(request.form.get('special_fee', 0))
-    discount_rate = int(request.form.get('discount_rate', 0))
-    total_amount = int(request.form.get('total_amount', 0))
-
     db = get_db()
     KST = timezone(timedelta(hours=9))
     now_kst = datetime.now(KST).strftime('%Y-%m-%d')
 
-    # 이미 결제 완료(is_paid=1)된 레코드가 있으면 금액은 건드리지 않고 note만 업데이트
-    existing = db.execute(
-        'SELECT is_paid, paid_date FROM tuition_ledger WHERE student_id=? AND year=? AND month=?',
-        (student_id, year, month)).fetchone()
+    for sid in all_student_ids:
+        # 각 학생(과목)별 개별 금액 조회
+        s = db.execute('SELECT tuition_fee, book_fee, etc_fee, special_fee, discount_rate FROM student WHERE id=?', (sid,)).fetchone()
+        if not s:
+            continue
+        tuition_fee = s['tuition_fee'] or 0
+        book_fee = s['book_fee'] or 0
+        etc_fee = s['etc_fee'] or 0
+        special_fee = s['special_fee'] or 0
+        discount_rate = s['discount_rate'] or 0
+        total_amount = int(tuition_fee * (1 - discount_rate / 100.0)) + book_fee + etc_fee + special_fee
 
-    if existing and existing['is_paid'] == 1 and is_paid == 1:
-        # 이미 결제완료 상태 → 금액 변경 없이 메모만 업데이트
-        db.execute('''
-            UPDATE tuition_ledger SET note=?, updated_at=CURRENT_TIMESTAMP
-            WHERE student_id=? AND year=? AND month=?
-        ''', (note, student_id, year, month))
-    elif is_paid == 0 and existing:
-        # 결제 취소 → paid_date 초기화
-        db.execute('''
-            UPDATE tuition_ledger SET tuition_fee=?, book_fee=?, etc_fee=?, special_fee=?, discount_rate=?, total_amount=?, is_paid=0, paid_date='', note=?, updated_at=CURRENT_TIMESTAMP
-            WHERE student_id=? AND year=? AND month=?
-        ''', (tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, note, student_id, year, month))
-    else:
-        # 신규 저장 또는 미결제→결제 전환 시 해당 시점 금액으로 확정
-        paid_date = now_kst if is_paid else ''
-        db.execute('''
-            INSERT INTO tuition_ledger (student_id, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(student_id, year, month)
-            DO UPDATE SET tuition_fee=?, book_fee=?, etc_fee=?, special_fee=?, discount_rate=?, total_amount=?, is_paid=?, paid_date=?, note=?, updated_at=CURRENT_TIMESTAMP
-        ''', (student_id, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note,
-              tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note))
+        existing = db.execute(
+            'SELECT is_paid, paid_date FROM tuition_ledger WHERE student_id=? AND year=? AND month=?',
+            (sid, year, month)).fetchone()
+
+        if existing and existing['is_paid'] == 1 and is_paid == 1:
+            db.execute('''
+                UPDATE tuition_ledger SET note=?, updated_at=CURRENT_TIMESTAMP
+                WHERE student_id=? AND year=? AND month=?
+            ''', (note, sid, year, month))
+        elif is_paid == 0 and existing:
+            db.execute('''
+                UPDATE tuition_ledger SET tuition_fee=?, book_fee=?, etc_fee=?, special_fee=?, discount_rate=?, total_amount=?, is_paid=0, paid_date='', note=?, updated_at=CURRENT_TIMESTAMP
+                WHERE student_id=? AND year=? AND month=?
+            ''', (tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, note, sid, year, month))
+        else:
+            paid_date = now_kst if is_paid else ''
+            db.execute('''
+                INSERT INTO tuition_ledger (student_id, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(student_id, year, month)
+                DO UPDATE SET tuition_fee=?, book_fee=?, etc_fee=?, special_fee=?, discount_rate=?, total_amount=?, is_paid=?, paid_date=?, note=?, updated_at=CURRENT_TIMESTAMP
+            ''', (sid, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note,
+                  tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note))
 
     db.commit()
     db.close()
