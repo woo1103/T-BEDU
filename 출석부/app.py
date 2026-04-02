@@ -1541,12 +1541,12 @@ def settlement():
                     pc = class_month_changes.get((cid, prev_y, prev_m), {'new': 0, 'register': 0, 'leave': 0, 're_register': 0})
                     cumulative += pc['new'] + pc['register'] + pc['re_register'] - pc['leave']
 
-            start_count = cumulative
+            start_count = cumulative + changes['new']  # 추가 인원을 월초에 합산
             reg = changes['register']
             rereg = changes['re_register']
             leave = changes['leave']
             net = reg + rereg - leave
-            end_count = start_count + changes['new'] + net
+            end_count = start_count + net
 
             auto_settlement.append({
                 'month': m,
@@ -1559,10 +1559,25 @@ def settlement():
                 'register': reg,
                 're_register': rereg,
                 'leave': leave,
-                'new_add': changes['new'],
                 'net': net,
                 'end_count': end_count
             })
+
+    # 관리자 편집 데이터 오버라이드
+    edits = db.execute('SELECT * FROM auto_settlement_edit WHERE year=?', (int_year,)).fetchall()
+    edit_map = {}
+    for e in edits:
+        edit_map[(e['month'], e['class_id'])] = e
+    for item in auto_settlement:
+        key = (item['month'], item['class_id'])
+        if key in edit_map:
+            e = edit_map[key]
+            item['start_count'] = e['start_count']
+            item['register'] = e['register']
+            item['re_register'] = e['re_register']
+            item['leave'] = e['leave']
+            item['net'] = e['register'] + e['re_register'] - e['leave']
+            item['end_count'] = e['start_count'] + item['net']
 
     auto_settlement.sort(key=lambda x: (x['month'], x['branch_id'], grade_sort_key(x.get('grade_level', '')), x['class_name']))
 
@@ -1610,9 +1625,9 @@ def settlement():
                     if pc:
                         cumulative += len(pc['new']) + len(pc['register']) + len(pc['re_register']) - len(pc['leave'])
 
-            start_count = cumulative
+            start_count = cumulative + new_add  # 추가 인원을 월초에 합산
             net = reg + rereg - leave
-            end_count = start_count + new_add + net
+            end_count = start_count + net
 
             auto_branch_settlement.append({
                 'month': m,
@@ -1622,10 +1637,25 @@ def settlement():
                 'register': reg,
                 're_register': rereg,
                 'leave': leave,
-                'new_add': new_add,
                 'net': net,
                 'end_count': end_count
             })
+
+    # 관리자 편집 데이터 오버라이드 (지점별)
+    branch_edits = db.execute('SELECT * FROM auto_branch_settlement_edit WHERE year=?', (int_year,)).fetchall()
+    branch_edit_map = {}
+    for e in branch_edits:
+        branch_edit_map[(e['month'], e['branch_id'])] = e
+    for item in auto_branch_settlement:
+        key = (item['month'], item['branch_id'])
+        if key in branch_edit_map:
+            e = branch_edit_map[key]
+            item['start_count'] = e['start_count']
+            item['register'] = e['register']
+            item['re_register'] = e['re_register']
+            item['leave'] = e['leave']
+            item['net'] = e['register'] + e['re_register'] - e['leave']
+            item['end_count'] = e['start_count'] + item['net']
 
     auto_branch_settlement.sort(key=lambda x: (x['month'], x['branch_id']))
 
@@ -1684,6 +1714,51 @@ def settlement_delete(id):
     db.close()
     flash('결산 데이터가 삭제되었습니다.')
     return redirect(url_for('settlement', year=year))
+
+
+@app.route('/settlement/auto-save', methods=['POST'])
+@admin_required
+def settlement_auto_save():
+    if not request.is_json:
+        return jsonify({'success': False, 'message': 'JSON 요청이 필요합니다.'}), 400
+    data = request.get_json()
+    items = data.get('items', [])
+    db = get_db()
+    for item in items:
+        year = item['year']
+        month = item['month']
+        key_type = item.get('type', 'class')  # 'class' or 'branch'
+        if key_type == 'class':
+            class_id = item['class_id']
+            branch_id = item['branch_id']
+            start_count = item['start_count']
+            register = item.get('register', 0)
+            re_register = item.get('re_register', 0)
+            leave = item.get('leave', 0)
+            # auto_settlement_data 테이블에 저장 (없으면 생성)
+            db.execute('''
+                INSERT INTO auto_settlement_edit (year, month, class_id, branch_id, start_count, register, re_register, leave)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(year, month, class_id)
+                DO UPDATE SET start_count=?, register=?, re_register=?, leave=?, updated_at=CURRENT_TIMESTAMP
+            ''', (year, month, class_id, branch_id, start_count, register, re_register, leave,
+                  start_count, register, re_register, leave))
+        elif key_type == 'branch':
+            branch_id = item['branch_id']
+            start_count = item['start_count']
+            register = item.get('register', 0)
+            re_register = item.get('re_register', 0)
+            leave = item.get('leave', 0)
+            db.execute('''
+                INSERT INTO auto_branch_settlement_edit (year, month, branch_id, start_count, register, re_register, leave)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(year, month, branch_id)
+                DO UPDATE SET start_count=?, register=?, re_register=?, leave=?, updated_at=CURRENT_TIMESTAMP
+            ''', (year, month, branch_id, start_count, register, re_register, leave,
+                  start_count, register, re_register, leave))
+    db.commit()
+    db.close()
+    return jsonify({'success': True, 'message': '완료되었습니다'})
 
 
 # ─── 원비명부 (Tuition Ledger) ───

@@ -274,6 +274,36 @@ def init_db():
         pass
     conn.commit()
 
+    # 결산서 편집 데이터 테이블
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS auto_settlement_edit (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            year INTEGER NOT NULL,
+            month INTEGER NOT NULL,
+            class_id INTEGER NOT NULL,
+            branch_id INTEGER NOT NULL,
+            start_count INTEGER NOT NULL DEFAULT 0,
+            register INTEGER NOT NULL DEFAULT 0,
+            re_register INTEGER NOT NULL DEFAULT 0,
+            leave INTEGER NOT NULL DEFAULT 0,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(year, month, class_id)
+        );
+        CREATE TABLE IF NOT EXISTS auto_branch_settlement_edit (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            year INTEGER NOT NULL,
+            month INTEGER NOT NULL,
+            branch_id INTEGER NOT NULL,
+            start_count INTEGER NOT NULL DEFAULT 0,
+            register INTEGER NOT NULL DEFAULT 0,
+            re_register INTEGER NOT NULL DEFAULT 0,
+            leave INTEGER NOT NULL DEFAULT 0,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(year, month, branch_id)
+        );
+    ''')
+    conn.commit()
+
     # 기본 관리자 계정 생성
     existing = conn.execute('SELECT id FROM user WHERE username = ?', ('admin',)).fetchone()
     if not existing:

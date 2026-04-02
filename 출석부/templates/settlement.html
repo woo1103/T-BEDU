@@ -86,44 +86,37 @@
 {% if auto_settlement %}
 <div class="manage-section">
     <h2>{{ sel_year }}년 반별 자동 집계 (담당별)</h2>
-    <p style="color:#888; font-size:0.9rem; margin-bottom:1rem;">변경이력 기반 자동 계산. 월초 인원 = 이전 월까지 누적된 추가 학생 수 기준.</p>
+    <p style="color:#888; font-size:0.9rem; margin-bottom:1rem;">변경이력 기반 자동 계산. 관리자는 숫자를 직접 수정 후 저장할 수 있습니다.</p>
     <div class="table-responsive">
-        <table>
+        <table id="autoSettlementTable">
             <thead>
-                <tr><th>월</th><th>지점 - 반</th><th>월초</th><th>추가</th><th>등록</th><th>재등록</th><th>휴원</th><th>순증</th><th>월말</th></tr>
+                <tr><th>월</th><th>지점 - 반</th><th>월초</th><th>등록</th><th>재등록</th><th>휴원</th><th>순증</th><th>월말</th>
+                {% if session.get('role') == 'admin' %}<th>저장</th>{% endif %}
+                </tr>
             </thead>
             <tbody>
-            {% set ns = namespace(t_start=0, t_new=0, t_reg=0, t_rereg=0, t_leave=0, t_net=0, t_end=0) %}
             {% for item in auto_settlement %}
-            {% set ns.t_start = ns.t_start + item.start_count %}
-            {% set ns.t_new = ns.t_new + item.new_add %}
-            {% set ns.t_reg = ns.t_reg + item.register %}
-            {% set ns.t_rereg = ns.t_rereg + item.re_register %}
-            {% set ns.t_leave = ns.t_leave + item.leave %}
-            {% set ns.t_net = ns.t_net + item.net %}
-            {% set ns.t_end = ns.t_end + item.end_count %}
-            <tr>
+            <tr class="auto-row" data-class-id="{{ item.class_id }}" data-branch-id="{{ item.branch_id }}" data-month="{{ item.month }}">
                 <td>{{ item.month }}월</td>
                 <td>{{ item.branch_name }} - {{ item.class_name }}</td>
+                {% if session.get('role') == 'admin' %}
+                <td><input type="number" class="form-control form-control-sm edit-start" value="{{ item.start_count }}" style="width:70px" onchange="recalcRow(this)"></td>
+                <td><input type="number" class="form-control form-control-sm edit-reg" value="{{ item.register }}" style="width:70px" onchange="recalcRow(this)"></td>
+                <td><input type="number" class="form-control form-control-sm edit-rereg" value="{{ item.re_register }}" style="width:70px" onchange="recalcRow(this)"></td>
+                <td><input type="number" class="form-control form-control-sm edit-leave" value="{{ item.leave }}" style="width:70px" onchange="recalcRow(this)"></td>
+                {% else %}
                 <td>{{ item.start_count }}</td>
-                <td>{{ item.new_add }}</td>
                 <td class="text-blue">+{{ item.register }}</td>
                 <td class="text-blue">+{{ item.re_register }}</td>
                 <td class="text-red">-{{ item.leave }}</td>
-                <td class="{% if item.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ item.net }}</td>
-                <td><strong>{{ item.end_count }}</strong></td>
+                {% endif %}
+                <td class="calc-net {% if item.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ item.net }}</td>
+                <td class="calc-end"><strong>{{ item.end_count }}</strong></td>
+                {% if session.get('role') == 'admin' %}
+                <td><button type="button" class="btn btn-sm btn-outline-secondary btn-save-row" onclick="saveAutoRow(this, 'class')">저장</button></td>
+                {% endif %}
             </tr>
             {% endfor %}
-            <tr class="row-total">
-                <td colspan="2"><strong>총 인원</strong></td>
-                <td>{{ ns.t_start }}</td>
-                <td>{{ ns.t_new }}</td>
-                <td class="text-blue">+{{ ns.t_reg }}</td>
-                <td class="text-blue">+{{ ns.t_rereg }}</td>
-                <td class="text-red">-{{ ns.t_leave }}</td>
-                <td class="{% if ns.t_net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ ns.t_net }}</td>
-                <td><strong>{{ ns.t_end }}</strong></td>
-            </tr>
             </tbody>
         </table>
     </div>
@@ -136,42 +129,35 @@
     <h2>{{ sel_year }}년 지점별 자동 집계 (실인원)</h2>
     <p style="color:#888; font-size:0.9rem; margin-bottom:1rem;">동일 학생이 여러 반에 등록된 경우 1명으로 집계합니다.</p>
     <div class="table-responsive">
-        <table>
+        <table id="autoBranchTable">
             <thead>
-                <tr><th>월</th><th>지점</th><th>월초</th><th>추가</th><th>등록</th><th>재등록</th><th>휴원</th><th>순증</th><th>월말</th></tr>
+                <tr><th>월</th><th>지점</th><th>월초</th><th>등록</th><th>재등록</th><th>휴원</th><th>순증</th><th>월말</th>
+                {% if session.get('role') == 'admin' %}<th>저장</th>{% endif %}
+                </tr>
             </thead>
             <tbody>
-            {% set bs = namespace(t_start=0, t_new=0, t_reg=0, t_rereg=0, t_leave=0, t_net=0, t_end=0) %}
             {% for item in auto_branch_settlement %}
-            {% set bs.t_start = bs.t_start + item.start_count %}
-            {% set bs.t_new = bs.t_new + item.new_add %}
-            {% set bs.t_reg = bs.t_reg + item.register %}
-            {% set bs.t_rereg = bs.t_rereg + item.re_register %}
-            {% set bs.t_leave = bs.t_leave + item.leave %}
-            {% set bs.t_net = bs.t_net + item.net %}
-            {% set bs.t_end = bs.t_end + item.end_count %}
-            <tr>
+            <tr class="auto-branch-row" data-branch-id="{{ item.branch_id }}" data-month="{{ item.month }}">
                 <td>{{ item.month }}월</td>
                 <td>{{ item.branch_name }}</td>
+                {% if session.get('role') == 'admin' %}
+                <td><input type="number" class="form-control form-control-sm edit-start" value="{{ item.start_count }}" style="width:70px" onchange="recalcRow(this)"></td>
+                <td><input type="number" class="form-control form-control-sm edit-reg" value="{{ item.register }}" style="width:70px" onchange="recalcRow(this)"></td>
+                <td><input type="number" class="form-control form-control-sm edit-rereg" value="{{ item.re_register }}" style="width:70px" onchange="recalcRow(this)"></td>
+                <td><input type="number" class="form-control form-control-sm edit-leave" value="{{ item.leave }}" style="width:70px" onchange="recalcRow(this)"></td>
+                {% else %}
                 <td>{{ item.start_count }}</td>
-                <td>{{ item.new_add }}</td>
                 <td class="text-blue">+{{ item.register }}</td>
                 <td class="text-blue">+{{ item.re_register }}</td>
                 <td class="text-red">-{{ item.leave }}</td>
-                <td class="{% if item.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ item.net }}</td>
-                <td><strong>{{ item.end_count }}</strong></td>
+                {% endif %}
+                <td class="calc-net {% if item.net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ item.net }}</td>
+                <td class="calc-end"><strong>{{ item.end_count }}</strong></td>
+                {% if session.get('role') == 'admin' %}
+                <td><button type="button" class="btn btn-sm btn-outline-secondary btn-save-row" onclick="saveAutoRow(this, 'branch')">저장</button></td>
+                {% endif %}
             </tr>
             {% endfor %}
-            <tr class="row-total">
-                <td colspan="2"><strong>총 실인원</strong></td>
-                <td>{{ bs.t_start }}</td>
-                <td>{{ bs.t_new }}</td>
-                <td class="text-blue">+{{ bs.t_reg }}</td>
-                <td class="text-blue">+{{ bs.t_rereg }}</td>
-                <td class="text-red">-{{ bs.t_leave }}</td>
-                <td class="{% if bs.t_net >= 0 %}text-blue{% else %}text-red{% endif %}">{{ bs.t_net }}</td>
-                <td><strong>{{ bs.t_end }}</strong></td>
-            </tr>
             </tbody>
         </table>
     </div>
@@ -425,6 +411,52 @@ function updateSettlementBranch() {
     var sel = document.getElementById('settlementClass');
     var opt = sel.options[sel.selectedIndex];
     document.getElementById('settlementBranch').value = opt.dataset.branchId || '';
+}
+
+function recalcRow(el) {
+    var row = el.closest('tr');
+    var start = parseInt(row.querySelector('.edit-start').value) || 0;
+    var reg = parseInt(row.querySelector('.edit-reg').value) || 0;
+    var rereg = parseInt(row.querySelector('.edit-rereg').value) || 0;
+    var leave = parseInt(row.querySelector('.edit-leave').value) || 0;
+    var net = reg + rereg - leave;
+    var end = start + net;
+    var netCell = row.querySelector('.calc-net');
+    netCell.textContent = net;
+    netCell.className = 'calc-net ' + (net >= 0 ? 'text-blue' : 'text-red');
+    row.querySelector('.calc-end').innerHTML = '<strong>' + end + '</strong>';
+}
+
+function saveAutoRow(btn, type) {
+    var row = btn.closest('tr');
+    var item = {
+        year: {{ sel_year }},
+        month: parseInt(row.dataset.month),
+        branch_id: parseInt(row.dataset.branchId),
+        type: type,
+        start_count: parseInt(row.querySelector('.edit-start').value) || 0,
+        register: parseInt(row.querySelector('.edit-reg').value) || 0,
+        re_register: parseInt(row.querySelector('.edit-rereg').value) || 0,
+        leave: parseInt(row.querySelector('.edit-leave').value) || 0
+    };
+    if (type === 'class') {
+        item.class_id = parseInt(row.dataset.classId);
+    }
+
+    fetch('{{ url_for("settlement_auto_save") }}', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({items: [item]})
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+        } else {
+            alert('오류: ' + (data.message || '저장 실패'));
+        }
+    })
+    .catch(() => alert('네트워크 오류가 발생했습니다.'));
 }
 </script>
 {% endblock %}
