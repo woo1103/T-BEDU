@@ -288,7 +288,9 @@ def init_db():
             leave INTEGER NOT NULL DEFAULT 0,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(year, month, class_id)
-        );
+        )
+    ''')
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS auto_branch_settlement_edit (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             year INTEGER NOT NULL,
@@ -300,7 +302,7 @@ def init_db():
             leave INTEGER NOT NULL DEFAULT 0,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(year, month, branch_id)
-        );
+        )
     ''')
     conn.commit()
 
