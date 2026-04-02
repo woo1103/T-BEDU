@@ -397,12 +397,26 @@ def change_log_add(student_id):
 def my_students():
     db = get_db()
     allowed = get_user_classes(db)
-    if allowed is None:
-        return redirect(url_for('manage'))
 
     branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
 
-    if allowed:
+    if allowed is None:
+        # 관리자: 전체 학생 조회
+        classes = db.execute(f'''
+            SELECT class.*, branch.name as branch_name
+            FROM class JOIN branch ON class.branch_id = branch.id
+            ORDER BY branch.id, {GRADE_SORT_CLASS}, class.name
+        ''').fetchall()
+        students = db.execute(f'''
+            SELECT student.*, class.name as class_name, branch.name as branch_name,
+                   class.subject as class_subject, class.grade_level as class_grade_level,
+                   class.class_number as class_class_number, class.day_schedule as class_day_schedule
+            FROM student
+            LEFT JOIN class ON student.class_id = class.id
+            LEFT JOIN branch ON student.branch_id = branch.id
+            ORDER BY branch.id, {GRADE_SORT_CLASS}, class.name, student.name
+        ''').fetchall()
+    elif allowed:
         placeholders = ','.join('?' * len(allowed))
         classes = db.execute(f'''
             SELECT class.*, branch.name as branch_name

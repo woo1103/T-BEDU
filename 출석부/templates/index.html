@@ -8,6 +8,10 @@
             <h2>출석부</h2>
             <p>날짜별 출석 및 숙제 현황 입력</p>
         </a>
+        <a href="{{ url_for('tuition') }}" class="card">
+            <h2>원비명부</h2>
+            <p>월별 수강료 결제 관리</p>
+        </a>
         <a href="{{ url_for('lesson_plan') }}" class="card">
             <h2>수업계획서</h2>
             <p>수업 내용 및 숙제 계획 관리</p>
@@ -16,19 +20,35 @@
             <h2>학생별 통계</h2>
             <p>주간/월간 출석률 및 숙제 완료율</p>
         </a>
+        <a href="{{ url_for('class_stats') }}" class="card">
+            <h2>반 별 통계</h2>
+            <p>반 별 출석률 및 숙제 완료율</p>
+        </a>
         <a href="{{ url_for('reports') }}" class="card">
             <h2>보고서</h2>
             <p>출석부/수업계획서/상담보고서 조회 및 PDF 출력</p>
         </a>
+        <a href="{{ url_for('curriculum') }}" class="card">
+            <h2>교육과정</h2>
+            <p>교육과정 등록 및 관리</p>
+        </a>
         {% if session.get('role') == 'admin' %}
+        <a href="{{ url_for('manage') }}" class="card">
+            <h2>관리</h2>
+            <p>지점, 반, 학생 추가/수정/삭제</p>
+        </a>
+        <a href="{{ url_for('users') }}" class="card">
+            <h2>담당자 관리</h2>
+            <p>담당자 계정 및 반 배정 관리</p>
+        </a>
         <a href="{{ url_for('settlement') }}" class="card">
             <h2>결산서</h2>
             <p>월별 휴원/신규 통계 및 분석</p>
         </a>
         {% endif %}
-        <a href="{{ url_for('manage') }}" class="card">
-            <h2>관리</h2>
-            <p>지점, 반, 학생 추가/수정/삭제</p>
+        <a href="{{ url_for('my_students') }}" class="card">
+            <h2>학생 관리</h2>
+            <p>담당 학생 정보 조회 및 수정</p>
         </a>
     </div>
 </div>
