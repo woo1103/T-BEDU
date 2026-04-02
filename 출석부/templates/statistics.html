@@ -4,6 +4,16 @@
 
 <form class="filter-form" method="get" action="{{ url_for('statistics') }}">
     <div class="filter-row">
+        {% if session.get('role') == 'admin' %}
+        <label>담당자:
+            <select name="teacher_id" onchange="this.form.querySelector('[name=class_id]').value=''; this.form.querySelector('[name=student_id]').value=''; this.form.submit()">
+                <option value="">전체</option>
+                {% for t in teachers %}
+                <option value="{{ t.id }}" {% if sel_teacher|string == t.id|string %}selected{% endif %}>{{ t.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        {% endif %}
         <label>지점:
             <select name="branch_id" onchange="this.form.querySelector('[name=class_id]').value=''; this.form.querySelector('[name=student_id]').value=''; this.form.submit()">
                 <option value="">선택</option>

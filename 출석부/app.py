@@ -865,17 +865,24 @@ def statistics():
     db = get_db()
     allowed = get_user_classes(db)
     branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
+    teachers = db.execute("SELECT * FROM user WHERE role = 'teacher' ORDER BY name").fetchall() if session.get('role') == 'admin' else []
 
     sel_branch = request.args.get('branch_id', '')
     sel_class = request.args.get('class_id', '')
     sel_student = request.args.get('student_id', '')
     sel_year = request.args.get('year', str(date.today().year))
     sel_month = request.args.get('month', str(date.today().month))
+    sel_teacher = request.args.get('teacher_id', '')
 
     classes = []
     students = []
     stats = None
     stat_teachers = []
+
+    teacher_class_ids = []
+    if sel_teacher:
+        rows = db.execute('SELECT class_id FROM user_class WHERE user_id = ?', (sel_teacher,)).fetchall()
+        teacher_class_ids = [r['class_id'] for r in rows]
 
     if sel_branch:
         if allowed is None:
@@ -886,6 +893,9 @@ def statistics():
             classes = db.execute(
                 f"SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY {GRADE_SORT_PLAIN}, name",
                 [sel_branch] + allowed).fetchall()
+
+        if sel_teacher and teacher_class_ids:
+            classes = [c for c in classes if c['id'] in teacher_class_ids]
 
     if sel_class:
         if allowed is not None and int(sel_class) not in allowed:
@@ -957,7 +967,7 @@ def statistics():
                            stats=stats, years=years, months=months,
                            sel_branch=sel_branch, sel_class=sel_class,
                            sel_student=sel_student, sel_year=sel_year, sel_month=sel_month,
-                           stat_teachers=stat_teachers)
+                           stat_teachers=stat_teachers, teachers=teachers, sel_teacher=sel_teacher)
 
 
 # ─── 학생 상세 (인적사항 + 상담보고서) ───
@@ -1232,13 +1242,20 @@ def reports():
     db = get_db()
     allowed = get_user_classes(db)
     branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
+    teachers = db.execute("SELECT * FROM user WHERE role = 'teacher' ORDER BY name").fetchall() if session.get('role') == 'admin' else []
 
     sel_branch = request.args.get('branch_id', '')
     sel_class = request.args.get('class_id', '')
     sel_type = request.args.get('type', '')  # attendance, lesson, settlement, consultation
+    sel_teacher = request.args.get('teacher_id', '')
 
     classes = []
     report_data = None
+
+    teacher_class_ids = []
+    if sel_teacher:
+        rows = db.execute('SELECT class_id FROM user_class WHERE user_id = ?', (sel_teacher,)).fetchall()
+        teacher_class_ids = [r['class_id'] for r in rows]
 
     if sel_branch:
         if allowed is None:
@@ -1249,6 +1266,9 @@ def reports():
             classes = db.execute(
                 f"SELECT * FROM class WHERE branch_id = ? AND id IN ({placeholders}) ORDER BY {GRADE_SORT_PLAIN}, name",
                 [sel_branch] + allowed).fetchall()
+
+        if sel_teacher and teacher_class_ids:
+            classes = [c for c in classes if c['id'] in teacher_class_ids]
 
     if sel_class and sel_type:
         if allowed is not None and int(sel_class) not in allowed:
@@ -1326,7 +1346,8 @@ def reports():
                            sel_branch=sel_branch, sel_class=sel_class,
                            sel_type=sel_type,
                            sel_year=request.args.get('year', str(date.today().year)),
-                           sel_month=request.args.get('month', str(date.today().month)))
+                           sel_month=request.args.get('month', str(date.today().month)),
+                           teachers=teachers, sel_teacher=sel_teacher)
 
 
 # ─── 결산서 (관리자 전용) ───
@@ -1872,8 +1893,15 @@ def class_stats():
     sel_class = request.args.get('class_id', '')
     sel_year = request.args.get('year', str(date.today().year))
     sel_month = request.args.get('month', str(date.today().month))
+    sel_teacher = request.args.get('teacher_id', '')
 
     db = get_db()
+    teachers = db.execute("SELECT * FROM user WHERE role = 'teacher' ORDER BY name").fetchall() if session.get('role') == 'admin' else []
+
+    teacher_class_ids = []
+    if sel_teacher:
+        rows = db.execute('SELECT class_id FROM user_class WHERE user_id = ?', (sel_teacher,)).fetchall()
+        teacher_class_ids = [r['class_id'] for r in rows]
 
     if session.get('role') == 'admin':
         branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
@@ -1902,6 +1930,9 @@ def class_stats():
                 WHERE class.branch_id = ? AND uc.user_id = ?
                 ORDER BY {GRADE_SORT_CLASS}, class.name
             ''', (sel_branch, session['user_id'])).fetchall()
+
+        if sel_teacher and teacher_class_ids:
+            classes = [c for c in classes if c['id'] in teacher_class_ids]
 
     daily_data = {}
     students = []
@@ -1978,7 +2009,8 @@ def class_stats():
                            sel_year=sel_year, sel_month=sel_month,
                            years=years, months=months,
                            daily_data=daily_data, month_days=month_days,
-                           students=students, class_teachers=class_teachers)
+                           students=students, class_teachers=class_teachers,
+                           teachers=teachers, sel_teacher=sel_teacher)
 
 
 if __name__ == '__main__':
