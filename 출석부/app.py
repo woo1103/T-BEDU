@@ -1520,7 +1520,7 @@ def settlement():
                 'month': m,
                 'class_id': cid,
                 'branch_id': c['branch_id'],
-                'grade_level': c.get('grade_level', ''),
+                'grade_level': c['grade_level'] if 'grade_level' in c.keys() else '',
                 'branch_name': c['branch_name'],
                 'class_name': c['name'],
                 'start_count': start_count,
