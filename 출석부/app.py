@@ -1683,7 +1683,8 @@ def tuition():
         query += ' AND s.branch_id = ?'
         params.append(sel_branch)
 
-    query += ' ORDER BY s.name, b.name, c.name'
+    grade_sort = "CASE WHEN c.grade_level LIKE '초%' THEN 1 WHEN c.grade_level LIKE '중%' THEN 2 WHEN c.grade_level LIKE '고%' THEN 3 ELSE 4 END, c.grade_level"
+    query += f' ORDER BY b.id, {grade_sort}, s.name'
     students = db.execute(query, params).fetchall()
 
     ledgers = {}
