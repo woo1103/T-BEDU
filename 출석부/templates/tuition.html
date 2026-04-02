@@ -89,38 +89,14 @@
                                 {% if gl.is_paid and gl.paid_date %}{% set ns.last_paid_date = gl.paid_date %}{% endif %}
                             {% endfor %}
                         {% endif %}
-                        <tr>
-                            <form method="POST" action="{{ url_for('tuition_save') }}">
-                                <input type="hidden" name="student_id" value="{{ s.id }}">
-                                {% for gs in group_students[1:] %}
-                                <input type="hidden" name="extra_student_ids" value="{{ gs.id }}">
-                                {% endfor %}
-                                <input type="hidden" name="year" value="{{ sel_year }}">
-                                <input type="hidden" name="month" value="{{ sel_month }}">
-                                <input type="hidden" name="search_name" value="{{ search_name }}">
-                                <input type="hidden" name="branch_id" value="{{ sel_branch }}">
-                                <input type="hidden" name="tuition_fee" value="{{ ledger.tuition_fee }}">
-                                <input type="hidden" name="book_fee" value="{{ ledger.book_fee }}">
-                                <input type="hidden" name="etc_fee" value="{{ ledger.etc_fee }}">
-                                <input type="hidden" name="special_fee" value="{{ ledger.special_fee }}">
-                                <input type="hidden" name="discount_rate" value="{{ ledger.discount_rate }}">
-                                <input type="hidden" name="total_amount" value="{{ ledger.total_amount }}">
-
+                        <tr class="tuition-row" data-student-id="{{ s.id }}" data-extra-ids="{% for gs in group_students[1:] %}{{ gs.id }}{% if not loop.last %},{% endif %}{% endfor %}">
                                 <td class="ps-3" style="white-space:nowrap;">
                                     <small class="text-muted d-block">{{ s.branch_name }}</small>
                                     <div>{{ s.class_grade_level or '' }} <span class="badge bg-secondary">{{ s.registration_date or '' }}</span></div>
                                 </td>
                                 <td style="white-space:nowrap;">
                                     <strong>{{ s.name }}</strong>
-                                    {% if group_students|length > 1 %}
-                                        {% if ns.all_paid %}
-                                        <span class="badge bg-success ms-1"><i class="bi bi-check-circle-fill"></i> 완료</span>
-                                        {% endif %}
-                                    {% else %}
-                                        {% if ledger.is_paid %}
-                                        <span class="badge bg-success ms-1"><i class="bi bi-check-circle-fill"></i> 완료</span>
-                                        {% endif %}
-                                    {% endif %}
+                                    <span class="badge bg-success ms-1 paid-badge" style="{% if group_students|length > 1 %}{% if not ns.all_paid %}display:none{% endif %}{% else %}{% if not ledger.is_paid %}display:none{% endif %}{% endif %}"><i class="bi bi-check-circle-fill"></i> 완료</span>
                                 </td>
                                 {% if group_students|length > 1 %}
                                 <td class="text-end">{{ "{:,}".format(ns.sum_tuition) }}</td>
@@ -139,11 +115,11 @@
                                 {% endif %}
                                 <td class="text-center">
                                     <div class="form-check form-switch d-flex justify-content-center m-0 p-0">
-                                        <input class="form-check-input ms-0 me-2 mt-1" type="checkbox" name="is_paid" style="width: 2.5em; height: 1.25em; cursor: pointer;"
-                                               {% if group_students|length > 1 %}{% if ns.all_paid %}checked{% endif %}{% else %}{% if ledger.is_paid %}checked{% endif %}{% endif %} onchange="this.form.submit()">
+                                        <input class="form-check-input ms-0 me-2 mt-1 tuition-paid" type="checkbox" style="width: 2.5em; height: 1.25em; cursor: pointer;"
+                                               {% if group_students|length > 1 %}{% if ns.all_paid %}checked{% endif %}{% else %}{% if ledger.is_paid %}checked{% endif %}{% endif %}>
                                     </div>
                                 </td>
-                                <td class="text-center text-nowrap">
+                                <td class="text-center text-nowrap tuition-paid-date">
                                     {% if group_students|length > 1 %}
                                         {% if ns.all_paid and ns.last_paid_date %}
                                         <small class="text-success">{{ ns.last_paid_date }}</small>
@@ -159,12 +135,9 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <input type="text" name="note" class="form-control form-control-sm border-0 bg-light" value="{{ ledger.note }}" placeholder="비고 입력">
+                                    <input type="text" class="form-control form-control-sm border-0 bg-light tuition-note" value="{{ ledger.note }}" placeholder="비고 입력">
                                 </td>
-                                <td class="text-end pe-3">
-                                    <button type="submit" class="btn btn-sm btn-outline-secondary">저장</button>
-                                </td>
-                            </form>
+                                <td class="text-end pe-3"></td>
                         </tr>
                         {% else %}
                         <tr>
@@ -174,7 +147,58 @@
                     </tbody>
                 </table>
             </div>
+            {% if student_groups %}
+            <div class="p-3 text-end">
+                <button type="button" class="btn btn-primary" id="btnSaveTuition">일괄 저장</button>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('btnSaveTuition');
+    if (!btn) return;
+
+    btn.addEventListener('click', function() {
+        const rows = document.querySelectorAll('.tuition-row');
+        const items = [];
+        rows.forEach(row => {
+            const sid = row.dataset.studentId;
+            const extraIds = row.dataset.extraIds ? row.dataset.extraIds.split(',').filter(Boolean) : [];
+            const isPaid = row.querySelector('.tuition-paid').checked;
+            const note = row.querySelector('.tuition-note').value;
+            items.push({
+                student_id: sid,
+                extra_student_ids: extraIds,
+                is_paid: isPaid,
+                note: note
+            });
+        });
+
+        fetch('{{ url_for("tuition_save") }}', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                year: '{{ sel_year }}',
+                month: '{{ sel_month }}',
+                items: items
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('오류: ' + (data.message || '저장 실패'));
+            }
+        })
+        .catch(() => alert('네트워크 오류가 발생했습니다.'));
+    });
+});
+</script>
 {% endblock %}

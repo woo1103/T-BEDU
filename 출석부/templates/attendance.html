@@ -2,8 +2,9 @@
 {% block content %}
 <h1>출석부</h1>
 
-<form class="filter-form" method="get" action="{{ url_for('attendance') }}">
+<form class="filter-form" method="get" action="{{ url_for('attendance') }}" id="filterForm">
     <div class="filter-row">
+        {% if session.get('role') == 'admin' %}
         <label>담당자:
             <select name="teacher_id" onchange="this.form.querySelector('[name=class_id]').value=''; this.form.submit()">
                 <option value="">전체</option>
@@ -12,6 +13,7 @@
                 {% endfor %}
             </select>
         </label>
+        {% endif %}
         <label>날짜:
             <input type="date" name="date" value="{{ sel_date }}" onchange="this.form.submit()">
         </label>
@@ -23,11 +25,21 @@
                 {% endfor %}
             </select>
         </label>
-        <label>과목(반):
-            <select name="class_id" onchange="this.form.submit()">
+        <label>과목:
+            <select id="filterSubject" onchange="filterClasses()">
+                <option value="">전체</option>
+            </select>
+        </label>
+        <label>학년:
+            <select id="filterGrade" onchange="filterClasses()">
+                <option value="">전체</option>
+            </select>
+        </label>
+        <label>반:
+            <select name="class_id" id="filterClass" onchange="this.form.submit()">
                 <option value="">선택</option>
                 {% for c in classes %}
-                <option value="{{ c.id }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
+                <option value="{{ c.id }}" data-subject="{{ c.subject }}" data-grade="{{ c.grade_level }}" data-number="{{ c.class_number }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ c.name }}</option>
                 {% endfor %}
             </select>
         </label>
@@ -35,61 +47,154 @@
 </form>
 
 {% if students %}
-<form method="post" action="{{ url_for('attendance_save') }}">
-    <input type="hidden" name="date" value="{{ sel_date }}">
-    <input type="hidden" name="branch_id" value="{{ sel_branch }}">
-    <input type="hidden" name="class_id" value="{{ sel_class }}">
-
-    <div class="table-responsive">
-        <table class="attendance-table">
-            <thead>
-                <tr>
-                    <th>이름</th>
-                    <th>출석</th>
-                    <th>사유</th>
-                    <th>숙제</th>
-                    <th>미완료 대책</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for s in students %}
-            {% set r = records.get(s.id, {}) %}
+<div class="table-responsive">
+    <table class="attendance-table">
+        <thead>
             <tr>
-                <td class="student-name">{{ s.name }}</td>
-                <td>
-                    <input type="hidden" name="student_ids" value="{{ s.id }}">
-                    <select name="status_{{ s.id }}">
-                        <option value="정상등원" {% if r.get('status','정상등원') == '정상등원' %}selected{% endif %}>정상등원</option>
-                        <option value="지각" {% if r.get('status') == '지각' %}selected{% endif %}>지각</option>
-                        <option value="결석" {% if r.get('status') == '결석' %}selected{% endif %}>결석</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="text" name="reason_{{ s.id }}" value="{{ r.get('reason', '') }}" placeholder="사유 입력">
-                </td>
-                <td>
-                    <select name="homework_{{ s.id }}">
-                        <option value="완료" {% if r.get('homework','완료') == '완료' %}selected{% endif %}>완료</option>
-                        <option value="미완료" {% if r.get('homework') == '미완료' %}selected{% endif %}>미완료</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="text" name="homework_action_{{ s.id }}" value="{{ r.get('homework_action', '') }}" placeholder="대책 입력">
-                </td>
+                <th>이름</th>
+                <th>출석</th>
+                <th>사유</th>
+                <th>숙제</th>
+                <th>미완료 대책</th>
             </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        </thead>
+        <tbody>
+        {% for s in students %}
+        {% set r = records.get(s.id, {}) %}
+        <tr data-student-id="{{ s.id }}">
+            <td class="student-name">{{ s.name }}</td>
+            <td>
+                <select class="att-status" data-sid="{{ s.id }}">
+                    <option value="정상등원" {% if r.get('status','정상등원') == '정상등원' %}selected{% endif %}>정상등원</option>
+                    <option value="지각" {% if r.get('status') == '지각' %}selected{% endif %}>지각</option>
+                    <option value="결석" {% if r.get('status') == '결석' %}selected{% endif %}>결석</option>
+                </select>
+            </td>
+            <td>
+                <input type="text" class="att-reason" data-sid="{{ s.id }}" value="{{ r.get('reason', '') }}" placeholder="사유 입력">
+            </td>
+            <td>
+                <select class="att-homework" data-sid="{{ s.id }}">
+                    <option value="완료" {% if r.get('homework','완료') == '완료' %}selected{% endif %}>완료</option>
+                    <option value="미완료" {% if r.get('homework') == '미완료' %}selected{% endif %}>미완료</option>
+                </select>
+            </td>
+            <td>
+                <input type="text" class="att-action" data-sid="{{ s.id }}" value="{{ r.get('homework_action', '') }}" placeholder="대책 입력">
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-    <div class="form-actions">
-        <button type="submit" class="btn btn-save">저장</button>
-    </div>
-</form>
+<div class="form-actions">
+    <button type="button" class="btn btn-save" id="btnSaveAttendance">저장</button>
+</div>
 {% elif sel_class %}
 <p class="empty-msg">등록된 학생이 없습니다. <a href="{{ url_for('manage') }}">관리</a>에서 학생을 추가하세요.</p>
 {% else %}
 <p class="empty-msg">지점과 반을 선택하세요.</p>
 {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+// 과목/학년 필터 초기화
+(function() {
+    const classSelect = document.getElementById('filterClass');
+    if (!classSelect) return;
+    const options = classSelect.querySelectorAll('option[data-subject]');
+    const subjects = new Set();
+    const grades = new Set();
+    options.forEach(opt => {
+        if (opt.dataset.subject) subjects.add(opt.dataset.subject);
+        if (opt.dataset.grade) grades.add(opt.dataset.grade);
+    });
+
+    const subjectSelect = document.getElementById('filterSubject');
+    subjects.forEach(s => {
+        const o = document.createElement('option');
+        o.value = s; o.textContent = s;
+        subjectSelect.appendChild(o);
+    });
+
+    const gradeSelect = document.getElementById('filterGrade');
+    // 학년 정렬: 초 → 중 → 고
+    const gradeArr = Array.from(grades).sort((a, b) => {
+        const order = {'초':1,'중':2,'고':3};
+        const oa = order[a[0]] || 4, ob = order[b[0]] || 4;
+        if (oa !== ob) return oa - ob;
+        return a.localeCompare(b);
+    });
+    gradeArr.forEach(g => {
+        const o = document.createElement('option');
+        o.value = g; o.textContent = g;
+        gradeSelect.appendChild(o);
+    });
+
+    // 현재 선택된 반의 과목/학년으로 필터 복원
+    const selOpt = classSelect.querySelector('option:checked[data-subject]');
+    if (selOpt) {
+        if (selOpt.dataset.subject) subjectSelect.value = selOpt.dataset.subject;
+        if (selOpt.dataset.grade) gradeSelect.value = selOpt.dataset.grade;
+    }
+})();
+
+function filterClasses() {
+    const subj = document.getElementById('filterSubject').value;
+    const grade = document.getElementById('filterGrade').value;
+    const classSelect = document.getElementById('filterClass');
+    const options = classSelect.querySelectorAll('option[data-subject]');
+
+    classSelect.value = '';
+    options.forEach(opt => {
+        let show = true;
+        if (subj && opt.dataset.subject !== subj) show = false;
+        if (grade && opt.dataset.grade !== grade) show = false;
+        opt.style.display = show ? '' : 'none';
+    });
+}
+
+// AJAX 일괄 저장
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('btnSaveAttendance');
+    if (!btn) return;
+
+    btn.addEventListener('click', function() {
+        const rows = document.querySelectorAll('tr[data-student-id]');
+        const records = [];
+        rows.forEach(row => {
+            const sid = row.dataset.studentId;
+            records.push({
+                student_id: sid,
+                status: row.querySelector('.att-status').value,
+                reason: row.querySelector('.att-reason').value,
+                homework: row.querySelector('.att-homework').value,
+                homework_action: row.querySelector('.att-action').value
+            });
+        });
+
+        fetch('{{ url_for("attendance_save") }}', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                date: '{{ sel_date }}',
+                class_id: '{{ sel_class }}',
+                records: records
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+            } else {
+                alert('오류: ' + (data.message || '저장 실패'));
+            }
+        })
+        .catch(() => alert('네트워크 오류가 발생했습니다.'));
+    });
+});
+</script>
 {% endblock %}

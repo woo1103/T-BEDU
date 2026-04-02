@@ -817,12 +817,44 @@ def attendance():
 @app.route('/attendance/save', methods=['POST'])
 @login_required
 def attendance_save():
+    # AJAX JSON 요청 처리
+    if request.is_json:
+        data = request.get_json()
+        sel_date = data.get('date')
+        sel_class = data.get('class_id')
+        records_data = data.get('records', [])
+
+        db = get_db()
+        allowed = get_user_classes(db)
+        if allowed is not None and int(sel_class) not in allowed:
+            db.close()
+            return jsonify({'success': False, 'message': '권한이 없습니다.'}), 403
+
+        for r in records_data:
+            sid = r['student_id']
+            status = r.get('status', '정상등원')
+            reason = r.get('reason', '')
+            homework = r.get('homework', '완료')
+            homework_action = r.get('homework_action', '')
+
+            db.execute('''
+                INSERT INTO attendance (student_id, date, status, reason, homework, homework_action)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ON CONFLICT(student_id, date)
+                DO UPDATE SET status=?, reason=?, homework=?, homework_action=?, updated_at=CURRENT_TIMESTAMP
+            ''', (sid, sel_date, status, reason, homework, homework_action,
+                  status, reason, homework, homework_action))
+
+        db.commit()
+        db.close()
+        return jsonify({'success': True, 'message': '완료되었습니다'})
+
+    # 기존 form 요청 처리 (호환성)
     sel_date = request.form.get('date')
     sel_branch = request.form.get('branch_id')
     sel_class = request.form.get('class_id')
     student_ids = request.form.getlist('student_ids')
 
-    # 담당자 권한 체크
     db = get_db()
     allowed = get_user_classes(db)
     if allowed is not None and int(sel_class) not in allowed:
@@ -1739,6 +1771,58 @@ def tuition():
 @app.route('/tuition/save', methods=['POST'])
 @login_required
 def tuition_save():
+    # AJAX JSON 요청 처리
+    if request.is_json:
+        data = request.get_json()
+        items = data.get('items', [])
+        year = data.get('year')
+        month = data.get('month')
+
+        db = get_db()
+        KST = timezone(timedelta(hours=9))
+        now_kst = datetime.now(KST).strftime('%Y-%m-%d')
+
+        for item in items:
+            all_sids = [item['student_id']] + item.get('extra_student_ids', [])
+            is_paid = 1 if item.get('is_paid') else 0
+            note = item.get('note', '').strip()
+
+            for sid in all_sids:
+                s = db.execute('SELECT tuition_fee, book_fee, etc_fee, special_fee, discount_rate FROM student WHERE id=?', (sid,)).fetchone()
+                if not s:
+                    continue
+                tuition_fee = s['tuition_fee'] or 0
+                book_fee = s['book_fee'] or 0
+                etc_fee = s['etc_fee'] or 0
+                special_fee = s['special_fee'] or 0
+                discount_rate = s['discount_rate'] or 0
+                total_amount = int(tuition_fee * (1 - discount_rate / 100.0)) + book_fee + etc_fee + special_fee
+
+                existing = db.execute(
+                    'SELECT is_paid, paid_date FROM tuition_ledger WHERE student_id=? AND year=? AND month=?',
+                    (sid, year, month)).fetchone()
+
+                if existing and existing['is_paid'] == 1 and is_paid == 1:
+                    db.execute('UPDATE tuition_ledger SET note=?, updated_at=CURRENT_TIMESTAMP WHERE student_id=? AND year=? AND month=?',
+                               (note, sid, year, month))
+                elif is_paid == 0 and existing:
+                    db.execute('''UPDATE tuition_ledger SET tuition_fee=?, book_fee=?, etc_fee=?, special_fee=?, discount_rate=?, total_amount=?, is_paid=0, paid_date='', note=?, updated_at=CURRENT_TIMESTAMP
+                                 WHERE student_id=? AND year=? AND month=?''',
+                               (tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, note, sid, year, month))
+                else:
+                    paid_date = now_kst if is_paid else ''
+                    db.execute('''INSERT INTO tuition_ledger (student_id, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note)
+                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                 ON CONFLICT(student_id, year, month)
+                                 DO UPDATE SET tuition_fee=?, book_fee=?, etc_fee=?, special_fee=?, discount_rate=?, total_amount=?, is_paid=?, paid_date=?, note=?, updated_at=CURRENT_TIMESTAMP''',
+                               (sid, year, month, tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note,
+                                tuition_fee, book_fee, etc_fee, special_fee, discount_rate, total_amount, is_paid, paid_date, note))
+
+        db.commit()
+        db.close()
+        return jsonify({'success': True, 'message': '완료되었습니다'})
+
+    # 기존 form 요청 처리
     student_id = request.form.get('student_id')
     extra_ids = request.form.getlist('extra_student_ids')
     all_student_ids = [student_id] + extra_ids
