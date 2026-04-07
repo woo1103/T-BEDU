@@ -82,6 +82,14 @@
     </form>
 </div>
 
+<!-- 당일 단어장/자료 -->
+{% if sel_date %}
+<div class="manage-section" id="dailyFilesSection" style="display:none;">
+    <h2>오늘의 학습자료 (단어장)</h2>
+    <div id="dailyFilesList"></div>
+</div>
+{% endif %}
+
 <!-- 수업계획서 목록 -->
 {% if plans %}
 <div class="manage-section">
@@ -94,6 +102,7 @@
                     <th>담당자</th>
                     <th>수업내용</th>
                     <th>숙제</th>
+                    <th>자료</th>
                     <th>관리</th>
                 </tr>
             </thead>
@@ -104,6 +113,7 @@
                 <td>{{ p.teacher_name }}</td>
                 <td class="plan-content">{{ p.content }}</td>
                 <td class="plan-homework">{{ p.homework }}</td>
+                <td class="plan-files" data-plan-date="{{ p.date }}"></td>
                 <td class="plan-actions">
                     {% if p.homework %}
                     <button class="btn btn-kakao" onclick="copyNotice({{ p.id }})">공지 복사</button>
@@ -278,8 +288,12 @@ function applyCurriculum(mode) {
     }
 }
 
-// 페이지 로드 시 교육과정 과목 로드
-document.addEventListener('DOMContentLoaded', loadCurSubjects);
+// 페이지 로드 시 교육과정 과목 로드 + 당일 파일 로드
+document.addEventListener('DOMContentLoaded', function() {
+    loadCurSubjects();
+    loadDailyFiles();
+    loadPlanFiles();
+});
 
 function copyNotice(planId) {
     fetch('/api/lesson-plan/notice/' + planId)
@@ -323,5 +337,70 @@ function closeModal() {
 document.getElementById('editModal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
 });
+
+// ─── 당일 학습자료(단어장) 로딩 ───
+function loadDailyFiles() {
+    var section = document.getElementById('dailyFilesSection');
+    if (!section) return;
+    var selDate = '{{ sel_date }}';
+    if (!selDate) return;
+
+    fetch('/api/curriculum/files-by-date?date=' + encodeURIComponent(selDate))
+        .then(r => r.json())
+        .then(files => {
+            if (files.length === 0) return;
+            section.style.display = '';
+            var container = document.getElementById('dailyFilesList');
+            var html = '<div class="table-responsive"><table><thead><tr><th>과목</th><th>학년</th><th>단원</th><th>라벨</th><th>페이지</th><th>파일</th><th>작업</th></tr></thead><tbody>';
+            files.forEach(function(f) {
+                html += '<tr>';
+                html += '<td>' + escHtml(f.subject) + '</td>';
+                html += '<td>' + escHtml(f.grade) + '</td>';
+                html += '<td>' + escHtml(f.unit_major) + (f.unit_minor ? ' > ' + escHtml(f.unit_minor) : '') + '</td>';
+                html += '<td>' + escHtml(f.label || '-') + '</td>';
+                html += '<td>' + (f.page_start ? 'p.' + f.page_start + (f.page_end && f.page_end !== f.page_start ? '~' + f.page_end : '') : '전체') + '</td>';
+                html += '<td>' + escHtml(f.original_filename) + '</td>';
+                html += '<td style="white-space:nowrap;">';
+                html += '<a href="/curriculum/file/extract/' + f.id + '" class="btn btn-edit" style="font-size:0.8rem; text-decoration:none;">다운로드</a> ';
+                html += '<a href="/curriculum/file/view/' + f.id + '" target="_blank" class="btn btn-add" style="font-size:0.8rem; text-decoration:none;" onclick="setTimeout(function(){window.open(\'/curriculum/file/view/' + f.id + '\').print()},500)">인쇄</a>';
+                html += '</td></tr>';
+            });
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        });
+}
+
+// ─── 수업계획서 목록 각 행에 해당 날짜 파일 표시 ───
+function loadPlanFiles() {
+    var cells = document.querySelectorAll('.plan-files[data-plan-date]');
+    var dateSet = new Set();
+    cells.forEach(function(cell) { if (cell.dataset.planDate) dateSet.add(cell.dataset.planDate); });
+
+    dateSet.forEach(function(d) {
+        fetch('/api/curriculum/files-by-date?date=' + encodeURIComponent(d))
+            .then(r => r.json())
+            .then(files => {
+                if (files.length === 0) return;
+                document.querySelectorAll('.plan-files[data-plan-date="' + d + '"]').forEach(function(cell) {
+                    var html = '';
+                    files.forEach(function(f) {
+                        html += '<div style="margin-bottom:0.2rem;">';
+                        html += '<a href="/curriculum/file/extract/' + f.id + '" style="font-size:0.8rem;" title="' + escHtml(f.original_filename) + '">';
+                        html += escHtml(f.label || f.original_filename);
+                        if (f.page_start) html += ' (p.' + f.page_start + (f.page_end && f.page_end !== f.page_start ? '~' + f.page_end : '') + ')';
+                        html += '</a>';
+                        html += ' <a href="/curriculum/file/view/' + f.id + '" target="_blank" style="font-size:0.75rem; color:#888;">인쇄</a>';
+                        html += '</div>';
+                    });
+                    cell.innerHTML = html;
+                });
+            });
+    });
+}
+
+function escHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 </script>
 {% endblock %}

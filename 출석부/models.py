@@ -113,6 +113,31 @@ def init_db():
             value TEXT NOT NULL
         );
 
+        CREATE TABLE IF NOT EXISTS curriculum_file (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            curriculum_id INTEGER NOT NULL,
+            original_filename TEXT NOT NULL,
+            stored_filename TEXT NOT NULL,
+            file_type TEXT NOT NULL DEFAULT '',
+            description TEXT DEFAULT '',
+            user_id INTEGER,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (curriculum_id) REFERENCES curriculum(id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS curriculum_file_mapping (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_id INTEGER NOT NULL,
+            label TEXT NOT NULL DEFAULT '',
+            page_start INTEGER DEFAULT NULL,
+            page_end INTEGER DEFAULT NULL,
+            image_index INTEGER DEFAULT NULL,
+            use_date TEXT DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (file_id) REFERENCES curriculum_file(id) ON DELETE CASCADE
+        );
+
         CREATE TABLE IF NOT EXISTS student_change_log (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             student_id INTEGER NOT NULL,

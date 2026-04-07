@@ -1,12 +1,22 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, session, g, flash, make_response
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session, g, flash, make_response, send_from_directory
 from models import get_db, init_db, hash_password
 from datetime import datetime, date, timezone, timedelta
 from functools import wraps
+from werkzeug.utils import secure_filename
 import json
 import os
+import uuid
 
 app = Flask(__name__)
 app.secret_key = 'tnbedu-attendance-secret-key-2026'
+
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif', 'bmp'}
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # 학년 정렬 헬퍼 (Python용, 초1→고3 순서)
 def grade_sort_key(grade_str):
@@ -2041,6 +2051,296 @@ def api_curriculum():
                         (subject, grade, unit_major)).fetchall()
     db.close()
     return jsonify([r['unit_minor'] for r in minors])
+
+
+# ─── 교육과정 파일(단어장) 관리 ───
+@app.route('/curriculum/file/upload', methods=['POST'])
+@login_required
+def curriculum_file_upload():
+    curriculum_id = request.form.get('curriculum_id')
+    description = request.form.get('description', '').strip()
+    file = request.files.get('file')
+
+    if not curriculum_id or not file or file.filename == '':
+        flash('파일을 선택해주세요.')
+        return redirect(url_for('curriculum'))
+
+    if not allowed_file(file.filename):
+        flash('허용되지 않는 파일 형식입니다. (PDF, PNG, JPG, GIF, BMP)')
+        return redirect(url_for('curriculum'))
+
+    ext = file.filename.rsplit('.', 1)[1].lower()
+    stored_filename = f"{uuid.uuid4().hex}.{ext}"
+    file.save(os.path.join(UPLOAD_FOLDER, stored_filename))
+
+    file_type = 'pdf' if ext == 'pdf' else 'image'
+
+    db = get_db()
+    db.execute('''
+        INSERT INTO curriculum_file (curriculum_id, original_filename, stored_filename, file_type, description, user_id)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', (curriculum_id, file.filename, stored_filename, file_type, description, session.get('user_id')))
+    db.commit()
+    db.close()
+    flash(f'파일 "{file.filename}"이 업로드되었습니다.')
+    return redirect(url_for('curriculum'))
+
+
+@app.route('/curriculum/file/delete/<int:file_id>', methods=['POST'])
+@login_required
+def curriculum_file_delete(file_id):
+    db = get_db()
+    f = db.execute('SELECT * FROM curriculum_file WHERE id = ?', (file_id,)).fetchone()
+    if f:
+        if session.get('role') == 'admin' or f['user_id'] == session.get('user_id'):
+            filepath = os.path.join(UPLOAD_FOLDER, f['stored_filename'])
+            if os.path.exists(filepath):
+                os.remove(filepath)
+            db.execute('DELETE FROM curriculum_file WHERE id = ?', (file_id,))
+            db.commit()
+            flash('파일이 삭제되었습니다.')
+        else:
+            flash('본인이 업로드한 파일만 삭제할 수 있습니다.')
+    db.close()
+    return redirect(url_for('curriculum'))
+
+
+@app.route('/curriculum/file/mapping/save', methods=['POST'])
+@login_required
+def curriculum_file_mapping_save():
+    file_id = request.form.get('file_id')
+    if not file_id:
+        return jsonify({'error': 'file_id required'}), 400
+
+    db = get_db()
+    # 기존 매핑 삭제 후 재저장
+    db.execute('DELETE FROM curriculum_file_mapping WHERE file_id = ?', (file_id,))
+
+    labels = request.form.getlist('label[]')
+    page_starts = request.form.getlist('page_start[]')
+    page_ends = request.form.getlist('page_end[]')
+    use_dates = request.form.getlist('use_date[]')
+
+    for i in range(len(labels)):
+        label = labels[i].strip() if i < len(labels) else ''
+        ps = int(page_starts[i]) if i < len(page_starts) and page_starts[i] else None
+        pe = int(page_ends[i]) if i < len(page_ends) and page_ends[i] else None
+        ud = use_dates[i].strip() if i < len(use_dates) else ''
+        if label or ps or ud:
+            db.execute('''
+                INSERT INTO curriculum_file_mapping (file_id, label, page_start, page_end, use_date)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (file_id, label, ps, pe, ud))
+    db.commit()
+    db.close()
+    flash('매핑이 저장되었습니다.')
+    return redirect(url_for('curriculum'))
+
+
+@app.route('/api/curriculum/files/<int:curriculum_id>')
+@login_required
+def api_curriculum_files(curriculum_id):
+    db = get_db()
+    files = db.execute('''
+        SELECT cf.*, u.name as uploader_name FROM curriculum_file cf
+        LEFT JOIN user u ON cf.user_id = u.id
+        WHERE cf.curriculum_id = ?
+        ORDER BY cf.created_at DESC
+    ''', (curriculum_id,)).fetchall()
+    result = []
+    for f in files:
+        mappings = db.execute('''
+            SELECT * FROM curriculum_file_mapping WHERE file_id = ? ORDER BY use_date, page_start
+        ''', (f['id'],)).fetchall()
+        result.append({
+            'id': f['id'],
+            'original_filename': f['original_filename'],
+            'stored_filename': f['stored_filename'],
+            'file_type': f['file_type'],
+            'description': f['description'],
+            'uploader_name': f['uploader_name'],
+            'created_at': f['created_at'],
+            'mappings': [dict(m) for m in mappings]
+        })
+    db.close()
+    return jsonify(result)
+
+
+@app.route('/api/curriculum/files-by-date')
+@login_required
+def api_curriculum_files_by_date():
+    target_date = request.args.get('date', '')
+    if not target_date:
+        return jsonify([])
+
+    db = get_db()
+    rows = db.execute('''
+        SELECT cfm.*, cf.original_filename, cf.stored_filename, cf.file_type, cf.description,
+               c.subject, c.grade, c.unit_major, c.unit_minor
+        FROM curriculum_file_mapping cfm
+        JOIN curriculum_file cf ON cfm.file_id = cf.id
+        JOIN curriculum c ON cf.curriculum_id = c.id
+        WHERE cfm.use_date = ?
+        ORDER BY c.subject, c.grade
+    ''', (target_date,)).fetchall()
+    db.close()
+    return jsonify([dict(r) for r in rows])
+
+
+@app.route('/curriculum/file/download/<int:file_id>')
+@login_required
+def curriculum_file_download(file_id):
+    db = get_db()
+    f = db.execute('SELECT * FROM curriculum_file WHERE id = ?', (file_id,)).fetchone()
+    db.close()
+    if not f:
+        flash('파일을 찾을 수 없습니다.')
+        return redirect(url_for('curriculum'))
+    return send_from_directory(UPLOAD_FOLDER, f['stored_filename'],
+                               download_name=f['original_filename'], as_attachment=True)
+
+
+@app.route('/curriculum/file/extract/<int:mapping_id>')
+@login_required
+def curriculum_file_extract(mapping_id):
+    db = get_db()
+    mapping = db.execute('''
+        SELECT cfm.*, cf.stored_filename, cf.original_filename, cf.file_type
+        FROM curriculum_file_mapping cfm
+        JOIN curriculum_file cf ON cfm.file_id = cf.id
+        WHERE cfm.id = ?
+    ''', (mapping_id,)).fetchone()
+    db.close()
+
+    if not mapping:
+        flash('매핑을 찾을 수 없습니다.')
+        return redirect(url_for('lesson_plan'))
+
+    if mapping['file_type'] == 'image':
+        return send_from_directory(UPLOAD_FOLDER, mapping['stored_filename'],
+                                    download_name=mapping['original_filename'], as_attachment=True)
+
+    # PDF 페이지 추출
+    if mapping['file_type'] == 'pdf' and mapping['page_start']:
+        try:
+            from pypdf import PdfReader, PdfWriter
+        except ImportError:
+            try:
+                from PyPDF2 import PdfReader, PdfWriter
+            except ImportError:
+                return send_from_directory(UPLOAD_FOLDER, mapping['stored_filename'],
+                                            download_name=mapping['original_filename'], as_attachment=True)
+
+        src_path = os.path.join(UPLOAD_FOLDER, mapping['stored_filename'])
+        reader = PdfReader(src_path)
+        writer = PdfWriter()
+
+        start = mapping['page_start'] - 1
+        end = (mapping['page_end'] or mapping['page_start']) - 1
+
+        for i in range(max(0, start), min(len(reader.pages), end + 1)):
+            writer.add_page(reader.pages[i])
+
+        base_name = os.path.splitext(mapping['original_filename'])[0]
+        out_name = f"{base_name}_p{mapping['page_start']}-{mapping['page_end'] or mapping['page_start']}.pdf"
+        out_path = os.path.join(UPLOAD_FOLDER, f"temp_{uuid.uuid4().hex}.pdf")
+        with open(out_path, 'wb') as fout:
+            writer.write(fout)
+
+        with open(out_path, 'rb') as tmp_f:
+            response = make_response(tmp_f.read())
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = f'attachment; filename="{out_name}"'
+
+        try:
+            os.remove(out_path)
+        except Exception:
+            pass
+
+        return response
+
+    return send_from_directory(UPLOAD_FOLDER, mapping['stored_filename'],
+                                download_name=mapping['original_filename'], as_attachment=True)
+
+
+@app.route('/curriculum/file/view/<int:mapping_id>')
+@login_required
+def curriculum_file_view(mapping_id):
+    """브라우저에서 바로 보기 (인쇄용)"""
+    db = get_db()
+    mapping = db.execute('''
+        SELECT cfm.*, cf.stored_filename, cf.original_filename, cf.file_type
+        FROM curriculum_file_mapping cfm
+        JOIN curriculum_file cf ON cfm.file_id = cf.id
+        WHERE cfm.id = ?
+    ''', (mapping_id,)).fetchone()
+    db.close()
+
+    if not mapping:
+        flash('매핑을 찾을 수 없습니다.')
+        return redirect(url_for('lesson_plan'))
+
+    if mapping['file_type'] == 'image':
+        return send_from_directory(UPLOAD_FOLDER, mapping['stored_filename'])
+
+    if mapping['file_type'] == 'pdf' and mapping['page_start']:
+        try:
+            from pypdf import PdfReader, PdfWriter
+        except ImportError:
+            try:
+                from PyPDF2 import PdfReader, PdfWriter
+            except ImportError:
+                return send_from_directory(UPLOAD_FOLDER, mapping['stored_filename'])
+
+        src_path = os.path.join(UPLOAD_FOLDER, mapping['stored_filename'])
+        reader = PdfReader(src_path)
+        writer = PdfWriter()
+
+        start = mapping['page_start'] - 1
+        end = (mapping['page_end'] or mapping['page_start']) - 1
+
+        for i in range(max(0, start), min(len(reader.pages), end + 1)):
+            writer.add_page(reader.pages[i])
+
+        out_path = os.path.join(UPLOAD_FOLDER, f"temp_{uuid.uuid4().hex}.pdf")
+        with open(out_path, 'wb') as fout:
+            writer.write(fout)
+
+        with open(out_path, 'rb') as tmp_f:
+            response = make_response(tmp_f.read())
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = 'inline'
+
+        try:
+            os.remove(out_path)
+        except Exception:
+            pass
+
+        return response
+
+    return send_from_directory(UPLOAD_FOLDER, mapping['stored_filename'])
+
+
+@app.route('/api/curriculum/file/pdf-pages/<int:file_id>')
+@login_required
+def api_curriculum_file_pdf_pages(file_id):
+    """PDF 파일의 총 페이지 수 반환"""
+    db = get_db()
+    f = db.execute('SELECT * FROM curriculum_file WHERE id = ?', (file_id,)).fetchone()
+    db.close()
+    if not f or f['file_type'] != 'pdf':
+        return jsonify({'pages': 0})
+    try:
+        from pypdf import PdfReader
+    except ImportError:
+        try:
+            from PyPDF2 import PdfReader
+        except ImportError:
+            return jsonify({'pages': 0, 'error': 'PDF 라이브러리가 설치되지 않았습니다.'})
+
+    src_path = os.path.join(UPLOAD_FOLDER, f['stored_filename'])
+    reader = PdfReader(src_path)
+    return jsonify({'pages': len(reader.pages)})
 
 
 # ─── 반 별 통계 ───

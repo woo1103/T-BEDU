@@ -63,17 +63,21 @@
                     <th>대단원</th>
                     <th>소단원</th>
                     <th>등록자</th>
+                    <th>파일</th>
                     <th>작업</th>
                 </tr>
             </thead>
             <tbody>
             {% for item in items %}
-            <tr data-subject="{{ item.subject }}" data-grade="{{ item.grade }}">
+            <tr data-subject="{{ item.subject }}" data-grade="{{ item.grade }}" data-id="{{ item.id }}">
                 <td>{{ item.subject }}</td>
                 <td>{{ item.grade }}</td>
                 <td>{{ item.unit_major }}</td>
                 <td>{{ item.unit_minor or '-' }}</td>
                 <td>{{ item.creator_name or '-' }}</td>
+                <td>
+                    <button class="btn btn-edit" onclick="openFileManager({{ item.id }}, '{{ item.subject }} {{ item.grade }} {{ item.unit_major }}')" style="font-size:0.8rem;">파일관리</button>
+                </td>
                 <td>
                     {% if session.get('role') == 'admin' or item.user_id == session.get('user_id') %}
                     <form action="{{ url_for('curriculum_delete', id=item.id) }}" method="post"
@@ -92,16 +96,62 @@
     {% endif %}
 </section>
 
+<!-- 파일 관리 모달 -->
+<div id="fileModal" class="modal" style="display:none" onclick="if(event.target===this)closeFileModal()">
+    <div class="modal-content" style="max-width:800px; max-height:90vh; overflow-y:auto;">
+        <h2 id="fileModalTitle">파일 관리</h2>
+
+        <!-- 파일 업로드 -->
+        <form action="{{ url_for('curriculum_file_upload') }}" method="post" enctype="multipart/form-data" style="margin-bottom:1.5rem; padding:1rem; background:#f8f9fa; border-radius:8px;">
+            <input type="hidden" name="curriculum_id" id="uploadCurriculumId">
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+                <input type="file" name="file" accept=".pdf,.png,.jpg,.jpeg,.gif,.bmp" required style="flex:1; min-width:200px;">
+                <input type="text" name="description" placeholder="설명 (예: 4월 단어장)" style="width:200px;">
+                <button type="submit" class="btn btn-add">업로드</button>
+            </div>
+            <p style="color:#888; font-size:0.8rem; margin-top:0.3rem;">PDF, PNG, JPG, GIF, BMP 파일을 업로드할 수 있습니다.</p>
+        </form>
+
+        <!-- 업로드된 파일 목록 -->
+        <div id="fileList">
+            <p style="color:#888;">파일을 불러오는 중...</p>
+        </div>
+
+        <div style="text-align:right; margin-top:1rem;">
+            <button class="btn btn-delete" onclick="closeFileModal()">닫기</button>
+        </div>
+    </div>
+</div>
+
+<!-- 매핑 편집 모달 -->
+<div id="mappingModal" class="modal" style="display:none" onclick="if(event.target===this)closeMappingModal()">
+    <div class="modal-content" style="max-width:750px; max-height:90vh; overflow-y:auto;">
+        <h2 id="mappingModalTitle">날짜별 페이지 매핑</h2>
+        <p style="color:#888; font-size:0.85rem; margin-bottom:1rem;" id="mappingFileInfo"></p>
+
+        <form id="mappingForm" action="{{ url_for('curriculum_file_mapping_save') }}" method="post">
+            <input type="hidden" name="file_id" id="mappingFileId">
+            <div id="mappingRows"></div>
+            <div style="margin-top:0.8rem; display:flex; gap:0.5rem;">
+                <button type="button" class="btn btn-add" onclick="addMappingRow()">+ 행 추가</button>
+                <button type="submit" class="btn btn-save">저장</button>
+                <button type="button" class="btn btn-delete" onclick="closeMappingModal()">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
 <script>
+var currentCurriculumId = null;
+
 function filterCurriculum() {
     var subj = document.getElementById('filterSubject').value;
     var grade = document.getElementById('filterGrade').value;
     var rows = document.querySelectorAll('#curriculumTable tbody tr');
 
-    // 학년 필터 옵션 업데이트
     var gradeSet = new Set();
     rows.forEach(function(row) {
         if (!subj || row.dataset.subject === subj) {
@@ -130,6 +180,117 @@ function filterCurriculum() {
         if (grade && row.dataset.grade !== grade) show = false;
         row.style.display = show ? '' : 'none';
     });
+}
+
+function openFileManager(curriculumId, title) {
+    currentCurriculumId = curriculumId;
+    document.getElementById('uploadCurriculumId').value = curriculumId;
+    document.getElementById('fileModalTitle').textContent = '파일 관리 — ' + title;
+    document.getElementById('fileModal').style.display = 'flex';
+    loadFiles(curriculumId);
+}
+
+function closeFileModal() {
+    document.getElementById('fileModal').style.display = 'none';
+}
+
+function loadFiles(curriculumId) {
+    var container = document.getElementById('fileList');
+    container.innerHTML = '<p style="color:#888;">불러오는 중...</p>';
+
+    fetch('/api/curriculum/files/' + curriculumId)
+        .then(r => r.json())
+        .then(files => {
+            if (files.length === 0) {
+                container.innerHTML = '<p class="empty-msg">업로드된 파일이 없습니다.</p>';
+                return;
+            }
+            var html = '';
+            files.forEach(function(f) {
+                html += '<div style="border:1px solid #ddd; border-radius:8px; padding:1rem; margin-bottom:1rem;">';
+                html += '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">';
+                html += '<div>';
+                html += '<strong>' + escapeHtml(f.original_filename) + '</strong>';
+                if (f.description) html += ' <span style="color:#888;">(' + escapeHtml(f.description) + ')</span>';
+                html += '<br><small style="color:#999;">' + (f.uploader_name || '') + ' | ' + f.file_type.toUpperCase() + ' | ' + (f.created_at || '') + '</small>';
+                html += '</div>';
+                html += '<div style="display:flex; gap:0.3rem;">';
+                html += '<a href="/curriculum/file/download/' + f.id + '" class="btn btn-edit" style="font-size:0.8rem; text-decoration:none;">다운로드</a>';
+                html += '<button class="btn btn-add" style="font-size:0.8rem;" onclick="openMappingEditor(' + f.id + ', \'' + escapeHtml(f.original_filename).replace(/'/g, "\\'") + '\', ' + JSON.stringify(f.mappings).replace(/"/g, '&quot;') + ', \'' + f.file_type + '\')">매핑설정</button>';
+                html += '<form action="/curriculum/file/delete/' + f.id + '" method="post" style="display:inline" onsubmit="return confirm(\'삭제하시겠습니까?\')"><button type="submit" class="btn btn-delete" style="font-size:0.8rem;">삭제</button></form>';
+                html += '</div></div>';
+
+                // 매핑 목록 표시
+                if (f.mappings && f.mappings.length > 0) {
+                    html += '<div style="margin-top:0.8rem; border-top:1px solid #eee; padding-top:0.5rem;">';
+                    html += '<small style="color:#666; font-weight:bold;">날짜별 매핑:</small>';
+                    html += '<table style="width:100%; margin-top:0.3rem; font-size:0.85rem;">';
+                    html += '<tr style="background:#f5f5f5;"><th style="padding:0.3rem;">라벨</th><th>페이지</th><th>사용일</th></tr>';
+                    f.mappings.forEach(function(m) {
+                        html += '<tr><td style="padding:0.3rem;">' + escapeHtml(m.label || '-') + '</td>';
+                        html += '<td>' + (m.page_start ? ('p.' + m.page_start + (m.page_end && m.page_end !== m.page_start ? '~' + m.page_end : '')) : '-') + '</td>';
+                        html += '<td>' + (m.use_date || '-') + '</td></tr>';
+                    });
+                    html += '</table></div>';
+                }
+
+                html += '</div>';
+            });
+            container.innerHTML = html;
+        });
+}
+
+function openMappingEditor(fileId, filename, existingMappings, fileType) {
+    document.getElementById('mappingFileId').value = fileId;
+    document.getElementById('mappingModalTitle').textContent = '날짜별 페이지 매핑';
+    document.getElementById('mappingFileInfo').textContent = filename + (fileType === 'pdf' ? ' (PDF)' : ' (이미지)');
+
+    var container = document.getElementById('mappingRows');
+    container.innerHTML = '';
+
+    if (existingMappings && existingMappings.length > 0) {
+        existingMappings.forEach(function(m) {
+            addMappingRow(m.label, m.page_start, m.page_end, m.use_date);
+        });
+    } else {
+        addMappingRow();
+    }
+
+    // PDF면 페이지 수 표시
+    if (fileType === 'pdf') {
+        fetch('/api/curriculum/file/pdf-pages/' + fileId)
+            .then(r => r.json())
+            .then(data => {
+                if (data.pages) {
+                    document.getElementById('mappingFileInfo').textContent += ' — 총 ' + data.pages + '페이지';
+                }
+            });
+    }
+
+    document.getElementById('mappingModal').style.display = 'flex';
+    closeFileModal();
+}
+
+function addMappingRow(label, pageStart, pageEnd, useDate) {
+    var container = document.getElementById('mappingRows');
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex; gap:0.4rem; margin-bottom:0.4rem; align-items:center; flex-wrap:wrap;';
+    row.innerHTML =
+        '<input type="text" name="label[]" placeholder="라벨 (예: Day 1)" value="' + (label || '') + '" style="width:120px;">' +
+        '<input type="number" name="page_start[]" placeholder="시작 페이지" value="' + (pageStart || '') + '" min="1" style="width:100px;">' +
+        '<input type="number" name="page_end[]" placeholder="끝 페이지" value="' + (pageEnd || '') + '" min="1" style="width:100px;">' +
+        '<input type="date" name="use_date[]" value="' + (useDate || '') + '" style="width:150px;">' +
+        '<button type="button" class="btn btn-delete" style="font-size:0.8rem; padding:0.2rem 0.5rem;" onclick="this.parentElement.remove()">×</button>';
+    container.appendChild(row);
+}
+
+function closeMappingModal() {
+    document.getElementById('mappingModal').style.display = 'none';
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 {% endblock %}
