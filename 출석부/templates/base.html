@@ -23,6 +23,7 @@
             <a href="{{ url_for('class_stats') }}" class="{% if request.endpoint == 'class_stats' %}active{% endif %}">반 별 통계</a>
             <a href="{{ url_for('reports') }}" class="{% if request.endpoint == 'reports' %}active{% endif %}">보고서</a>
             <a href="{{ url_for('curriculum') }}" class="{% if request.endpoint == 'curriculum' %}active{% endif %}">교육과정</a>
+            <a href="{{ url_for('supply') }}" class="{% if request.endpoint == 'supply' %}active{% endif %}">비품현황</a>
             {% if session.get('role') == 'admin' %}
             <a href="{{ url_for('manage') }}" class="{% if request.endpoint == 'manage' %}active{% endif %}">관리</a>
             <a href="{{ url_for('users') }}" class="{% if request.endpoint == 'users' %}active{% endif %}">담당자 관리</a>

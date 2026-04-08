@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>비품현황표</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-msg">
+    {% for msg in messages %}
+    <p>{{ msg }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<form class="filter-form" method="get" action="{{ url_for('supply') }}">
+    <div class="filter-row">
+        <label>지점:
+            <select name="branch_id" onchange="this.form.submit()">
+                <option value="">선택</option>
+                {% for b in branches %}
+                <option value="{{ b.id }}" {% if sel_branch|string == b.id|string %}selected{% endif %}>{{ b.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>기준 주(월요일):
+            <input type="date" name="date" value="{{ sel_date }}" onchange="this.form.submit()">
+        </label>
+    </div>
+</form>
+
+{% if sel_branch %}
+<!-- 품목 추가 -->
+<div class="manage-section">
+    <h2>품목 추가</h2>
+    <form method="post" action="{{ url_for('supply_item_add') }}" class="inline-form" style="gap:0.5rem;">
+        <input type="hidden" name="branch_id" value="{{ sel_branch }}">
+        <input type="text" name="name" placeholder="품목명 (예: A4용지)" required style="width:200px;">
+        <input type="text" name="unit" placeholder="단위 (기본: 개)" style="width:100px;">
+        <button type="submit" class="btn btn-add">추가</button>
+    </form>
+</div>
+
+<!-- 주간 재고 입력 -->
+{% if items %}
+<div class="manage-section">
+    <h2>주간 재고 현황 <small style="color:#888; font-weight:normal;">(최근 5주)</small></h2>
+    <div class="table-responsive">
+        <table id="supplyTable">
+            <thead>
+                <tr>
+                    <th style="min-width:120px;">품목</th>
+                    <th style="min-width:50px;">단위</th>
+                    {% for d in weekly_dates %}
+                    <th style="min-width:90px;">
+                        {{ d[5:] }}
+                        {% if loop.last %}<br><span style="color:#27ae60; font-size:0.75rem;">이번주</span>{% endif %}
+                    </th>
+                    {% endfor %}
+                    <th style="min-width:70px;">주간 차이</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+            <tr data-item-id="{{ item.id }}">
+                <td><strong>{{ item.name }}</strong></td>
+                <td style="color:#888;">{{ item.unit }}</td>
+                {% for d in weekly_dates %}
+                <td>
+                    <input type="number" class="qty-input" data-item-id="{{ item.id }}" data-date="{{ d }}"
+                           value="{{ records_map.get((item.id, d), '') }}"
+                           min="0" style="width:70px; padding:0.3rem; text-align:center;"
+                           onchange="markChanged(this)">
+                </td>
+                {% endfor %}
+                <td class="weekly-diff" style="font-weight:bold; text-align:center;">-</td>
+                <td>
+                    <form method="post" action="{{ url_for('supply_item_delete', item_id=item.id) }}"
+                          style="display:inline" onsubmit="return confirm('\"{{ item.name }}\" 품목을 삭제하시겠습니까?\n모든 기록도 함께 삭제됩니다.')">
+                        <button type="submit" class="btn btn-delete" style="font-size:0.8rem;">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-top:0.8rem;">
+        <button class="btn btn-save" onclick="saveRecords()">저장</button>
+        <span id="saveStatus" style="margin-left:0.5rem; color:#888;"></span>
+    </div>
+</div>
+{% else %}
+<p class="empty-msg">등록된 품목이 없습니다. 위에서 품목을 추가하세요.</p>
+{% endif %}
+
+<!-- 월별 사용량 통계 -->
+<div class="manage-section">
+    <h2>월별 사용량 통계</h2>
+    <div style="display:flex; gap:0.5rem; margin-bottom:1rem; align-items:center;">
+        <select id="statsYear" style="padding:0.4rem;">
+            {% for y in range(2024, 2028) %}
+            <option value="{{ y }}" {% if y == sel_date[:4]|int %}selected{% endif %}>{{ y }}년</option>
+            {% endfor %}
+        </select>
+        <select id="statsMonth" style="padding:0.4rem;">
+            {% for m in range(1, 13) %}
+            <option value="{{ m }}" {% if m == sel_date[5:7]|int %}selected{% endif %}>{{ m }}월</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-edit" onclick="loadMonthlyStats()">조회</button>
+    </div>
+    <div id="monthlyStatsContainer">
+        <p class="empty-msg">조회 버튼을 눌러 통계를 확인하세요.</p>
+    </div>
+</div>
+
+{% else %}
+<p class="empty-msg">지점을 선택하세요.</p>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+var changedInputs = new Set();
+
+function markChanged(input) {
+    changedInputs.add(input);
+    calcWeeklyDiffs();
+}
+
+function calcWeeklyDiffs() {
+    var rows = document.querySelectorAll('#supplyTable tbody tr');
+    rows.forEach(function(row) {
+        var inputs = row.querySelectorAll('.qty-input');
+        var diffCell = row.querySelector('.weekly-diff');
+        if (inputs.length < 2) return;
+
+        var last = inputs[inputs.length - 1].value;
+        var prev = inputs[inputs.length - 2].value;
+
+        if (last !== '' && prev !== '') {
+            var diff = parseInt(last) - parseInt(prev);
+            if (diff > 0) {
+                diffCell.textContent = '+' + diff;
+                diffCell.style.color = '#27ae60';
+            } else if (diff < 0) {
+                diffCell.textContent = diff;
+                diffCell.style.color = '#e74c3c';
+            } else {
+                diffCell.textContent = '0';
+                diffCell.style.color = '#888';
+            }
+        } else {
+            diffCell.textContent = '-';
+            diffCell.style.color = '#888';
+        }
+    });
+}
+
+function saveRecords() {
+    var inputs = document.querySelectorAll('.qty-input');
+    var records = [];
+    inputs.forEach(function(inp) {
+        if (inp.value !== '') {
+            records.push({
+                item_id: parseInt(inp.dataset.itemId),
+                date: inp.dataset.date,
+                quantity: parseInt(inp.value)
+            });
+        }
+    });
+
+    if (records.length === 0) {
+        alert('저장할 데이터가 없습니다.');
+        return;
+    }
+
+    var status = document.getElementById('saveStatus');
+    status.textContent = '저장 중...';
+
+    fetch('/api/supply/record/save', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({records: records})
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.ok) {
+            status.textContent = '저장 완료!';
+            status.style.color = '#27ae60';
+            changedInputs.clear();
+            setTimeout(function() { status.textContent = ''; }, 2000);
+        } else {
+            status.textContent = '저장 실패';
+            status.style.color = '#e74c3c';
+        }
+    })
+    .catch(function() {
+        status.textContent = '저장 실패';
+        status.style.color = '#e74c3c';
+    });
+}
+
+function loadMonthlyStats() {
+    var branchId = '{{ sel_branch }}';
+    var year = document.getElementById('statsYear').value;
+    var month = document.getElementById('statsMonth').value;
+    var container = document.getElementById('monthlyStatsContainer');
+
+    container.innerHTML = '<p style="color:#888;">불러오는 중...</p>';
+
+    fetch('/api/supply/monthly-stats?branch_id=' + branchId + '&year=' + year + '&month=' + month)
+        .then(r => r.json())
+        .then(data => {
+            if (data.length === 0) {
+                container.innerHTML = '<p class="empty-msg">해당 월 데이터가 없습니다.</p>';
+                return;
+            }
+
+            var html = '<div class="table-responsive"><table>';
+            html += '<thead><tr><th>품목</th><th>단위</th>';
+
+            // 주차 헤더
+            if (data[0].weeks) {
+                data[0].weeks.forEach(function(w, i) {
+                    html += '<th>' + w.date.substring(5) + '</th>';
+                });
+            }
+            html += '<th style="background:#f0f0f0;">월 합계</th></tr></thead><tbody>';
+
+            data.forEach(function(item) {
+                html += '<tr><td><strong>' + escHtml(item.name) + '</strong></td>';
+                html += '<td style="color:#888;">' + escHtml(item.unit) + '</td>';
+
+                item.weeks.forEach(function(w) {
+                    var diffText = '-';
+                    var color = '#888';
+                    if (w.diff !== null) {
+                        if (w.diff > 0) { diffText = '+' + w.diff; color = '#27ae60'; }
+                        else if (w.diff < 0) { diffText = '' + w.diff; color = '#e74c3c'; }
+                        else { diffText = '0'; }
+                    }
+                    html += '<td style="text-align:center; color:' + color + ';">' + diffText;
+                    if (w.qty !== null) html += '<br><small style="color:#aaa;">(' + w.qty + ')</small>';
+                    html += '</td>';
+                });
+
+                var totalColor = '#333';
+                var totalText = item.total_usage;
+                if (item.total_usage > 0) { totalText = '+' + item.total_usage; totalColor = '#27ae60'; }
+                else if (item.total_usage < 0) { totalColor = '#e74c3c'; }
+                html += '<td style="text-align:center; font-weight:bold; background:#f0f0f0; color:' + totalColor + ';">' + totalText + '</td>';
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+            html += '<p style="color:#888; font-size:0.8rem; margin-top:0.5rem;">* 숫자: 주간 변동량 (양수=입고, 음수=사용), 괄호 안: 재고 수량</p>';
+            container.innerHTML = html;
+        });
+}
+
+function escHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// 페이지 로드 시 주간 차이 계산
+document.addEventListener('DOMContentLoaded', function() {
+    calcWeeklyDiffs();
+});
+</script>
+{% endblock %}

@@ -212,6 +212,28 @@ def init_db():
             FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE,
             UNIQUE(student_id, year, month)
         );
+        CREATE TABLE IF NOT EXISTS supply_item (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            branch_id INTEGER NOT NULL,
+            name TEXT NOT NULL,
+            unit TEXT NOT NULL DEFAULT '개',
+            sort_order INTEGER DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (branch_id) REFERENCES branch(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS supply_record (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            item_id INTEGER NOT NULL,
+            record_date TEXT NOT NULL,
+            quantity INTEGER NOT NULL DEFAULT 0,
+            user_id INTEGER,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (item_id) REFERENCES supply_item(id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL,
+            UNIQUE(item_id, record_date)
+        );
     ''')
 
     conn.commit()

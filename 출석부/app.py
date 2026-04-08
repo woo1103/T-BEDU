@@ -3,6 +3,7 @@ from models import get_db, init_db, hash_password
 from datetime import datetime, date, timezone, timedelta
 from functools import wraps
 from werkzeug.utils import secure_filename
+from urllib.parse import quote
 import json
 import os
 import uuid
@@ -1964,6 +1965,195 @@ def tuition_save():
     flash('원비 명부가 업데이트 되었습니다.')
     return redirect(url_for('tuition', year=year, month=month, search_name=search_name, branch_id=branch_id))
 
+# ─── 비품현황표 ───
+@app.route('/supply')
+@login_required
+def supply():
+    db = get_db()
+    branches = db.execute('SELECT * FROM branch ORDER BY id').fetchall()
+
+    sel_branch = request.args.get('branch_id', '')
+    sel_date = request.args.get('date', '')
+
+    if not sel_date:
+        today = date.today()
+        # 이번 주 월요일
+        monday = today - timedelta(days=today.weekday())
+        sel_date = monday.strftime('%Y-%m-%d')
+
+    items = []
+    records_map = {}
+    prev_records_map = {}
+    weekly_dates = []
+
+    if sel_branch:
+        items = db.execute(
+            'SELECT * FROM supply_item WHERE branch_id = ? ORDER BY sort_order, name',
+            (sel_branch,)).fetchall()
+
+        # 선택된 날짜 기준 최근 5주 월요일 계산
+        sel_dt = datetime.strptime(sel_date, '%Y-%m-%d').date()
+        for i in range(5):
+            d = sel_dt - timedelta(weeks=i)
+            weekly_dates.append(d.strftime('%Y-%m-%d'))
+        weekly_dates.reverse()
+
+        # 해당 주간들의 기록 조회
+        if items and weekly_dates:
+            item_ids = [it['id'] for it in items]
+            ph = ','.join('?' * len(item_ids))
+            dph = ','.join('?' * len(weekly_dates))
+            rows = db.execute(
+                f'SELECT * FROM supply_record WHERE item_id IN ({ph}) AND record_date IN ({dph})',
+                item_ids + weekly_dates).fetchall()
+            for r in rows:
+                records_map[(r['item_id'], r['record_date'])] = r['quantity']
+
+    db.close()
+    return render_template('supply.html',
+                           branches=branches, items=items,
+                           sel_branch=sel_branch, sel_date=sel_date,
+                           records_map=records_map, weekly_dates=weekly_dates)
+
+
+@app.route('/supply/item/add', methods=['POST'])
+@login_required
+def supply_item_add():
+    branch_id = request.form.get('branch_id')
+    name = request.form.get('name', '').strip()
+    unit = request.form.get('unit', '개').strip() or '개'
+
+    if branch_id and name:
+        db = get_db()
+        db.execute('INSERT INTO supply_item (branch_id, name, unit) VALUES (?, ?, ?)',
+                   (branch_id, name, unit))
+        db.commit()
+        db.close()
+        flash(f'"{name}" 품목이 추가되었습니다.')
+    return redirect(url_for('supply', branch_id=branch_id))
+
+
+@app.route('/supply/item/delete/<int:item_id>', methods=['POST'])
+@login_required
+def supply_item_delete(item_id):
+    db = get_db()
+    item = db.execute('SELECT * FROM supply_item WHERE id = ?', (item_id,)).fetchone()
+    branch_id = item['branch_id'] if item else ''
+    if item:
+        db.execute('DELETE FROM supply_item WHERE id = ?', (item_id,))
+        db.commit()
+        flash('품목이 삭제되었습니다.')
+    db.close()
+    return redirect(url_for('supply', branch_id=branch_id))
+
+
+@app.route('/api/supply/record/save', methods=['POST'])
+@login_required
+def supply_record_save():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'no data'}), 400
+
+    db = get_db()
+    for rec in data.get('records', []):
+        item_id = rec.get('item_id')
+        record_date = rec.get('date')
+        quantity = rec.get('quantity')
+        if item_id and record_date and quantity is not None:
+            db.execute('''
+                INSERT INTO supply_record (item_id, record_date, quantity, user_id)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(item_id, record_date) DO UPDATE SET
+                    quantity = excluded.quantity,
+                    user_id = excluded.user_id,
+                    updated_at = CURRENT_TIMESTAMP
+            ''', (item_id, record_date, quantity, session.get('user_id')))
+    db.commit()
+    db.close()
+    return jsonify({'ok': True})
+
+
+@app.route('/api/supply/monthly-stats')
+@login_required
+def supply_monthly_stats():
+    branch_id = request.args.get('branch_id', '')
+    year = request.args.get('year', '')
+    month = request.args.get('month', '')
+
+    if not branch_id or not year or not month:
+        return jsonify([])
+
+    year = int(year)
+    month = int(month)
+
+    # 해당 월의 모든 월요일 계산
+    first_day = date(year, month, 1)
+    if month == 12:
+        last_day = date(year + 1, 1, 1) - timedelta(days=1)
+    else:
+        last_day = date(year, month + 1, 1) - timedelta(days=1)
+
+    mondays = []
+    d = first_day
+    while d <= last_day:
+        if d.weekday() == 0:
+            mondays.append(d.strftime('%Y-%m-%d'))
+        d += timedelta(days=1)
+
+    # 해당 월 직전 월요일도 포함 (첫 주 차이 계산용)
+    if mondays:
+        prev_monday = (datetime.strptime(mondays[0], '%Y-%m-%d').date() - timedelta(weeks=1)).strftime('%Y-%m-%d')
+        all_dates = [prev_monday] + mondays
+    else:
+        return jsonify([])
+
+    db = get_db()
+    items = db.execute('SELECT * FROM supply_item WHERE branch_id = ? ORDER BY sort_order, name',
+                       (branch_id,)).fetchall()
+
+    if not items:
+        db.close()
+        return jsonify([])
+
+    item_ids = [it['id'] for it in items]
+    ph = ','.join('?' * len(item_ids))
+    dph = ','.join('?' * len(all_dates))
+    rows = db.execute(
+        f'SELECT * FROM supply_record WHERE item_id IN ({ph}) AND record_date IN ({dph})',
+        item_ids + all_dates).fetchall()
+    db.close()
+
+    rec_map = {}
+    for r in rows:
+        rec_map[(r['item_id'], r['record_date'])] = r['quantity']
+
+    result = []
+    for item in items:
+        total_usage = 0
+        weekly_details = []
+        for i, mon in enumerate(mondays):
+            cur = rec_map.get((item['id'], mon))
+            if i == 0:
+                prev = rec_map.get((item['id'], prev_monday))
+            else:
+                prev = rec_map.get((item['id'], mondays[i - 1]))
+            diff = None
+            if cur is not None and prev is not None:
+                diff = cur - prev
+                total_usage += diff
+            weekly_details.append({'date': mon, 'qty': cur, 'diff': diff})
+
+        result.append({
+            'id': item['id'],
+            'name': item['name'],
+            'unit': item['unit'],
+            'total_usage': total_usage,
+            'weeks': weekly_details
+        })
+
+    return jsonify(result)
+
+
 # ─── 사용 가이드 ───
 @app.route('/guide')
 @login_required
@@ -2250,7 +2440,7 @@ def curriculum_file_extract(mapping_id):
         with open(out_path, 'rb') as tmp_f:
             response = make_response(tmp_f.read())
         response.headers['Content-Type'] = 'application/pdf'
-        response.headers['Content-Disposition'] = f'attachment; filename="{out_name}"'
+        response.headers['Content-Disposition'] = f"attachment; filename*=UTF-8''{quote(out_name)}"
 
         try:
             os.remove(out_path)
