@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { EXAM_TYPE_MAP, getQuestionTypes, DIFFICULTY_MAP } from "@/lib/question-types";
-import type { Choice, ExamType, Difficulty } from "@/types";
+import type { Choice, ExamType, Difficulty, PassageMode } from "@/types";
 
 const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
 
@@ -37,6 +37,7 @@ export default function NewQuestionPage() {
   const [selectedTypes, setSelectedTypes] = useState<TypeSelection[]>([]);
   const [topic, setTopic] = useState("");
   const [sourcePassage, setSourcePassage] = useState("");
+  const [passageMode, setPassageMode] = useState<PassageMode>("original");
 
   // AI 생성 결과
   const [generatedQuestions, setGeneratedQuestions] = useState<GeneratedQuestion[]>([]);
@@ -104,6 +105,7 @@ export default function NewQuestionPage() {
               difficulty,
               topic,
               sourcePassage: sourcePassage || undefined,
+              passageMode: sourcePassage ? passageMode : undefined,
             }),
           });
           if (!res.ok) {
@@ -338,21 +340,90 @@ export default function NewQuestionPage() {
         <>
           {/* 내신 지문 학습 */}
           {examType === "naesin" && (
-            <div className="bg-amber-50 rounded-xl border border-amber-200 p-6 space-y-3">
-              <h3 className="font-semibold text-amber-800">
-                교과서 지문 입력 (선택)
-              </h3>
-              <p className="text-sm text-amber-700">
-                교과서 지문을 입력하면 해당 지문을 기반으로 문제를 출제합니다.
-                입력하지 않으면 AI가 새로운 지문을 자체 생성합니다.
-              </p>
+            <div className="bg-amber-50 rounded-xl border border-amber-200 p-6 space-y-4">
+              <div>
+                <h3 className="font-semibold text-amber-800 text-lg">
+                  지문 학습 (내신 출제용)
+                </h3>
+                <p className="text-sm text-amber-700 mt-1">
+                  교과서 지문을 입력하면 해당 지문을 기반으로 문제를 출제합니다.
+                  입력하지 않으면 AI가 새로운 지문을 자체 생성합니다.
+                </p>
+              </div>
+
               <textarea
                 value={sourcePassage}
                 onChange={(e) => setSourcePassage(e.target.value)}
-                rows={8}
-                placeholder="교과서 영어 지문을 여기에 붙여넣기 하세요..."
-                className="w-full border border-amber-300 rounded-lg px-3 py-2 text-sm font-mono leading-relaxed"
+                rows={10}
+                placeholder={"교과서 영어 지문을 여기에 붙여넣기 하세요...\n\n예시:\nThe concept of emotional intelligence has gained significant attention in recent decades. Unlike traditional measures of intelligence, emotional intelligence refers to the ability to recognize, understand, and manage our own emotions..."}
+                className="w-full border border-amber-300 rounded-lg px-3 py-2 text-sm font-mono leading-relaxed focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
               />
+
+              {sourcePassage.trim() && (
+                <div className="bg-white rounded-lg border border-amber-200 p-4 space-y-3">
+                  <p className="text-sm font-medium text-amber-800">
+                    지문 활용 방식
+                  </p>
+                  <div className="flex gap-3">
+                    <label
+                      className={`flex-1 cursor-pointer rounded-lg border-2 p-3 transition-colors ${
+                        passageMode === "original"
+                          ? "border-amber-500 bg-amber-50"
+                          : "border-gray-200 bg-white hover:border-amber-300"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="passageMode"
+                        value="original"
+                        checked={passageMode === "original"}
+                        onChange={() => setPassageMode("original")}
+                        className="sr-only"
+                      />
+                      <span className="block text-sm font-semibold text-gray-800">
+                        원문 그대로
+                      </span>
+                      <span className="block text-xs text-gray-500 mt-1">
+                        교과서 지문을 그대로 사용하여 문제 출제. 지문 암기 확인에 적합.
+                      </span>
+                    </label>
+                    <label
+                      className={`flex-1 cursor-pointer rounded-lg border-2 p-3 transition-colors ${
+                        passageMode === "modified"
+                          ? "border-amber-500 bg-amber-50"
+                          : "border-gray-200 bg-white hover:border-amber-300"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="passageMode"
+                        value="modified"
+                        checked={passageMode === "modified"}
+                        onChange={() => setPassageMode("modified")}
+                        className="sr-only"
+                      />
+                      <span className="block text-sm font-semibold text-gray-800">
+                        변형 출제
+                      </span>
+                      <span className="block text-xs text-gray-500 mt-1">
+                        지문의 어휘/구문/내용을 난이도에 맞게 변형하여 출제. 응용력 평가에 적합.
+                      </span>
+                    </label>
+                  </div>
+                  <p className="text-xs text-amber-600">
+                    {passageMode === "original"
+                      ? "원본 지문이 그대로 출제되며, 선지와 발문만 새로 생성됩니다."
+                      : "난이도에 따라 지문이 변형됩니다. 중 난이도는 일부 표현 교체, 상 난이도는 단어/내용 전면 변형."}
+                  </p>
+                </div>
+              )}
+
+              {sourcePassage.trim() && (
+                <div className="flex items-center gap-2 text-xs text-amber-600">
+                  <span className="inline-block w-2 h-2 bg-amber-400 rounded-full"></span>
+                  지문 입력됨 ({sourcePassage.trim().split(/\s+/).length} 단어)
+                </div>
+              )}
             </div>
           )}
 

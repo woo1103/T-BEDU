@@ -57,10 +57,14 @@ export interface TemplateStructureItem {
 export type ExamType = "suneung" | "naesin" | "toeic" | "toefl" | "custom";
 export type Difficulty = "easy" | "medium" | "hard";
 
+export type PassageMode = "original" | "modified";
+
 export interface GenerateRequest {
   examType: ExamType;
   questionType: string;
   difficulty: Difficulty;
   topic?: string;
   count?: number;
+  sourcePassage?: string;
+  passageMode?: PassageMode;
 }

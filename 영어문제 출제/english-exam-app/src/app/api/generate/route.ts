@@ -5,7 +5,7 @@ import { getQuestionTypeInfo } from "@/lib/question-types";
 
 export async function POST(request: NextRequest) {
   try {
-    const { examType, questionType, difficulty, topic, sourcePassage } = await request.json();
+    const { examType, questionType, difficulty, topic, sourcePassage, passageMode } = await request.json();
 
     if (!examType || !questionType) {
       return NextResponse.json(
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const systemPrompt = getSystemPrompt(examType, questionType, difficulty, sourcePassage);
+    const systemPrompt = getSystemPrompt(examType, questionType, difficulty, sourcePassage, passageMode);
     if (!systemPrompt) {
       return NextResponse.json(
         { error: `이 문제 유형(${questionType})에 대한 프롬프트가 아직 준비되지 않았습니다.` },

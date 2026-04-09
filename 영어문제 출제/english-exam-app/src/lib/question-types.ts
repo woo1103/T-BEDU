@@ -49,6 +49,7 @@ export const NAESIN_TYPES: QuestionTypeInfo[] = [
   { code: "naesin_content", number: 9, name: "내용 일치/불일치", nameEn: "Content Match", category: "독해", defaultPoints: 2 },
   { code: "naesin_refer", number: 10, name: "지칭 추론", nameEn: "Reference", category: "독해", defaultPoints: 2 },
   { code: "naesin_writing", number: 11, name: "서술형", nameEn: "Written Response", category: "서술형", defaultPoints: 5 },
+  { code: "naesin_example", number: 12, name: "적절한 사례", nameEn: "Appropriate Example", category: "독해", defaultPoints: 3 },
 ];
 
 // TOEIC 문제 유형
