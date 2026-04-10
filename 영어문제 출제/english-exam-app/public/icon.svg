@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="64" fill="#2563eb"/>
+  <text x="256" y="200" text-anchor="middle" font-size="120" font-weight="bold" fill="white" font-family="Arial">ENG</text>
+  <text x="256" y="380" text-anchor="middle" font-size="80" fill="white" font-family="Arial" opacity="0.9">문제출제</text>
+</svg>
