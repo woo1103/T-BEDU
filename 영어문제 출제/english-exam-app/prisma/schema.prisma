@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("TURSO_DATABASE_URL")
+}
+
+model Question {
+  id           String   @id @default(cuid())
+  examType     String   // "suneung" | "naesin" | "toeic" | "toefl" | "custom"
+  questionType String   // "18_purpose" | "29_grammar" 등
+  number       Int?     // 문항 번호
+  points       Int      @default(2)
+
+  passage     String   // 지문 (영어)
+  question    String   // 발문
+  choices     String   // JSON: [{label:"①", text:"...", isCorrect:false}, ...]
+  answer      String   // 정답
+  explanation String?  // 해설
+
+  difficulty  String   @default("medium") // "easy" | "medium" | "hard"
+  tags        String?  // JSON: ["빈칸추론", "인과관계"]
+  source      String?  // 출처
+  aiGenerated Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  examItems   ExamItem[]
+}
+
+model Exam {
+  id           String   @id @default(cuid())
+  title        String   // "2학기 중간고사 영어"
+  examType     String   // "suneung" | "naesin" 등
+  description  String?
+  totalPoints  Int      @default(100)
+  timeLimit    Int?     // 분 단위
+
+  headerInfo   String?  // JSON: {school, grade, date, teacher}
+  instructions String?  // 시험 안내문
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  items        ExamItem[]
+}
+
+model ExamItem {
+  id           String   @id @default(cuid())
+  examId       String
+  questionId   String
+  orderNum     Int
+  customPoints Int?
+
+  exam     Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id])
+
+  @@unique([examId, orderNum])
+}
+
+model Template {
+  id        String   @id @default(cuid())
+  name      String   // "수능 영어 모의고사"
+  examType  String
+  structure String   // JSON: [{questionType:"18_purpose", count:1, points:2}, ...]
+  createdAt DateTime @default(now())
+}
