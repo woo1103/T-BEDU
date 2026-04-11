@@ -208,6 +208,43 @@ export default function NewQuestionPage() {
     );
   }
 
+  // 정답 번호를 ①~⑤에 균등 배분하여 선지 재배치
+  function distributeAnswers(questions: GeneratedQuestion[]): GeneratedQuestion[] {
+    if (questions.length === 0) return questions;
+
+    // 각 문제에 할당할 정답 인덱스 (0~4)를 균등 분배
+    const answerSlots: number[] = [];
+    for (let i = 0; i < questions.length; i++) {
+      answerSlots.push(i % 5);
+    }
+    // 셔플하여 패턴화 방지
+    for (let i = answerSlots.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [answerSlots[i], answerSlots[j]] = [answerSlots[j], answerSlots[i]];
+    }
+
+    return questions.map((q, idx) => {
+      const targetCorrectIdx = answerSlots[idx];
+      const correctIdx = q.choices.findIndex((c) => c.isCorrect);
+      if (correctIdx === -1 || correctIdx === targetCorrectIdx) return q;
+
+      // 선지를 재배치: 정답을 targetCorrectIdx 위치로 이동
+      const newChoices = [...q.choices];
+      [newChoices[correctIdx], newChoices[targetCorrectIdx]] = [
+        newChoices[targetCorrectIdx],
+        newChoices[correctIdx],
+      ];
+      // 라벨 재할당
+      return {
+        ...q,
+        choices: newChoices.map((c, i) => ({
+          ...c,
+          label: CIRCLE_LABELS[i] || `(${i + 1})`,
+        })),
+      };
+    });
+  }
+
   // 선택된 지문 목록 (저장된 지문 모드일 때)
   function getSelectedPassages(): SavedPassage[] {
     if (passageInputMode === "direct") return [];
@@ -293,7 +330,9 @@ export default function NewQuestionPage() {
       }
     }
 
-    setGeneratedQuestions(results);
+    // 정답 번호를 ①~⑤에 균등 분배
+    const distributed = distributeAnswers(results);
+    setGeneratedQuestions(distributed);
     setCurrentPreview(0);
     setGenerating(false);
   }
