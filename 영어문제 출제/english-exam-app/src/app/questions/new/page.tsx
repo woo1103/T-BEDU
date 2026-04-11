@@ -54,6 +54,10 @@ export default function NewQuestionPage() {
   const [passageInputMode, setPassageInputMode] = useState<"saved" | "direct">("saved");
   const [selectedPassageIds, setSelectedPassageIds] = useState<Set<string>>(new Set());
 
+  // 트리 펼침 상태
+  const [expandedGrades, setExpandedGrades] = useState<Set<string>>(new Set());
+  const [expandedTextbooks, setExpandedTextbooks] = useState<Set<string>>(new Set());
+
   // AI 생성 결과
   const [generatedQuestions, setGeneratedQuestions] = useState<GeneratedQuestion[]>([]);
   const [currentPreview, setCurrentPreview] = useState(0);
@@ -79,24 +83,102 @@ export default function NewQuestionPage() {
     }
   }, [examType]);
 
-  // 저장된 지문 선택/해제 토글
+  // 지문을 학년 → 교과서 → 단원 트리로 그룹핑
+  type PassageTree = Map<string, Map<string, SavedPassage[]>>;
+  function buildPassageTree(): PassageTree {
+    const tree: PassageTree = new Map();
+    for (const p of savedPassages) {
+      if (!tree.has(p.grade)) tree.set(p.grade, new Map());
+      const textbookMap = tree.get(p.grade)!;
+      if (!textbookMap.has(p.textbook)) textbookMap.set(p.textbook, []);
+      textbookMap.get(p.textbook)!.push(p);
+    }
+    return tree;
+  }
+
+  const passageTree = buildPassageTree();
+
+  // 개별 지문 토글
   function togglePassageSelection(passageId: string) {
     setSelectedPassageIds((prev) => {
       const next = new Set(prev);
-      if (next.has(passageId)) {
-        next.delete(passageId);
+      if (next.has(passageId)) next.delete(passageId);
+      else next.add(passageId);
+      return next;
+    });
+  }
+
+  // 교과서 단위 일괄 선택/해제
+  function toggleTextbookAll(grade: string, textbook: string) {
+    const passages = passageTree.get(grade)?.get(textbook) || [];
+    const ids = passages.map((p) => p.id);
+    const allSelected = ids.every((id) => selectedPassageIds.has(id));
+    setSelectedPassageIds((prev) => {
+      const next = new Set(prev);
+      if (allSelected) {
+        ids.forEach((id) => next.delete(id));
       } else {
-        next.add(passageId);
+        ids.forEach((id) => next.add(id));
       }
       return next;
     });
   }
 
-  // 선택된 지문들의 내용을 합쳐서 sourcePassage에 반영
-  function getSelectedPassageContent(): string {
-    if (passageInputMode === "direct") return sourcePassage;
-    const selected = savedPassages.filter((p) => selectedPassageIds.has(p.id));
-    return selected.map((p) => p.content).join("\n\n---\n\n");
+  // 학년 단위 일괄 선택/해제
+  function toggleGradeAll(grade: string) {
+    const textbookMap = passageTree.get(grade);
+    if (!textbookMap) return;
+    const ids: string[] = [];
+    textbookMap.forEach((passages) => passages.forEach((p) => ids.push(p.id)));
+    const allSelected = ids.every((id) => selectedPassageIds.has(id));
+    setSelectedPassageIds((prev) => {
+      const next = new Set(prev);
+      if (allSelected) {
+        ids.forEach((id) => next.delete(id));
+      } else {
+        ids.forEach((id) => next.add(id));
+      }
+      return next;
+    });
+  }
+
+  // 트리 펼침 토글
+  function toggleGradeExpand(grade: string) {
+    setExpandedGrades((prev) => {
+      const next = new Set(prev);
+      if (next.has(grade)) next.delete(grade);
+      else next.add(grade);
+      return next;
+    });
+  }
+
+  function toggleTextbookExpand(key: string) {
+    setExpandedTextbooks((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  // 체크 상태 계산
+  function getGradeCheckState(grade: string): "all" | "some" | "none" {
+    const textbookMap = passageTree.get(grade);
+    if (!textbookMap) return "none";
+    const ids: string[] = [];
+    textbookMap.forEach((passages) => passages.forEach((p) => ids.push(p.id)));
+    const selectedCount = ids.filter((id) => selectedPassageIds.has(id)).length;
+    if (selectedCount === 0) return "none";
+    if (selectedCount === ids.length) return "all";
+    return "some";
+  }
+
+  function getTextbookCheckState(grade: string, textbook: string): "all" | "some" | "none" {
+    const passages = passageTree.get(grade)?.get(textbook) || [];
+    const selectedCount = passages.filter((p) => selectedPassageIds.has(p.id)).length;
+    if (selectedCount === 0) return "none";
+    if (selectedCount === passages.length) return "all";
+    return "some";
   }
 
   // 유형 토글
@@ -126,6 +208,16 @@ export default function NewQuestionPage() {
     );
   }
 
+  // 선택된 지문 목록 (저장된 지문 모드일 때)
+  function getSelectedPassages(): SavedPassage[] {
+    if (passageInputMode === "direct") return [];
+    return savedPassages.filter((p) => selectedPassageIds.has(p.id));
+  }
+
+  // 총 생성 문제 수 = 유형별 개수 × 지문 수 (지문 선택 시)
+  const selectedPassageCount = passageInputMode === "saved" ? selectedPassageIds.size : (sourcePassage.trim() ? 1 : 0);
+  const passageMultiplier = selectedPassageCount > 0 ? selectedPassageCount : 1;
+
   // AI 복수 생성
   async function handleGenerate() {
     if (selectedTypes.length === 0) {
@@ -137,49 +229,66 @@ export default function NewQuestionPage() {
 
     const results: GeneratedQuestion[] = [];
 
-    for (const typeSelection of selectedTypes) {
-      for (let i = 0; i < typeSelection.count; i++) {
-        try {
-          const res = await fetch("/api/generate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              examType,
+    // 지문 목록 준비: 저장된 지문이 선택되었으면 각각, 아니면 빈/직접입력 1개
+    const passagesToUse: { content: string; label: string }[] = [];
+    const selectedSaved = getSelectedPassages();
+    if (selectedSaved.length > 0) {
+      for (const p of selectedSaved) {
+        passagesToUse.push({
+          content: p.content,
+          label: `${p.textbook} ${p.lesson}${p.title ? ` - ${p.title}` : ""}`,
+        });
+      }
+    } else if (passageInputMode === "direct" && sourcePassage.trim()) {
+      passagesToUse.push({ content: sourcePassage, label: "직접 입력 지문" });
+    } else {
+      passagesToUse.push({ content: "", label: "" });
+    }
+
+    for (const passageItem of passagesToUse) {
+      for (const typeSelection of selectedTypes) {
+        for (let i = 0; i < typeSelection.count; i++) {
+          try {
+            const res = await fetch("/api/generate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                examType,
+                questionType: typeSelection.code,
+                difficulty,
+                topic,
+                sourcePassage: passageItem.content || undefined,
+                passageMode: passageItem.content ? passageMode : undefined,
+              }),
+            });
+            if (!res.ok) {
+              const err = await res.json();
+              throw new Error(err.error || "생성 실패");
+            }
+            const data = await res.json();
+            results.push({
+              passage: data.passage || "",
+              question: data.question || "",
+              choices: (data.choices || []).map(
+                (c: { text: string; isCorrect: boolean }, idx: number) => ({
+                  label: CIRCLE_LABELS[idx] || `(${idx + 1})`,
+                  text: c.text,
+                  isCorrect: c.isCorrect,
+                })
+              ),
+              explanation: data.explanation || "",
+              points: data.points || 2,
               questionType: typeSelection.code,
-              difficulty,
-              topic,
-              sourcePassage: getSelectedPassageContent() || undefined,
-              passageMode: getSelectedPassageContent() ? passageMode : undefined,
-            }),
-          });
-          if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.error || "생성 실패");
+              questionTypeName: typeSelection.name,
+            });
+            setGeneratedQuestions([...results]);
+          } catch (err) {
+            alert(
+              `${passageItem.label ? `[${passageItem.label}] ` : ""}${typeSelection.name} ${i + 1}번째 생성 실패: ${
+                err instanceof Error ? err.message : "오류"
+              }`
+            );
           }
-          const data = await res.json();
-          results.push({
-            passage: data.passage || "",
-            question: data.question || "",
-            choices: (data.choices || []).map(
-              (c: { text: string; isCorrect: boolean }, idx: number) => ({
-                label: CIRCLE_LABELS[idx] || `(${idx + 1})`,
-                text: c.text,
-                isCorrect: c.isCorrect,
-              })
-            ),
-            explanation: data.explanation || "",
-            points: data.points || 2,
-            questionType: typeSelection.code,
-            questionTypeName: typeSelection.name,
-          });
-          // 중간 결과 업데이트
-          setGeneratedQuestions([...results]);
-        } catch (err) {
-          alert(
-            `${typeSelection.name} ${i + 1}번째 생성 실패: ${
-              err instanceof Error ? err.message : "오류"
-            }`
-          );
         }
       }
     }
@@ -302,7 +411,8 @@ export default function NewQuestionPage() {
     );
   }
 
-  const totalToGenerate = selectedTypes.reduce((sum, t) => sum + t.count, 0);
+  const typesTotal = selectedTypes.reduce((sum, t) => sum + t.count, 0);
+  const totalToGenerate = typesTotal * passageMultiplier;
   const currentQ = generatedQuestions[currentPreview];
 
   return (
@@ -419,7 +529,7 @@ export default function NewQuestionPage() {
                 </button>
               </div>
 
-              {/* 저장된 지문 선택 모드 */}
+              {/* 저장된 지문 선택 모드 - 트리 구조 */}
               {passageInputMode === "saved" && (
                 <div className="space-y-3">
                   {savedPassages.length === 0 ? (
@@ -434,58 +544,114 @@ export default function NewQuestionPage() {
                     </div>
                   ) : (
                     <>
-                      <div className="max-h-64 overflow-y-auto space-y-2 pr-1">
-                        {savedPassages.map((p) => {
-                          const isSelected = selectedPassageIds.has(p.id);
+                      <div className="max-h-80 overflow-y-auto pr-1 bg-white rounded-lg border border-amber-200">
+                        {Array.from(passageTree.entries()).map(([grade, textbookMap]) => {
+                          const gradeCheck = getGradeCheckState(grade);
+                          const gradeExpanded = expandedGrades.has(grade);
                           return (
-                            <button
-                              key={p.id}
-                              onClick={() => togglePassageSelection(p.id)}
-                              className={`w-full text-left rounded-lg border-2 p-3 transition-colors ${
-                                isSelected
-                                  ? "border-amber-500 bg-white"
-                                  : "border-transparent bg-white/60 hover:border-amber-300"
-                              }`}
-                            >
-                              <div className="flex items-center justify-between mb-1">
-                                <div className="flex gap-2">
-                                  <span className="px-1.5 py-0.5 text-xs rounded bg-amber-100 text-amber-700">
-                                    {p.grade}
-                                  </span>
-                                  <span className="px-1.5 py-0.5 text-xs rounded bg-blue-100 text-blue-700">
-                                    {p.textbook}
-                                  </span>
-                                  <span className="text-xs text-gray-600">
-                                    {p.lesson}
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs text-gray-400">
-                                    {p.wordCount}단어
-                                  </span>
-                                  {isSelected && (
-                                    <span className="w-5 h-5 bg-amber-500 text-white rounded-full text-xs flex items-center justify-center">
-                                      ✓
-                                    </span>
-                                  )}
-                                </div>
+                            <div key={grade} className="border-b border-gray-100 last:border-b-0">
+                              {/* 학년 레벨 */}
+                              <div className="flex items-center gap-2 px-3 py-2.5 hover:bg-amber-50">
+                                <button
+                                  onClick={() => toggleGradeExpand(grade)}
+                                  className="text-gray-400 text-xs w-4"
+                                >
+                                  {gradeExpanded ? "▼" : "▶"}
+                                </button>
+                                <input
+                                  type="checkbox"
+                                  checked={gradeCheck === "all"}
+                                  ref={(el) => { if (el) el.indeterminate = gradeCheck === "some"; }}
+                                  onChange={() => toggleGradeAll(grade)}
+                                  className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+                                />
+                                <span className="text-sm font-semibold text-gray-800">{grade}</span>
+                                <span className="text-xs text-gray-400 ml-auto">
+                                  {(() => {
+                                    let count = 0;
+                                    textbookMap.forEach((ps) => { count += ps.length; });
+                                    return `${count}개 지문`;
+                                  })()}
+                                </span>
                               </div>
-                              {p.title && (
-                                <p className="text-sm font-medium text-gray-800">
-                                  {p.title}
-                                </p>
+
+                              {/* 교과서 레벨 */}
+                              {gradeExpanded && (
+                                <div className="pl-6">
+                                  {Array.from(textbookMap.entries()).map(([textbook, passages]) => {
+                                    const tbKey = `${grade}::${textbook}`;
+                                    const tbCheck = getTextbookCheckState(grade, textbook);
+                                    const tbExpanded = expandedTextbooks.has(tbKey);
+                                    return (
+                                      <div key={tbKey} className="border-t border-gray-50">
+                                        {/* 교과서 행 */}
+                                        <div className="flex items-center gap-2 px-3 py-2 hover:bg-blue-50">
+                                          <button
+                                            onClick={() => toggleTextbookExpand(tbKey)}
+                                            className="text-gray-400 text-xs w-4"
+                                          >
+                                            {tbExpanded ? "▼" : "▶"}
+                                          </button>
+                                          <input
+                                            type="checkbox"
+                                            checked={tbCheck === "all"}
+                                            ref={(el) => { if (el) el.indeterminate = tbCheck === "some"; }}
+                                            onChange={() => toggleTextbookAll(grade, textbook)}
+                                            className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+                                          />
+                                          <span className="text-sm font-medium text-blue-700">{textbook}</span>
+                                          <span className="text-xs text-gray-400 ml-auto">{passages.length}개</span>
+                                        </div>
+
+                                        {/* 단원(지문) 레벨 */}
+                                        {tbExpanded && (
+                                          <div className="pl-6">
+                                            {passages.map((p) => {
+                                              const isSelected = selectedPassageIds.has(p.id);
+                                              return (
+                                                <label
+                                                  key={p.id}
+                                                  className={`flex items-center gap-2 px-3 py-2 cursor-pointer border-t border-gray-50 transition-colors ${
+                                                    isSelected ? "bg-amber-50" : "hover:bg-gray-50"
+                                                  }`}
+                                                >
+                                                  <input
+                                                    type="checkbox"
+                                                    checked={isSelected}
+                                                    onChange={() => togglePassageSelection(p.id)}
+                                                    className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+                                                  />
+                                                  <span className="text-sm text-gray-700 flex-1">
+                                                    {p.lesson}
+                                                    {p.title && <span className="text-gray-400"> - {p.title}</span>}
+                                                  </span>
+                                                  <span className="text-xs text-gray-400">{p.wordCount}단어</span>
+                                                </label>
+                                              );
+                                            })}
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
                               )}
-                              <p className="text-xs text-gray-500 mt-1 line-clamp-2">
-                                {p.content.slice(0, 120)}...
-                              </p>
-                            </button>
+                            </div>
                           );
                         })}
                       </div>
                       {selectedPassageIds.size > 0 && (
-                        <div className="flex items-center gap-2 text-xs text-amber-700 bg-white rounded-lg p-2">
-                          <span className="inline-block w-2 h-2 bg-amber-500 rounded-full"></span>
-                          {selectedPassageIds.size}개 지문 선택됨
+                        <div className="flex items-center justify-between text-xs bg-white rounded-lg p-2 border border-amber-200">
+                          <div className="flex items-center gap-2 text-amber-700">
+                            <span className="inline-block w-2 h-2 bg-amber-500 rounded-full"></span>
+                            {selectedPassageIds.size}개 지문 선택됨
+                          </div>
+                          <button
+                            onClick={() => setSelectedPassageIds(new Set())}
+                            className="text-gray-400 hover:text-gray-600"
+                          >
+                            선택 해제
+                          </button>
                         </div>
                       )}
                     </>
@@ -613,8 +779,9 @@ export default function NewQuestionPage() {
             {selectedTypes.length > 0 && (
               <div className="border-t border-gray-100 pt-4">
                 <p className="text-sm font-medium text-gray-700 mb-3">
-                  선택된 유형 ({selectedTypes.length}개, 총{" "}
-                  {totalToGenerate}문제)
+                  선택된 유형 ({selectedTypes.length}개, 유형당 {typesTotal}문제
+                  {passageMultiplier > 1 && ` × ${passageMultiplier}지문 = ${totalToGenerate}문제`}
+                  {passageMultiplier <= 1 && `, 총 ${totalToGenerate}문제`})
                 </p>
                 <div className="space-y-2">
                   {selectedTypes.map((st) => (
