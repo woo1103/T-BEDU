@@ -72,15 +72,16 @@ const styles = StyleSheet.create({
   coverCircleArea: {
     position: "absolute",
     top: 80,
-    left: -60,
+    left: 48,
     width: 500,
     height: 500,
   },
-  coverTitle: {
+  coverTitleInCircle: {
     position: "absolute",
-    top: 320,
-    right: 80,
-    textAlign: "right",
+    top: 280,
+    left: 0,
+    right: 0,
+    textAlign: "center",
   },
   coverTitleText: {
     fontSize: 28,
@@ -331,8 +332,8 @@ function CoverPage() {
         </Svg>
       </View>
 
-      {/* Daily Gift 타이틀 */}
-      <View style={styles.coverTitle}>
+      {/* Daily Gift 타이틀 - 원 안 중앙 */}
+      <View style={styles.coverTitleInCircle}>
         <Text style={styles.coverTitleText}>Daily Gift</Text>
       </View>
 
