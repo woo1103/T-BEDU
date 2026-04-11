@@ -1,9 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { EXAM_TYPE_MAP, getQuestionTypes, DIFFICULTY_MAP } from "@/lib/question-types";
 import type { Choice, ExamType, Difficulty, PassageMode } from "@/types";
+
+interface SavedPassage {
+  id: string;
+  textbook: string;
+  grade: string;
+  lesson: string;
+  title: string | null;
+  content: string;
+  wordCount: number;
+}
 
 const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
 
@@ -39,6 +49,11 @@ export default function NewQuestionPage() {
   const [sourcePassage, setSourcePassage] = useState("");
   const [passageMode, setPassageMode] = useState<PassageMode>("original");
 
+  // 저장된 지문
+  const [savedPassages, setSavedPassages] = useState<SavedPassage[]>([]);
+  const [passageInputMode, setPassageInputMode] = useState<"saved" | "direct">("saved");
+  const [selectedPassageIds, setSelectedPassageIds] = useState<Set<string>>(new Set());
+
   // AI 생성 결과
   const [generatedQuestions, setGeneratedQuestions] = useState<GeneratedQuestion[]>([]);
   const [currentPreview, setCurrentPreview] = useState(0);
@@ -54,6 +69,35 @@ export default function NewQuestionPage() {
   const [points, setPoints] = useState(2);
 
   const questionTypes = getQuestionTypes(examType);
+
+  // 내신 모드일 때 저장된 지문 불러오기
+  useEffect(() => {
+    if (examType === "naesin") {
+      fetch("/api/passages")
+        .then((res) => res.json())
+        .then((data) => setSavedPassages(data));
+    }
+  }, [examType]);
+
+  // 저장된 지문 선택/해제 토글
+  function togglePassageSelection(passageId: string) {
+    setSelectedPassageIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(passageId)) {
+        next.delete(passageId);
+      } else {
+        next.add(passageId);
+      }
+      return next;
+    });
+  }
+
+  // 선택된 지문들의 내용을 합쳐서 sourcePassage에 반영
+  function getSelectedPassageContent(): string {
+    if (passageInputMode === "direct") return sourcePassage;
+    const selected = savedPassages.filter((p) => selectedPassageIds.has(p.id));
+    return selected.map((p) => p.content).join("\n\n---\n\n");
+  }
 
   // 유형 토글
   function toggleType(code: string, name: string) {
@@ -104,8 +148,8 @@ export default function NewQuestionPage() {
               questionType: typeSelection.code,
               difficulty,
               topic,
-              sourcePassage: sourcePassage || undefined,
-              passageMode: sourcePassage ? passageMode : undefined,
+              sourcePassage: getSelectedPassageContent() || undefined,
+              passageMode: getSelectedPassageContent() ? passageMode : undefined,
             }),
           });
           if (!res.ok) {
@@ -343,23 +387,125 @@ export default function NewQuestionPage() {
             <div className="bg-amber-50 rounded-xl border border-amber-200 p-6 space-y-4">
               <div>
                 <h3 className="font-semibold text-amber-800 text-lg">
-                  지문 학습 (내신 출제용)
+                  지문 선택 (내신 출제용)
                 </h3>
                 <p className="text-sm text-amber-700 mt-1">
-                  교과서 지문을 입력하면 해당 지문을 기반으로 문제를 출제합니다.
-                  입력하지 않으면 AI가 새로운 지문을 자체 생성합니다.
+                  저장된 교과서 지문을 선택하거나 직접 입력하여 문제를 출제합니다.
+                  선택하지 않으면 AI가 새로운 지문을 자체 생성합니다.
                 </p>
               </div>
 
-              <textarea
-                value={sourcePassage}
-                onChange={(e) => setSourcePassage(e.target.value)}
-                rows={10}
-                placeholder={"교과서 영어 지문을 여기에 붙여넣기 하세요...\n\n예시:\nThe concept of emotional intelligence has gained significant attention in recent decades. Unlike traditional measures of intelligence, emotional intelligence refers to the ability to recognize, understand, and manage our own emotions..."}
-                className="w-full border border-amber-300 rounded-lg px-3 py-2 text-sm font-mono leading-relaxed focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
-              />
+              {/* 입력 방식 탭 */}
+              <div className="flex gap-1 bg-amber-100 rounded-lg p-1">
+                <button
+                  onClick={() => setPassageInputMode("saved")}
+                  className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors ${
+                    passageInputMode === "saved"
+                      ? "bg-white text-amber-800 shadow-sm"
+                      : "text-amber-600 hover:text-amber-800"
+                  }`}
+                >
+                  저장된 지문 선택 ({savedPassages.length})
+                </button>
+                <button
+                  onClick={() => setPassageInputMode("direct")}
+                  className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors ${
+                    passageInputMode === "direct"
+                      ? "bg-white text-amber-800 shadow-sm"
+                      : "text-amber-600 hover:text-amber-800"
+                  }`}
+                >
+                  직접 입력
+                </button>
+              </div>
 
-              {sourcePassage.trim() && (
+              {/* 저장된 지문 선택 모드 */}
+              {passageInputMode === "saved" && (
+                <div className="space-y-3">
+                  {savedPassages.length === 0 ? (
+                    <div className="text-center py-6 text-amber-600 text-sm">
+                      <p>저장된 지문이 없습니다.</p>
+                      <a
+                        href="/passages/new"
+                        className="text-amber-800 underline font-medium"
+                      >
+                        지문 등록하기
+                      </a>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="max-h-64 overflow-y-auto space-y-2 pr-1">
+                        {savedPassages.map((p) => {
+                          const isSelected = selectedPassageIds.has(p.id);
+                          return (
+                            <button
+                              key={p.id}
+                              onClick={() => togglePassageSelection(p.id)}
+                              className={`w-full text-left rounded-lg border-2 p-3 transition-colors ${
+                                isSelected
+                                  ? "border-amber-500 bg-white"
+                                  : "border-transparent bg-white/60 hover:border-amber-300"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between mb-1">
+                                <div className="flex gap-2">
+                                  <span className="px-1.5 py-0.5 text-xs rounded bg-amber-100 text-amber-700">
+                                    {p.grade}
+                                  </span>
+                                  <span className="px-1.5 py-0.5 text-xs rounded bg-blue-100 text-blue-700">
+                                    {p.textbook}
+                                  </span>
+                                  <span className="text-xs text-gray-600">
+                                    {p.lesson}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-gray-400">
+                                    {p.wordCount}단어
+                                  </span>
+                                  {isSelected && (
+                                    <span className="w-5 h-5 bg-amber-500 text-white rounded-full text-xs flex items-center justify-center">
+                                      ✓
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              {p.title && (
+                                <p className="text-sm font-medium text-gray-800">
+                                  {p.title}
+                                </p>
+                              )}
+                              <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                                {p.content.slice(0, 120)}...
+                              </p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {selectedPassageIds.size > 0 && (
+                        <div className="flex items-center gap-2 text-xs text-amber-700 bg-white rounded-lg p-2">
+                          <span className="inline-block w-2 h-2 bg-amber-500 rounded-full"></span>
+                          {selectedPassageIds.size}개 지문 선택됨
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* 직접 입력 모드 */}
+              {passageInputMode === "direct" && (
+                <textarea
+                  value={sourcePassage}
+                  onChange={(e) => setSourcePassage(e.target.value)}
+                  rows={10}
+                  placeholder={"교과서 영어 지문을 여기에 붙여넣기 하세요...\n\n예시:\nThe concept of emotional intelligence has gained significant attention in recent decades..."}
+                  className="w-full border border-amber-300 rounded-lg px-3 py-2 text-sm font-mono leading-relaxed focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+                />
+              )}
+
+              {/* 지문 활용 방식 (지문이 선택/입력된 경우) */}
+              {(selectedPassageIds.size > 0 || (passageInputMode === "direct" && sourcePassage.trim())) && (
                 <div className="bg-white rounded-lg border border-amber-200 p-4 space-y-3">
                   <p className="text-sm font-medium text-amber-800">
                     지문 활용 방식
@@ -384,7 +530,7 @@ export default function NewQuestionPage() {
                         원문 그대로
                       </span>
                       <span className="block text-xs text-gray-500 mt-1">
-                        교과서 지문을 그대로 사용하여 문제 출제. 지문 암기 확인에 적합.
+                        교과서 지문을 그대로 사용하여 문제 출제
                       </span>
                     </label>
                     <label
@@ -406,7 +552,7 @@ export default function NewQuestionPage() {
                         변형 출제
                       </span>
                       <span className="block text-xs text-gray-500 mt-1">
-                        지문의 어휘/구문/내용을 난이도에 맞게 변형하여 출제. 응용력 평가에 적합.
+                        어휘/구문/내용을 난이도에 맞게 변형
                       </span>
                     </label>
                   </div>
@@ -415,13 +561,6 @@ export default function NewQuestionPage() {
                       ? "원본 지문이 그대로 출제되며, 선지와 발문만 새로 생성됩니다."
                       : "난이도에 따라 지문이 변형됩니다. 중 난이도는 일부 표현 교체, 상 난이도는 단어/내용 전면 변형."}
                   </p>
-                </div>
-              )}
-
-              {sourcePassage.trim() && (
-                <div className="flex items-center gap-2 text-xs text-amber-600">
-                  <span className="inline-block w-2 h-2 bg-amber-400 rounded-full"></span>
-                  지문 입력됨 ({sourcePassage.trim().split(/\s+/).length} 단어)
                 </div>
               )}
             </div>

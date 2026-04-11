@@ -47,6 +47,17 @@ const statements = [
     CONSTRAINT "ExamItem_examId_fkey" FOREIGN KEY ("examId") REFERENCES "Exam" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "ExamItem_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
   )`,
+  `CREATE TABLE IF NOT EXISTS "Passage" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "textbook" TEXT NOT NULL,
+    "grade" TEXT NOT NULL,
+    "lesson" TEXT NOT NULL,
+    "title" TEXT,
+    "content" TEXT NOT NULL,
+    "wordCount" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+  )`,
   `CREATE TABLE IF NOT EXISTS "Template" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,

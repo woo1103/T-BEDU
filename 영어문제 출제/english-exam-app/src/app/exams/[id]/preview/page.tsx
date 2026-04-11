@@ -2,7 +2,13 @@
 
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import type { Choice } from "@/types";
+
+const PDFDownloadButton = dynamic(
+  () => import("@/components/pdf/PDFDownloadButton"),
+  { ssr: false }
+);
 
 interface ExamQuestion {
   id: string;
@@ -86,12 +92,15 @@ export default function ExamPreviewPage({
             정답 표시
           </label>
         </div>
-        <button
-          onClick={handlePrint}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
-        >
-          인쇄 / PDF 저장
-        </button>
+        <div className="flex gap-2">
+          <PDFDownloadButton exam={exam} showAnswers={showAnswers} />
+          <button
+            onClick={handlePrint}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300"
+          >
+            브라우저 인쇄
+          </button>
+        </div>
       </div>
 
       {/* 시험지 본문 */}

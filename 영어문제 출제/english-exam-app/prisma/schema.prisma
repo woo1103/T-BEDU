@@ -61,6 +61,18 @@ model ExamItem {
   @@unique([examId, orderNum])
 }
 
+model Passage {
+  id          String   @id @default(cuid())
+  textbook    String   // 교과서명: "능률 영어I", "YBM 영어II" 등
+  grade       String   // 학년: "고1", "고2", "고3"
+  lesson      String   // 과/단원: "Lesson 3", "Unit 5"
+  title       String?  // 지문 제목 (선택)
+  content     String   // 지문 본문 (영어)
+  wordCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Template {
   id        String   @id @default(cuid())
   name      String   // "수능 영어 모의고사"
