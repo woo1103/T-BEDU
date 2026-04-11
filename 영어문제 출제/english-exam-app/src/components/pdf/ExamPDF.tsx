@@ -29,6 +29,7 @@ Font.register({
 
 const BRAND_CYAN = "#4FC3F7";
 const BRAND_DARK_CYAN = "#29B6F6";
+const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
 
 interface Choice {
   label: string;
@@ -377,12 +378,13 @@ function QuestionItem({
 
       {choices.map((choice, i) => {
         const isCorrect = showAnswers && choice.isCorrect;
+        const label = CIRCLE_LABELS[i] || `(${i + 1})`;
         return (
           <View key={i} style={styles.choiceRow}>
             <Text
               style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}
             >
-              {choice.label}
+              {label}
             </Text>
             <Text
               style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}
@@ -396,13 +398,16 @@ function QuestionItem({
   );
 }
 
-// 문항들을 2단으로 분배 (단순히 반씩 나눔)
-function splitIntoColumns(items: ExamItemData[]): [ExamItemData[], ExamItemData[]] {
-  const mid = Math.ceil(items.length / 2);
-  return [items.slice(0, mid), items.slice(mid)];
+// 문항들을 2개씩 페어링 (1,2 / 3,4 / 5,6 ...)
+function pairItems(items: ExamItemData[]): [ExamItemData | null, ExamItemData | null][] {
+  const pairs: [ExamItemData | null, ExamItemData | null][] = [];
+  for (let i = 0; i < items.length; i += 2) {
+    pairs.push([items[i], items[i + 1] || null]);
+  }
+  return pairs;
 }
 
-// 내지 페이지
+// 내지 페이지 — 페이지당 2문제 (좌: 홀수번, 우: 짝수번)
 function ContentPages({
   title,
   items,
@@ -412,37 +417,41 @@ function ContentPages({
   items: ExamItemData[];
   showAnswers: boolean;
 }) {
-  const [leftItems, rightItems] = splitIntoColumns(items);
+  const pairs = pairItems(items);
 
   return (
-    <Page size="A4" style={styles.contentPage} wrap>
-      {/* 상단 컬러 바 */}
-      <View style={styles.headerBar} fixed />
+    <>
+      {pairs.map((pair, pageIdx) => (
+        <Page key={pageIdx} size="A4" style={styles.contentPage}>
+          {/* 상단 컬러 바 */}
+          <View style={styles.headerBar} />
 
-      {/* 헤더 로우 */}
-      <View style={styles.headerRow} fixed>
-        <View style={styles.headerLogo}>
-          <Text style={styles.headerLogoText}>T&B</Text>
-        </View>
-        <Text style={styles.headerTitle}>Daily Gift</Text>
-        <Text style={styles.headerSub}>{title}</Text>
-      </View>
+          {/* 헤더 로우 */}
+          <View style={styles.headerRow}>
+            <View style={styles.headerLogo}>
+              <Text style={styles.headerLogoText}>T&B</Text>
+            </View>
+            <Text style={styles.headerTitle}>Daily Gift</Text>
+            <Text style={styles.headerSub}>{title}</Text>
+          </View>
 
-      {/* 2단 레이아웃 */}
-      <View style={styles.columnsContainer}>
-        <View style={styles.column}>
-          {leftItems.map((item) => (
-            <QuestionItem key={item.orderNum} item={item} showAnswers={showAnswers} />
-          ))}
-        </View>
-        <View style={styles.columnDivider} />
-        <View style={styles.column}>
-          {rightItems.map((item) => (
-            <QuestionItem key={item.orderNum} item={item} showAnswers={showAnswers} />
-          ))}
-        </View>
-      </View>
-    </Page>
+          {/* 2단 레이아웃 */}
+          <View style={styles.columnsContainer}>
+            <View style={styles.column}>
+              {pair[0] && (
+                <QuestionItem item={pair[0]} showAnswers={showAnswers} />
+              )}
+            </View>
+            <View style={styles.columnDivider} />
+            <View style={styles.column}>
+              {pair[1] && (
+                <QuestionItem item={pair[1]} showAnswers={showAnswers} />
+              )}
+            </View>
+          </View>
+        </Page>
+      ))}
+    </>
   );
 }
 
