@@ -171,7 +171,7 @@ export default function ExamPreviewPage({
                           : "text-gray-700"
                       }`}
                     >
-                      {choice.label} {choice.text}
+                      {i + 1}. {choice.text}
                       {showAnswers && choice.isCorrect && " ◀ 정답"}
                     </p>
                   ))}

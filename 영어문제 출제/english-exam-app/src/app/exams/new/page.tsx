@@ -19,6 +19,7 @@ interface SelectedItem {
   question: QuestionRow;
   orderNum: number;
   customPoints?: number;
+  addedAt: string;
 }
 
 export default function NewExamPage() {
@@ -58,6 +59,7 @@ export default function NewExamPage() {
         questionId: q.id,
         question: q,
         orderNum: prev.length + 1,
+        addedAt: new Date().toLocaleString("ko-KR"),
       },
     ]);
   }
@@ -291,6 +293,9 @@ export default function NewExamPage() {
                   </div>
                   <p className="text-gray-600 mt-1 truncate">
                     {item.question.question}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    추가: {item.addedAt}
                   </p>
                 </li>
               ))}
