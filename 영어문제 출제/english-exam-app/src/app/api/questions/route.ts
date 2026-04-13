@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
   const questions = await prisma.question.findMany({
     where,
     orderBy: { createdAt: "desc" },
+    include: { passageRef: true },
   });
 
   return NextResponse.json(questions);
@@ -45,6 +46,7 @@ export async function POST(request: NextRequest) {
       tags: body.tags ? JSON.stringify(body.tags) : null,
       source: body.source || null,
       aiGenerated: body.aiGenerated || false,
+      passageId: body.passageId || null,
     },
   });
 

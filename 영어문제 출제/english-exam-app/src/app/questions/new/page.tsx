@@ -15,6 +15,12 @@ interface SavedPassage {
   wordCount: number;
 }
 
+interface ExamSummary {
+  id: string;
+  title: string;
+  examType: string;
+}
+
 const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
 
 interface GeneratedQuestion {
@@ -25,6 +31,7 @@ interface GeneratedQuestion {
   points: number;
   questionType: string;
   questionTypeName: string;
+  passageId?: string;
 }
 
 interface TypeSelection {
@@ -57,6 +64,17 @@ export default function NewQuestionPage() {
   // 트리 펼침 상태
   const [expandedGrades, setExpandedGrades] = useState<Set<string>>(new Set());
   const [expandedTextbooks, setExpandedTextbooks] = useState<Set<string>>(new Set());
+
+  // 생성 완료 후 이동할 시험지
+  const [exams, setExams] = useState<ExamSummary[]>([]);
+  const [targetExamId, setTargetExamId] = useState<string>("");
+
+  useEffect(() => {
+    fetch("/api/exams")
+      .then((res) => res.json())
+      .then((data: ExamSummary[]) => setExams(data))
+      .catch(() => {});
+  }, []);
 
   // AI 생성 결과
   const [generatedQuestions, setGeneratedQuestions] = useState<GeneratedQuestion[]>([]);
@@ -97,6 +115,82 @@ export default function NewQuestionPage() {
   }
 
   const passageTree = buildPassageTree();
+
+  // 지문 행 클릭 → 해당 지문만 선택하고 즉시 생성
+  async function generateFromSinglePassage(passageId: string) {
+    if (selectedTypes.length === 0) {
+      alert("먼저 문제 유형을 1개 이상 선택해주세요.");
+      return;
+    }
+    setSelectedPassageIds(new Set([passageId]));
+    setPassageInputMode("saved");
+    // state 갱신은 비동기이지만 handleGenerate는 현재 상태가 아닌 closure를 참조하므로
+    // 명시적으로 한 지문만 넘겨주는 경로를 만든다.
+    await generateWithPassages([passageId]);
+  }
+
+  // 명시적으로 지정된 passageIds로 생성
+  async function generateWithPassages(passageIds: string[]) {
+    if (selectedTypes.length === 0) {
+      alert("최소 1개 이상의 문제 유형을 선택해주세요.");
+      return;
+    }
+    setGenerating(true);
+    setGeneratedQuestions([]);
+    const results: GeneratedQuestion[] = [];
+    const picks = savedPassages.filter((p) => passageIds.includes(p.id));
+    for (const p of picks) {
+      for (const typeSelection of selectedTypes) {
+        for (let i = 0; i < typeSelection.count; i++) {
+          try {
+            const res = await fetch("/api/generate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                examType,
+                questionType: typeSelection.code,
+                difficulty,
+                topic,
+                sourcePassage: p.content,
+                passageMode,
+              }),
+            });
+            if (!res.ok) {
+              const err = await res.json();
+              throw new Error(err.error || "생성 실패");
+            }
+            const data = await res.json();
+            results.push({
+              passage: data.passage || "",
+              question: data.question || "",
+              choices: (data.choices || []).map(
+                (c: { text: string; isCorrect: boolean }, idx: number) => ({
+                  label: CIRCLE_LABELS[idx] || `(${idx + 1})`,
+                  text: c.text,
+                  isCorrect: c.isCorrect,
+                })
+              ),
+              explanation: data.explanation || "",
+              points: data.points || 2,
+              questionType: typeSelection.code,
+              questionTypeName: typeSelection.name,
+              passageId: p.id,
+            });
+            setGeneratedQuestions([...results]);
+          } catch (err) {
+            alert(
+              `[${p.textbook} ${p.lesson}] ${typeSelection.name} ${i + 1}번째 생성 실패: ${
+                err instanceof Error ? err.message : "오류"
+              }`
+            );
+          }
+        }
+      }
+    }
+    setGeneratedQuestions(distributeAnswers(results));
+    setCurrentPreview(0);
+    setGenerating(false);
+  }
 
   // 개별 지문 토글
   function togglePassageSelection(passageId: string) {
@@ -267,13 +361,14 @@ export default function NewQuestionPage() {
     const results: GeneratedQuestion[] = [];
 
     // 지문 목록 준비: 저장된 지문이 선택되었으면 각각, 아니면 빈/직접입력 1개
-    const passagesToUse: { content: string; label: string }[] = [];
+    const passagesToUse: { content: string; label: string; passageId?: string }[] = [];
     const selectedSaved = getSelectedPassages();
     if (selectedSaved.length > 0) {
       for (const p of selectedSaved) {
         passagesToUse.push({
           content: p.content,
           label: `${p.textbook} ${p.lesson}${p.title ? ` - ${p.title}` : ""}`,
+          passageId: p.id,
         });
       }
     } else if (passageInputMode === "direct" && sourcePassage.trim()) {
@@ -317,6 +412,7 @@ export default function NewQuestionPage() {
               points: data.points || 2,
               questionType: typeSelection.code,
               questionTypeName: typeSelection.name,
+              passageId: passageItem.passageId,
             });
             setGeneratedQuestions([...results]);
           } catch (err) {
@@ -337,8 +433,8 @@ export default function NewQuestionPage() {
     setGenerating(false);
   }
 
-  // 개별 문제 저장
-  async function saveQuestion(q: GeneratedQuestion) {
+  // 개별 문제 저장 → 저장된 Question.id 반환
+  async function saveQuestion(q: GeneratedQuestion): Promise<string | null> {
     const correctIndex = q.choices.findIndex((c) => c.isCorrect);
     const res = await fetch("/api/questions", {
       method: "POST",
@@ -355,22 +451,47 @@ export default function NewQuestionPage() {
         difficulty,
         aiGenerated: true,
         source: "AI 생성 (Claude)",
+        passageId: q.passageId,
       }),
     });
-    return res.ok;
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.id as string;
   }
 
-  // 전체 저장
+  // 전체 저장 → 대상 시험지에 append까지
   async function handleSaveAll() {
     setSaving(true);
-    let successCount = 0;
+    const savedIds: string[] = [];
     for (const q of generatedQuestions) {
-      const ok = await saveQuestion(q);
-      if (ok) successCount++;
+      const id = await saveQuestion(q);
+      if (id) savedIds.push(id);
     }
+
+    // 대상 시험지가 지정되어 있으면 append
+    if (targetExamId && savedIds.length > 0) {
+      try {
+        await fetch(`/api/exams/${targetExamId}/items`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ questionIds: savedIds }),
+        });
+      } catch {
+        alert("시험지에 배치하는 중 오류가 발생했습니다.");
+      }
+    }
+
     setSaving(false);
-    alert(`${successCount}개의 문제가 저장되었습니다.`);
-    router.push("/questions");
+    alert(
+      `${savedIds.length}개의 문제가 저장되었습니다.${
+        targetExamId ? " 선택한 시험지로 이동합니다." : ""
+      }`
+    );
+    if (targetExamId) {
+      router.push(`/exams/${targetExamId}/preview`);
+    } else {
+      router.push("/questions");
+    }
   }
 
   // 수동 저장
@@ -648,9 +769,9 @@ export default function NewQuestionPage() {
                                             {passages.map((p) => {
                                               const isSelected = selectedPassageIds.has(p.id);
                                               return (
-                                                <label
+                                                <div
                                                   key={p.id}
-                                                  className={`flex items-center gap-2 px-3 py-2 cursor-pointer border-t border-gray-50 transition-colors ${
+                                                  className={`flex items-center gap-2 px-3 py-2 border-t border-gray-50 transition-colors ${
                                                     isSelected ? "bg-amber-50" : "hover:bg-gray-50"
                                                   }`}
                                                 >
@@ -660,12 +781,17 @@ export default function NewQuestionPage() {
                                                     onChange={() => togglePassageSelection(p.id)}
                                                     className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
                                                   />
-                                                  <span className="text-sm text-gray-700 flex-1">
+                                                  <button
+                                                    type="button"
+                                                    onClick={() => generateFromSinglePassage(p.id)}
+                                                    className="text-sm text-gray-700 flex-1 text-left hover:text-amber-700 hover:underline"
+                                                    title="클릭하면 이 지문으로 바로 출제합니다"
+                                                  >
                                                     {p.lesson}
                                                     {p.title && <span className="text-gray-400"> - {p.title}</span>}
-                                                  </span>
+                                                  </button>
                                                   <span className="text-xs text-gray-400">{p.wordCount}단어</span>
-                                                </label>
+                                                </div>
                                               );
                                             })}
                                           </div>
@@ -1033,7 +1159,22 @@ export default function NewQuestionPage() {
                 </div>
               )}
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-2 mr-auto">
+                  <label className="text-sm text-gray-600">저장 후 시험지에 배치:</label>
+                  <select
+                    value={targetExamId}
+                    onChange={(e) => setTargetExamId(e.target.value)}
+                    className="border border-gray-300 rounded-lg px-3 py-2 text-sm max-w-xs"
+                  >
+                    <option value="">(배치하지 않음)</option>
+                    {exams.map((ex) => (
+                      <option key={ex.id} value={ex.id}>
+                        {ex.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <button
                   onClick={handleSaveAll}
                   disabled={saving}

@@ -18,6 +18,14 @@ interface QuestionRow {
   points: number;
   source: string | null;
   aiGenerated: boolean;
+  passageId: string | null;
+  passageRef: {
+    id: string;
+    textbook: string;
+    grade: string;
+    lesson: string;
+    title: string | null;
+  } | null;
 }
 
 interface SelectedItem {
@@ -47,6 +55,42 @@ export default function NewExamPage() {
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [detailQuestion, setDetailQuestion] = useState<QuestionRow | null>(null);
+
+  // 트리 펼침 상태 (학년 / 교과서 / 단원)
+  const [expandedGrades, setExpandedGrades] = useState<Set<string>>(new Set());
+  const [expandedTextbooks, setExpandedTextbooks] = useState<Set<string>>(new Set());
+  const [expandedLessons, setExpandedLessons] = useState<Set<string>>(new Set());
+
+  function toggleSet(key: string, setter: React.Dispatch<React.SetStateAction<Set<string>>>) {
+    setter((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  // 학년 → 교과서 → 단원(lesson) → Question[] 트리
+  type QuestionTree = Map<string, Map<string, Map<string, QuestionRow[]>>>;
+  function buildQuestionTree(): { tree: QuestionTree; orphans: QuestionRow[] } {
+    const tree: QuestionTree = new Map();
+    const orphans: QuestionRow[] = [];
+    for (const q of availableQuestions) {
+      if (!q.passageRef) {
+        orphans.push(q);
+        continue;
+      }
+      const { grade, textbook, lesson } = q.passageRef;
+      if (!tree.has(grade)) tree.set(grade, new Map());
+      const tb = tree.get(grade)!;
+      if (!tb.has(textbook)) tb.set(textbook, new Map());
+      const ls = tb.get(textbook)!;
+      const lessonKey = lesson + (q.passageRef.title ? ` - ${q.passageRef.title}` : "");
+      if (!ls.has(lessonKey)) ls.set(lessonKey, []);
+      ls.get(lessonKey)!.push(q);
+    }
+    return { tree, orphans };
+  }
 
   useEffect(() => {
     fetch("/api/questions")
@@ -213,66 +257,139 @@ export default function NewExamPage() {
             <p className="text-sm text-gray-400">
               등록된 문제가 없습니다. 먼저 문제를 만들어주세요.
             </p>
-          ) : (
-            <ul className="space-y-2 max-h-96 overflow-y-auto">
-              {availableQuestions.map((q) => {
-                const isSelected = selectedItems.some(
-                  (item) => item.questionId === q.id
-                );
-                const typeInfo = getQuestionTypeInfo(q.examType, q.questionType);
-                const diffLabel = { easy: "하", medium: "중", hard: "상" }[q.difficulty] || q.difficulty;
-                return (
-                  <li
-                    key={q.id}
-                    className={`p-3 rounded-lg border text-sm transition-colors ${
-                      isSelected
-                        ? "border-blue-300 bg-blue-50 opacity-50"
-                        : "border-gray-200 hover:border-blue-300"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="flex gap-1.5 flex-wrap">
-                        <span className="text-xs text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
-                          {typeInfo
-                            ? `${typeInfo.number}번 ${typeInfo.name}`
-                            : q.questionType}
-                        </span>
-                        <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
-                          {diffLabel} · {q.points}점
-                        </span>
-                        {q.aiGenerated && (
-                          <span className="text-xs text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded">AI</span>
-                        )}
-                      </div>
-                    </div>
-                    {q.source && q.source !== "직접 작성" && q.source !== "AI 생성 (Claude)" && (
-                      <p className="text-xs text-amber-600 mb-1">{q.source}</p>
+          ) : (() => {
+            const { tree, orphans } = buildQuestionTree();
+            const renderQuestion = (q: QuestionRow) => {
+              const isSelected = selectedItems.some((item) => item.questionId === q.id);
+              const typeInfo = getQuestionTypeInfo(q.examType, q.questionType);
+              const diffLabel = { easy: "하", medium: "중", hard: "상" }[q.difficulty] || q.difficulty;
+              return (
+                <li
+                  key={q.id}
+                  className={`p-2 rounded border text-sm transition-colors ml-6 ${
+                    isSelected ? "border-blue-300 bg-blue-50 opacity-60" : "border-gray-200 hover:border-blue-300"
+                  }`}
+                >
+                  <div className="flex gap-1.5 flex-wrap mb-1">
+                    <span className="text-xs text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
+                      {typeInfo ? `${typeInfo.number}번 ${typeInfo.name}` : q.questionType}
+                    </span>
+                    <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                      {diffLabel} · {q.points}점
+                    </span>
+                    {q.aiGenerated && (
+                      <span className="text-xs text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded">AI</span>
                     )}
-                    <p className="text-gray-700 truncate">{q.question}</p>
-                    <div className="flex items-center gap-2 mt-2">
+                  </div>
+                  <p className="text-gray-700 truncate">{q.question}</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <button
+                      onClick={() => setDetailQuestion(q)}
+                      className="text-xs text-gray-500 hover:text-blue-600 underline"
+                    >
+                      상세보기
+                    </button>
+                    {!isSelected ? (
                       <button
-                        onClick={(e) => { e.stopPropagation(); setDetailQuestion(q); }}
-                        className="text-xs text-gray-500 hover:text-blue-600 underline"
+                        onClick={() => addQuestion(q)}
+                        className="text-xs text-blue-600 hover:text-blue-800 font-medium ml-auto"
                       >
-                        상세보기
+                        + 추가
                       </button>
-                      {!isSelected && (
-                        <button
-                          onClick={() => addQuestion(q)}
-                          className="text-xs text-blue-600 hover:text-blue-800 font-medium ml-auto"
-                        >
-                          + 추가
-                        </button>
-                      )}
-                      {isSelected && (
-                        <span className="text-xs text-gray-400 ml-auto">추가됨</span>
+                    ) : (
+                      <span className="text-xs text-gray-400 ml-auto">추가됨</span>
+                    )}
+                  </div>
+                </li>
+              );
+            };
+
+            return (
+              <div className="max-h-96 overflow-y-auto border border-gray-100 rounded-lg">
+                {Array.from(tree.entries()).map(([grade, tbMap]) => {
+                  const gExpanded = expandedGrades.has(grade);
+                  let gCount = 0;
+                  tbMap.forEach((ls) => ls.forEach((qs) => (gCount += qs.length)));
+                  return (
+                    <div key={grade} className="border-b border-gray-100 last:border-b-0">
+                      <button
+                        onClick={() => toggleSet(grade, setExpandedGrades)}
+                        className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-50 text-left"
+                      >
+                        <span className="text-gray-400 text-xs w-4">{gExpanded ? "▼" : "▶"}</span>
+                        <span className="text-sm font-semibold text-gray-800">{grade}</span>
+                        <span className="text-xs text-gray-400 ml-auto">{gCount}문제</span>
+                      </button>
+                      {gExpanded && (
+                        <div className="pl-4">
+                          {Array.from(tbMap.entries()).map(([textbook, lsMap]) => {
+                            const tbKey = `${grade}::${textbook}`;
+                            const tbExpanded = expandedTextbooks.has(tbKey);
+                            let tbCount = 0;
+                            lsMap.forEach((qs) => (tbCount += qs.length));
+                            return (
+                              <div key={tbKey} className="border-t border-gray-50">
+                                <button
+                                  onClick={() => toggleSet(tbKey, setExpandedTextbooks)}
+                                  className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-blue-50 text-left"
+                                >
+                                  <span className="text-gray-400 text-xs w-4">{tbExpanded ? "▼" : "▶"}</span>
+                                  <span className="text-sm font-medium text-blue-700">{textbook}</span>
+                                  <span className="text-xs text-gray-400 ml-auto">{tbCount}문제</span>
+                                </button>
+                                {tbExpanded && (
+                                  <div className="pl-4">
+                                    {Array.from(lsMap.entries()).map(([lesson, qs]) => {
+                                      const lsKey = `${tbKey}::${lesson}`;
+                                      const lsExpanded = expandedLessons.has(lsKey);
+                                      return (
+                                        <div key={lsKey} className="border-t border-gray-50">
+                                          <button
+                                            onClick={() => toggleSet(lsKey, setExpandedLessons)}
+                                            className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-amber-50 text-left"
+                                          >
+                                            <span className="text-gray-400 text-xs w-4">{lsExpanded ? "▼" : "▶"}</span>
+                                            <span className="text-sm text-amber-700">{lesson}</span>
+                                            <span className="text-xs text-gray-400 ml-auto">{qs.length}문제</span>
+                                          </button>
+                                          {lsExpanded && (
+                                            <ul className="space-y-1.5 py-2 pr-2">
+                                              {qs.map(renderQuestion)}
+                                            </ul>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       )}
                     </div>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+                  );
+                })}
+                {orphans.length > 0 && (
+                  <div className="border-t border-gray-100">
+                    <button
+                      onClick={() => toggleSet("__orphans__", setExpandedGrades)}
+                      className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-50 text-left"
+                    >
+                      <span className="text-gray-400 text-xs w-4">
+                        {expandedGrades.has("__orphans__") ? "▼" : "▶"}
+                      </span>
+                      <span className="text-sm font-semibold text-gray-600">지문 미연결</span>
+                      <span className="text-xs text-gray-400 ml-auto">{orphans.length}문제</span>
+                    </button>
+                    {expandedGrades.has("__orphans__") && (
+                      <ul className="space-y-1.5 py-2 pr-2">{orphans.map(renderQuestion)}</ul>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         {/* 시험지 구성 (오른쪽) */}

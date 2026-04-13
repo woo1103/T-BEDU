@@ -25,10 +25,15 @@ model Question {
   source      String?  // 출처
   aiGenerated Boolean  @default(false)
 
+  passageId   String?  // 원본 지문(Passage) 연결 — 지문 기반 출제일 때
+  passageRef  Passage? @relation(fields: [passageId], references: [id], onDelete: SetNull)
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   examItems   ExamItem[]
+
+  @@index([passageId])
 }
 
 model Exam {
@@ -71,6 +76,8 @@ model Passage {
   wordCount   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  questions   Question[]
 }
 
 model Template {

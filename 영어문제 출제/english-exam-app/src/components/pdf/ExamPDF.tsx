@@ -455,6 +455,18 @@ function ContentPages({
   );
 }
 
+// choices에서 정답 번호(①②③④⑤) 추출
+function getCorrectLabel(choicesJson: string): string {
+  try {
+    const choices: Choice[] = JSON.parse(choicesJson);
+    const correctIdx = choices.findIndex((c) => c.isCorrect);
+    if (correctIdx >= 0) return CIRCLE_LABELS[correctIdx] || `${correctIdx + 1}`;
+  } catch {
+    /* empty */
+  }
+  return "?";
+}
+
 // 정답지 페이지
 function AnswerPage({ items }: { items: ExamItemData[] }) {
   return (
@@ -474,7 +486,9 @@ function AnswerPage({ items }: { items: ExamItemData[] }) {
             return (
               <View key={item.orderNum} style={styles.answerCell}>
                 <Text style={styles.answerNum}>{item.orderNum}</Text>
-                <Text style={styles.answerVal}>{item.question.answer}</Text>
+                <Text style={styles.answerVal}>
+                  {getCorrectLabel(item.question.choices)}
+                </Text>
               </View>
             );
           })}
