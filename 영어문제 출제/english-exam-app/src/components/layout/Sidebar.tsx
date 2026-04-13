@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const navItems = [
   { href: "/", label: "대시보드", icon: "📊" },
@@ -12,8 +13,24 @@ const navItems = [
   { href: "/exams/new", label: "시험지 구성", icon: "📋" },
 ];
 
+const adminItems = [
+  { href: "/admin/users", label: "계정 관리", icon: "👤" },
+];
+
 export default function Sidebar() {
   const pathname = usePathname();
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (pathname === "/login") return;
+    fetch("/api/auth/me")
+      .then((r) => (r.ok ? r.json() : { user: null }))
+      .then((d) => setRole(d.user?.role ?? null));
+  }, [pathname]);
+
+  if (pathname === "/login") return null;
+
+  const allItems = role === "admin" ? [...navItems, ...adminItems] : navItems;
 
   return (
     <aside className="w-64 bg-slate-900 text-white min-h-screen flex flex-col">
@@ -23,7 +40,7 @@ export default function Sidebar() {
       </div>
       <nav className="flex-1 p-4">
         <ul className="space-y-1">
-          {navItems.map((item) => {
+          {allItems.map((item) => {
             const isActive =
               pathname === item.href ||
               (item.href !== "/" && pathname.startsWith(item.href));

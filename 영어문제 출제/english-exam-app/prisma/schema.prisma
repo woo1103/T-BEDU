@@ -87,3 +87,12 @@ model Template {
   structure String   // JSON: [{questionType:"18_purpose", count:1, points:2}, ...]
   createdAt DateTime @default(now())
 }
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  role         String   @default("teacher") // "admin" | "teacher"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
