@@ -29,7 +29,11 @@ Font.register({
 
 const BRAND_CYAN = "#4FC3F7";
 const BRAND_DARK_CYAN = "#29B6F6";
-const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
+// 원문자(①②③④⑤)는 한글 폰트 서브셋에 빠져 PDF에서 a,b,c,d로 렌더되는 이슈가 있어
+// 일반 숫자로 대체.
+const CIRCLE_LABELS = ["1.", "2.", "3.", "4.", "5."];
+// 긴 문제 판별 임계값: passage 글자 + 모든 choice 글자 합
+const LONG_ITEM_CHARS = 900;
 
 interface Choice {
   label: string;
@@ -154,33 +158,34 @@ const styles = StyleSheet.create({
   // 2단 레이아웃
   columnsContainer: {
     flexDirection: "row",
-    paddingHorizontal: 15,
-    paddingTop: 10,
+    paddingHorizontal: 18,
+    paddingTop: 14,
     flex: 1,
   },
   column: {
     flex: 1,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
   },
   columnDivider: {
     width: 1,
     backgroundColor: "#E0E0E0",
+    marginHorizontal: 4,
   },
 
   // 문항
   questionBlock: {
-    marginBottom: 12,
+    marginBottom: 18,
   },
   questionHeader: {
     flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 4,
+    alignItems: "flex-start",
+    marginBottom: 6,
   },
   questionNumber: {
     fontSize: 12,
     fontWeight: 700,
     color: "#333333",
-    marginRight: 4,
+    marginRight: 6,
   },
   questionPoints: {
     fontSize: 8,
@@ -189,54 +194,67 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     paddingVertical: 1,
     borderRadius: 2,
-    marginRight: 4,
+    marginRight: 6,
+    marginTop: 1,
   },
   questionText: {
     fontSize: 10,
     color: "#333333",
     fontWeight: 700,
     flex: 1,
+    lineHeight: 1.5,
   },
   passageBox: {
     borderWidth: 1,
     borderColor: "#D0D0D0",
     borderRadius: 4,
-    padding: 8,
-    marginBottom: 6,
+    padding: 10,
+    marginBottom: 10,
     backgroundColor: "#FAFAFA",
   },
   passageText: {
     fontSize: 9.5,
-    lineHeight: 1.7,
+    lineHeight: 1.6,
     color: "#333333",
+  },
+  choicesBlock: {
+    marginTop: 2,
   },
   choiceRow: {
     flexDirection: "row",
-    marginBottom: 3,
+    marginBottom: 5,
     paddingLeft: 4,
   },
   choiceLabel: {
     fontSize: 9.5,
     color: "#444444",
-    width: 16,
+    width: 18,
     fontWeight: 700,
   },
   choiceLabelCorrect: {
     fontSize: 9.5,
     color: "#E53935",
-    width: 16,
+    width: 18,
     fontWeight: 700,
   },
   choiceText: {
     fontSize: 9.5,
     color: "#444444",
     flex: 1,
+    lineHeight: 1.5,
   },
   choiceTextCorrect: {
     fontSize: 9.5,
     color: "#E53935",
     fontWeight: 700,
     flex: 1,
+    lineHeight: 1.5,
+  },
+  splitChoicesHeader: {
+    fontSize: 9,
+    color: "#999999",
+    marginBottom: 6,
+    fontWeight: 700,
   },
 
   // 정답 표
@@ -346,24 +364,27 @@ function CoverPage() {
   );
 }
 
-// 문항 렌더링
-function QuestionItem({
-  item,
-  showAnswers,
-}: {
-  item: ExamItemData;
-  showAnswers: boolean;
-}) {
-  const pts = item.customPoints || item.question.points;
-  let choices: Choice[] = [];
+function parseChoices(choicesJson: string): Choice[] {
   try {
-    choices = JSON.parse(item.question.choices);
+    return JSON.parse(choicesJson) as Choice[];
   } catch {
-    /* empty */
+    return [];
   }
+}
 
+// 문제 길이(문자 수) 계산 — split 모드 판단용
+function itemCharLength(item: ExamItemData): number {
+  const passageLen = item.question.passage?.length || 0;
+  const choices = parseChoices(item.question.choices);
+  const choicesLen = choices.reduce((s, c) => s + (c.text?.length || 0), 0);
+  return passageLen + choicesLen + (item.question.question?.length || 0);
+}
+
+// 문제 헤더 + 지문 (선지는 포함하지 않음)
+function QuestionHead({ item }: { item: ExamItemData }) {
+  const pts = item.customPoints || item.question.points;
   return (
-    <View style={styles.questionBlock} wrap={false}>
+    <View style={styles.questionBlock}>
       <View style={styles.questionHeader}>
         <Text style={styles.questionNumber}>{item.orderNum}.</Text>
         {pts >= 3 && <Text style={styles.questionPoints}>{pts}점</Text>}
@@ -375,20 +396,33 @@ function QuestionItem({
           <Text style={styles.passageText}>{item.question.passage}</Text>
         </View>
       )}
+    </View>
+  );
+}
 
+// 선지만 렌더링
+function ChoicesBlock({
+  item,
+  showAnswers,
+  header,
+}: {
+  item: ExamItemData;
+  showAnswers: boolean;
+  header?: string;
+}) {
+  const choices = parseChoices(item.question.choices);
+  return (
+    <View style={styles.choicesBlock}>
+      {header && <Text style={styles.splitChoicesHeader}>{header}</Text>}
       {choices.map((choice, i) => {
         const isCorrect = showAnswers && choice.isCorrect;
-        const label = CIRCLE_LABELS[i] || `(${i + 1})`;
+        const label = CIRCLE_LABELS[i] || `${i + 1}.`;
         return (
           <View key={i} style={styles.choiceRow}>
-            <Text
-              style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}
-            >
+            <Text style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
               {label}
             </Text>
-            <Text
-              style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}
-            >
+            <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
               {choice.text}
             </Text>
           </View>
@@ -398,16 +432,50 @@ function QuestionItem({
   );
 }
 
-// 문항들을 2개씩 페어링 (1,2 / 3,4 / 5,6 ...)
-function pairItems(items: ExamItemData[]): [ExamItemData | null, ExamItemData | null][] {
-  const pairs: [ExamItemData | null, ExamItemData | null][] = [];
-  for (let i = 0; i < items.length; i += 2) {
-    pairs.push([items[i], items[i + 1] || null]);
-  }
-  return pairs;
+// 일반(컴팩트) 모드: 좌우 한 문제씩 — 헤더+지문+선지 전부 포함
+function QuestionItem({
+  item,
+  showAnswers,
+}: {
+  item: ExamItemData;
+  showAnswers: boolean;
+}) {
+  return (
+    <View wrap={false}>
+      <QuestionHead item={item} />
+      <ChoicesBlock item={item} showAnswers={showAnswers} />
+    </View>
+  );
 }
 
-// 내지 페이지 — 페이지당 2문제 (좌: 홀수번, 우: 짝수번)
+// 페이지 구성: long 아이템은 스플릿 페이지, 아니면 2개씩 페어 페이지
+type PageLayout =
+  | { mode: "pair"; left: ExamItemData; right: ExamItemData | null }
+  | { mode: "split"; item: ExamItemData };
+
+function layoutPages(items: ExamItemData[]): PageLayout[] {
+  const pages: PageLayout[] = [];
+  let i = 0;
+  while (i < items.length) {
+    const a = items[i];
+    if (itemCharLength(a) > LONG_ITEM_CHARS) {
+      pages.push({ mode: "split", item: a });
+      i += 1;
+      continue;
+    }
+    const b = items[i + 1];
+    if (b && itemCharLength(b) <= LONG_ITEM_CHARS) {
+      pages.push({ mode: "pair", left: a, right: b });
+      i += 2;
+    } else {
+      pages.push({ mode: "pair", left: a, right: null });
+      i += 1;
+    }
+  }
+  return pages;
+}
+
+// 내지 페이지
 function ContentPages({
   title,
   items,
@@ -417,16 +485,14 @@ function ContentPages({
   items: ExamItemData[];
   showAnswers: boolean;
 }) {
-  const pairs = pairItems(items);
+  const pages = layoutPages(items);
 
   return (
     <>
-      {pairs.map((pair, pageIdx) => (
+      {pages.map((pg, pageIdx) => (
         <Page key={pageIdx} size="A4" style={styles.contentPage}>
-          {/* 상단 컬러 바 */}
           <View style={styles.headerBar} />
 
-          {/* 헤더 로우 */}
           <View style={styles.headerRow}>
             <View style={styles.headerLogo}>
               <Text style={styles.headerLogoText}>T&B</Text>
@@ -435,19 +501,34 @@ function ContentPages({
             <Text style={styles.headerSub}>{title}</Text>
           </View>
 
-          {/* 2단 레이아웃 */}
           <View style={styles.columnsContainer}>
-            <View style={styles.column}>
-              {pair[0] && (
-                <QuestionItem item={pair[0]} showAnswers={showAnswers} />
-              )}
-            </View>
-            <View style={styles.columnDivider} />
-            <View style={styles.column}>
-              {pair[1] && (
-                <QuestionItem item={pair[1]} showAnswers={showAnswers} />
-              )}
-            </View>
+            {pg.mode === "pair" ? (
+              <>
+                <View style={styles.column}>
+                  <QuestionItem item={pg.left} showAnswers={showAnswers} />
+                </View>
+                <View style={styles.columnDivider} />
+                <View style={styles.column}>
+                  {pg.right && (
+                    <QuestionItem item={pg.right} showAnswers={showAnswers} />
+                  )}
+                </View>
+              </>
+            ) : (
+              <>
+                <View style={styles.column}>
+                  <QuestionHead item={pg.item} />
+                </View>
+                <View style={styles.columnDivider} />
+                <View style={styles.column}>
+                  <ChoicesBlock
+                    item={pg.item}
+                    showAnswers={showAnswers}
+                    header={`${pg.item.orderNum}번 선지`}
+                  />
+                </View>
+              </>
+            )}
           </View>
         </Page>
       ))}
