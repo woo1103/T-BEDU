@@ -6,31 +6,52 @@
     <meta name="theme-color" content="#2c3e50">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="TNBEDU">
+    <meta name="apple-mobile-web-app-title" content="T&amp;B Hub">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon-192.png') }}">
-    <title>TNBEDU</title>
+    <title>T&amp;B Hub</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <nav class="navbar">
         <a href="{{ url_for('index') }}" class="nav-brand" style="text-decoration:none; color:white;">T&amp;B Hub</a>
+        {% set learning_eps = ['attendance','statistics','class_stats','lesson_plan','curriculum','my_students'] %}
+        {% set finance_eps = ['tuition','settlement'] %}
+        {% set ops_eps = ['reports','supply','manage','users'] %}
         <div class="nav-links">
-            <a href="{{ url_for('attendance') }}" class="{% if request.endpoint == 'attendance' %}active{% endif %}">출석부</a>
-            <a href="{{ url_for('tuition') }}" class="{% if request.endpoint == 'tuition' %}active{% endif %}">원비명부</a>
-            <a href="{{ url_for('lesson_plan') }}" class="{% if request.endpoint == 'lesson_plan' %}active{% endif %}">수업계획서</a>
-            <a href="{{ url_for('statistics') }}" class="{% if request.endpoint == 'statistics' %}active{% endif %}">학생별 통계</a>
-            <a href="{{ url_for('class_stats') }}" class="{% if request.endpoint == 'class_stats' %}active{% endif %}">반 별 통계</a>
-            <a href="{{ url_for('reports') }}" class="{% if request.endpoint == 'reports' %}active{% endif %}">보고서</a>
-            <a href="{{ url_for('curriculum') }}" class="{% if request.endpoint == 'curriculum' %}active{% endif %}">교육과정</a>
-            <a href="{{ url_for('supply') }}" class="{% if request.endpoint == 'supply' %}active{% endif %}">비품현황</a>
-            {% if session.get('role') == 'admin' %}
-            <a href="{{ url_for('manage') }}" class="{% if request.endpoint == 'manage' %}active{% endif %}">관리</a>
-            <a href="{{ url_for('users') }}" class="{% if request.endpoint == 'users' %}active{% endif %}">담당자 관리</a>
-            <a href="{{ url_for('settlement') }}" class="{% if request.endpoint == 'settlement' %}active{% endif %}">결산서</a>
-            {% else %}
-            <a href="{{ url_for('my_students') }}" class="{% if request.endpoint == 'my_students' %}active{% endif %}">학생 관리</a>
-            {% endif %}
+            <details class="nav-dropdown {% if request.endpoint in learning_eps %}active{% endif %}">
+                <summary>학습관리</summary>
+                <div class="nav-dropdown-menu">
+                    <a href="{{ url_for('attendance') }}" class="{% if request.endpoint == 'attendance' %}active{% endif %}">출석부</a>
+                    <a href="{{ url_for('statistics') }}" class="{% if request.endpoint == 'statistics' %}active{% endif %}">학생별 통계</a>
+                    <a href="{{ url_for('class_stats') }}" class="{% if request.endpoint == 'class_stats' %}active{% endif %}">반 별 통계</a>
+                    <a href="{{ url_for('lesson_plan') }}" class="{% if request.endpoint == 'lesson_plan' %}active{% endif %}">수업계획서</a>
+                    <a href="{{ url_for('curriculum') }}" class="{% if request.endpoint == 'curriculum' %}active{% endif %}">교육과정</a>
+                    {% if session.get('role') != 'admin' %}
+                    <a href="{{ url_for('my_students') }}" class="{% if request.endpoint == 'my_students' %}active{% endif %}">학생 관리</a>
+                    {% endif %}
+                </div>
+            </details>
+            <details class="nav-dropdown {% if request.endpoint in finance_eps %}active{% endif %}">
+                <summary>재무</summary>
+                <div class="nav-dropdown-menu">
+                    <a href="{{ url_for('tuition') }}" class="{% if request.endpoint == 'tuition' %}active{% endif %}">원비명부</a>
+                    {% if session.get('role') == 'admin' %}
+                    <a href="{{ url_for('settlement') }}" class="{% if request.endpoint == 'settlement' %}active{% endif %}">결산서</a>
+                    {% endif %}
+                </div>
+            </details>
+            <details class="nav-dropdown {% if request.endpoint in ops_eps %}active{% endif %}">
+                <summary>운영</summary>
+                <div class="nav-dropdown-menu">
+                    <a href="{{ url_for('reports') }}" class="{% if request.endpoint == 'reports' %}active{% endif %}">보고서</a>
+                    <a href="{{ url_for('supply') }}" class="{% if request.endpoint == 'supply' %}active{% endif %}">비품현황</a>
+                    {% if session.get('role') == 'admin' %}
+                    <a href="{{ url_for('manage') }}" class="{% if request.endpoint == 'manage' %}active{% endif %}">관리</a>
+                    <a href="{{ url_for('users') }}" class="{% if request.endpoint == 'users' %}active{% endif %}">담당자 관리</a>
+                    {% endif %}
+                </div>
+            </details>
         </div>
         <div class="nav-user">
             <a href="{{ url_for('guide') }}" class="{% if request.endpoint == 'guide' %}active{% endif %}" style="margin-right:0.5rem; font-size:0.85rem; color:#bdc3c7;">사용 가이드</a>
@@ -46,6 +67,19 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/static/service-worker.js');
         }
+        document.addEventListener('click', function(e) {
+            document.querySelectorAll('.nav-dropdown[open]').forEach(function(d) {
+                if (!d.contains(e.target)) d.removeAttribute('open');
+            });
+        });
+        document.querySelectorAll('.nav-dropdown > summary').forEach(function(s) {
+            s.addEventListener('click', function(e) {
+                var parent = s.parentElement;
+                document.querySelectorAll('.nav-dropdown[open]').forEach(function(d) {
+                    if (d !== parent) d.removeAttribute('open');
+                });
+            });
+        });
     </script>
     {% block scripts %}{% endblock %}
 </body>

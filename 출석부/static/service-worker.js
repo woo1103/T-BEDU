@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tnbedu-v1';
+const CACHE_NAME = 'tnb-hub-v2';
 const urlsToCache = [
     '/',
     '/static/style.css',
