@@ -39,7 +39,7 @@
             <select name="class_id" id="filterClass" onchange="this.form.submit()">
                 <option value="">선택</option>
                 {% for c in classes %}
-                <option value="{{ c.id }}" data-subject="{{ c.subject }}" data-grade="{{ c.grade_level }}" data-number="{{ c.class_number }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ c.class_number or c.name }}</option>
+                <option value="{{ c.id }}" data-subject="{{ c.subject }}" data-grade="{{ c.grade_level }}" data-number="{{ c.class_number }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ ((c.grade_level or '') ~ ' ' ~ (c.class_number or ''))|trim }}</option>
                 {% endfor %}
             </select>
         </label>

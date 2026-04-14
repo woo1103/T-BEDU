@@ -26,7 +26,7 @@
             <select name="class_id" onchange="this.form.querySelector('[name=student_id]').value=''; this.form.submit()">
                 <option value="">선택</option>
                 {% for c in classes %}
-                <option value="{{ c.id }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ (c.grade_level ~ ' ' ~ c.class_number)|trim if c.class_number else c.name }}</option>
+                <option value="{{ c.id }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ ((c.grade_level or '') ~ ' ' ~ (c.class_number or ''))|trim }}</option>
                 {% endfor %}
             </select>
         </label>
