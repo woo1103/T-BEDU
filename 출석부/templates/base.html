@@ -6,15 +6,15 @@
     <meta name="theme-color" content="#2c3e50">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="T&amp;B Hub">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="apple-mobile-web-app-title" content="T&amp;BHub">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}?v=3">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon-192.png') }}">
-    <title>T&amp;B Hub</title>
+    <title>T&amp;BHub</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <nav class="navbar">
-        <a href="{{ url_for('index') }}" class="nav-brand" style="text-decoration:none; color:white;">T&amp;B Hub</a>
+        <a href="{{ url_for('index') }}" class="nav-brand" style="text-decoration:none; color:white;">T&amp;BHub</a>
         {% set learning_eps = ['attendance','statistics','class_stats','lesson_plan','curriculum','my_students'] %}
         {% set finance_eps = ['tuition','settlement'] %}
         {% set ops_eps = ['reports','supply','manage','users'] %}

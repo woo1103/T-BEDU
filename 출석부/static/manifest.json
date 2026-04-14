@@ -1,7 +1,7 @@
 {
-    "name": "T&B Hub",
-    "short_name": "T&B Hub",
-    "description": "T&B Hub - 학원 관리 플랫폼",
+    "name": "T&BHub",
+    "short_name": "T&BHub",
+    "description": "T&BHub - 학원 관리 플랫폼",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#f5f7fa",
