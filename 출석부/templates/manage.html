@@ -61,7 +61,7 @@
             <option value="과학">과학</option>
         </select>
         <input type="text" name="grade_level" placeholder="학년" required style="width:80px;">
-        <input type="text" name="class_number" placeholder="반" required style="width:80px;">
+        <input type="text" name="class_number" placeholder="반(선택)" style="width:80px;">
         <input type="text" name="day_schedule" placeholder="요일" style="width:100px;">
         <button type="submit" class="btn btn-add">추가</button>
     </form>
@@ -81,7 +81,7 @@
                         <option value="과학" {% if c.subject == '과학' %}selected{% endif %}>과학</option>
                     </select>
                     <input type="text" name="grade_level" value="{{ c.grade_level or '' }}" placeholder="학년" required style="width:70px;">
-                    <input type="text" name="class_number" value="{{ c.class_number or c.name }}" placeholder="반" required style="width:70px;">
+                    <input type="text" name="class_number" value="{{ c.class_number or '' }}" placeholder="반(선택)" style="width:70px;">
                     <input type="text" name="day_schedule" value="{{ c.day_schedule or '' }}" placeholder="요일" style="width:80px;">
                     <button type="submit" class="btn btn-edit">수정</button>
                 </form>

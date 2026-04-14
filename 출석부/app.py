@@ -176,8 +176,8 @@ def class_add():
     grade_level = request.form.get('grade_level', '').strip()
     class_number = request.form.get('class_number', '').strip()
     day_schedule = request.form.get('day_schedule', '').strip()
-    if branch_id and subject and grade_level and class_number:
-        name = f"{subject} {grade_level} {class_number}"
+    if branch_id and subject and grade_level:
+        name = f"{subject} {grade_level} {class_number}".strip()
         db = get_db()
         db.execute('INSERT INTO class (name, branch_id, subject, grade_level, class_number, day_schedule) VALUES (?, ?, ?, ?, ?, ?)',
                    (name, branch_id, subject, grade_level, class_number, day_schedule))
@@ -199,8 +199,8 @@ def class_edit(id):
     if allowed is not None and int(id) not in allowed:
         db.close()
         return redirect(url_for('my_students'))
-    if subject and grade_level and class_number:
-        name = f"{subject} {grade_level} {class_number}"
+    if subject and grade_level:
+        name = f"{subject} {grade_level} {class_number}".strip()
         db.execute('UPDATE class SET name=?, subject=?, grade_level=?, class_number=?, day_schedule=? WHERE id=?',
                    (name, subject, grade_level, class_number, day_schedule, id))
     else:
