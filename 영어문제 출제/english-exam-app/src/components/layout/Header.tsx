@@ -9,6 +9,7 @@ const pageTitles: Record<string, string> = {
   "/questions/new": "문제 만들기",
   "/exams": "시험지 관리",
   "/exams/new": "시험지 구성",
+  "/textbooks": "교재 관리",
   "/admin/users": "계정 관리",
 };
 
@@ -36,6 +37,7 @@ export default function Header() {
     pageTitles[pathname] ||
     (pathname.startsWith("/questions/") ? "문제 상세" : "") ||
     (pathname.startsWith("/exams/") ? "시험지 상세" : "") ||
+    (pathname.startsWith("/textbooks/") ? "교재 편집" : "") ||
     "영어 문제 출제";
 
   async function handleLogout() {

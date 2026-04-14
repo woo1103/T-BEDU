@@ -96,3 +96,60 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+// ─── 교재 (Textbook) ───
+model Textbook {
+  id             String   @id @default(cuid())
+  title          String
+  subtitle       String?
+  description    String?
+
+  coverTemplate  String   @default("classic")  // "classic" | "block" | "badge"
+  pageTemplate   String   @default("default")  // 내지 템플릿 키
+  themeColor     String   @default("#4FC3F7")
+  brandText      String   @default("T&BEDU")
+  logoText       String   @default("T")
+
+  settings       String?  // JSON: 세부 커스터마이징 (폰트, 여백, 헤더 문구 등)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  chapters       Chapter[]
+}
+
+model Chapter {
+  id          String   @id @default(cuid())
+  textbookId  String
+  orderNum    Int
+  title       String
+
+  textbook    Textbook       @relation(fields: [textbookId], references: [id], onDelete: Cascade)
+  pages       TextbookPage[]
+
+  @@index([textbookId])
+}
+
+model TextbookPage {
+  id          String   @id @default(cuid())
+  chapterId   String
+  orderNum    Int
+  title       String?
+
+  chapter     Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  blocks      Block[]
+
+  @@index([chapterId])
+}
+
+model Block {
+  id          String   @id @default(cuid())
+  pageId      String
+  orderNum    Int
+  type        String   // "TEXT" | "HEADING" | "IMAGE" | "TABLE" | "QUESTION"
+  data        String   // JSON payload (타입별 스키마 상이)
+
+  page        TextbookPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId])
+}
