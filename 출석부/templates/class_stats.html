@@ -22,11 +22,16 @@
                 {% endfor %}
             </select>
         </label>
+        <label>학년:
+            <select id="filterGrade" onchange="filterClasses()">
+                <option value="">전체</option>
+            </select>
+        </label>
         <label>반:
-            <select name="class_id" onchange="this.form.submit()">
+            <select name="class_id" id="filterClass" onchange="this.form.submit()">
                 <option value="">선택</option>
                 {% for c in classes %}
-                <option value="{{ c.id }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ c.class_number or '(공란)' }}</option>
+                <option value="{{ c.id }}" data-grade="{{ c.grade_level }}" {% if sel_class|string == c.id|string %}selected{% endif %}>{{ c.class_number or '(공란)' }}</option>
                 {% endfor %}
             </select>
         </label>
@@ -163,4 +168,43 @@
 <p class="empty-msg">지점과 반을 선택하세요.</p>
 {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    const classSelect = document.getElementById('filterClass');
+    if (!classSelect) return;
+    const options = classSelect.querySelectorAll('option[data-grade]');
+    const grades = new Set();
+    options.forEach(opt => { if (opt.dataset.grade) grades.add(opt.dataset.grade); });
+
+    const gradeSelect = document.getElementById('filterGrade');
+    const gradeArr = Array.from(grades).sort((a, b) => {
+        const order = {'초':1,'중':2,'고':3};
+        const oa = order[a[0]] || 4, ob = order[b[0]] || 4;
+        if (oa !== ob) return oa - ob;
+        return a.localeCompare(b);
+    });
+    gradeArr.forEach(g => {
+        const o = document.createElement('option');
+        o.value = g; o.textContent = g;
+        gradeSelect.appendChild(o);
+    });
+
+    const selOpt = classSelect.querySelector('option:checked[data-grade]');
+    if (selOpt && selOpt.dataset.grade) gradeSelect.value = selOpt.dataset.grade;
+})();
+
+function filterClasses() {
+    const grade = document.getElementById('filterGrade').value;
+    const classSelect = document.getElementById('filterClass');
+    const options = classSelect.querySelectorAll('option[data-grade]');
+    classSelect.value = '';
+    options.forEach(opt => {
+        const show = !grade || opt.dataset.grade === grade;
+        opt.style.display = show ? '' : 'none';
+    });
+}
+</script>
 {% endblock %}
