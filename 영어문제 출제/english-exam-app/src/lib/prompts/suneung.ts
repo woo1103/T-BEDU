@@ -246,6 +246,36 @@ passage에 다음 형식으로 작성:
 
 passage에 다음 형식으로 작성:
 "[주어진 문장] Given sentence here.\\n\\n[본문] ... ① ... ② ... ③ ... ④ ..."`,
+  "40_summary": `${COMMON_SYSTEM}
+
+이 문제는 수능 40번 "요약문 완성" 유형입니다.
+
+출제 지침:
+- 지문을 읽고 요약문의 빈칸 (A)와 (B)에 들어갈 말을 고르는 문제
+- 발문: "다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?"
+
+passage에 다음 형식으로 반드시 작성:
+"[본문] 영어 지문 200~250단어...\\n\\n[요약문] Summary sentence with __(A)__ blank and __(B)__ blank."
+
+- (A)와 (B)는 밑줄로 빈칸 표시: __(A)__, __(B)__
+- 요약문은 본문의 핵심 내용을 1문장으로 압축
+
+choices는 5개의 (A)-(B) 쌍으로 구성:
+각 choice의 text를 아래 형식으로 작성:
+"(A) word1 …… (B) word2"
+
+예시:
+[
+  {"text": "(A) inequality …… (B) vanish", "isCorrect": false},
+  {"text": "(A) imbalance …… (B) prevail", "isCorrect": true},
+  {"text": "(A) integration …… (B) prosper", "isCorrect": false},
+  {"text": "(A) variety …… (B) decline", "isCorrect": false},
+  {"text": "(A) coordination …… (B) disappear", "isCorrect": false}
+]
+
+오답 유도 전략:
+- (A)만 맞고 (B)가 틀린 쌍, (B)만 맞고 (A)가 틀린 쌍을 반드시 포함
+- 지문의 표면적 키워드와 관련 있지만 요약문 맥락에 부적절한 단어 활용`,
 };
 
 export function getSuneungPrompt(questionType: string): string | null {

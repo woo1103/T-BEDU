@@ -11,6 +11,14 @@ import {
   Line,
   Font,
 } from "@react-pdf/renderer";
+import {
+  parsePassage,
+  isWritingType,
+  type OrderParsed,
+  type InsertionParsed,
+  type GrammarParsed,
+  type SummaryParsed,
+} from "@/lib/passage-parser";
 
 // 한글 폰트 등록 (Google Fonts CDN)
 Font.register({
@@ -29,10 +37,7 @@ Font.register({
 
 const BRAND_CYAN = "#4FC3F7";
 const BRAND_DARK_CYAN = "#29B6F6";
-// 원문자(①②③④⑤)는 한글 폰트 서브셋에 빠져 PDF에서 a,b,c,d로 렌더되는 이슈가 있어
-// 일반 숫자로 대체.
 const CIRCLE_LABELS = ["1.", "2.", "3.", "4.", "5."];
-// 긴 문제 판별 임계값: passage 글자 + 모든 choice 글자 합
 const LONG_ITEM_CHARS = 900;
 
 interface Choice {
@@ -56,10 +61,11 @@ interface ExamItemData {
   question: ExamQuestion;
 }
 
-interface ExamPDFProps {
+export interface ExamPDFProps {
   title: string;
   items: ExamItemData[];
   showAnswers?: boolean;
+  mode?: "student" | "teacher";
 }
 
 const styles = StyleSheet.create({
@@ -115,7 +121,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     fontFamily: "NotoSansKR",
   },
-  // 상단 헤더바
   headerBar: {
     backgroundColor: BRAND_CYAN,
     height: 8,
@@ -257,6 +262,112 @@ const styles = StyleSheet.create({
     fontWeight: 700,
   },
 
+  // 주어진 글/문장 박스 (굵은 테두리)
+  givenBox: {
+    borderWidth: 1.5,
+    borderColor: "#333333",
+    borderRadius: 4,
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: "#FFFFFF",
+  },
+
+  // 세그먼트 레이블
+  segmentLabel: {
+    fontSize: 10,
+    fontWeight: 700,
+    color: "#333333",
+    marginRight: 4,
+  },
+  segmentBlock: {
+    marginBottom: 6,
+    paddingLeft: 4,
+  },
+
+  // 밑줄 텍스트
+  underlinedText: {
+    fontSize: 9.5,
+    textDecoration: "underline",
+    color: "#333333",
+  },
+  markerText: {
+    fontSize: 8,
+    fontWeight: 700,
+    color: "#333333",
+  },
+
+  // 요약문
+  summaryArrow: {
+    textAlign: "center",
+    fontSize: 14,
+    color: "#999999",
+    marginVertical: 4,
+  },
+  summaryChoiceTable: {
+    flexDirection: "row",
+    marginTop: 8,
+    paddingLeft: 4,
+  },
+  summaryChoiceColumn: {
+    flex: 1,
+    paddingHorizontal: 4,
+  },
+  summaryChoiceHeader: {
+    fontSize: 9,
+    fontWeight: 700,
+    color: "#666666",
+    marginBottom: 4,
+    textAlign: "center",
+  },
+  summaryChoiceRow: {
+    flexDirection: "row",
+    marginBottom: 3,
+  },
+
+  // 서술형 답안란
+  writingAnswerArea: {
+    borderWidth: 1,
+    borderColor: "#D0D0D0",
+    borderStyle: "dashed",
+    borderRadius: 4,
+    padding: 10,
+    marginBottom: 10,
+    minHeight: 60,
+  },
+  writingAnswerLabel: {
+    fontSize: 8,
+    color: "#BBBBBB",
+  },
+
+  // 해설지 채점기준 박스
+  gradingBox: {
+    borderWidth: 1,
+    borderColor: "#FFCDD2",
+    borderRadius: 4,
+    padding: 8,
+    marginTop: 6,
+    backgroundColor: "#FFF8F8",
+  },
+  gradingTitle: {
+    fontSize: 8,
+    fontWeight: 700,
+    color: "#E53935",
+    marginBottom: 4,
+  },
+  gradingText: {
+    fontSize: 8,
+    color: "#666666",
+    lineHeight: 1.5,
+    marginBottom: 2,
+  },
+  gradingTextCorrect: {
+    fontSize: 8,
+    color: "#E53935",
+    fontWeight: 700,
+    lineHeight: 1.5,
+    marginBottom: 2,
+  },
+
   // 정답 표
   answerSection: {
     marginTop: 20,
@@ -301,13 +412,25 @@ const styles = StyleSheet.create({
     color: "#E53935",
     fontWeight: 700,
   },
+
+  // 서술형 해설지 항목
+  writingAnswerSection: {
+    marginTop: 12,
+    paddingHorizontal: 20,
+  },
+  writingAnswerTitle: {
+    fontSize: 10,
+    fontWeight: 700,
+    color: "#333333",
+    marginBottom: 6,
+    marginTop: 12,
+  },
 });
 
-// 표지 페이지
+// ── 표지 페이지 ──
 function CoverPage() {
   return (
     <Page size="A4" style={styles.coverPage}>
-      {/* 우측 상단 장식 선 */}
       <View style={styles.coverDecoLines}>
         <Svg width={80} height={60}>
           <Line x1="20" y1="0" x2="80" y2="0" stroke={BRAND_CYAN} strokeWidth="2" />
@@ -315,48 +438,16 @@ function CoverPage() {
           <Line x1="40" y1="30" x2="80" y2="30" stroke={BRAND_CYAN} strokeWidth="1.5" />
         </Svg>
       </View>
-
-      {/* 원형 디자인 */}
       <View style={styles.coverCircleArea}>
         <Svg width={500} height={500}>
-          {/* 바깥 원 (실선) */}
-          <Circle
-            cx="250"
-            cy="250"
-            r="220"
-            fill="none"
-            stroke={BRAND_DARK_CYAN}
-            strokeWidth="1.5"
-          />
-          {/* 중간 원 (굵은 반투명) */}
-          <Circle
-            cx="250"
-            cy="250"
-            r="200"
-            fill="none"
-            stroke={BRAND_CYAN}
-            strokeWidth="8"
-            opacity="0.4"
-          />
-          {/* 안쪽 원 (점선) */}
-          <Circle
-            cx="250"
-            cy="250"
-            r="180"
-            fill="none"
-            stroke={BRAND_CYAN}
-            strokeWidth="1"
-            strokeDasharray="8,6"
-          />
+          <Circle cx="250" cy="250" r="220" fill="none" stroke={BRAND_DARK_CYAN} strokeWidth="1.5" />
+          <Circle cx="250" cy="250" r="200" fill="none" stroke={BRAND_CYAN} strokeWidth="8" opacity="0.4" />
+          <Circle cx="250" cy="250" r="180" fill="none" stroke={BRAND_CYAN} strokeWidth="1" strokeDasharray="8,6" />
         </Svg>
       </View>
-
-      {/* Daily Gift 타이틀 - 원 안 중앙 */}
       <View style={styles.coverTitleInCircle}>
         <Text style={styles.coverTitleText}>Daily Gift</Text>
       </View>
-
-      {/* 하단 브랜드 */}
       <View style={styles.coverBrand}>
         <Text style={styles.coverBrandText}>T&BEDU</Text>
       </View>
@@ -372,7 +463,6 @@ function parseChoices(choicesJson: string): Choice[] {
   }
 }
 
-// 문제 길이(문자 수) 계산 — split 모드 판단용
 function itemCharLength(item: ExamItemData): number {
   const passageLen = item.question.passage?.length || 0;
   const choices = parseChoices(item.question.choices);
@@ -380,27 +470,19 @@ function itemCharLength(item: ExamItemData): number {
   return passageLen + choicesLen + (item.question.question?.length || 0);
 }
 
-// 문제 헤더 + 지문 (선지는 포함하지 않음)
-function QuestionHead({ item }: { item: ExamItemData }) {
+// ── 문제 헤더 (번호 + 배점 + 발문) ──
+function QuestionHeaderRow({ item }: { item: ExamItemData }) {
   const pts = item.customPoints || item.question.points;
   return (
-    <View style={styles.questionBlock}>
-      <View style={styles.questionHeader}>
-        <Text style={styles.questionNumber}>{item.orderNum}.</Text>
-        {pts >= 3 && <Text style={styles.questionPoints}>{pts}점</Text>}
-        <Text style={styles.questionText}>{item.question.question}</Text>
-      </View>
-
-      {item.question.passage && (
-        <View style={styles.passageBox}>
-          <Text style={styles.passageText}>{item.question.passage}</Text>
-        </View>
-      )}
+    <View style={styles.questionHeader}>
+      <Text style={styles.questionNumber}>{item.orderNum}.</Text>
+      {pts >= 3 && <Text style={styles.questionPoints}>{pts}점</Text>}
+      <Text style={styles.questionText}>{item.question.question}</Text>
     </View>
   );
 }
 
-// 선지만 렌더링
+// ── 선지 블록 ──
 function ChoicesBlock({
   item,
   showAnswers,
@@ -432,8 +514,315 @@ function ChoicesBlock({
   );
 }
 
-// 일반(컴팩트) 모드: 좌우 한 문제씩 — 헤더+지문+선지 전부 포함
-function QuestionItem({
+// ── 순서배열 PDF ──
+function OrderQuestionPDF({
+  item,
+  parsed,
+  showAnswers,
+}: {
+  item: ExamItemData;
+  parsed: OrderParsed;
+  showAnswers: boolean;
+}) {
+  const choices = parseChoices(item.question.choices);
+  return (
+    <View wrap={false}>
+      <QuestionHeaderRow item={item} />
+      {/* 주어진 글 박스 */}
+      <View style={styles.givenBox}>
+        <Text style={styles.passageText}>{parsed.givenParagraph}</Text>
+      </View>
+      {/* (A)(B)(C) 세그먼트 */}
+      {parsed.segments.map((seg, i) => (
+        <View key={i} style={styles.segmentBlock}>
+          <Text style={styles.passageText}>
+            <Text style={styles.segmentLabel}>{seg.label} </Text>
+            {seg.text}
+          </Text>
+        </View>
+      ))}
+      {/* 선지 */}
+      <View style={styles.choicesBlock}>
+        {choices.map((choice, i) => {
+          const isCorrect = showAnswers && choice.isCorrect;
+          const label = CIRCLE_LABELS[i] || `${i + 1}.`;
+          return (
+            <View key={i} style={styles.choiceRow}>
+              <Text style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
+                {label}
+              </Text>
+              <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
+                {choice.text}
+              </Text>
+            </View>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+// ── 문장삽입 PDF ──
+function InsertionQuestionPDF({
+  item,
+  parsed,
+  showAnswers,
+}: {
+  item: ExamItemData;
+  parsed: InsertionParsed;
+  showAnswers: boolean;
+}) {
+  const choices = parseChoices(item.question.choices);
+  // 마커를 PDF-safe 숫자로 변환
+  const markerMap: Record<string, string> = {
+    "①": "(1)",
+    "②": "(2)",
+    "③": "(3)",
+    "④": "(4)",
+    "⑤": "(5)",
+  };
+
+  return (
+    <View wrap={false}>
+      <QuestionHeaderRow item={item} />
+      {/* 주어진 문장 박스 */}
+      <View style={styles.givenBox}>
+        <Text style={styles.passageText}>{parsed.givenSentence}</Text>
+      </View>
+      {/* 본문 (인라인 마커) */}
+      <View style={styles.passageBox}>
+        <Text style={styles.passageText}>
+          {parsed.bodyParts.map((part, i) =>
+            part.marker ? (
+              <Text key={i} style={{ fontWeight: 700 }}>
+                {" "}
+                {markerMap[part.marker] || part.marker}
+                {" "}
+              </Text>
+            ) : (
+              <Text key={i}>{part.text}</Text>
+            )
+          )}
+        </Text>
+      </View>
+      {/* 선지 (있으면) */}
+      {choices.length > 0 && (
+        <View style={styles.choicesBlock}>
+          {choices.map((choice, i) => {
+            const isCorrect = showAnswers && choice.isCorrect;
+            const label = CIRCLE_LABELS[i] || `${i + 1}.`;
+            return (
+              <View key={i} style={styles.choiceRow}>
+                <Text style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
+                  {label}
+                </Text>
+                <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
+                  {choice.text}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      )}
+    </View>
+  );
+}
+
+// ── 어법/어휘 PDF ──
+function GrammarVocabQuestionPDF({
+  item,
+  parsed,
+  showAnswers,
+}: {
+  item: ExamItemData;
+  parsed: GrammarParsed;
+  showAnswers: boolean;
+}) {
+  const choices = parseChoices(item.question.choices);
+  // 마커를 PDF-safe 숫자로 변환
+  const markerMap: Record<string, string> = {
+    "①": "(1)",
+    "②": "(2)",
+    "③": "(3)",
+    "④": "(4)",
+    "⑤": "(5)",
+  };
+
+  return (
+    <View wrap={false}>
+      <QuestionHeaderRow item={item} />
+      {/* 지문 (밑줄+마커 포함) */}
+      <View style={styles.passageBox}>
+        <Text style={styles.passageText}>
+          {parsed.parts.map((part, i) =>
+            part.underlined ? (
+              <Text key={i}>
+                <Text style={styles.markerText}>
+                  {markerMap[part.marker || ""] || part.marker || ""}
+                </Text>
+                <Text style={styles.underlinedText}>{part.underlined}</Text>
+              </Text>
+            ) : (
+              <Text key={i}>{part.text}</Text>
+            )
+          )}
+        </Text>
+      </View>
+      {/* 선지 */}
+      <View style={styles.choicesBlock}>
+        {choices.map((choice, i) => {
+          const isCorrect = showAnswers && choice.isCorrect;
+          const label = CIRCLE_LABELS[i] || `${i + 1}.`;
+          return (
+            <View key={i} style={styles.choiceRow}>
+              <Text style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
+                {label}
+              </Text>
+              <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
+                {choice.text}
+              </Text>
+            </View>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+// ── 요약문 PDF ──
+function SummaryQuestionPDF({
+  item,
+  parsed,
+  showAnswers,
+}: {
+  item: ExamItemData;
+  parsed: SummaryParsed;
+  showAnswers: boolean;
+}) {
+  const choices = parseChoices(item.question.choices);
+
+  // (A)/(B) 쌍 파싱
+  const parsedChoices = choices.map((c) => {
+    const match = c.text.match(
+      /\(A\)\s*(\S+)\s*[…·\-—]+\s*\(B\)\s*(\S+)/
+    );
+    return {
+      a: match ? match[1] : c.text,
+      b: match ? match[2] : "",
+      isCorrect: c.isCorrect,
+    };
+  });
+
+  return (
+    <View wrap={false}>
+      <QuestionHeaderRow item={item} />
+      {/* 본문 박스 */}
+      <View style={styles.passageBox}>
+        <Text style={styles.passageText}>{parsed.mainPassage}</Text>
+      </View>
+      {/* 화살표 */}
+      <Text style={styles.summaryArrow}>▼</Text>
+      {/* 요약문 박스 */}
+      <View style={styles.passageBox}>
+        <Text style={styles.passageText}>{parsed.summaryText}</Text>
+      </View>
+      {/* (A)/(B) 선지 표 */}
+      <View style={styles.summaryChoiceTable}>
+        {/* (A) 열 */}
+        <View style={styles.summaryChoiceColumn}>
+          <Text style={styles.summaryChoiceHeader}>(A)</Text>
+          {parsedChoices.map((c, i) => {
+            const isCorrect = showAnswers && c.isCorrect;
+            const label = CIRCLE_LABELS[i] || `${i + 1}.`;
+            return (
+              <View key={i} style={styles.summaryChoiceRow}>
+                <Text style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
+                  {label}
+                </Text>
+                <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
+                  {c.a}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+        {/* 구분점 열 */}
+        <View style={{ justifyContent: "center", paddingTop: 16 }}>
+          {parsedChoices.map((_, i) => (
+            <Text
+              key={i}
+              style={{ fontSize: 8, color: "#999999", marginBottom: 3, textAlign: "center" }}
+            >
+              ……
+            </Text>
+          ))}
+        </View>
+        {/* (B) 열 */}
+        <View style={styles.summaryChoiceColumn}>
+          <Text style={styles.summaryChoiceHeader}>(B)</Text>
+          {parsedChoices.map((c, i) => {
+            const isCorrect = showAnswers && c.isCorrect;
+            return (
+              <View key={i} style={styles.summaryChoiceRow}>
+                <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
+                  {c.b}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    </View>
+  );
+}
+
+// ── 서술형 PDF ──
+function WritingQuestionPDF({
+  item,
+  showAnswers,
+  mode,
+}: {
+  item: ExamItemData;
+  showAnswers: boolean;
+  mode: "student" | "teacher";
+}) {
+  const choices = parseChoices(item.question.choices);
+
+  return (
+    <View wrap={false}>
+      <QuestionHeaderRow item={item} />
+      {/* 지문 */}
+      {item.question.passage && (
+        <View style={styles.passageBox}>
+          <Text style={styles.passageText}>{item.question.passage}</Text>
+        </View>
+      )}
+      {/* 답안 작성란 (학생용) */}
+      {mode === "student" && (
+        <View style={styles.writingAnswerArea}>
+          <Text style={styles.writingAnswerLabel}>답안 작성란</Text>
+        </View>
+      )}
+      {/* 해설지: 채점기준/모범답안 */}
+      {mode === "teacher" && showAnswers && choices.length > 0 && (
+        <View style={styles.gradingBox}>
+          <Text style={styles.gradingTitle}>[채점 기준 / 모범답안]</Text>
+          {choices.map((choice, i) => (
+            <Text
+              key={i}
+              style={choice.isCorrect ? styles.gradingTextCorrect : styles.gradingText}
+            >
+              {choice.text}
+            </Text>
+          ))}
+        </View>
+      )}
+    </View>
+  );
+}
+
+// ── 기본 문제 (헤더+지문+선지 전부 포함) ──
+function DefaultQuestionPDF({
   item,
   showAnswers,
 }: {
@@ -442,13 +831,139 @@ function QuestionItem({
 }) {
   return (
     <View wrap={false}>
-      <QuestionHead item={item} />
+      <QuestionHeaderRow item={item} />
+      {item.question.passage && (
+        <View style={styles.passageBox}>
+          <Text style={styles.passageText}>{item.question.passage}</Text>
+        </View>
+      )}
       <ChoicesBlock item={item} showAnswers={showAnswers} />
     </View>
   );
 }
 
-// 페이지 구성: long 아이템은 스플릿 페이지, 아니면 2개씩 페어 페이지
+// ── 문제 렌더러 (유형별 분기) ──
+function QuestionItem({
+  item,
+  showAnswers,
+  mode,
+}: {
+  item: ExamItemData;
+  showAnswers: boolean;
+  mode: "student" | "teacher";
+}) {
+  const parsed = parsePassage(item.question.passage, item.question.questionType);
+
+  switch (parsed.type) {
+    case "order":
+      return <OrderQuestionPDF item={item} parsed={parsed} showAnswers={showAnswers} />;
+    case "insertion":
+      return <InsertionQuestionPDF item={item} parsed={parsed} showAnswers={showAnswers} />;
+    case "grammar":
+      return <GrammarVocabQuestionPDF item={item} parsed={parsed} showAnswers={showAnswers} />;
+    case "summary":
+      return <SummaryQuestionPDF item={item} parsed={parsed} showAnswers={showAnswers} />;
+    case "writing":
+      return <WritingQuestionPDF item={item} showAnswers={showAnswers} mode={mode} />;
+    default:
+      return <DefaultQuestionPDF item={item} showAnswers={showAnswers} />;
+  }
+}
+
+// ── 문제 헤더 + 지문만 (split 모드 좌측용) ──
+function QuestionHead({ item }: { item: ExamItemData }) {
+  const parsed = parsePassage(item.question.passage, item.question.questionType);
+
+  return (
+    <View style={styles.questionBlock}>
+      <QuestionHeaderRow item={item} />
+
+      {parsed.type === "order" && (
+        <>
+          <View style={styles.givenBox}>
+            <Text style={styles.passageText}>{parsed.givenParagraph}</Text>
+          </View>
+          {parsed.segments.map((seg, i) => (
+            <View key={i} style={styles.segmentBlock}>
+              <Text style={styles.passageText}>
+                <Text style={styles.segmentLabel}>{seg.label} </Text>
+                {seg.text}
+              </Text>
+            </View>
+          ))}
+        </>
+      )}
+
+      {parsed.type === "insertion" && (
+        <>
+          <View style={styles.givenBox}>
+            <Text style={styles.passageText}>{parsed.givenSentence}</Text>
+          </View>
+          <View style={styles.passageBox}>
+            <Text style={styles.passageText}>
+              {parsed.bodyParts.map((part, i) =>
+                part.marker ? (
+                  <Text key={i} style={{ fontWeight: 700 }}>
+                    {" "}({CIRCLE_LABELS.indexOf(
+                      ["①", "②", "③", "④", "⑤"].indexOf(part.marker) >= 0
+                        ? CIRCLE_LABELS[["①", "②", "③", "④", "⑤"].indexOf(part.marker)]
+                        : ""
+                    ) >= 0
+                      ? CIRCLE_LABELS[["①", "②", "③", "④", "⑤"].indexOf(part.marker)]
+                      : part.marker}){" "}
+                  </Text>
+                ) : (
+                  <Text key={i}>{part.text}</Text>
+                )
+              )}
+            </Text>
+          </View>
+        </>
+      )}
+
+      {parsed.type === "grammar" && (
+        <View style={styles.passageBox}>
+          <Text style={styles.passageText}>
+            {parsed.parts.map((part, i) =>
+              part.underlined ? (
+                <Text key={i}>
+                  <Text style={styles.markerText}>
+                    {({ "①": "(1)", "②": "(2)", "③": "(3)", "④": "(4)", "⑤": "(5)" } as Record<string, string>)[part.marker || ""] || part.marker || ""}
+                  </Text>
+                  <Text style={styles.underlinedText}>{part.underlined}</Text>
+                </Text>
+              ) : (
+                <Text key={i}>{part.text}</Text>
+              )
+            )}
+          </Text>
+        </View>
+      )}
+
+      {parsed.type === "summary" && (
+        <>
+          <View style={styles.passageBox}>
+            <Text style={styles.passageText}>{parsed.mainPassage}</Text>
+          </View>
+          <Text style={styles.summaryArrow}>▼</Text>
+          <View style={styles.passageBox}>
+            <Text style={styles.passageText}>{parsed.summaryText}</Text>
+          </View>
+        </>
+      )}
+
+      {(parsed.type === "default" || parsed.type === "writing") && item.question.passage && (
+        <View style={styles.passageBox}>
+          <Text style={styles.passageText}>
+            {parsed.type === "default" ? parsed.text : item.question.passage}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+}
+
+// 페이지 레이아웃
 type PageLayout =
   | { mode: "pair"; left: ExamItemData; right: ExamItemData | null }
   | { mode: "split"; item: ExamItemData };
@@ -480,10 +995,12 @@ function ContentPages({
   title,
   items,
   showAnswers,
+  mode,
 }: {
   title: string;
   items: ExamItemData[];
   showAnswers: boolean;
+  mode: "student" | "teacher";
 }) {
   const pages = layoutPages(items);
 
@@ -492,7 +1009,6 @@ function ContentPages({
       {pages.map((pg, pageIdx) => (
         <Page key={pageIdx} size="A4" style={styles.contentPage}>
           <View style={styles.headerBar} />
-
           <View style={styles.headerRow}>
             <View style={styles.headerLogo}>
               <Text style={styles.headerLogoText}>T&B</Text>
@@ -505,12 +1021,12 @@ function ContentPages({
             {pg.mode === "pair" ? (
               <>
                 <View style={styles.column}>
-                  <QuestionItem item={pg.left} showAnswers={showAnswers} />
+                  <QuestionItem item={pg.left} showAnswers={showAnswers} mode={mode} />
                 </View>
                 <View style={styles.columnDivider} />
                 <View style={styles.column}>
                   {pg.right && (
-                    <QuestionItem item={pg.right} showAnswers={showAnswers} />
+                    <QuestionItem item={pg.right} showAnswers={showAnswers} mode={mode} />
                   )}
                 </View>
               </>
@@ -536,7 +1052,7 @@ function ContentPages({
   );
 }
 
-// choices에서 정답 번호(①②③④⑤) 추출
+// choices에서 정답 번호 추출
 function getCorrectLabel(choicesJson: string): string {
   try {
     const choices: Choice[] = JSON.parse(choicesJson);
@@ -549,7 +1065,20 @@ function getCorrectLabel(choicesJson: string): string {
 }
 
 // 정답지 페이지
-function AnswerPage({ items }: { items: ExamItemData[] }) {
+function AnswerPage({
+  items,
+  mode,
+}: {
+  items: ExamItemData[];
+  mode: "student" | "teacher";
+}) {
+  const objectiveItems = items.filter(
+    (item) => !isWritingType(item.question.questionType)
+  );
+  const writingItems = items.filter((item) =>
+    isWritingType(item.question.questionType)
+  );
+
   return (
     <Page size="A4" style={styles.contentPage}>
       <View style={styles.headerBar} />
@@ -558,33 +1087,76 @@ function AnswerPage({ items }: { items: ExamItemData[] }) {
           <Text style={styles.headerLogoText}>T&B</Text>
         </View>
         <Text style={styles.headerTitle}>Daily Gift</Text>
-        <Text style={styles.headerSub}>정답표</Text>
+        <Text style={styles.headerSub}>
+          {mode === "teacher" ? "해설지" : "정답표"}
+        </Text>
       </View>
+
+      {/* 객관식 정답 그리드 */}
       <View style={styles.answerSection}>
         <Text style={styles.answerTitle}>정답</Text>
         <View style={styles.answerGrid}>
-          {items.map((item) => {
+          {objectiveItems.map((item) => (
+            <View key={item.orderNum} style={styles.answerCell}>
+              <Text style={styles.answerNum}>{item.orderNum}</Text>
+              <Text style={styles.answerVal}>
+                {getCorrectLabel(item.question.choices)}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </View>
+
+      {/* 해설지: 서술형 채점기준/모범답안 */}
+      {mode === "teacher" && writingItems.length > 0 && (
+        <View style={styles.writingAnswerSection}>
+          <Text style={styles.answerTitle}>서술형 채점 기준</Text>
+          {writingItems.map((item) => {
+            const choices = parseChoices(item.question.choices);
             return (
-              <View key={item.orderNum} style={styles.answerCell}>
-                <Text style={styles.answerNum}>{item.orderNum}</Text>
-                <Text style={styles.answerVal}>
-                  {getCorrectLabel(item.question.choices)}
+              <View key={item.orderNum} style={{ marginBottom: 10 }}>
+                <Text style={styles.writingAnswerTitle}>
+                  {item.orderNum}번 ({item.customPoints || item.question.points}점)
                 </Text>
+                {choices.map((choice, i) => (
+                  <Text
+                    key={i}
+                    style={
+                      choice.isCorrect
+                        ? styles.gradingTextCorrect
+                        : styles.gradingText
+                    }
+                  >
+                    {choice.text}
+                  </Text>
+                ))}
               </View>
             );
           })}
         </View>
-      </View>
+      )}
     </Page>
   );
 }
 
-export default function ExamPDF({ title, items, showAnswers = false }: ExamPDFProps) {
+export default function ExamPDF({
+  title,
+  items,
+  showAnswers = false,
+  mode = "student",
+}: ExamPDFProps) {
+  const effectiveShowAnswers = mode === "teacher" ? true : showAnswers;
+
   return (
     <Document>
       <CoverPage />
-      <ContentPages title={title} items={items} showAnswers={showAnswers} />
-      <AnswerPage items={items} />
+      <ContentPages
+        title={title}
+        items={items}
+        showAnswers={effectiveShowAnswers}
+        mode={mode}
+      />
+      <AnswerPage items={items} mode={mode} />
     </Document>
   );
 }

@@ -186,6 +186,119 @@ export const NAESIN_PROMPTS: Record<string, string> = {
 - choices에는 모범답안과 채점 기준을 넣어주세요
 - points: 5`,
 
+  "naesin_summary": `${NAESIN_COMMON}
+
+이 문제는 내신 "요약문 완성" 유형입니다.
+
+출제 지침:
+- 지문을 읽고 요약문의 빈칸 (A)와 (B)에 들어갈 말을 고르는 문제
+- 발문: "다음 글의 내용을 한 문장으로 요약하고자 한다. 빈칸 (A), (B)에 들어갈 말로 가장 적절한 것은?"
+
+passage에 다음 형식으로 반드시 작성:
+"[본문] 영어 지문...\\n\\n[요약문] Summary sentence with __(A)__ blank and __(B)__ blank."
+
+- (A)와 (B)는 밑줄로 빈칸 표시: __(A)__, __(B)__
+- 요약문은 본문의 핵심 내용을 1문장으로 압축
+
+choices는 5개의 (A)-(B) 쌍으로 구성:
+각 choice의 text를 아래 형식으로 작성:
+"(A) word1 …… (B) word2"
+
+예시:
+[
+  {"text": "(A) inequality …… (B) vanish", "isCorrect": false},
+  {"text": "(A) imbalance …… (B) prevail", "isCorrect": true},
+  {"text": "(A) integration …… (B) prosper", "isCorrect": false},
+  {"text": "(A) variety …… (B) decline", "isCorrect": false},
+  {"text": "(A) coordination …… (B) disappear", "isCorrect": false}
+]
+
+오답 유도 전략:
+- (A)만 맞고 (B)가 틀린 쌍, (B)만 맞고 (A)가 틀린 쌍을 반드시 포함
+- 지문의 표면적 키워드와 관련 있지만 요약문 맥락에 부적절한 단어 활용
+- points: 3`,
+
+  "naesin_writing_summary": `${NAESIN_COMMON}
+
+이 문제는 내신 "서술형(요약)" 유형입니다.
+
+출제 지침:
+- 지문을 읽고 요약문을 영어로 직접 완성하는 서술형 문제
+- 발문 예시: "다음 글을 읽고, 아래 요약문의 빈칸을 주어진 조건에 맞게 완성하시오."
+- 학생이 빈칸에 들어갈 영어 단어/구를 직접 작성
+- choices에는 모범답안과 채점 기준을 넣어주세요
+
+choices 형식 (서술형):
+[
+  {"text": "모범답안: (작성할 영어 답안)", "isCorrect": true},
+  {"text": "채점기준1: 핵심 어휘 정확 사용 (2점)", "isCorrect": false},
+  {"text": "채점기준2: 문법적 정확성 (1점)", "isCorrect": false},
+  {"text": "채점기준3: 문맥 적합성 (1점)", "isCorrect": false},
+  {"text": "채점기준4: 철자/대소문자 정확 (1점)", "isCorrect": false}
+]
+- points: 5`,
+
+  "naesin_writing_grammar": `${NAESIN_COMMON}
+
+이 문제는 내신 "서술형(문법)" 유형입니다.
+
+출제 지침:
+- 지문 속 문법적으로 틀린 부분을 찾아 올바르게 고쳐 쓰는 서술형 문제
+- 발문 예시: "다음 글에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오." 또는 "밑줄 친 (A)~(C)를 어법에 맞게 고쳐 쓰시오."
+- 지문에 의도적으로 문법 오류 2~3개를 삽입 (밑줄 표시 권장)
+- 주요 문법 포인트: 수일치, 시제, 관계사, 분사, 능동/수동, 병렬구조
+- choices에는 모범답안과 채점 기준을 넣어주세요
+
+choices 형식 (서술형):
+[
+  {"text": "모범답안: (A) 틀린표현→올바른표현 / (B) 틀린표현→올바른표현 / (C) 틀린표현→올바른표현", "isCorrect": true},
+  {"text": "채점기준1: (A) 정확히 수정 (2점)", "isCorrect": false},
+  {"text": "채점기준2: (B) 정확히 수정 (2점)", "isCorrect": false},
+  {"text": "채점기준3: (C) 정확히 수정 (1점)", "isCorrect": false},
+  {"text": "채점기준4: - (감점 없음)", "isCorrect": false}
+]
+- points: 5`,
+
+  "naesin_writing_vocab": `${NAESIN_COMMON}
+
+이 문제는 내신 "서술형(단어)" 유형입니다.
+
+출제 지침:
+- 본문에서 적절한 단어를 찾아 빈칸에 쓰는 서술형 문제
+- 발문 예시: "다음 글을 읽고, 아래 문장의 빈칸에 본문에서 적절한 단어를 찾아 쓰시오." 또는 "주어진 철자로 시작하는 본문 속 단어를 찾아 쓰시오."
+- 빈칸은 2~3개, 본문의 핵심 어휘를 대상으로
+- choices에는 모범답안과 채점 기준을 넣어주세요
+
+choices 형식 (서술형):
+[
+  {"text": "모범답안: (1) 단어1 (2) 단어2 (3) 단어3", "isCorrect": true},
+  {"text": "채점기준1: (1)번 정답 (2점)", "isCorrect": false},
+  {"text": "채점기준2: (2)번 정답 (2점)", "isCorrect": false},
+  {"text": "채점기준3: (3)번 정답 (1점)", "isCorrect": false},
+  {"text": "채점기준4: 철자 오류 시 각 -0.5점", "isCorrect": false}
+]
+- points: 5`,
+
+  "naesin_writing_composition": `${NAESIN_COMMON}
+
+이 문제는 내신 "서술형(영작)" 유형입니다.
+
+출제 지침:
+- 주어진 조건에 맞게 영어 문장을 작성하는 서술형 문제
+- 발문 예시: "다음 <조건>에 맞게 영어로 문장을 완성하시오." 또는 "주어진 단어를 활용하여 영작하시오."
+- 조건: 사용할 어휘, 문법 구조, 문장 길이 등을 명시
+- choices에는 모범답안과 채점 기준을 넣어주세요
+
+choices 형식 (서술형):
+[
+  {"text": "모범답안: (완성된 영어 문장)", "isCorrect": true},
+  {"text": "채점기준1: 지정 어휘 사용 (2점)", "isCorrect": false},
+  {"text": "채점기준2: 지정 문법 구조 사용 (1점)", "isCorrect": false},
+  {"text": "채점기준3: 문장 완성도/자연스러움 (1점)", "isCorrect": false},
+  {"text": "채점기준4: 철자/대소문자/구두점 정확 (1점)", "isCorrect": false}
+]
+- points: 5`,
+
   "naesin_example": `${NAESIN_COMMON}
 
 이 문제는 내신 "적절한 사례" 유형입니다.

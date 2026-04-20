@@ -48,8 +48,13 @@ export const NAESIN_TYPES: QuestionTypeInfo[] = [
   { code: "naesin_topic", number: 8, name: "주제/요지/제목", nameEn: "Topic/Gist/Title", category: "독해", defaultPoints: 2 },
   { code: "naesin_content", number: 9, name: "내용 일치/불일치", nameEn: "Content Match", category: "독해", defaultPoints: 2 },
   { code: "naesin_refer", number: 10, name: "지칭 추론", nameEn: "Reference", category: "독해", defaultPoints: 2 },
-  { code: "naesin_writing", number: 11, name: "서술형", nameEn: "Written Response", category: "서술형", defaultPoints: 5 },
-  { code: "naesin_example", number: 12, name: "적절한 사례", nameEn: "Appropriate Example", category: "독해", defaultPoints: 3 },
+  { code: "naesin_summary", number: 11, name: "요약문 완성", nameEn: "Summary Completion", category: "독해", defaultPoints: 3 },
+  { code: "naesin_writing", number: 12, name: "서술형", nameEn: "Written Response", category: "서술형", defaultPoints: 5 },
+  { code: "naesin_writing_summary", number: 13, name: "서술형(요약)", nameEn: "Written (Summary)", category: "서술형", defaultPoints: 5 },
+  { code: "naesin_writing_grammar", number: 14, name: "서술형(문법)", nameEn: "Written (Grammar)", category: "서술형", defaultPoints: 5 },
+  { code: "naesin_writing_vocab", number: 15, name: "서술형(단어)", nameEn: "Written (Vocab)", category: "서술형", defaultPoints: 5 },
+  { code: "naesin_writing_composition", number: 16, name: "서술형(영작)", nameEn: "Written (Composition)", category: "서술형", defaultPoints: 5 },
+  { code: "naesin_example", number: 17, name: "적절한 사례", nameEn: "Appropriate Example", category: "독해", defaultPoints: 3 },
 ];
 
 // TOEIC 문제 유형
