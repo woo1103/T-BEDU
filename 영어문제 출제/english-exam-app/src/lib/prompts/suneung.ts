@@ -171,13 +171,32 @@ export const SUNEUNG_PROMPTS: Record<string, string> = {
 이 문제는 수능 30번 "어휘" 유형입니다.
 
 출제 지침:
-- 문맥에서 적절하지 않은 어휘를 찾는 문제
-- 지문에 5개 밑줄 표시, 그 중 문맥상 부적절한 것 1개
+- 문맥에서 적절하지 않은 어휘 1개를 찾는 문제
+- 지문 속 핵심 어휘 5개에 ①~⑤ 번호 + 밑줄을 표시하고, 그중 1개만 문맥상 부적절하게 구성
 - 발문: "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?"
-- 선지의 text는 밑줄 친 어휘
+
+passage 작성 규칙 (매우 중요):
+- passage 본문 속에 어휘 5개를 선정하여, 각 어휘를 \`①<u>word</u>\`, \`②<u>word</u>\`, \`③<u>word</u>\`, \`④<u>word</u>\`, \`⑤<u>word</u>\` 형태로 **지문 안에 직접 표시**
+- 번호는 반드시 지문 등장 순서대로 ①→⑤
+- 5개 중 1개만 부적절, 나머지 4개는 문맥상 적절해야 함
+
+choices 작성 규칙:
+- 선지 text는 **번호만** 담는다: "①", "②", "③", "④", "⑤"
+- 밑줄 친 단어나 문장 반복 금지 (지문에서 이미 밑줄로 표시됨)
+
+choices 예시:
+[
+  {"text": "①", "isCorrect": false},
+  {"text": "②", "isCorrect": false},
+  {"text": "③", "isCorrect": true},
+  {"text": "④", "isCorrect": false},
+  {"text": "⑤", "isCorrect": false}
+]
 
 오답 유도 전략:
-- 반의어로 바꿔야 하는 위치에 원래 단어를 두어 혼동`,
+- 부적절한 1개 어휘는 반의어 또는 의미 방향이 반대인 단어로 교체
+- 또는 형태·철자가 유사한 혼동어로 교체 (adopt↔adapt, affect↔effect, conceive↔perceive 등)
+- explanation에 정답 번호의 원래 적절한 단어와 왜 부적절한지 근거 명시`,
 
   "31_blank_vocab": `${COMMON_SYSTEM}
 

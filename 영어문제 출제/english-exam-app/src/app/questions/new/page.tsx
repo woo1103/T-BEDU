@@ -27,11 +27,16 @@ interface GeneratedQuestion {
   passage: string;
   question: string;
   choices: Choice[];
+  answer: string;
   explanation: string;
   points: number;
   questionType: string;
   questionTypeName: string;
   passageId?: string;
+}
+
+function isWritingType(questionType: string): boolean {
+  return questionType.startsWith("naesin_writing");
 }
 
 interface TypeSelection {
@@ -170,6 +175,7 @@ export default function NewQuestionPage() {
                   isCorrect: c.isCorrect,
                 })
               ),
+              answer: data.answer || "",
               explanation: data.explanation || "",
               points: data.points || 2,
               questionType: typeSelection.code,
@@ -318,6 +324,7 @@ export default function NewQuestionPage() {
     }
 
     return questions.map((q, idx) => {
+      if (isWritingType(q.questionType) || q.choices.length === 0) return q;
       const targetCorrectIdx = answerSlots[idx];
       const correctIdx = q.choices.findIndex((c) => c.isCorrect);
       if (correctIdx === -1 || correctIdx === targetCorrectIdx) return q;
@@ -408,6 +415,7 @@ export default function NewQuestionPage() {
                   isCorrect: c.isCorrect,
                 })
               ),
+              answer: data.answer || "",
               explanation: data.explanation || "",
               points: data.points || 2,
               questionType: typeSelection.code,
@@ -435,7 +443,11 @@ export default function NewQuestionPage() {
 
   // 개별 문제 저장 → 저장된 Question.id 반환
   async function saveQuestion(q: GeneratedQuestion): Promise<string | null> {
+    const writing = isWritingType(q.questionType);
     const correctIndex = q.choices.findIndex((c) => c.isCorrect);
+    const answer = writing
+      ? q.answer
+      : q.choices[correctIndex]?.label || "";
     const res = await fetch("/api/questions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -445,8 +457,8 @@ export default function NewQuestionPage() {
         points: q.points,
         passage: q.passage,
         question: q.question,
-        choices: q.choices,
-        answer: q.choices[correctIndex]?.label || "",
+        choices: writing ? [] : q.choices,
+        answer,
         explanation: q.explanation,
         difficulty,
         aiGenerated: true,
@@ -1103,41 +1115,66 @@ export default function NewQuestionPage() {
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm text-gray-600 mb-2">
-                      선지
-                    </label>
-                    <div className="space-y-2">
-                      {currentQ.choices.map((choice, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <button
-                            onClick={() =>
-                              setGeneratedCorrect(currentPreview, i)
-                            }
-                            className={`w-8 h-8 rounded-full text-sm font-bold flex items-center justify-center transition-colors ${
-                              choice.isCorrect
-                                ? "bg-green-500 text-white"
-                                : "bg-gray-200 text-gray-500 hover:bg-gray-300"
-                            }`}
-                          >
-                            {choice.label}
-                          </button>
-                          <input
-                            type="text"
-                            value={choice.text}
-                            onChange={(e) =>
-                              updateGeneratedChoice(
-                                currentPreview,
-                                i,
-                                e.target.value
-                              )
-                            }
-                            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                          />
-                        </div>
-                      ))}
+                  {isWritingType(currentQ.questionType) ||
+                  currentQ.choices.length === 0 ? (
+                    <div>
+                      <label className="block text-sm text-gray-600 mb-1">
+                        모범답안
+                      </label>
+                      <textarea
+                        value={currentQ.answer}
+                        onChange={(e) =>
+                          updateGenerated(
+                            currentPreview,
+                            "answer",
+                            e.target.value
+                          )
+                        }
+                        rows={3}
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                        placeholder="서술형 모범답안 (영어)"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">
+                        서술형 유형: 선지 없음. 해설에 채점기준을 포함하세요.
+                      </p>
                     </div>
-                  </div>
+                  ) : (
+                    <div>
+                      <label className="block text-sm text-gray-600 mb-2">
+                        선지
+                      </label>
+                      <div className="space-y-2">
+                        {currentQ.choices.map((choice, i) => (
+                          <div key={i} className="flex items-center gap-2">
+                            <button
+                              onClick={() =>
+                                setGeneratedCorrect(currentPreview, i)
+                              }
+                              className={`w-8 h-8 rounded-full text-sm font-bold flex items-center justify-center transition-colors ${
+                                choice.isCorrect
+                                  ? "bg-green-500 text-white"
+                                  : "bg-gray-200 text-gray-500 hover:bg-gray-300"
+                              }`}
+                            >
+                              {choice.label}
+                            </button>
+                            <input
+                              type="text"
+                              value={choice.text}
+                              onChange={(e) =>
+                                updateGeneratedChoice(
+                                  currentPreview,
+                                  i,
+                                  e.target.value
+                                )
+                              }
+                              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   <div>
                     <label className="block text-sm text-gray-600 mb-1">
