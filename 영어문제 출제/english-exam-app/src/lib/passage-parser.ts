@@ -75,23 +75,56 @@ export function parsePassage(
 ): ParsedPassage {
   if (!passage) return { type: "default", text: "" };
 
+  // <u>...</u> → __...__ 로 정규화 (기존 AI 생성 데이터 호환)
+  const normalized = normalizeUnderlineTags(passage);
+
   if (ORDER_TYPES.includes(questionType)) {
-    return parseOrder(passage);
+    return parseOrder(normalized);
   }
   if (INSERTION_TYPES.includes(questionType)) {
-    return parseInsertion(passage);
+    return parseInsertion(normalized);
   }
   if (GRAMMAR_VOCAB_TYPES.includes(questionType)) {
-    return parseGrammar(passage);
+    return parseGrammar(normalized);
   }
   if (SUMMARY_TYPES.includes(questionType)) {
-    return parseSummary(passage);
+    return parseSummary(normalized);
   }
   if (WRITING_TYPES.includes(questionType)) {
-    return { type: "writing", passage };
+    return { type: "writing", passage: normalized };
   }
 
-  return { type: "default", text: passage };
+  return { type: "default", text: normalized };
+}
+
+// <u>text</u> 또는 <U>text</U> 를 __text__ 로 변환
+export function normalizeUnderlineTags(passage: string): string {
+  return passage.replace(/<\/?u>/gi, "__").replace(/____/g, "");
+}
+
+// __text__ 마커를 분할하여 underline 여부와 함께 반환
+export interface InlineSegment {
+  text: string;
+  underline: boolean;
+}
+
+export function splitInlineUnderline(text: string): InlineSegment[] {
+  if (!text) return [];
+  const result: InlineSegment[] = [];
+  const regex = /__([\s\S]+?)__/g;
+  let lastIdx = 0;
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIdx) {
+      result.push({ text: text.substring(lastIdx, match.index), underline: false });
+    }
+    result.push({ text: match[1], underline: true });
+    lastIdx = match.index + match[0].length;
+  }
+  if (lastIdx < text.length) {
+    result.push({ text: text.substring(lastIdx), underline: false });
+  }
+  return result.length === 0 ? [{ text, underline: false }] : result;
 }
 
 function parseOrder(passage: string): OrderParsed | DefaultParsed {

@@ -4,6 +4,7 @@ import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { EXAM_TYPE_MAP, getQuestionTypes, DIFFICULTY_MAP } from "@/lib/question-types";
 import type { Choice, ExamType, Difficulty } from "@/types";
+import { PassageText } from "@/components/PassageText";
 
 const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
 
@@ -196,7 +197,7 @@ export default function QuestionDetailPage({
           />
         ) : (
           <p className="text-sm leading-relaxed whitespace-pre-wrap font-mono text-gray-800">
-            {passage}
+            <PassageText text={passage} />
           </p>
         )}
       </div>

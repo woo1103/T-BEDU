@@ -14,6 +14,8 @@ import {
 import {
   parsePassage,
   isWritingType,
+  normalizeUnderlineTags,
+  splitInlineUnderline,
   type OrderParsed,
   type InsertionParsed,
   type GrammarParsed,
@@ -53,6 +55,31 @@ interface ExamQuestion {
   answer: string;
   points: number;
   questionType: string;
+}
+
+// __...__ 와 <u>...</u> 를 실제 밑줄 Text로 렌더링
+function PassageInline({
+  text,
+  style,
+}: {
+  text: string;
+  style?: ReturnType<typeof StyleSheet.create>[string];
+}) {
+  const normalized = normalizeUnderlineTags(text);
+  const segments = splitInlineUnderline(normalized);
+  return (
+    <Text style={style}>
+      {segments.map((seg, i) =>
+        seg.underline ? (
+          <Text key={i} style={{ textDecoration: "underline" }}>
+            {seg.text}
+          </Text>
+        ) : (
+          seg.text
+        )
+      )}
+    </Text>
+  );
 }
 
 interface ExamItemData {
@@ -794,7 +821,7 @@ function WritingQuestionPDF({
       {/* 지문 */}
       {item.question.passage && (
         <View style={styles.passageBox}>
-          <Text style={styles.passageText}>{item.question.passage}</Text>
+          <PassageInline text={item.question.passage} style={styles.passageText} />
         </View>
       )}
       {/* 답안 작성란 (학생용) */}
@@ -834,7 +861,7 @@ function DefaultQuestionPDF({
       <QuestionHeaderRow item={item} />
       {item.question.passage && (
         <View style={styles.passageBox}>
-          <Text style={styles.passageText}>{item.question.passage}</Text>
+          <PassageInline text={item.question.passage} style={styles.passageText} />
         </View>
       )}
       <ChoicesBlock item={item} showAnswers={showAnswers} />
@@ -954,9 +981,10 @@ function QuestionHead({ item }: { item: ExamItemData }) {
 
       {(parsed.type === "default" || parsed.type === "writing") && item.question.passage && (
         <View style={styles.passageBox}>
-          <Text style={styles.passageText}>
-            {parsed.type === "default" ? parsed.text : item.question.passage}
-          </Text>
+          <PassageInline
+            text={parsed.type === "default" ? parsed.text : item.question.passage}
+            style={styles.passageText}
+          />
         </View>
       )}
     </View>

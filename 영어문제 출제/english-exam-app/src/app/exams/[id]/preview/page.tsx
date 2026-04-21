@@ -13,6 +13,7 @@ import {
   type GrammarParsed,
   type SummaryParsed,
 } from "@/lib/passage-parser";
+import { PassageText } from "@/components/PassageText";
 
 const PDFDownloadButton = dynamic(
   () => import("@/components/pdf/PDFDownloadButton"),
@@ -299,7 +300,7 @@ function WritingRenderer({
       {passage && (
         <div className="border border-gray-300 rounded-lg p-4 mb-3 bg-gray-50 print:bg-white">
           <p className="text-sm leading-relaxed whitespace-pre-wrap font-mono">
-            {passage}
+            <PassageText text={passage} />
           </p>
         </div>
       )}
@@ -348,7 +349,7 @@ function DefaultRenderer({
       {passage && (
         <div className="border border-gray-300 rounded-lg p-4 mb-3 bg-gray-50 print:bg-white">
           <p className="text-sm leading-relaxed whitespace-pre-wrap font-mono">
-            {passage}
+            <PassageText text={passage} />
           </p>
         </div>
       )}
