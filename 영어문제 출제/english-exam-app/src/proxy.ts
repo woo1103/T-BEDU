@@ -42,6 +42,6 @@ function unauthorized(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/|icon|manifest|favicon|sw\\.js|.*\\.(?:png|jpg|jpeg|svg|ico|webmanifest)).*)",
+    "/((?!_next/|fonts/|icon|manifest|favicon|sw\\.js|.*\\.(?:png|jpg|jpeg|svg|ico|webmanifest|ttf|otf|woff|woff2)).*)",
   ],
 };
