@@ -5,6 +5,17 @@ import Link from "next/link";
 import { EXAM_TYPE_MAP, DIFFICULTY_MAP, getQuestionTypeInfo } from "@/lib/question-types";
 import type { ExamType, Difficulty } from "@/types";
 
+interface ExamUsage {
+  id: string;
+  examId: string;
+  exam: {
+    id: string;
+    title: string;
+    headerInfo: string | null;
+    createdAt: string;
+  };
+}
+
 interface QuestionRow {
   id: string;
   examType: string;
@@ -14,6 +25,7 @@ interface QuestionRow {
   points: number;
   aiGenerated: boolean;
   createdAt: string;
+  examItems?: ExamUsage[];
 }
 
 export default function QuestionsPage() {
@@ -22,6 +34,7 @@ export default function QuestionsPage() {
   const [filterExamType, setFilterExamType] = useState("");
   const [filterDifficulty, setFilterDifficulty] = useState("");
   const [search, setSearch] = useState("");
+  const [historyOf, setHistoryOf] = useState<QuestionRow | null>(null);
 
   useEffect(() => {
     fetchQuestions();
@@ -136,6 +149,7 @@ export default function QuestionsPage() {
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">난이도</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">배점</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">출처</th>
+                <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">출제 이력</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">날짜</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium"></th>
               </tr>
@@ -177,6 +191,18 @@ export default function QuestionsPage() {
                         {q.aiGenerated ? "AI" : "수동"}
                       </span>
                     </td>
+                    <td className="px-4 py-3">
+                      {q.examItems && q.examItems.length > 0 ? (
+                        <button
+                          onClick={() => setHistoryOf(q)}
+                          className="text-xs bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-2 py-1 rounded"
+                        >
+                          {q.examItems.length}회 출제
+                        </button>
+                      ) : (
+                        <span className="text-xs text-gray-300">-</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3 text-xs text-gray-400">
                       {new Date(q.createdAt).toLocaleDateString("ko-KR")}
                     </td>
@@ -195,6 +221,77 @@ export default function QuestionsPage() {
           </table>
         )}
       </div>
+
+      {historyOf && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+          onClick={() => setHistoryOf(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl max-w-xl w-full max-h-[80vh] overflow-y-auto p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-gray-800">출제 이력</h3>
+              <button
+                onClick={() => setHistoryOf(null)}
+                className="text-gray-400 hover:text-gray-600 text-xl"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 border-b border-gray-100 pb-3">
+              {historyOf.question.slice(0, 80)}
+              {historyOf.question.length > 80 ? "..." : ""}
+            </p>
+            <ul className="space-y-2">
+              {(historyOf.examItems || [])
+                .slice()
+                .sort(
+                  (a, b) =>
+                    new Date(b.exam.createdAt).getTime() -
+                    new Date(a.exam.createdAt).getTime()
+                )
+                .map((item) => {
+                  let school = "";
+                  let grade = "";
+                  try {
+                    if (item.exam.headerInfo) {
+                      const h = JSON.parse(item.exam.headerInfo);
+                      school = h.school || "";
+                      grade = h.grade || "";
+                    }
+                  } catch {}
+                  return (
+                    <li
+                      key={item.id}
+                      className="p-3 rounded-lg border border-gray-200"
+                    >
+                      <Link
+                        href={`/exams/${item.examId}/preview`}
+                        className="text-sm font-medium text-blue-600 hover:underline"
+                      >
+                        {item.exam.title}
+                      </Link>
+                      <div className="text-xs text-gray-500 mt-1 flex gap-3 flex-wrap">
+                        <span>
+                          {new Date(item.exam.createdAt).toLocaleDateString(
+                            "ko-KR"
+                          )}
+                        </span>
+                        {(school || grade) && (
+                          <span>
+                            {[school, grade].filter(Boolean).join(" · ")}
+                          </span>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

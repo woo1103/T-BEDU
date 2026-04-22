@@ -58,6 +58,17 @@ export default function NewExamPage() {
 
   // 트리 펼침 상태 (학년 / 교과서 / 과 / 지문 / 유형)
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  // 일괄선택용 체크된 문제 id
+  const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
+
+  function toggleCheck(id: string) {
+    setCheckedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   function toggle(key: string) {
     setExpanded((prev) => {
@@ -121,6 +132,39 @@ export default function NewExamPage() {
         orderNum: prev.length + 1,
       },
     ]);
+  }
+
+  function addQuestions(qs: QuestionRow[]) {
+    setSelectedItems((prev) => {
+      const existing = new Set(prev.map((i) => i.questionId));
+      const toAdd = qs.filter((q) => !existing.has(q.id));
+      const merged = [
+        ...prev,
+        ...toAdd.map((q) => ({
+          questionId: q.id,
+          question: q,
+          orderNum: 0,
+        })),
+      ];
+      return merged.map((item, i) => ({ ...item, orderNum: i + 1 }));
+    });
+  }
+
+  function addCheckedQuestions() {
+    const qs = availableQuestions.filter((q) => checkedIds.has(q.id));
+    addQuestions(qs);
+    setCheckedIds(new Set());
+  }
+
+  // 트리 노드 하위의 모든 문제를 재귀적으로 수집
+  function collectQuestions(node: unknown): QuestionRow[] {
+    if (Array.isArray(node)) return node as QuestionRow[];
+    if (node instanceof Map) {
+      const out: QuestionRow[] = [];
+      for (const v of node.values()) out.push(...collectQuestions(v));
+      return out;
+    }
+    return [];
   }
 
   function removeQuestion(questionId: string) {
@@ -258,9 +302,30 @@ export default function NewExamPage() {
       <div className="grid grid-cols-2 gap-6">
         {/* 문제 은행 (왼쪽) */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h3 className="font-semibold text-gray-800 mb-4">
-            문제 은행 ({availableQuestions.length}개)
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold text-gray-800">
+              문제 은행 ({availableQuestions.length}개)
+            </h3>
+            {checkedIds.size > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-500">
+                  {checkedIds.size}개 선택됨
+                </span>
+                <button
+                  onClick={() => setCheckedIds(new Set())}
+                  className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1"
+                >
+                  해제
+                </button>
+                <button
+                  onClick={addCheckedQuestions}
+                  className="text-xs bg-blue-600 text-white hover:bg-blue-700 font-medium px-3 py-1.5 rounded"
+                >
+                  + 선택한 문제 추가
+                </button>
+              </div>
+            )}
+          </div>
           {loadingQuestions ? (
             <p className="text-sm text-gray-400">불러오는 중...</p>
           ) : availableQuestions.length === 0 ? (
@@ -281,6 +346,7 @@ export default function NewExamPage() {
 
             const renderQuestion = (q: QuestionRow) => {
               const isSelected = selectedItems.some((item) => item.questionId === q.id);
+              const isChecked = checkedIds.has(q.id);
               const diffLabel = { easy: "하", medium: "중", hard: "상" }[q.difficulty] || q.difficulty;
               return (
                 <li
@@ -289,32 +355,43 @@ export default function NewExamPage() {
                     isSelected ? "border-blue-300 bg-blue-50 opacity-60" : "border-gray-200 hover:border-blue-300"
                   }`}
                 >
-                  <div className="flex gap-1.5 flex-wrap mb-1">
-                    <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
-                      {diffLabel} · {q.points}점
-                    </span>
-                    {q.aiGenerated && (
-                      <span className="text-xs text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded">AI</span>
-                    )}
-                  </div>
-                  <p className="text-gray-700 truncate">{q.question}</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <button
-                      onClick={() => setDetailQuestion(q)}
-                      className="text-xs text-gray-500 hover:text-blue-600 underline"
-                    >
-                      상세보기
-                    </button>
-                    {!isSelected ? (
-                      <button
-                        onClick={() => addQuestion(q)}
-                        className="text-xs text-blue-600 hover:text-blue-800 font-medium ml-auto"
-                      >
-                        + 추가
-                      </button>
-                    ) : (
-                      <span className="text-xs text-gray-400 ml-auto">추가됨</span>
-                    )}
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      disabled={isSelected}
+                      onChange={() => toggleCheck(q.id)}
+                      className="mt-1"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex gap-1.5 flex-wrap mb-1">
+                        <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                          {diffLabel} · {q.points}점
+                        </span>
+                        {q.aiGenerated && (
+                          <span className="text-xs text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded">AI</span>
+                        )}
+                      </div>
+                      <p className="text-gray-700 truncate">{q.question}</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <button
+                          onClick={() => setDetailQuestion(q)}
+                          className="text-xs text-gray-500 hover:text-blue-600 underline"
+                        >
+                          상세보기
+                        </button>
+                        {!isSelected ? (
+                          <button
+                            onClick={() => addQuestion(q)}
+                            className="text-xs text-blue-600 hover:text-blue-800 font-medium ml-auto"
+                          >
+                            + 추가
+                          </button>
+                        ) : (
+                          <span className="text-xs text-gray-400 ml-auto">추가됨</span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </li>
               );
@@ -325,6 +402,7 @@ export default function NewExamPage() {
               label: string,
               count: number,
               depth: number,
+              nodeQuestions: QuestionRow[],
               children: React.ReactNode
             ) => {
               const colors = [
@@ -335,17 +413,36 @@ export default function NewExamPage() {
                 "text-purple-700 hover:bg-purple-50",
               ];
               const isOpen = expanded.has(key);
+              const addableCount = nodeQuestions.filter(
+                (q) => !selectedItems.some((it) => it.questionId === q.id)
+              ).length;
               return (
                 <div key={key} className={depth > 0 ? "border-t border-gray-50" : "border-b border-gray-100 last:border-b-0"}>
-                  <button
-                    onClick={() => toggle(key)}
-                    className={`w-full flex items-center gap-2 px-3 py-1.5 text-left text-sm ${colors[depth] || colors[4]}`}
-                    style={{ paddingLeft: `${12 + depth * 16}px` }}
+                  <div
+                    className={`w-full flex items-center gap-2 pr-2 text-sm ${colors[depth] || colors[4]}`}
                   >
-                    <span className="text-gray-400 text-xs w-4">{isOpen ? "▼" : "▶"}</span>
-                    <span>{label}</span>
-                    <span className="text-xs text-gray-400 ml-auto">{count}문제</span>
-                  </button>
+                    <button
+                      onClick={() => toggle(key)}
+                      className="flex-1 flex items-center gap-2 px-3 py-1.5 text-left"
+                      style={{ paddingLeft: `${12 + depth * 16}px` }}
+                    >
+                      <span className="text-gray-400 text-xs w-4">{isOpen ? "▼" : "▶"}</span>
+                      <span>{label}</span>
+                      <span className="text-xs text-gray-400 ml-auto">{count}문제</span>
+                    </button>
+                    {addableCount > 0 && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          addQuestions(nodeQuestions);
+                        }}
+                        className="text-xs text-blue-600 hover:text-blue-800 whitespace-nowrap px-2 py-0.5 rounded hover:bg-blue-50"
+                        title="이 그룹의 모든 문제를 시험지에 추가"
+                      >
+                        + 전체 {addableCount}
+                      </button>
+                    )}
+                  </div>
                   {isOpen && children}
                 </div>
               );
@@ -354,15 +451,15 @@ export default function NewExamPage() {
             return (
               <div className="max-h-[500px] overflow-y-auto border border-gray-100 rounded-lg">
                 {Array.from(tree.entries()).map(([gradeKey, l2]) =>
-                  treeRow(`g::${gradeKey}`, gradeKey, countTree(l2), 0,
+                  treeRow(`g::${gradeKey}`, gradeKey, countTree(l2), 0, collectQuestions(l2),
                     <>{Array.from(l2.entries()).map(([textbook, l3]) =>
-                      treeRow(`t::${gradeKey}::${textbook}`, textbook, countTree(l3), 1,
+                      treeRow(`t::${gradeKey}::${textbook}`, textbook, countTree(l3), 1, collectQuestions(l3),
                         <>{Array.from(l3.entries()).map(([lesson, l4]) =>
-                          treeRow(`l::${gradeKey}::${textbook}::${lesson}`, lesson, countTree(l4), 2,
+                          treeRow(`l::${gradeKey}::${textbook}::${lesson}`, lesson, countTree(l4), 2, collectQuestions(l4),
                             <>{Array.from(l4.entries()).map(([passage, l5]) =>
-                              treeRow(`p::${gradeKey}::${textbook}::${lesson}::${passage}`, passage, countTree(l5), 3,
+                              treeRow(`p::${gradeKey}::${textbook}::${lesson}::${passage}`, passage, countTree(l5), 3, collectQuestions(l5),
                                 <>{Array.from(l5.entries()).map(([qtype, qs]) =>
-                                  treeRow(`q::${gradeKey}::${textbook}::${lesson}::${passage}::${qtype}`, qtype, qs.length, 4,
+                                  treeRow(`q::${gradeKey}::${textbook}::${lesson}::${passage}::${qtype}`, qtype, qs.length, 4, qs,
                                     <ul className="space-y-1.5 py-2 px-2" style={{ paddingLeft: `${12 + 5 * 16}px` }}>
                                       {qs.map(renderQuestion)}
                                     </ul>
@@ -377,7 +474,7 @@ export default function NewExamPage() {
                   )
                 )}
                 {orphans.length > 0 &&
-                  treeRow("__orphans__", "지문 미연결", orphans.length, 0,
+                  treeRow("__orphans__", "지문 미연결", orphans.length, 0, orphans,
                     <ul className="space-y-1.5 py-2 px-4">{orphans.map(renderQuestion)}</ul>
                   )
                 }

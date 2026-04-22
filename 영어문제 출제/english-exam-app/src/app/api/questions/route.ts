@@ -22,7 +22,21 @@ export async function GET(request: NextRequest) {
   const questions = await prisma.question.findMany({
     where,
     orderBy: { createdAt: "desc" },
-    include: { passageRef: true },
+    include: {
+      passageRef: true,
+      examItems: {
+        include: {
+          exam: {
+            select: {
+              id: true,
+              title: true,
+              headerInfo: true,
+              createdAt: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   return NextResponse.json(questions);
