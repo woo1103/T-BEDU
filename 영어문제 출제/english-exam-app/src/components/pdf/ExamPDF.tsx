@@ -39,7 +39,7 @@ Font.register({
 
 const BRAND_CYAN = "#4FC3F7";
 const BRAND_DARK_CYAN = "#29B6F6";
-const CIRCLE_LABELS = ["1.", "2.", "3.", "4.", "5."];
+const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
 const LONG_ITEM_CHARS = 900;
 
 interface Choice {
@@ -600,14 +600,6 @@ function InsertionQuestionPDF({
   showAnswers: boolean;
 }) {
   const choices = parseChoices(item.question.choices);
-  // 마커를 PDF-safe 숫자로 변환
-  const markerMap: Record<string, string> = {
-    "①": "(1)",
-    "②": "(2)",
-    "③": "(3)",
-    "④": "(4)",
-    "⑤": "(5)",
-  };
 
   return (
     <View wrap={false}>
@@ -623,7 +615,7 @@ function InsertionQuestionPDF({
             part.marker ? (
               <Text key={i} style={{ fontWeight: 700 }}>
                 {" "}
-                {markerMap[part.marker] || part.marker}
+                {part.marker}
                 {" "}
               </Text>
             ) : (
@@ -632,25 +624,21 @@ function InsertionQuestionPDF({
           )}
         </Text>
       </View>
-      {/* 선지 (있으면) */}
-      {choices.length > 0 && (
-        <View style={styles.choicesBlock}>
-          {choices.map((choice, i) => {
-            const isCorrect = showAnswers && choice.isCorrect;
-            const label = CIRCLE_LABELS[i] || `${i + 1}.`;
-            return (
-              <View key={i} style={styles.choiceRow}>
-                <Text style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
-                  {label}
-                </Text>
-                <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
-                  {choice.text}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-      )}
+      {/* 선지: 문장삽입은 항상 ①~⑤ 순서 고정 (한 줄 배치) */}
+      <View style={[styles.choicesBlock, { flexDirection: "row", justifyContent: "space-around", paddingTop: 4 }]}>
+        {CIRCLE_LABELS.map((label, i) => {
+          const choice = choices[i];
+          const isCorrect = showAnswers && choice?.isCorrect;
+          return (
+            <Text
+              key={i}
+              style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}
+            >
+              {label}
+            </Text>
+          );
+        })}
+      </View>
     </View>
   );
 }
@@ -666,14 +654,6 @@ function GrammarVocabQuestionPDF({
   showAnswers: boolean;
 }) {
   const choices = parseChoices(item.question.choices);
-  // 마커를 PDF-safe 숫자로 변환
-  const markerMap: Record<string, string> = {
-    "①": "(1)",
-    "②": "(2)",
-    "③": "(3)",
-    "④": "(4)",
-    "⑤": "(5)",
-  };
 
   return (
     <View wrap={false}>
@@ -684,9 +664,7 @@ function GrammarVocabQuestionPDF({
           {parsed.parts.map((part, i) =>
             part.underlined ? (
               <Text key={i}>
-                <Text style={styles.markerText}>
-                  {markerMap[part.marker || ""] || part.marker || ""}
-                </Text>
+                <Text style={styles.markerText}>{part.marker || ""}</Text>
                 <Text style={styles.underlinedText}>{part.underlined}</Text>
               </Text>
             ) : (
@@ -806,15 +784,12 @@ function SummaryQuestionPDF({
 // ── 서술형 PDF ──
 function WritingQuestionPDF({
   item,
-  showAnswers,
   mode,
 }: {
   item: ExamItemData;
   showAnswers: boolean;
   mode: "student" | "teacher";
 }) {
-  const choices = parseChoices(item.question.choices);
-
   return (
     <View wrap={false}>
       <QuestionHeaderRow item={item} />
@@ -824,24 +799,10 @@ function WritingQuestionPDF({
           <PassageInline text={item.question.passage} style={styles.passageText} />
         </View>
       )}
-      {/* 답안 작성란 (학생용) */}
+      {/* 답안 작성란 (학생용) — 서술형에는 선지 없음 */}
       {mode === "student" && (
         <View style={styles.writingAnswerArea}>
           <Text style={styles.writingAnswerLabel}>답안 작성란</Text>
-        </View>
-      )}
-      {/* 해설지: 채점기준/모범답안 */}
-      {mode === "teacher" && showAnswers && choices.length > 0 && (
-        <View style={styles.gradingBox}>
-          <Text style={styles.gradingTitle}>[채점 기준 / 모범답안]</Text>
-          {choices.map((choice, i) => (
-            <Text
-              key={i}
-              style={choice.isCorrect ? styles.gradingTextCorrect : styles.gradingText}
-            >
-              {choice.text}
-            </Text>
-          ))}
         </View>
       )}
     </View>
@@ -931,13 +892,7 @@ function QuestionHead({ item }: { item: ExamItemData }) {
               {parsed.bodyParts.map((part, i) =>
                 part.marker ? (
                   <Text key={i} style={{ fontWeight: 700 }}>
-                    {" "}({CIRCLE_LABELS.indexOf(
-                      ["①", "②", "③", "④", "⑤"].indexOf(part.marker) >= 0
-                        ? CIRCLE_LABELS[["①", "②", "③", "④", "⑤"].indexOf(part.marker)]
-                        : ""
-                    ) >= 0
-                      ? CIRCLE_LABELS[["①", "②", "③", "④", "⑤"].indexOf(part.marker)]
-                      : part.marker}){" "}
+                    {" "}{part.marker}{" "}
                   </Text>
                 ) : (
                   <Text key={i}>{part.text}</Text>
@@ -954,9 +909,7 @@ function QuestionHead({ item }: { item: ExamItemData }) {
             {parsed.parts.map((part, i) =>
               part.underlined ? (
                 <Text key={i}>
-                  <Text style={styles.markerText}>
-                    {({ "①": "(1)", "②": "(2)", "③": "(3)", "④": "(4)", "⑤": "(5)" } as Record<string, string>)[part.marker || ""] || part.marker || ""}
-                  </Text>
+                  <Text style={styles.markerText}>{part.marker || ""}</Text>
                   <Text style={styles.underlinedText}>{part.underlined}</Text>
                 </Text>
               ) : (
@@ -1001,7 +954,9 @@ function layoutPages(items: ExamItemData[]): PageLayout[] {
   let i = 0;
   while (i < items.length) {
     const a = items[i];
-    if (itemCharLength(a) > LONG_ITEM_CHARS) {
+    // 서술형은 선지가 없으므로 split 레이아웃을 쓰지 않음
+    const aIsWriting = isWritingType(a.question.questionType);
+    if (!aIsWriting && itemCharLength(a) > LONG_ITEM_CHARS) {
       pages.push({ mode: "split", item: a });
       i += 1;
       continue;
