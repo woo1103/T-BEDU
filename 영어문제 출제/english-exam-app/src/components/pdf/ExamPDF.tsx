@@ -22,16 +22,17 @@ import {
   type SummaryParsed,
 } from "@/lib/passage-parser";
 
-// 한글 폰트 등록 (Google Fonts CDN)
+// 한글 폰트 등록 — 로컬 Noto Sans KR 전체 TTF (한글·라틴·CJK 원문자 등 전 글리프 포함)
+// 이전 버전은 fontsource의 korean 서브셋만 로드되어 "1." 이나 "①" 같은 글자가 깨졌음.
 Font.register({
   family: "NotoSansKR",
   fonts: [
     {
-      src: "https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-kr@latest/korean-400-normal.ttf",
+      src: "/fonts/NotoSansKR-Regular.ttf",
       fontWeight: 400,
     },
     {
-      src: "https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-kr@latest/korean-700-normal.ttf",
+      src: "/fonts/NotoSansKR-Bold.ttf",
       fontWeight: 700,
     },
   ],
