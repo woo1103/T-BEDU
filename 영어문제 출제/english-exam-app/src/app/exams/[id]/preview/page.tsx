@@ -7,6 +7,7 @@ import type { Choice } from "@/types";
 import {
   parsePassage,
   isWritingType,
+  normalizeMarkerChoices,
   type ParsedPassage,
   type OrderParsed,
   type InsertionParsed,
@@ -387,6 +388,9 @@ function QuestionRenderer({
   } catch {
     /* empty */
   }
+  // 선지가 ①~⑤ 마커로만 구성된 경우(문장삽입·밑줄 유형 등) ①→⑤ 순서로 정렬
+  // + "문장 끝" 꾸밈말 제거. 영어/한글 선지는 그대로 통과.
+  choices = normalizeMarkerChoices(choices);
 
   const parsed: ParsedPassage = parsePassage(
     item.question.passage,

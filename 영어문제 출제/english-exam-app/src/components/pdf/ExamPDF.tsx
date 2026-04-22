@@ -16,6 +16,7 @@ import {
   isWritingType,
   normalizeUnderlineTags,
   splitInlineUnderline,
+  normalizeMarkerChoices,
   type OrderParsed,
   type InsertionParsed,
   type GrammarParsed,
@@ -485,7 +486,10 @@ function CoverPage() {
 
 function parseChoices(choicesJson: string): Choice[] {
   try {
-    return JSON.parse(choicesJson) as Choice[];
+    const raw = JSON.parse(choicesJson) as Choice[];
+    // 선지가 ①~⑤ 마커로만 구성된 경우 ①→⑤ 순서로 정렬 + "문장 끝" 제거
+    // 영어/한글 선지는 그대로 통과.
+    return normalizeMarkerChoices(raw);
   } catch {
     return [];
   }

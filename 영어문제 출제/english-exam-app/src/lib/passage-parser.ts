@@ -69,6 +69,38 @@ const WRITING_TYPES = [
 
 const CIRCLE_MARKERS = ["①", "②", "③", "④", "⑤"];
 
+export interface MarkerChoice {
+  label: string;
+  text: string;
+  isCorrect: boolean;
+}
+
+// 선지가 ①~⑤ 마커만으로 구성됐는지 판별
+// "문장 끝" 같은 꾸밈말은 무시하고 판정한다.
+export function isMarkerOnlyChoices(choices: MarkerChoice[]): boolean {
+  if (choices.length === 0) return false;
+  return choices.every((c) => {
+    const stripped = c.text.replace(/[()\s]*문장\s*끝[()\s]*/g, "").trim();
+    return CIRCLE_MARKERS.includes(stripped);
+  });
+}
+
+// 마커-only 선지만 ①→⑤ 순서로 정렬하고 "문장 끝" 등의 꾸밈말을 제거한다.
+// 영어/한글이 섞인 선지(요약문·어법 해설·서술형 등)는 건드리지 않는다.
+export function normalizeMarkerChoices<T extends MarkerChoice>(choices: T[]): T[] {
+  if (!isMarkerOnlyChoices(choices)) return choices;
+  return choices
+    .map((c) => ({
+      ...c,
+      text: c.text.replace(/[()\s]*문장\s*끝[()\s]*/g, "").trim(),
+    }))
+    .sort(
+      (a, b) =>
+        CIRCLE_MARKERS.indexOf(a.text) - CIRCLE_MARKERS.indexOf(b.text)
+    )
+    .map((c, i) => ({ ...c, label: CIRCLE_MARKERS[i] }));
+}
+
 export function parsePassage(
   passage: string,
   questionType: string
@@ -202,6 +234,14 @@ function parseInsertion(passage: string): InsertionParsed | DefaultParsed {
 
   // 본문을 ①②③④⑤ 마커로 분리
   const bodyParts = splitByCircleMarkers(body);
+
+  // 문장삽입 본문에는 반드시 ⑤ 마커(마지막 위치)가 있어야 함.
+  // 원본 데이터가 ①~④까지만 있을 경우 맨 끝에 ⑤를 보강한다.
+  const hasFifth = bodyParts.some((p) => p.marker === "⑤");
+  const hasAnyMarker = bodyParts.some((p) => !!p.marker);
+  if (hasAnyMarker && !hasFifth) {
+    bodyParts.push({ text: "", marker: "⑤" });
+  }
 
   return { type: "insertion", givenSentence, bodyParts };
 }
