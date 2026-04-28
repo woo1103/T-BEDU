@@ -2,10 +2,30 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateQuestion } from "@/lib/claude";
 import { getSystemPrompt } from "@/lib/prompts";
 import { getQuestionTypeInfo } from "@/lib/question-types";
+import { prisma } from "@/lib/db";
+
+async function getActiveDirectives(examType: string, questionType: string): Promise<string> {
+  const list = await prisma.promptDirective.findMany({
+    where: {
+      enabled: true,
+      OR: [
+        { scope: "global" },
+        { scope: "examType", scopeKey: examType },
+        { scope: "questionType", scopeKey: questionType },
+      ],
+    },
+    orderBy: { createdAt: "asc" },
+  });
+  if (list.length === 0) return "";
+  return (
+    "\n\n[관리자 지시문 — 반드시 준수]\n" +
+    list.map((d, i) => `${i + 1}. (${d.title}) ${d.body}`).join("\n")
+  );
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const { examType, questionType, difficulty, topic, sourcePassage, passageMode } = await request.json();
+    const { examType, questionType, difficulty, topic, sourcePassage, passageMode, priorQuestions } = await request.json();
 
     if (!examType || !questionType) {
       return NextResponse.json(
@@ -21,13 +41,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const systemPrompt = getSystemPrompt(examType, questionType, difficulty, sourcePassage, passageMode);
-    if (!systemPrompt) {
+    const basePrompt = getSystemPrompt(examType, questionType, difficulty, sourcePassage, passageMode, priorQuestions);
+    if (!basePrompt) {
       return NextResponse.json(
         { error: `이 문제 유형(${questionType})에 대한 프롬프트가 아직 준비되지 않았습니다.` },
         { status: 400 }
       );
     }
+    const directives = await getActiveDirectives(examType, questionType);
+    const systemPrompt = basePrompt + directives;
 
     const typeInfo = getQuestionTypeInfo(examType, questionType);
     const difficultyMap = { easy: "하 (쉬움)", medium: "중 (보통)", hard: "상 (어려움)" };

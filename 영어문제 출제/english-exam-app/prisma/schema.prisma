@@ -97,6 +97,24 @@ model User {
   updatedAt    DateTime @updatedAt
 }
 
+// 관리자가 등록하는 AI 출제 지시문 (system prompt 보강)
+// scope: "global" | "examType" | "questionType"
+//   - global: 모든 출제에 적용
+//   - examType: scopeKey 가 "suneung" / "naesin" 등
+//   - questionType: scopeKey 가 "naesin_vocab" 등 문제 코드
+model PromptDirective {
+  id          String   @id @default(cuid())
+  title       String
+  body        String
+  scope       String
+  scopeKey    String?
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([scope, scopeKey, enabled])
+}
+
 // ─── 교재 (Textbook) ───
 model Textbook {
   id             String   @id @default(cuid())

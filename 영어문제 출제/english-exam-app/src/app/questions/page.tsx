@@ -26,7 +26,16 @@ interface QuestionRow {
   aiGenerated: boolean;
   createdAt: string;
   examItems?: ExamUsage[];
+  passageRef?: {
+    id: string;
+    textbook: string;
+    grade: string;
+    lesson: string;
+    title: string | null;
+  } | null;
 }
+
+type SortKey = "date_desc" | "date_asc" | "grade" | "textbook";
 
 export default function QuestionsPage() {
   const [questions, setQuestions] = useState<QuestionRow[]>([]);
@@ -35,6 +44,9 @@ export default function QuestionsPage() {
   const [filterDifficulty, setFilterDifficulty] = useState("");
   const [search, setSearch] = useState("");
   const [historyOf, setHistoryOf] = useState<QuestionRow | null>(null);
+  const [sortKey, setSortKey] = useState<SortKey>("date_desc");
+  const [filterGrade, setFilterGrade] = useState("");
+  const [filterTextbook, setFilterTextbook] = useState("");
 
   useEffect(() => {
     fetchQuestions();
@@ -62,6 +74,27 @@ export default function QuestionsPage() {
     await fetch(`/api/questions/${id}`, { method: "DELETE" });
     fetchQuestions();
   }
+
+  const grades = Array.from(
+    new Set(questions.map((q) => q.passageRef?.grade).filter((g): g is string => !!g))
+  ).sort();
+  const textbooks = Array.from(
+    new Set(questions.map((q) => q.passageRef?.textbook).filter((t): t is string => !!t))
+  ).sort();
+
+  const visibleQuestions = (() => {
+    let arr = questions.slice();
+    if (filterGrade) arr = arr.filter((q) => q.passageRef?.grade === filterGrade);
+    if (filterTextbook) arr = arr.filter((q) => q.passageRef?.textbook === filterTextbook);
+    arr.sort((a, b) => {
+      if (sortKey === "date_desc") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (sortKey === "date_asc") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      if (sortKey === "grade") return (a.passageRef?.grade || "ㅎ").localeCompare(b.passageRef?.grade || "ㅎ");
+      if (sortKey === "textbook") return (a.passageRef?.textbook || "ㅎ").localeCompare(b.passageRef?.textbook || "ㅎ");
+      return 0;
+    });
+    return arr;
+  })();
 
   return (
     <div className="space-y-6">
@@ -124,6 +157,55 @@ export default function QuestionsPage() {
             + 문제 만들기
           </Link>
         </div>
+        {/* 2차 정렬·범위 필터 */}
+        <div className="flex flex-wrap gap-3 items-end mt-3 pt-3 border-t border-gray-100">
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">정렬</label>
+            <select
+              value={sortKey}
+              onChange={(e) => setSortKey(e.target.value as SortKey)}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            >
+              <option value="date_desc">최신 등록순</option>
+              <option value="date_asc">오래된 등록순</option>
+              <option value="grade">학년순</option>
+              <option value="textbook">교과서순</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">학년</label>
+            <select
+              value={filterGrade}
+              onChange={(e) => setFilterGrade(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            >
+              <option value="">전체</option>
+              {grades.map((g) => (
+                <option key={g} value={g}>
+                  {g}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">교과서</label>
+            <select
+              value={filterTextbook}
+              onChange={(e) => setFilterTextbook(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            >
+              <option value="">전체</option>
+              {textbooks.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </div>
+          <span className="text-xs text-gray-400 ml-auto">
+            {visibleQuestions.length} / {questions.length}개 표시
+          </span>
+        </div>
       </div>
 
       {/* 문제 목록 */}
@@ -149,13 +231,14 @@ export default function QuestionsPage() {
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">난이도</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">배점</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">출처</th>
+                <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">교과서/학년</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">출제 이력</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">날짜</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {questions.map((q) => {
+              {visibleQuestions.map((q) => {
                 const typeInfo = getQuestionTypeInfo(q.examType, q.questionType);
                 const diffInfo = DIFFICULTY_MAP[q.difficulty as Difficulty];
                 return (
@@ -190,6 +273,17 @@ export default function QuestionsPage() {
                       >
                         {q.aiGenerated ? "AI" : "수동"}
                       </span>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-gray-500">
+                      {q.passageRef ? (
+                        <span>
+                          {q.passageRef.textbook}
+                          <span className="text-gray-300"> · </span>
+                          {q.passageRef.grade}
+                        </span>
+                      ) : (
+                        <span className="text-gray-300">-</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       {q.examItems && q.examItems.length > 0 ? (

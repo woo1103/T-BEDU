@@ -93,6 +93,12 @@ export default function ExamsPage() {
                   >
                     미리보기
                   </Link>
+                  <Link
+                    href={`/exams/${exam.id}/edit`}
+                    className="text-xs text-amber-600 hover:text-amber-700"
+                  >
+                    편집
+                  </Link>
                   <button
                     onClick={() => handleDelete(exam.id)}
                     className="text-xs text-red-500 hover:text-red-700"

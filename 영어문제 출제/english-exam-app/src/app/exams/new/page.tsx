@@ -19,6 +19,7 @@ interface QuestionRow {
   source: string | null;
   aiGenerated: boolean;
   passageId: string | null;
+  createdAt?: string;
   passageRef: {
     id: string;
     textbook: string;
@@ -27,6 +28,8 @@ interface QuestionRow {
     title: string | null;
   } | null;
 }
+
+type SortMode = "tree" | "date" | "grade" | "textbook";
 
 interface SelectedItem {
   questionId: string;
@@ -60,6 +63,53 @@ export default function NewExamPage() {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   // 일괄선택용 체크된 문제 id
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
+  const [sortMode, setSortMode] = useState<SortMode>("tree");
+  const [bankSearch, setBankSearch] = useState("");
+
+  const filteredQuestions = bankSearch.trim()
+    ? availableQuestions.filter(
+        (q) =>
+          q.question.toLowerCase().includes(bankSearch.toLowerCase()) ||
+          q.passage.toLowerCase().includes(bankSearch.toLowerCase())
+      )
+    : availableQuestions;
+
+  function flatGroups(): { key: string; label: string; items: QuestionRow[] }[] {
+    if (sortMode === "date") {
+      const m = new Map<string, QuestionRow[]>();
+      for (const q of filteredQuestions) {
+        const day = q.createdAt ? new Date(q.createdAt).toLocaleDateString("ko-KR") : "날짜 미상";
+        if (!m.has(day)) m.set(day, []);
+        m.get(day)!.push(q);
+      }
+      return Array.from(m.entries())
+        .sort((a, b) => (a[0] < b[0] ? 1 : -1))
+        .map(([k, v]) => ({ key: `d::${k}`, label: k, items: v }));
+    }
+    if (sortMode === "grade") {
+      const m = new Map<string, QuestionRow[]>();
+      for (const q of filteredQuestions) {
+        const g = q.passageRef?.grade || "학년 미연결";
+        if (!m.has(g)) m.set(g, []);
+        m.get(g)!.push(q);
+      }
+      return Array.from(m.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([k, v]) => ({ key: `g::${k}`, label: k, items: v }));
+    }
+    if (sortMode === "textbook") {
+      const m = new Map<string, QuestionRow[]>();
+      for (const q of filteredQuestions) {
+        const t = q.passageRef?.textbook || "교과서 미연결";
+        if (!m.has(t)) m.set(t, []);
+        m.get(t)!.push(q);
+      }
+      return Array.from(m.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([k, v]) => ({ key: `t::${k}`, label: k, items: v }));
+    }
+    return [];
+  }
 
   function toggleCheck(id: string) {
     setCheckedIds((prev) => {
@@ -89,7 +139,7 @@ export default function NewExamPage() {
   function buildQuestionTree(): { tree: QuestionTree; orphans: QuestionRow[] } {
     const tree: QuestionTree = new Map();
     const orphans: QuestionRow[] = [];
-    for (const q of availableQuestions) {
+    for (const q of filteredQuestions) {
       if (!q.passageRef) {
         orphans.push(q);
         continue;
@@ -326,6 +376,39 @@ export default function NewExamPage() {
               </div>
             )}
           </div>
+          {/* 정렬 토글 + 검색 */}
+          {!loadingQuestions && availableQuestions.length > 0 && (
+            <div className="flex items-center gap-2 mb-3">
+              <div className="flex bg-gray-100 rounded-lg p-1 text-xs">
+                {(
+                  [
+                    ["tree", "트리"],
+                    ["date", "날짜순"],
+                    ["grade", "학년순"],
+                    ["textbook", "교과서순"],
+                  ] as [SortMode, string][]
+                ).map(([mode, label]) => (
+                  <button
+                    key={mode}
+                    onClick={() => setSortMode(mode)}
+                    className={`px-2.5 py-1 rounded ${
+                      sortMode === mode ? "bg-white text-gray-800 shadow-sm" : "text-gray-500"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <input
+                type="text"
+                value={bankSearch}
+                onChange={(e) => setBankSearch(e.target.value)}
+                placeholder="발문/지문 검색"
+                className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-xs"
+              />
+            </div>
+          )}
+
           {loadingQuestions ? (
             <p className="text-sm text-gray-400">불러오는 중...</p>
           ) : availableQuestions.length === 0 ? (
@@ -447,6 +530,18 @@ export default function NewExamPage() {
                 </div>
               );
             };
+
+            if (sortMode !== "tree") {
+              return (
+                <div className="max-h-[500px] overflow-y-auto border border-gray-100 rounded-lg">
+                  {flatGroups().map((g) =>
+                    treeRow(g.key, g.label, g.items.length, 0, g.items,
+                      <ul className="space-y-1.5 py-2 px-4">{g.items.map(renderQuestion)}</ul>
+                    )
+                  )}
+                </div>
+              );
+            }
 
             return (
               <div className="max-h-[500px] overflow-y-auto border border-gray-100 rounded-lg">

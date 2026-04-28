@@ -146,6 +146,7 @@ export default function NewQuestionPage() {
     const picks = savedPassages.filter((p) => passageIds.includes(p.id));
     for (const p of picks) {
       for (const typeSelection of selectedTypes) {
+        const siblings: { question: string; answer?: string }[] = [];
         for (let i = 0; i < typeSelection.count; i++) {
           try {
             const res = await fetch("/api/generate", {
@@ -158,6 +159,7 @@ export default function NewQuestionPage() {
                 topic,
                 sourcePassage: p.content,
                 passageMode,
+                priorQuestions: siblings.length > 0 ? siblings : undefined,
               }),
             });
             if (!res.ok) {
@@ -181,6 +183,10 @@ export default function NewQuestionPage() {
               questionType: typeSelection.code,
               questionTypeName: typeSelection.name,
               passageId: p.id,
+            });
+            siblings.push({
+              question: data.question || "",
+              answer: data.answer || undefined,
             });
             setGeneratedQuestions([...results]);
           } catch (err) {
@@ -386,6 +392,7 @@ export default function NewQuestionPage() {
 
     for (const passageItem of passagesToUse) {
       for (const typeSelection of selectedTypes) {
+        const siblings: { question: string; answer?: string }[] = [];
         for (let i = 0; i < typeSelection.count; i++) {
           try {
             const res = await fetch("/api/generate", {
@@ -398,6 +405,7 @@ export default function NewQuestionPage() {
                 topic,
                 sourcePassage: passageItem.content || undefined,
                 passageMode: passageItem.content ? passageMode : undefined,
+                priorQuestions: siblings.length > 0 ? siblings : undefined,
               }),
             });
             if (!res.ok) {
@@ -421,6 +429,10 @@ export default function NewQuestionPage() {
               questionType: typeSelection.code,
               questionTypeName: typeSelection.name,
               passageId: passageItem.passageId,
+            });
+            siblings.push({
+              question: data.question || "",
+              answer: data.answer || undefined,
             });
             setGeneratedQuestions([...results]);
           } catch (err) {

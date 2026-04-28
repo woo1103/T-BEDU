@@ -15,6 +15,7 @@ const navItems = [
 ];
 
 const adminItems = [
+  { href: "/admin/prompts", label: "AI 지시문", icon: "🧠" },
   { href: "/admin/users", label: "계정 관리", icon: "👤" },
 ];
 

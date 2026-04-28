@@ -1041,9 +1041,12 @@ function ContentPages({
 }
 
 // choices에서 정답 번호 추출
+// 본문 표시와 동일하게 normalizeMarkerChoices를 거친 뒤 인덱스를 찾아야
+// 마커 전용 선지(어휘·문장삽입 등)에서 본문 정답 위치와 정답표 번호가 일치한다.
 function getCorrectLabel(choicesJson: string): string {
   try {
-    const choices: Choice[] = JSON.parse(choicesJson);
+    const raw = JSON.parse(choicesJson) as Choice[];
+    const choices = normalizeMarkerChoices(raw);
     const correctIdx = choices.findIndex((c) => c.isCorrect);
     if (correctIdx >= 0) return CIRCLE_LABELS[correctIdx] || `${correctIdx + 1}`;
   } catch {

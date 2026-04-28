@@ -6,7 +6,8 @@ export function getSystemPrompt(
   questionType: string,
   difficulty: string,
   sourcePassage?: string,
-  passageMode?: string
+  passageMode?: string,
+  priorQuestions?: { question: string; answer?: string }[]
 ): string | null {
   let basePrompt: string | null = null;
 
@@ -57,6 +58,24 @@ ${sourcePassage}
 ${sourcePassage}
 ---`;
     }
+  }
+
+  // 동일 지문 · 동일 유형으로 이미 출제된 형제 문제가 있을 경우, 발문/포커스를 다르게
+  if (basePrompt && priorQuestions && priorQuestions.length > 0) {
+    const list = priorQuestions
+      .map((p, i) => `(${i + 1}) 발문: ${p.question}${p.answer ? `\n    정답: ${p.answer}` : ""}`)
+      .join("\n");
+    basePrompt += `
+
+[이미 같은 지문·같은 유형으로 출제된 문제 — 중복 회피]
+아래 ${priorQuestions.length}개 문제는 이미 출제됨. 새로 만드는 문제는 **반드시 다음 조건을 모두 충족**해야 한다:
+1. 발문의 어휘·문장 구조를 직전 문제와 다르게 (단순히 어순만 바꾸지 말 것)
+2. 묻는 초점·정답 후보의 위치·논리 측면을 다른 곳으로 이동 (예: 직전이 주제를 물었다면 이번엔 같은 유형 안에서도 다른 문장 또는 다른 지문 부분에 초점)
+3. 정답으로 이끄는 단서 문장이 직전 문제와 겹치지 않게
+4. 매력적 오답의 함정 기법도 직전과 다른 기법을 사용
+
+이미 출제된 문제 목록:
+${list}`;
   }
 
   return basePrompt;

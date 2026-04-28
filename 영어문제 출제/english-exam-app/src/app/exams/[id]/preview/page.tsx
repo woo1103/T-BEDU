@@ -514,6 +514,12 @@ export default function ExamPreviewPage({
           </label>
         </div>
         <div className="flex gap-2">
+          <Link
+            href={`/exams/${id}/edit`}
+            className="px-4 py-2 bg-amber-100 text-amber-700 rounded-lg text-sm font-medium hover:bg-amber-200"
+          >
+            편집
+          </Link>
           <PDFDownloadButton exam={exam} showAnswers={showAnswers} />
           <button
             onClick={handlePrint}
