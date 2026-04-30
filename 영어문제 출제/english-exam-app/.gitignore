@@ -42,3 +42,5 @@ next-env.d.ts
 
 /src/generated/prisma
 영어문제 출제/english-exam-app/dev.db
+
+.vercel
