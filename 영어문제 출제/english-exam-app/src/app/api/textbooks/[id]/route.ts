@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const textbook = await prisma.textbook.findUnique({ where: { id } });
+  const textbook = await prisma.workbook.findUnique({ where: { id } });
   if (!textbook) {
     return NextResponse.json({ error: "교재를 찾을 수 없습니다" }, { status: 404 });
   }
@@ -32,7 +32,7 @@ export async function PUT(
 ) {
   const { id } = await params;
   const body = await request.json();
-  const textbook = await prisma.textbook.update({
+  const textbook = await prisma.workbook.update({
     where: { id },
     data: {
       title: body.title,
@@ -48,6 +48,6 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  await prisma.textbook.delete({ where: { id } });
+  await prisma.workbook.delete({ where: { id } });
   return NextResponse.json({ success: true });
 }

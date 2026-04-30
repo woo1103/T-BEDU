@@ -80,7 +80,7 @@ model Passage {
   questions   Question[]
 }
 
-model Textbook {
+model Workbook {
   id          String   @id @default(cuid())
   title       String
   description String?

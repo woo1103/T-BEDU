@@ -10,7 +10,7 @@ if (!url || !authToken) {
 const client = createClient({ url, authToken });
 
 const sql = `
-CREATE TABLE IF NOT EXISTS "Textbook" (
+CREATE TABLE IF NOT EXISTS "Workbook" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "description" TEXT,
@@ -23,9 +23,9 @@ CREATE TABLE IF NOT EXISTS "Textbook" (
 try {
   await client.execute(sql);
   const check = await client.execute(
-    "SELECT name FROM sqlite_master WHERE type='table' AND name='Textbook'"
+    "SELECT name FROM sqlite_master WHERE type='table' AND name='Workbook'"
   );
-  console.log("✓ Textbook 테이블 확인:", check.rows);
+  console.log("✓ Workbook 테이블 확인:", check.rows);
 } catch (e) {
   console.error("실패:", e);
   process.exit(1);
