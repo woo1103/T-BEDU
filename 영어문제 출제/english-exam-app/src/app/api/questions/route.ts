@@ -7,8 +7,10 @@ export async function GET(request: NextRequest) {
   const questionType = searchParams.get("questionType");
   const difficulty = searchParams.get("difficulty");
   const search = searchParams.get("search");
+  const ids = searchParams.get("ids");
 
   const where: Record<string, unknown> = {};
+  if (ids) where.id = { in: ids.split(",").filter(Boolean) };
   if (examType) where.examType = examType;
   if (questionType) where.questionType = questionType;
   if (difficulty) where.difficulty = difficulty;
