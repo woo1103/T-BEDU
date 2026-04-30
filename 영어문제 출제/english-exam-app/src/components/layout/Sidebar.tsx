@@ -11,6 +11,7 @@ const navItems = [
   { href: "/questions/new", label: "문제 만들기", icon: "✨" },
   { href: "/exams", label: "시험지 관리", icon: "📄" },
   { href: "/exams/new", label: "시험지 구성", icon: "📋" },
+  { href: "/textbooks", label: "교재", icon: "📚" },
 ];
 
 const adminItems = [
