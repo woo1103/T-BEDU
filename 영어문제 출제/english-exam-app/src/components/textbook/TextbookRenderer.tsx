@@ -33,6 +33,47 @@ export default function TextbookRenderer({
   );
 }
 
+const NAMED_COLORS: Record<string, string> = {
+  red: "#dc2626",
+  blue: "#2563eb",
+  green: "#16a34a",
+  orange: "#ea580c",
+  purple: "#9333ea",
+  teal: "#0d9488",
+  pink: "#db2777",
+  gray: "#4b5563",
+  black: "#111827",
+};
+
+function resolveColor(c: string): string {
+  const v = c.trim().toLowerCase();
+  if (NAMED_COLORS[v]) return NAMED_COLORS[v];
+  if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(c.trim())) return c.trim();
+  return "inherit";
+}
+
+const CALLOUT_STYLES: Record<
+  "tip" | "point" | "warn" | "info",
+  { wrap: string; head: string }
+> = {
+  tip: {
+    wrap: "border-blue-200 bg-blue-50 print:bg-white",
+    head: "bg-blue-100 text-blue-800",
+  },
+  point: {
+    wrap: "border-purple-200 bg-purple-50 print:bg-white",
+    head: "bg-purple-100 text-purple-800",
+  },
+  warn: {
+    wrap: "border-red-200 bg-red-50 print:bg-white",
+    head: "bg-red-100 text-red-800",
+  },
+  info: {
+    wrap: "border-emerald-200 bg-emerald-50 print:bg-white",
+    head: "bg-emerald-100 text-emerald-800",
+  },
+};
+
 function RenderNode({
   node,
   questions,
@@ -127,6 +168,12 @@ function RenderNode({
     case "hrule":
       return <hr className="my-4 border-gray-300" />;
 
+    case "linebreak":
+      return <br />;
+
+    case "hspace":
+      return <span style={{ display: "inline-block", width: node.size }} />;
+
     case "bold":
       return (
         <strong>
@@ -143,6 +190,42 @@ function RenderNode({
             <RenderNode key={i} node={c} questions={questions} showAnswers={showAnswers} />
           ))}
         </em>
+      );
+
+    case "underline":
+      return (
+        <span style={{ textDecoration: "underline" }}>
+          {node.children.map((c, i) => (
+            <RenderNode key={i} node={c} questions={questions} showAnswers={showAnswers} />
+          ))}
+        </span>
+      );
+
+    case "strike":
+      return (
+        <span style={{ textDecoration: "line-through" }}>
+          {node.children.map((c, i) => (
+            <RenderNode key={i} node={c} questions={questions} showAnswers={showAnswers} />
+          ))}
+        </span>
+      );
+
+    case "color":
+      return (
+        <span style={{ color: resolveColor(node.color) }}>
+          {node.children.map((c, i) => (
+            <RenderNode key={i} node={c} questions={questions} showAnswers={showAnswers} />
+          ))}
+        </span>
+      );
+
+    case "highlight":
+      return (
+        <mark className="bg-yellow-200 px-0.5 rounded-sm">
+          {node.children.map((c, i) => (
+            <RenderNode key={i} node={c} questions={questions} showAnswers={showAnswers} />
+          ))}
+        </mark>
       );
 
     case "center":
@@ -173,6 +256,35 @@ function RenderNode({
             <RenderNode key={i} node={c} questions={questions} showAnswers={showAnswers} />
           ))}
         </div>
+      );
+
+    case "callout": {
+      const s = CALLOUT_STYLES[node.variant];
+      return (
+        <div className={`my-3 border rounded-lg overflow-hidden ${s.wrap}`}>
+          <div className={`px-3 py-1.5 text-sm font-semibold ${s.head}`}>
+            {node.label}
+          </div>
+          <div className="px-3 py-2">
+            {node.children.map((c, i) => (
+              <RenderNode key={i} node={c} questions={questions} showAnswers={showAnswers} />
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    case "list":
+      return (
+        <ul className="my-2 ml-5 list-disc space-y-1">
+          {node.items.map((item, i) => (
+            <li key={i} className="leading-relaxed">
+              {item.map((c, j) => (
+                <RenderNode key={j} node={c} questions={questions} showAnswers={showAnswers} />
+              ))}
+            </li>
+          ))}
+        </ul>
       );
 
     case "error":

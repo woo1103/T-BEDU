@@ -7,10 +7,21 @@
 //   \vspace{1em}              세로 여백
 //   \pagebreak                인쇄 시 페이지 나눔
 //   \hrule                    가로선
+//   \\                        강제 줄바꿈
+//   \hspace{1em}              가로 여백
+//   ~                         논브레이킹 스페이스
 //   \textbf{x}  \textit{x}    굵게/기울임 (인라인)
+//   \underline{x}  \sout{x}   밑줄/취소선 (인라인)
+//   \textcolor{색}{x}         색상 글자 (red/blue/green/orange/purple/teal 또는 #hex)
+//   \hl{x}                    형광펜 (노랑)
 //   \center{x}                가운데 정렬 블록
 //   \begin{columns}{2} ... \end{columns}   다단 조판
-//   \begin{box} ... \end{box}              테두리 박스
+//   \begin{box} ... \end{box}              테두리 박스 (회색)
+//   \begin{tipbox}{라벨} ... \end{tipbox}     💡 Tip 프리셋 (파랑)
+//   \begin{pointbox}{라벨} ... \end{pointbox} 🌟 Point 프리셋 (보라)
+//   \begin{warnbox}{라벨} ... \end{warnbox}   ⚠️ Warn 프리셋 (빨강)
+//   \begin{infobox}{라벨} ... \end{infobox}   ℹ️ Info 프리셋 (초록)
+//   \begin{itemize} \item ... \item ... \end{itemize}  글머리표
 
 export type Node =
   | { type: "text"; value: string }
@@ -21,11 +32,24 @@ export type Node =
   | { type: "vspace"; size: string }
   | { type: "pagebreak" }
   | { type: "hrule" }
+  | { type: "linebreak" }
+  | { type: "hspace"; size: string }
   | { type: "bold"; children: Node[] }
   | { type: "italic"; children: Node[] }
+  | { type: "underline"; children: Node[] }
+  | { type: "strike"; children: Node[] }
+  | { type: "color"; color: string; children: Node[] }
+  | { type: "highlight"; children: Node[] }
   | { type: "center"; children: Node[] }
   | { type: "columns"; count: number; children: Node[] }
   | { type: "box"; children: Node[] }
+  | {
+      type: "callout";
+      variant: "tip" | "point" | "warn" | "info";
+      label: string;
+      children: Node[];
+    }
+  | { type: "list"; items: Node[][] }
   | { type: "error"; message: string };
 
 const BLOCK_COMMANDS = new Set([
@@ -37,6 +61,16 @@ const BLOCK_COMMANDS = new Set([
   "pagebreak",
   "hrule",
 ]);
+
+const CALLOUT_DEFAULTS: Record<
+  "tipbox" | "pointbox" | "warnbox" | "infobox",
+  { variant: "tip" | "point" | "warn" | "info"; label: string }
+> = {
+  tipbox: { variant: "tip", label: "💡 Tip" },
+  pointbox: { variant: "point", label: "🌟 Point" },
+  warnbox: { variant: "warn", label: "⚠️ 주의" },
+  infobox: { variant: "info", label: "ℹ️ 참고" },
+};
 
 class Parser {
   private pos = 0;
@@ -95,6 +129,12 @@ class Parser {
           buf += rawCommand(cmd.name, cmd.args);
           continue;
         }
+        // \\  -> literal forced linebreak marker; let inline parser handle
+        if (this.src[this.pos + 1] === "\\") {
+          buf += "\\\\";
+          this.pos += 2;
+          continue;
+        }
       }
 
       // paragraph break (\n\n)
@@ -132,8 +172,50 @@ class Parser {
     while (this.src[this.pos] === "{") {
       args.push(this.readBracedArg());
     }
+    if (name === "itemize") {
+      const items = this.parseItemize();
+      return { type: "list", items };
+    }
     const inner = this.parseBlocks(name);
     return makeEnvironment(name, args, inner);
+  }
+
+  private parseItemize(): Node[][] {
+    const items: Node[][] = [];
+    let current: string | null = null;
+    const pushItem = () => {
+      if (current === null) return;
+      const trimmed = current.trim();
+      items.push(trimmed.length > 0 ? parseInline(trimmed) : []);
+      current = null;
+    };
+    while (this.pos < this.src.length) {
+      if (this.peek("\\end{itemize}")) {
+        this.pos += "\\end{itemize}".length;
+        pushItem();
+        return items;
+      }
+      if (this.peek("\\item")) {
+        // boundary — close prior item and start new
+        pushItem();
+        current = "";
+        this.pos += "\\item".length;
+        // skip optional single space after \item
+        if (this.src[this.pos] === " ") this.pos++;
+        continue;
+      }
+      if (current === null) {
+        // text before first \item — discard whitespace, keep otherwise as implicit first item
+        if (/\s/.test(this.src[this.pos])) {
+          this.pos++;
+          continue;
+        }
+        current = "";
+      }
+      current += this.src[this.pos++];
+    }
+    pushItem();
+    return items;
   }
 
   private readBracedArg(): string {
@@ -210,6 +292,11 @@ function makeEnvironment(name: string, args: string[], children: Node[]): Node {
   if (name === "center") {
     return { type: "center", children };
   }
+  if (name in CALLOUT_DEFAULTS) {
+    const def = CALLOUT_DEFAULTS[name as keyof typeof CALLOUT_DEFAULTS];
+    const label = (args[0] ?? "").trim() || def.label;
+    return { type: "callout", variant: def.variant, label, children };
+  }
   return { type: "error", message: `알 수 없는 환경: ${name}` };
 }
 
@@ -225,6 +312,21 @@ function parseInline(src: string): Node[] {
     }
   };
   while (i < src.length) {
+    // ~ → 논브레이킹 스페이스
+    if (src[i] === "~") {
+      buf += " ";
+      i++;
+      continue;
+    }
+    // \\ → 강제 줄바꿈
+    if (src[i] === "\\" && src[i + 1] === "\\") {
+      flush();
+      out.push({ type: "linebreak" });
+      i += 2;
+      // skip a single trailing space/newline so layout reads naturally
+      if (src[i] === " " || src[i] === "\n") i++;
+      continue;
+    }
     if (src[i] === "\\") {
       // read command
       let j = i + 1;
@@ -270,8 +372,21 @@ function makeInlineCommand(name: string, args: string[]): Node | null {
       return { type: "bold", children: parseInline(args[0] ?? "") };
     case "textit":
       return { type: "italic", children: parseInline(args[0] ?? "") };
+    case "underline":
+      return { type: "underline", children: parseInline(args[0] ?? "") };
+    case "sout":
+      return { type: "strike", children: parseInline(args[0] ?? "") };
     case "center":
       return { type: "center", children: parseInline(args[0] ?? "") };
+    case "textcolor": {
+      const color = (args[0] ?? "").trim();
+      const text = args[1] ?? "";
+      return { type: "color", color, children: parseInline(text) };
+    }
+    case "hl":
+      return { type: "highlight", children: parseInline(args[0] ?? "") };
+    case "hspace":
+      return { type: "hspace", size: (args[0] ?? "1em").trim() };
   }
   return null;
 }
