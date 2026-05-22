@@ -130,6 +130,60 @@ function markChanged(input) {
     calcWeeklyDiffs();
 }
 
+// 품목별 부족 기준 (이번주 값이 이 수치 이하면 빨간색 강조)
+// 품목명에 아래 키워드가 포함되면 매칭 (공백/오타에 견고하게)
+var LOW_STOCK_RULES = [
+    { match: function(n){ return n.indexOf('a4') >= 0; },                              threshold: 4 },
+    { match: function(n){ return n.indexOf('롤') >= 0 && n.indexOf('휴지') >= 0; },     threshold: 10 },
+    { match: function(n){ return n.indexOf('물티슈') >= 0; },                          threshold: 3 },
+    { match: function(n){ return n.indexOf('스테') >= 0 && n.indexOf('심') >= 0; },     threshold: 0 },
+    { match: function(n){ return n.indexOf('물컵') >= 0 || n.indexOf('정수기') >= 0; }, threshold: 10 },
+    { match: function(n){ return n.indexOf('종량제') >= 0; },                          threshold: 1 },
+    { match: function(n){ return n.indexOf('분필') >= 0; },                            threshold: 20 },
+];
+
+function getThreshold(itemName) {
+    var n = (itemName || '').toLowerCase().replace(/\s+/g, '');
+    for (var i = 0; i < LOW_STOCK_RULES.length; i++) {
+        if (LOW_STOCK_RULES[i].match(n)) return LOW_STOCK_RULES[i].threshold;
+    }
+    return null;
+}
+
+function checkLowStock() {
+    var rows = document.querySelectorAll('#supplyTable tbody tr');
+    rows.forEach(function(row) {
+        var nameEl = row.querySelector('td strong');
+        if (!nameEl) return;
+        var threshold = getThreshold(nameEl.textContent);
+        var inputs = row.querySelectorAll('.qty-input');
+        if (inputs.length === 0) return;
+        var lastInput = inputs[inputs.length - 1];
+        var lastCell = lastInput.parentElement;
+
+        // 초기화
+        lastCell.style.backgroundColor = '';
+        lastInput.style.backgroundColor = '';
+        lastInput.style.color = '';
+        lastInput.style.fontWeight = '';
+        row.style.backgroundColor = '';
+
+        if (threshold === null) return;
+        var val = lastInput.value;
+        if (val === '') return;
+        var qty = parseFloat(val);
+        if (isNaN(qty)) return;
+
+        if (qty <= threshold) {
+            lastCell.style.backgroundColor = '#ff5252';
+            lastInput.style.backgroundColor = '#fff5f5';
+            lastInput.style.color = '#c00';
+            lastInput.style.fontWeight = '700';
+            row.style.backgroundColor = '#ffe6e6';
+        }
+    });
+}
+
 function calcWeeklyDiffs() {
     var rows = document.querySelectorAll('#supplyTable tbody tr');
     rows.forEach(function(row) {
@@ -157,6 +211,7 @@ function calcWeeklyDiffs() {
             diffCell.style.color = '#888';
         }
     });
+    checkLowStock();
 }
 
 function saveRecords() {
