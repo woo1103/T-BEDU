@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>물품 조사 현황</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-msg">
+    {% for msg in messages %}<p>{{ msg }}</p>{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<style>
+    .inv-table { width: 100%; border-collapse: collapse; margin-top: 1em; }
+    .inv-table th, .inv-table td { border: 1px solid #ccc; padding: 0.6em; text-align: center; }
+    .inv-table thead { background: #2c3e50; color: #fff; }
+    .inv-table .item-col { text-align: left; min-width: 140px; font-weight: 600; }
+    .inv-table .threshold { color: #666; font-size: 0.85em; font-weight: normal; }
+    .inv-table input[type=number] { width: 80px; padding: 0.3em; text-align: center; }
+    .inv-row-low { background: #ffe6e6; }
+    .inv-cell-low { background: #ff5252; color: #fff; font-weight: 700; }
+    .inv-cell-low input { background: #fff5f5; color: #c00; font-weight: 700; }
+    .inv-total { background: #f5f5f5; font-weight: 700; }
+    .inv-total.inv-cell-low { background: #ff5252; color: #fff; }
+    .inv-legend { margin-top: 0.6em; font-size: 0.9em; color: #555; }
+    .inv-legend .dot { display: inline-block; width: 12px; height: 12px; background: #ff5252; vertical-align: middle; margin-right: 4px; border-radius: 2px; }
+    .inv-save { margin-top: 1em; }
+</style>
+
+<form action="{{ url_for('inventory_save') }}" method="post">
+    <table class="inv-table">
+        <thead>
+            <tr>
+                <th class="item-col">품목</th>
+                {% for b in branches %}
+                <th>{{ b.name }}</th>
+                {% endfor %}
+                <th>통합</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr class="{% if row.total_low %}inv-row-low{% endif %}">
+                <td class="item-col">
+                    {{ row.item.name }}
+                    <div class="threshold">기준: {{ row.item.threshold }}{{ row.item.unit }} 이하</div>
+                </td>
+                {% for cell in row.branches %}
+                <td class="{% if cell.low %}inv-cell-low{% endif %}">
+                    {% if cell.branch_id %}
+                    <input type="number" step="any" min="0"
+                           name="qty_{{ cell.branch_id }}_{{ row.item.key }}"
+                           value="{{ cell.quantity }}">
+                    {{ row.item.unit }}
+                    {% else %}
+                    <span style="color:#999;">지점없음</span>
+                    {% endif %}
+                </td>
+                {% endfor %}
+                <td class="inv-total {% if row.total_low %}inv-cell-low{% endif %}">
+                    {{ row.total }} {{ row.item.unit }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="inv-legend"><span class="dot"></span> 기준 수량 이하 → 보충 필요</div>
+
+    <div class="inv-save">
+        <button type="submit" class="btn btn-add">저장</button>
+    </div>
+</form>
+{% endblock %}

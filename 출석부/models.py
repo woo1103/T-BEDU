@@ -156,6 +156,16 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
             UNIQUE(year, month, class_id, user_id)
         );
+        CREATE TABLE IF NOT EXISTS inventory_item (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            branch_id INTEGER NOT NULL,
+            item_key TEXT NOT NULL,
+            quantity REAL NOT NULL DEFAULT 0,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (branch_id) REFERENCES branch(id) ON DELETE CASCADE,
+            UNIQUE(branch_id, item_key)
+        );
+
         CREATE TABLE IF NOT EXISTS tuition_ledger (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             student_id INTEGER NOT NULL,
