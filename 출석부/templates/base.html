@@ -21,7 +21,6 @@
             <a href="{{ url_for('lesson_plan') }}" class="{% if request.endpoint == 'lesson_plan' %}active{% endif %}">수업계획서</a>
             <a href="{{ url_for('statistics') }}" class="{% if request.endpoint == 'statistics' %}active{% endif %}">학생별 통계</a>
             <a href="{{ url_for('reports') }}" class="{% if request.endpoint == 'reports' %}active{% endif %}">보고서</a>
-            <a href="{{ url_for('inventory') }}" class="{% if request.endpoint == 'inventory' %}active{% endif %}">물품 조사 현황</a>
             {% if session.get('role') == 'admin' %}
             <a href="{{ url_for('manage') }}" class="{% if request.endpoint == 'manage' %}active{% endif %}">관리</a>
             <a href="{{ url_for('users') }}" class="{% if request.endpoint == 'users' %}active{% endif %}">담당자 관리</a>
