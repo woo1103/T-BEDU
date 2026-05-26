@@ -44,6 +44,7 @@
 {% if items %}
 <div class="manage-section">
     <h2>주간 재고 현황 <small style="color:#888; font-weight:normal;">(최근 5주)</small></h2>
+    <div id="lowStockAlert" style="display:none; margin:0 0 1rem 0; padding:0.8rem 1rem; background:#fff5f5; border:2px solid #e74c3c; border-left:6px solid #c0392b; border-radius:6px; color:#c0392b; font-weight:700; font-size:1rem; line-height:1.5; word-break:keep-all;"></div>
     <div class="table-responsive">
         <table id="supplyTable">
             <thead>
@@ -152,10 +153,12 @@ function getThreshold(itemName) {
 
 function checkLowStock() {
     var rows = document.querySelectorAll('#supplyTable tbody tr');
+    var lowItems = [];
     rows.forEach(function(row) {
         var nameEl = row.querySelector('td strong');
         if (!nameEl) return;
-        var threshold = getThreshold(nameEl.textContent);
+        var itemName = nameEl.textContent;
+        var threshold = getThreshold(itemName);
         var inputs = row.querySelectorAll('.qty-input');
         if (inputs.length === 0) return;
         var lastInput = inputs[inputs.length - 1];
@@ -180,8 +183,21 @@ function checkLowStock() {
             lastInput.style.color = '#c00';
             lastInput.style.fontWeight = '700';
             row.style.backgroundColor = '#ffe6e6';
+            lowItems.push(itemName);
         }
     });
+
+    var alertEl = document.getElementById('lowStockAlert');
+    if (alertEl) {
+        if (lowItems.length > 0) {
+            var msg = lowItems.map(function(n){ return escHtml(n) + ' 구매필요'; }).join(', ');
+            alertEl.innerHTML = '***' + msg;
+            alertEl.style.display = 'block';
+        } else {
+            alertEl.innerHTML = '';
+            alertEl.style.display = 'none';
+        }
+    }
 }
 
 function calcWeeklyDiffs() {
