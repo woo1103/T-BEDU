@@ -86,6 +86,10 @@ export default function ExamEditPage({
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
 
+  const [bulkModalOpen, setBulkModalOpen] = useState(false);
+  const [bulkCheckedIds, setBulkCheckedIds] = useState<Set<string>>(new Set());
+  const [bulkExpanded, setBulkExpanded] = useState<Set<string>>(new Set());
+
   useEffect(() => {
     Promise.all([
       fetch(`/api/exams/${id}`).then((r) => r.json()),
@@ -160,6 +164,59 @@ export default function ExamEditPage({
     const qs = availableQuestions.filter((q) => checkedIds.has(q.id));
     addQuestions(qs);
     setCheckedIds(new Set());
+  }
+
+  // ─── 교재별 일괄 추가 모달용 ───
+  function bulkToggleExpanded(key: string) {
+    setBulkExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  function bulkToggle(ids: string[]) {
+    setBulkCheckedIds((prev) => {
+      const next = new Set(prev);
+      const allChecked = ids.every((id) => next.has(id));
+      if (allChecked) {
+        for (const id of ids) next.delete(id);
+      } else {
+        for (const id of ids) next.add(id);
+      }
+      return next;
+    });
+  }
+
+  function bulkBuildByTextbook(): Map<string, Map<string, Map<string, QuestionRow[]>>> {
+    // 교재 → 과/단원 → 지문 → 문제[]
+    const tree = new Map<string, Map<string, Map<string, QuestionRow[]>>>();
+    for (const q of availableQuestions) {
+      const tb = q.passageRef?.textbook || "교과서 미연결";
+      const ls = q.passageRef?.lesson || "단원 미지정";
+      const pTitle = q.passageRef?.title || (q.passageRef ? `지문 ${q.passageRef.id.slice(-4)}` : "지문 없음");
+      if (!tree.has(tb)) tree.set(tb, new Map());
+      const l2 = tree.get(tb)!;
+      if (!l2.has(ls)) l2.set(ls, new Map());
+      const l3 = l2.get(ls)!;
+      if (!l3.has(pTitle)) l3.set(pTitle, []);
+      l3.get(pTitle)!.push(q);
+    }
+    return tree;
+  }
+
+  function addBulkChecked() {
+    const qs = availableQuestions.filter((q) => bulkCheckedIds.has(q.id));
+    const existing = new Set(selectedItems.map((i) => i.questionId));
+    const dup = qs.filter((q) => existing.has(q.id)).length;
+    const added = qs.length - dup;
+    addQuestions(qs);
+    setBulkCheckedIds(new Set());
+    setBulkModalOpen(false);
+    setTimeout(() => {
+      alert(`${added}개 추가됨${dup > 0 ? ` · ${dup}개 중복 건너뜀` : ""}`);
+    }, 50);
   }
 
   function removeQuestion(qid: string) {
@@ -514,10 +571,16 @@ export default function ExamEditPage({
       <div className="grid grid-cols-2 gap-6">
         {/* 문제 은행 */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-gray-800">
+          <div className="flex items-center gap-2 mb-3">
+            <h3 className="font-semibold text-gray-800 mr-auto">
               문제 은행 ({filteredQuestions.length}개)
             </h3>
+            <button
+              onClick={() => setBulkModalOpen(true)}
+              className="text-xs bg-emerald-600 text-white hover:bg-emerald-700 font-medium px-3 py-1.5 rounded"
+            >
+              📚 교재별 일괄 추가
+            </button>
             {checkedIds.size > 0 && (
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-500">{checkedIds.size}개 선택됨</span>
@@ -676,6 +739,182 @@ export default function ExamEditPage({
           {saving ? "저장 중..." : "변경사항 저장"}
         </button>
       </div>
+
+      {bulkModalOpen && (() => {
+        const tree = bulkBuildByTextbook();
+        const alreadyIn = new Set(selectedItems.map((i) => i.questionId));
+        return (
+          <div
+            className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+            onClick={() => setBulkModalOpen(false)}
+          >
+            <div
+              className="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[85vh] flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between p-5 border-b border-gray-100">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-800">교재별 일괄 추가</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    교재 → 단원 → 지문 순으로 펼쳐서 체크. 이미 추가된 문제는 자동으로 건너뜁니다.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setBulkModalOpen(false)}
+                  className="text-gray-400 hover:text-gray-600 text-xl"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-5">
+                {Array.from(tree.entries()).map(([tb, lessons]) => {
+                  const tbAllIds: string[] = [];
+                  for (const ps of lessons.values()) for (const arr of ps.values()) for (const q of arr) if (!alreadyIn.has(q.id)) tbAllIds.push(q.id);
+                  const tbAllChecked = tbAllIds.length > 0 && tbAllIds.every((id) => bulkCheckedIds.has(id));
+                  const tbKey = `tb::${tb}`;
+                  const tbOpen = bulkExpanded.has(tbKey);
+                  return (
+                    <div key={tbKey} className="mb-2 border border-gray-200 rounded-lg">
+                      <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 rounded-t-lg">
+                        <input
+                          type="checkbox"
+                          checked={tbAllChecked}
+                          disabled={tbAllIds.length === 0}
+                          onChange={() => bulkToggle(tbAllIds)}
+                        />
+                        <button
+                          onClick={() => bulkToggleExpanded(tbKey)}
+                          className="flex-1 flex items-center gap-2 text-left text-sm font-semibold text-emerald-800"
+                        >
+                          <span className="text-xs">{tbOpen ? "▼" : "▶"}</span>
+                          <span>{tb}</span>
+                          <span className="text-xs text-emerald-600 ml-auto">
+                            추가 가능 {tbAllIds.length}개
+                          </span>
+                        </button>
+                      </div>
+                      {tbOpen && (
+                        <div className="px-3 py-2 space-y-1">
+                          {Array.from(lessons.entries()).map(([ls, passages]) => {
+                            const lsAllIds: string[] = [];
+                            for (const arr of passages.values()) for (const q of arr) if (!alreadyIn.has(q.id)) lsAllIds.push(q.id);
+                            const lsAllChecked = lsAllIds.length > 0 && lsAllIds.every((id) => bulkCheckedIds.has(id));
+                            const lsKey = `ls::${tb}::${ls}`;
+                            const lsOpen = bulkExpanded.has(lsKey);
+                            return (
+                              <div key={lsKey} className="border-l-2 border-emerald-100 pl-2">
+                                <div className="flex items-center gap-2 py-1">
+                                  <input
+                                    type="checkbox"
+                                    checked={lsAllChecked}
+                                    disabled={lsAllIds.length === 0}
+                                    onChange={() => bulkToggle(lsAllIds)}
+                                  />
+                                  <button
+                                    onClick={() => bulkToggleExpanded(lsKey)}
+                                    className="flex-1 flex items-center gap-2 text-left text-sm font-medium text-amber-700"
+                                  >
+                                    <span className="text-xs">{lsOpen ? "▼" : "▶"}</span>
+                                    <span>{ls}</span>
+                                    <span className="text-xs text-gray-400 ml-auto">
+                                      {lsAllIds.length}개
+                                    </span>
+                                  </button>
+                                </div>
+                                {lsOpen && (
+                                  <div className="pl-4 py-1 space-y-1">
+                                    {Array.from(passages.entries()).map(([pTitle, qs]) => {
+                                      const pAllIds = qs.filter((q) => !alreadyIn.has(q.id)).map((q) => q.id);
+                                      const pAllChecked = pAllIds.length > 0 && pAllIds.every((id) => bulkCheckedIds.has(id));
+                                      const pKey = `p::${tb}::${ls}::${pTitle}`;
+                                      const pOpen = bulkExpanded.has(pKey);
+                                      return (
+                                        <div key={pKey} className="border-l border-amber-100 pl-2">
+                                          <div className="flex items-center gap-2 py-1">
+                                            <input
+                                              type="checkbox"
+                                              checked={pAllChecked}
+                                              disabled={pAllIds.length === 0}
+                                              onChange={() => bulkToggle(pAllIds)}
+                                            />
+                                            <button
+                                              onClick={() => bulkToggleExpanded(pKey)}
+                                              className="flex-1 flex items-center gap-2 text-left text-xs text-gray-700"
+                                            >
+                                              <span className="text-xs">{pOpen ? "▼" : "▶"}</span>
+                                              <span className="truncate">{pTitle}</span>
+                                              <span className="text-xs text-gray-400 ml-auto">
+                                                {pAllIds.length}/{qs.length}
+                                              </span>
+                                            </button>
+                                          </div>
+                                          {pOpen && (
+                                            <ul className="pl-5 py-1 space-y-0.5">
+                                              {qs.map((q) => {
+                                                const isIn = alreadyIn.has(q.id);
+                                                const ti = getQuestionTypeInfo(q.examType, q.questionType);
+                                                const typeLabel = ti ? `${ti.number}번 ${ti.name}` : q.questionType;
+                                                return (
+                                                  <li key={q.id} className="flex items-center gap-2 text-xs py-0.5">
+                                                    <input
+                                                      type="checkbox"
+                                                      checked={bulkCheckedIds.has(q.id)}
+                                                      disabled={isIn}
+                                                      onChange={() => bulkToggle([q.id])}
+                                                    />
+                                                    <span className={`flex-1 truncate ${isIn ? "text-gray-400 line-through" : "text-gray-700"}`}>
+                                                      <span className="text-purple-600 mr-1">[{typeLabel}]</span>
+                                                      {q.question}
+                                                    </span>
+                                                    {isIn && <span className="text-xs text-gray-400">추가됨</span>}
+                                                  </li>
+                                                );
+                                              })}
+                                            </ul>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                {tree.size === 0 && (
+                  <p className="text-center text-sm text-gray-400 py-8">표시할 문제가 없습니다.</p>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between p-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
+                <span className="text-sm text-gray-600">
+                  {bulkCheckedIds.size}개 선택됨
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setBulkCheckedIds(new Set())}
+                    className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                  >
+                    선택 해제
+                  </button>
+                  <button
+                    onClick={addBulkChecked}
+                    disabled={bulkCheckedIds.size === 0}
+                    className="px-4 py-2 text-sm bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50"
+                  >
+                    + 선택한 {bulkCheckedIds.size}개 추가
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {detailQuestion && (
         <div
