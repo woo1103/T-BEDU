@@ -5,29 +5,27 @@
 //   2) 특정 계정 승격:     node --env-file=.env.local scripts/promote-admin.mjs <username>
 //   3) teacher 로 강등:    node --env-file=.env.local scripts/promote-admin.mjs <username> teacher
 
-import { PrismaClient } from "../src/generated/prisma/client/index.js";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { createClient } from "@libsql/client";
 
-const adapter = new PrismaLibSql({
+const db = createClient({
   url: process.env.TURSO_DATABASE_URL,
   authToken: process.env.TURSO_AUTH_TOKEN,
 });
-const prisma = new PrismaClient({ adapter });
 
 async function main() {
   const username = process.argv[2];
   const role = process.argv[3] || "admin";
 
   if (!username) {
-    const users = await prisma.user.findMany({
-      select: { username: true, role: true, createdAt: true },
-      orderBy: { createdAt: "asc" },
-    });
+    const res = await db.execute(
+      `SELECT username, role, createdAt FROM User ORDER BY createdAt ASC`
+    );
     console.log("\n현재 계정 목록:");
     console.log("─".repeat(60));
-    for (const u of users) {
-      const tag = u.role === "admin" ? "[admin]   " : "[teacher] ";
-      console.log(`${tag} ${u.username.padEnd(20)} ${u.createdAt.toISOString().slice(0, 10)}`);
+    for (const row of res.rows) {
+      const tag = row.role === "admin" ? "[admin]   " : "[teacher] ";
+      const created = String(row.createdAt).slice(0, 10);
+      console.log(`${tag} ${String(row.username).padEnd(20)} ${created}`);
     }
     console.log("─".repeat(60));
     console.log(`\n승격하려면: node --env-file=.env.local scripts/promote-admin.mjs <username>`);
@@ -39,23 +37,28 @@ async function main() {
     process.exit(1);
   }
 
-  const before = await prisma.user.findUnique({ where: { username } });
-  if (!before) {
+  const before = await db.execute({
+    sql: `SELECT username, role FROM User WHERE username = ?`,
+    args: [username],
+  });
+  if (before.rows.length === 0) {
     console.error(`'${username}' 계정을 찾을 수 없습니다.`);
     process.exit(1);
   }
-  if (before.role === role) {
+  const prevRole = before.rows[0].role;
+  if (prevRole === role) {
     console.log(`이미 role='${role}' 입니다. 변경 사항 없음.`);
     return;
   }
 
-  await prisma.user.update({ where: { username }, data: { role } });
-  console.log(`'${username}' 의 role: ${before.role} → ${role}`);
+  await db.execute({
+    sql: `UPDATE User SET role = ?, updatedAt = CURRENT_TIMESTAMP WHERE username = ?`,
+    args: [role, username],
+  });
+  console.log(`'${username}' 의 role: ${prevRole} → ${role}`);
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(() => prisma.$disconnect());
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
