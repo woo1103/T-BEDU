@@ -1,15 +1,13 @@
-const CACHE_NAME = "english-exam-v1";
-
-self.addEventListener("install", (event) => {
+// 배포 후 구 JS 청크를 캐시하지 않도록 fetch 가로채기 비활성화
+self.addEventListener("install", () => {
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(clients.claim());
-});
-
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
+  event.waitUntil(
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
+      .then(() => self.clients.claim())
   );
 });

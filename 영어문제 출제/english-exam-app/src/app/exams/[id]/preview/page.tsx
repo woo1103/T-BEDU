@@ -467,15 +467,31 @@ export default function ExamPreviewPage({
   const { id } = use(params);
   const [exam, setExam] = useState<ExamDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [showAnswers, setShowAnswers] = useState(false);
 
   useEffect(() => {
     fetch(`/api/exams/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          setLoadError(data.error || "시험지를 불러오지 못했습니다.");
+          setExam(null);
+          return;
+        }
+        if (!Array.isArray(data.items)) {
+          setLoadError("시험지 문항 데이터가 올바르지 않습니다.");
+          setExam(null);
+          return;
+        }
         setExam(data);
-        setLoading(false);
-      });
+        setLoadError(null);
+      })
+      .catch(() => {
+        setLoadError("시험지를 불러오는 중 오류가 발생했습니다.");
+        setExam(null);
+      })
+      .finally(() => setLoading(false));
   }, [id]);
 
   function handlePrint() {
@@ -486,11 +502,25 @@ export default function ExamPreviewPage({
     return <div className="text-center text-gray-400 py-12">불러오는 중...</div>;
   }
 
-  if (!exam) {
-    return <div className="text-center text-gray-400 py-12">시험지를 찾을 수 없습니다.</div>;
+  if (loadError || !exam) {
+    return (
+      <div className="text-center py-12 space-y-3">
+        <p className="text-gray-600">{loadError || "시험지를 찾을 수 없습니다."}</p>
+        <Link href="/exams" className="text-sm text-blue-600 hover:underline">
+          시험지 목록으로
+        </Link>
+      </div>
+    );
   }
 
-  const headerInfo = exam.headerInfo ? JSON.parse(exam.headerInfo) : {};
+  let headerInfo: Record<string, string> = {};
+  if (exam.headerInfo) {
+    try {
+      headerInfo = JSON.parse(exam.headerInfo);
+    } catch {
+      headerInfo = {};
+    }
+  }
 
   return (
     <div>
