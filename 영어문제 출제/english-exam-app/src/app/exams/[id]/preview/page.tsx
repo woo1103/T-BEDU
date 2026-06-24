@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, Component, type ReactNode } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import type { Choice } from "@/types";
@@ -218,11 +218,12 @@ function SummaryRenderer({
 }) {
   // choices에서 (A)/(B) 쌍 파싱
   const parsedChoices = choices.map((c) => {
-    const match = c.text.match(
+    const text = c.text ?? "";
+    const match = text.match(
       /\(A\)\s*(\S+)\s*[…·\-—]+\s*\(B\)\s*(\S+)/
     );
     return {
-      a: match ? match[1] : c.text,
+      a: match ? match[1] : text,
       b: match ? match[2] : "",
       isCorrect: c.isCorrect,
       label: c.label,
@@ -371,6 +372,31 @@ function DefaultRenderer({
       </div>
     </>
   );
+}
+
+// ── 문항별 에러 경계 ──
+// 한 문항의 데이터가 비정상이어도 시험지 전체가 죽지 않도록 격리한다.
+class QuestionErrorBoundary extends Component<
+  { orderNum: number; children: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="border-b border-gray-200 pb-6 last:border-b-0 text-sm text-gray-400">
+          <span className="font-bold text-lg text-gray-500">
+            {this.props.orderNum}.
+          </span>{" "}
+          이 문항을 표시할 수 없습니다. (데이터 형식 오류)
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
 
 // ── 문항 렌더러 (유형별 분기) ──
@@ -591,11 +617,9 @@ export default function ExamPreviewPage({
         {/* 문항들 */}
         <div className="space-y-8">
           {exam.items.map((item) => (
-            <QuestionRenderer
-              key={item.id}
-              item={item}
-              showAnswers={showAnswers}
-            />
+            <QuestionErrorBoundary key={item.id} orderNum={item.orderNum}>
+              <QuestionRenderer item={item} showAnswers={showAnswers} />
+            </QuestionErrorBoundary>
           ))}
         </div>
       </div>

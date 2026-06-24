@@ -713,11 +713,12 @@ function SummaryQuestionPDF({
 
   // (A)/(B) 쌍 파싱
   const parsedChoices = choices.map((c) => {
-    const match = c.text.match(
+    const text = c.text ?? "";
+    const match = text.match(
       /\(A\)\s*(\S+)\s*[…·\-—]+\s*\(B\)\s*(\S+)/
     );
     return {
-      a: match ? match[1] : c.text,
+      a: match ? match[1] : text,
       b: match ? match[2] : "",
       isCorrect: c.isCorrect,
     };

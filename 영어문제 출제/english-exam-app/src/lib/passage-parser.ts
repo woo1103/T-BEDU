@@ -80,7 +80,7 @@ export interface MarkerChoice {
 export function isMarkerOnlyChoices(choices: MarkerChoice[]): boolean {
   if (choices.length === 0) return false;
   return choices.every((c) => {
-    const stripped = c.text.replace(/[()\s]*문장\s*끝[()\s]*/g, "").trim();
+    const stripped = (c.text ?? "").replace(/[()\s]*문장\s*끝[()\s]*/g, "").trim();
     return CIRCLE_MARKERS.includes(stripped);
   });
 }
@@ -92,7 +92,7 @@ export function normalizeMarkerChoices<T extends MarkerChoice>(choices: T[]): T[
   return choices
     .map((c) => ({
       ...c,
-      text: c.text.replace(/[()\s]*문장\s*끝[()\s]*/g, "").trim(),
+      text: (c.text ?? "").replace(/[()\s]*문장\s*끝[()\s]*/g, "").trim(),
     }))
     .sort(
       (a, b) =>
