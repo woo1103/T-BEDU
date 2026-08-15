@@ -1,0 +1,7 @@
+# API 키가 들어가므로 절대 커밋하지 않는다
+.env
+
+node_modules/
+.bundle/
+out/
+render.log

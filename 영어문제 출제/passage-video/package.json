@@ -1,0 +1,25 @@
+{
+  "name": "passage-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "영어 지문을 만화 캐릭터 애니메이션 MP4로 시각화하는 Remotion 렌더러",
+  "scripts": {
+    "studio": "remotion studio",
+    "tts": "node scripts/tts.mjs",
+    "voices": "node scripts/voices.mjs",
+    "stills": "node scripts/stills.mjs",
+    "render": "node scripts/render.mjs"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.507",
+    "@remotion/cli": "4.0.507",
+    "@remotion/renderer": "4.0.507",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "remotion": "4.0.507"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}

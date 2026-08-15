@@ -1,0 +1,105 @@
+{
+  "slug": "sample-story",
+  "title": "낯선 도시의 우산",
+  "subtitle": "필자가 겪은 하루가 생각을 바꿔 놓았다",
+  "source": "이야기 지문 예시 · 필자 수기",
+  "kind": "story",
+  "characters": {
+    "writer": {
+      "name": "필자",
+      "voice": { "name": "ko-KR-Neural2-C", "rate": 1, "pitch": -1 },
+      "skin": "#EFCBA9",
+      "hair": "curly",
+      "hairColor": "#2E2622",
+      "outfit": "tshirt",
+      "outfitColor": "#E4643F",
+      "accentColor": "#3B4252",
+      "accessory": "none",
+      "build": "normal"
+    },
+    "stranger": {
+      "name": "노부인",
+      "voice": { "name": "ko-KR-Neural2-B", "rate": 0.88, "pitch": -2 },
+      "skin": "#F3D9C0",
+      "hair": "bun",
+      "hairColor": "#B9B4AE",
+      "outfit": "dress",
+      "outfitColor": "#5E9E86",
+      "accentColor": "#3C5F52",
+      "accessory": "glasses",
+      "prop": "basket",
+      "build": "stout"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "낯선 도시의 우산",
+      "subtitle": "이야기 지문 · 친절의 값",
+      "narration": "필자가 유학 첫 학기에 겪은 하루의 일이에요.",
+      "cast": [
+        { "who": "writer", "expression": "neutral", "pose": "idle" },
+        { "who": "stranger", "expression": "happy", "pose": "present" }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "street",
+      "caption": "낯선 도시, 갑자기 쏟아진 비",
+      "sfx": "쏴아—",
+      "narration": "지도도 우산도 없이, 필자는 처음 와 본 거리에 홀로 서 있었어요.",
+      "speech": {
+        "who": "writer",
+        "text": "여기가 어디지… 이대로 있으면 수업에 못 가는데.",
+        "thought": true
+      },
+      "narrationOut": "말이 통하지 않는 도시에서는 길을 묻는 일조차 두려웠어요.",
+      "cast": [{ "who": "writer", "expression": "sad", "pose": "shrug" }]
+    },
+    {
+      "type": "dialogue",
+      "setting": "street",
+      "narration": "그때 장바구니를 든 노부인이 다가와 자신의 우산을 내밀었어요.",
+      "lines": [
+        { "who": "stranger", "text": "이거 쓰고 가요. 나는 곧 집에 도착하니까 괜찮아요." },
+        { "who": "writer", "text": "아니에요, 그러면 어르신이 비를 맞으시잖아요." },
+        { "who": "stranger", "text": "언젠가 다른 사람에게 갚아 주면 돼요. 그거면 충분해요." }
+      ],
+      "narrationOut": "필자는 우산을 받아 들었지만, 자신이 무엇을 받은 것인지는 그날 알지 못했어요.",
+      "cast": [
+        { "who": "writer", "expression": "surprised", "pose": "idle" },
+        { "who": "stranger", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "room",
+      "caption": "몇 달 뒤, 같은 자리에 선 다른 사람",
+      "narration": "학기가 끝날 무렵, 필자는 비에 갇힌 신입생을 우연히 마주쳤어요.",
+      "speech": {
+        "who": "writer",
+        "text": "이거 쓰고 가요. 언젠가 다른 사람에게 갚아 주면 돼요."
+      },
+      "narrationOut": "노부인의 말이 그대로 자신의 입에서 나오는 걸 필자는 그때 처음 깨달았어요.",
+      "cast": [{ "who": "writer", "expression": "happy", "pose": "present" }]
+    },
+    {
+      "type": "quote",
+      "sentence": "She did not ask me to thank her; she asked me to pass it on, and that turned a small favor into something that kept moving.",
+      "translation": "그분은 고마움을 갚으라 하지 않고 다른 사람에게 넘겨주라고 했고, 그 말이 작은 호의를 계속 움직이는 것으로 바꿔 놓았다.",
+      "highlight": ["pass", "moving", "not"],
+      "narration": "필자가 이 이야기로 말하려는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "이 이야기가 남긴 것",
+      "points": [
+        "필자는 낯선 도시에서 낯선 사람의 우산을 받았다",
+        "노부인은 보답 대신 '다른 사람에게 넘겨주기'를 요청했다",
+        "그래서 호의는 한 번에 끝나지 않고 계속 이어졌다"
+      ],
+      "narration": "받은 것을 돌려주는 대신 넘겨줄 때, 친절은 사라지지 않고 계속 움직여요.",
+      "cast": [{ "who": "writer", "expression": "happy", "pose": "cheer" }]
+    }
+  ]
+}

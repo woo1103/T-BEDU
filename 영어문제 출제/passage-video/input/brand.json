@@ -1,0 +1,16 @@
+{
+  "name": "T&BEDU",
+  "tagline": "지문을 눈으로 이해하는 시간",
+  "color": "#245B3E",
+  "logo": "logo.png",
+  "narratorVoice": {
+    "name": "ko-KR-Neural2-A",
+    "rate": 0.92,
+    "pitch": -1.5
+  },
+  "bgm": "bgm.mp3",
+  "bgmVolume": 0.07,
+  "_안내_로고": "logo 는 public/ 폴더 안의 파일명입니다. 이 줄을 지우거나 파일이 없으면 학원명으로 만든 원형 로고가 대신 나옵니다.",
+  "_안내_나레이터": "3인칭 나레이션 목소리. 모든 영상에서 이 목소리로 고정됩니다. rate 를 낮추면 차분해지고 pitch 를 낮추면 톤이 내려갑니다. 실제 사용 가능한 목소리 이름은 `node scripts/voices.mjs` 로 확인하세요.",
+  "_안내_배경음악": "public/bgm.mp3 를 넣으면 전 구간에 은은하게 깔립니다. 파일이 없으면 배경음악 없이 렌더됩니다. bgmVolume 은 0~1 (0.07 = 나레이션을 가리지 않는 수준)."
+}
