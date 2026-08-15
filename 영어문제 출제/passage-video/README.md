@@ -3,6 +3,23 @@
 영어 지문 하나를 **T&BEDU 인트로가 붙은 1920×1080 MP4**로 만드는 렌더러.
 Remotion(React로 영상을 그리는 도구)을 쓰므로 지문마다 코드를 짤 필요 없이 **JSON 한 개만 쓰면 된다.**
 
+## 새 PC에서 시작하기
+
+```bash
+git clone https://github.com/woo1103/T-BEDU.git
+cd "T-BEDU/영어문제 출제/passage-video"
+npm install
+cp .env.example .env      # 그리고 GOOGLE_TTS_API_KEY 를 채운다
+node scripts/doctor.mjs   # 준비됐는지 점검
+```
+
+`doctor` 가 [정상] 만 띄우면 바로 렌더할 수 있다. 필요한 것:
+
+- **Node 22 이상** — 스크립트가 `.ts` 파일을 직접 불러오므로 타입 스트리핑이 필요하다
+- **TTS API 키** — 없어도 무음으로는 렌더된다
+- 그 외(브라우저·인코더·한글 폰트)는 전부 자동이다. Remotion 이 첫 렌더 때 Chrome 을 받아오고,
+  ffmpeg 는 번들되어 있으며, 한글 폰트는 `public/fonts/` 에 함께 커밋되어 있다
+
 ## 쓰는 법
 
 Claude Code 에서 지문을 붙여넣고 영상을 요청하면 `passage-video` 스킬이 알아서 아래 과정을 수행한다.
