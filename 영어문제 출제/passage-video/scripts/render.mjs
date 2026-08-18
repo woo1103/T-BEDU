@@ -30,7 +30,11 @@ await renderMedia({
   outputLocation,
   inputProps: spec,
   crf: 20,
-  concurrency: null,
+  // 워커를 코어 수만큼 띄우면 한글 폰트 준비가 기본 타임아웃(30초)을 넘겨
+  // "delayRender was not cleared" 로 렌더가 통째로 실패한다.
+  // 동시 실행을 줄이고 대기 시간을 넉넉히 준다.
+  concurrency: 4,
+  timeoutInMilliseconds: 120000,
   onProgress: ({ progress }) => {
     const pct = Math.floor(progress * 100);
     if (pct >= last + 10) {

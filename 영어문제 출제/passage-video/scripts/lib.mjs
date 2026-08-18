@@ -1,5 +1,6 @@
 import path from "node:path";
 import fs from "node:fs";
+import os from "node:os";
 import { fileURLToPath } from "node:url";
 import { bundle } from "@remotion/bundler";
 import { selectComposition } from "@remotion/renderer";
@@ -57,13 +58,16 @@ export const getBundle = async () => {
   process.stdout.write("번들링 중...\n");
   cached = await bundle({
     entryPoint: path.join(ROOT, "src", "index.ts"),
-    outDir: path.join(ROOT, ".bundle"),
+    // 번들은 반드시 OneDrive 밖(임시 폴더)에 만든다.
+    // OneDrive 안에 두면 렌더 워커 여러 개가 폰트(2MB)를 동시에 읽을 때
+    // 동기화가 파일을 붙잡아 로딩이 끝나지 않고 렌더가 통째로 실패한다.
+    outDir: path.join(os.tmpdir(), "passage-video-bundle"),
   });
   return cached;
 };
 
 export const getComposition = (serveUrl, spec) =>
-  selectComposition({ serveUrl, id: "Passage", inputProps: spec });
+  selectComposition({ serveUrl, id: "Passage", inputProps: spec, timeoutInMilliseconds: 120000 });
 
 /** 씬별 대표 프레임 (씬 안에서 62% 지점 — 애니메이션이 다 끝난 시점) */
 export const sceneMidFrames = (spec) => {

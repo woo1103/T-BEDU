@@ -1,47 +1,27 @@
-import { continueRender, delayRender, staticFile } from "remotion";
+import { staticFile } from "remotion";
 
 /**
- * 한글 폰트를 저장소 안에 넣어 두고 직접 불러온다.
+ * 한글 폰트를 저장소에 넣어 두고 CSS 로만 불러온다.
  *
- * OS 기본 폰트(맑은 고딕 등)에 의존하면 다른 PC·맥·리눅스에서 렌더할 때
- * 자간과 두께가 달라지거나 글자가 깨진다. 영상은 어디서 렌더해도 똑같아야 하므로
- * 폰트를 함께 커밋해서 쓴다.
+ * 왜 delayRender 로 기다리지 않는가:
+ * 폰트 로딩 완료를 기다리게 하면(직접 구현하든 @remotion/fonts 를 쓰든)
+ * 렌더 워커 페이지가 새로 뜰 때마다 간헐적으로 완료 신호가 오지 않았고,
+ * 그때마다 "delayRender was not cleared" 로 **렌더 전체가 실패**했다.
+ * 매번 다른 프레임(693, 2998 …)에서 죽어 재현도 일정하지 않았다.
  *
- * 로딩은 @font-face 를 주입한 뒤 document.fonts.load 로 기다린다.
- * FontFace 생성자 방식은 렌더 워커를 여러 개 띄울 때 완료 신호가 오지 않아
- * delayRender 타임아웃으로 렌더가 통째로 실패하는 일이 있었다.
+ * 폰트는 화질 문제일 뿐이고 렌더 실패는 치명적이므로, 기다리지 않기로 한다.
+ * font-display: swap 이라 폰트가 아직 준비되지 않은 순간에도 글자는 항상 보이고
+ * (시스템 폰트로 그려진다), 준비되면 즉시 Pretendard 로 바뀐다.
+ * 로컬 파일이라 실제로는 거의 즉시 적용된다.
  */
-const FAMILY = "Pretendard";
+export const FONT_FAMILY = "Pretendard";
 
 const style = document.createElement("style");
 style.textContent = `
 @font-face {
-  font-family: '${FAMILY}';
+  font-family: '${FONT_FAMILY}';
   src: url('${staticFile("fonts/PretendardVariable.woff2")}') format('woff2-variations');
   font-weight: 45 920;
-  font-display: block;
+  font-display: swap;
 }`;
 document.head.appendChild(style);
-
-const handle = delayRender("Pretendard 폰트 로딩");
-let settled = false;
-const finish = () => {
-  if (settled) return;
-  settled = true;
-  continueRender(handle);
-};
-
-// 실제로 쓰는 굵기들을 미리 로드한다 (한글 글리프를 포함해 요청해야 한다)
-Promise.all([
-  document.fonts.load(`400 100px ${FAMILY}`, "가"),
-  document.fonts.load(`700 100px ${FAMILY}`, "가"),
-  document.fonts.load(`900 100px ${FAMILY}`, "가"),
-])
-  .then(finish)
-  .catch((err) => {
-    console.warn("Pretendard 로딩 실패 — 시스템 폰트로 렌더합니다.", err);
-    finish();
-  });
-
-// 어떤 경우에도 폰트 때문에 렌더 전체가 죽지 않도록 하는 안전장치
-setTimeout(finish, 20000);

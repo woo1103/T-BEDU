@@ -284,24 +284,48 @@ export const Setting: React.FC<{ kind?: SettingKind; accent: string }> = ({
   }
 
   if (kind === "street") {
+    // 캐릭터는 화면 좌우 끝에 선다. 건물은 가운데에만 두어 인물과 겹치지 않게 한다.
     return (
       <>
         <Paper tint="#E9EEF3" />
-        {[[200, 3], [520, 2], [1240, 4], [1560, 2]].map(([x, floors], i) => (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              left: x,
-              top: floorY - 120 * (floors as number),
-              width: 250,
-              height: 120 * (floors as number),
-              background: ["#C7D2DD", "#D9C9BC", "#C2CFC6", "#DCD2E2"][i % 4],
-              border: `6px solid ${theme.line}`,
-              borderRadius: "8px 8px 0 0",
-            }}
-          />
-        ))}
+        {[[430, 3], [700, 2], [970, 4], [1240, 3]].map(([x, floors], i) => {
+          const h = 118 * (floors as number);
+          return (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: x,
+                top: floorY - h,
+                width: 240,
+                height: h,
+                background: ["#C7D2DD", "#D9C9BC", "#C2CFC6", "#DCD2E2"][i % 4],
+                border: `6px solid ${theme.line}`,
+                borderRadius: "8px 8px 0 0",
+                display: "flex",
+                flexWrap: "wrap",
+                alignContent: "flex-start",
+                gap: 18,
+                padding: 24,
+                boxSizing: "border-box",
+              }}
+            >
+              {Array.from({ length: (floors as number) * 2 }).map((_, w) => (
+                <div
+                  key={w}
+                  style={{
+                    width: 78,
+                    height: 52,
+                    background: (i + w) % 3 === 0 ? theme.amber : "#F2F6F9",
+                    border: `4px solid ${theme.line}`,
+                    borderRadius: 4,
+                    opacity: 0.9,
+                  }}
+                />
+              ))}
+            </div>
+          );
+        })}
         {floor("#9EA9B4")}
       </>
     );

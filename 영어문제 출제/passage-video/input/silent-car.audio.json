@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/silent-car/s0-narration.wav",
+    "seconds": 4.64,
+    "hash": "bde3f6afcf7e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/silent-car/s1-narration.wav",
+    "seconds": 3.92,
+    "hash": "080a1f25935b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/silent-car/s1-narrationOut.wav",
+    "seconds": 4.36,
+    "hash": "c7d1f243fc96",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/silent-car/s1-question.wav",
+    "seconds": 2.32,
+    "hash": "c0cc41e92a9f",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/silent-car/s2-narration.wav",
+    "seconds": 5.2,
+    "hash": "184818b7e55d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/silent-car/s3-narration.wav",
+    "seconds": 4.96,
+    "hash": "bedb6aeab0b0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/silent-car/s4-narration.wav",
+    "seconds": 4.08,
+    "hash": "e93ebbcc3894",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/silent-car/s4-narrationOut.wav",
+    "seconds": 4.6,
+    "hash": "469e1b51db5a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-line0": {
+    "file": "audio/silent-car/s4-line0.wav",
+    "seconds": 4.88,
+    "hash": "0408c96eaa6d",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s4-line1": {
+    "file": "audio/silent-car/s4-line1.wav",
+    "seconds": 5,
+    "hash": "eccbfad51b71",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s4-line2": {
+    "file": "audio/silent-car/s4-line2.wav",
+    "seconds": 4.36,
+    "hash": "73dad2658068",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-narration": {
+    "file": "audio/silent-car/s5-narration.wav",
+    "seconds": 6.24,
+    "hash": "8b363ec83cc2",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/silent-car/s6-narration.wav",
+    "seconds": 4.48,
+    "hash": "44ae2fbb983d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/silent-car/s7-narration.wav",
+    "seconds": 3.4,
+    "hash": "a45f77fbdac6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "slug": "silent-car",
+  "title": "조용한 차가 위험한 이유",
+  "subtitle": "눈으로만 확인하면 안 되는 이유가 있어요",
+  "source": "올림포스 독해의 기본1 12강 Analysis",
+  "kind": "academic",
+  "characters": {
+    "sena": {
+      "name": "세나",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F4D0B4",
+      "hair": "braids",
+      "hairColor": "#332420",
+      "outfit": "hoodie",
+      "outfitColor": "#E0653F",
+      "accentColor": "#3B4252",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "ryu": {
+      "name": "류 반장",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E5C0A0",
+      "hair": "short",
+      "hairColor": "#2E2723",
+      "outfit": "uniform",
+      "outfitColor": "#3E7CC4",
+      "accentColor": "#2C3A4E",
+      "accessory": "cap",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "조용한 차가 위험한 이유",
+      "subtitle": "감각 · 시각과 청각",
+      "narration": "이번 지문은 우리가 길에서 위험을 알아채는 방식을 다루고 있어요.",
+      "cast": [
+        { "who": "sena", "expression": "happy", "pose": "raise" },
+        { "who": "ryu", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "세나는 길을 건널 때 눈으로만 확인하면 된다고 생각했어요.",
+      "question": "양쪽만 잘 보면 되는 거 아니야?",
+      "thought": true,
+      "narrationOut": "부모님이 가장 먼저 가르치는 것도 좌우를 살피라는 말이니까요.",
+      "cast": [{ "who": "sena", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "소리라는 단서",
+      "meaning": "우리는 엔진 소리만으로도 차가 어디서 어느 방향으로 오는지 알아채요.",
+      "icon": "👂",
+      "narration": "시각이 지배적인 감각이지만, 청각도 그에 못지않게 중요해요.",
+      "cast": [{ "who": "ryu", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "두 감각이 하는 일",
+      "left": {
+        "label": "시각",
+        "icon": "👀",
+        "points": ["앞에 보이는 것만 확인", "고개를 돌려야 보인다", "가려지면 놓친다"]
+      },
+      "right": {
+        "label": "청각",
+        "icon": "👂",
+        "points": ["보이지 않아도 알아챈다", "방향까지 짐작한다", "다른 일 하면서도 작동"]
+      },
+      "narration": "두 감각은 하는 일이 서로 달라서 어느 하나로는 대신할 수 없어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "street",
+      "narration": "세나는 조용한 전기차가 바로 옆을 지나가자 깜짝 놀랐어요.",
+      "lines": [
+        { "who": "sena", "text": "차가 바로 옆에 올 때까지 전혀 몰랐어요. 소리가 하나도 안 났거든요." },
+        { "who": "ryu", "text": "그게 전기차의 문제예요. 사람들은 엔진 소리로 차를 알아채 왔으니까요." },
+        { "who": "sena", "text": "그러면 소리가 없는 차가 오히려 더 위험할 수도 있겠네요." }
+      ],
+      "narrationOut": "실제로 보행자와 자전거 이용자에게는 예상 밖의 위협이 되었어요.",
+      "cast": [
+        { "who": "sena", "expression": "surprised", "pose": "shrug" },
+        { "who": "ryu", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "flow",
+      "heading": "조용해서 생긴 문제",
+      "steps": [
+        { "label": "엔진 소리 없음", "icon": "🔇" },
+        { "label": "못 알아챔", "icon": "🚶" },
+        { "label": "사고 위험", "icon": "⚠️" },
+        { "label": "경고음 의무화", "icon": "🔊" }
+      ],
+      "narration": "그래서 미국 교통 당국은 느리게 달리는 전기차에 경고음을 내도록 했어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "These pose an unanticipated but serious threat to pedestrians and bicyclists, who depend on engine noise to detect and orient to cars.",
+      "translation": "조용한 전기차는 엔진 소리에 의존해 차를 감지하고 방향을 가늠해 온 보행자와 자전거 이용자에게 예상 밖의 심각한 위협이 됩니다.",
+      "highlight": ["threat", "engine", "noise", "detect"],
+      "narration": "지문에서는 이 문장이 문제의 핵심을 짚어 줘요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "시각이 지배적이지만 청각도 중요하다",
+        "조용한 전기차는 소리 단서를 없앴다",
+        "그래서 저속 전기차에 경고음이 의무화됐다"
+      ],
+      "narration": "두 단서가 함께 있어야 생사가 갈리지 않아요.",
+      "cast": [{ "who": "sena", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

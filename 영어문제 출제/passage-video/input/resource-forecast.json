@@ -1,0 +1,132 @@
+{
+  "slug": "resource-forecast",
+  "title": "30년 뒤 석유가 없다고?",
+  "subtitle": "고갈 예측이 놓치고 있는 것이 하나 있어요",
+  "source": "올림포스 독해의 기본1 12강 Practice 2",
+  "kind": "academic",
+  "characters": {
+    "sea": {
+      "name": "세아",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F7D5BC",
+      "hair": "bob",
+      "hairColor": "#4A2F26",
+      "outfit": "uniform",
+      "outfitColor": "#7C5CE0",
+      "accentColor": "#3A3260",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "han": {
+      "name": "한 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E9C6A4",
+      "hair": "short",
+      "hairColor": "#6B6660",
+      "outfit": "suit",
+      "outfitColor": "#2F6E5A",
+      "accentColor": "#2A3B33",
+      "accessory": "glasses",
+      "facialHair": "mustache",
+      "prop": "pen",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "30년 뒤 석유가 없다고?",
+      "subtitle": "경제 · 자원 고갈 예측의 함정",
+      "narration": "이번 지문은 자원이 언제 바닥나는지를 계산하는 방식을 다루고 있어요.",
+      "cast": [
+        { "who": "sea", "expression": "surprised", "pose": "raise" },
+        { "who": "han", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "세아는 석유가 30년 뒤에 바닥난다는 기사를 읽고 걱정이 되었어요.",
+      "question": "정말 내가 어른이 될 때쯤 석유가 다 떨어지는 걸까?",
+      "thought": true,
+      "narrationOut": "이런 예측은 아주 단순한 나눗셈 하나에서 나와요.",
+      "cast": [{ "who": "sea", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "현재 매장량 지수",
+      "meaning": "지금 알려진 매장량을 지금 쓰는 양으로 나눠 몇 년이 남았는지 계산하는 방법이에요.",
+      "icon": "📊",
+      "narration": "고갈을 예측하는 사람들이 흔히 쓰는 계산법이에요.",
+      "cast": [{ "who": "han", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "bars",
+      "heading": "지문이 든 예시",
+      "bars": [
+        { "label": "알려진 매장량", "value": 4450, "note": "억 배럴" },
+        { "label": "한 해 사용량", "value": 150, "note": "억 배럴" }
+      ],
+      "narration": "4450억 배럴을 한 해 150억 배럴씩 쓰면 약 30년이라는 답이 나와요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "세아는 숫자가 맞는데 왜 이 계산이 틀렸다는 건지 이해되지 않았어요.",
+      "lines": [
+        { "who": "sea", "text": "계산은 정확한 것 같은데, 왜 이 예측이 틀렸다는 거예요?" },
+        { "who": "han", "text": "매장량도 사용량도 30년 내내 그대로일 거라고 가정했기 때문이에요." },
+        { "who": "sea", "text": "아, 값이 오르면 사람들이 덜 쓰거나 다른 걸 찾겠네요." }
+      ],
+      "narrationOut": "예측이 놓친 것은 자원의 양이 아니라 가격이 하는 일이었어요.",
+      "cast": [
+        { "who": "sea", "expression": "confused", "pose": "shrug" },
+        { "who": "han", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "compare",
+      "heading": "예측 vs 실제",
+      "left": {
+        "label": "고갈 예측",
+        "icon": "📉",
+        "points": ["매장량은 정해져 있다", "쓰는 양은 계속 늘어난다", "그래서 30년이면 끝난다"]
+      },
+      "right": {
+        "label": "시장의 작동",
+        "icon": "💰",
+        "points": ["줄어들면 가격이 오른다", "덜 쓰고 대체재를 찾는다", "새 매장지를 개발한다"]
+      },
+      "narration": "시장이 제 역할을 하면 자원은 예측보다 훨씬 오래 버텨요."
+    },
+    {
+      "type": "flow",
+      "heading": "가격이 하는 일",
+      "steps": [
+        { "label": "자원 감소", "icon": "🛢️" },
+        { "label": "가격 상승", "icon": "💰" },
+        { "label": "덜 쓰고 대체", "icon": "🔄" },
+        { "label": "더 오래 간다", "icon": "⏳" }
+      ],
+      "narration": "가격이 오르는 것 자체가 고갈을 늦추는 장치예요."
+    },
+    {
+      "type": "quote",
+      "sentence": "But what they fail to see is that if markets are allowed to do their usual duty, that is, prices rise as depletion occurs, resources will last much longer.",
+      "translation": "그러나 그들이 보지 못하는 것은, 시장이 제 역할을 하도록 두면 고갈이 진행될수록 가격이 올라 자원이 훨씬 더 오래 간다는 점입니다.",
+      "highlight": ["markets", "prices", "longer"],
+      "narration": "지문에서는 이 문장이 결론이에요.",
+      "english": "prices rise as depletion occurs"
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "매장량을 사용량으로 나눈 값은 단순한 계산일 뿐이다",
+        "가격이 오르면 사용은 줄고 대체재가 나온다",
+        "그래서 자원은 예측보다 훨씬 오래 간다"
+      ],
+      "narration": "예측을 볼 때는 시장이 빠져 있지 않은지 확인해야 해요.",
+      "cast": [{ "who": "sea", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}
