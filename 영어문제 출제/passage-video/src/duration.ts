@@ -13,6 +13,23 @@ import type { AudioClip, Scene, VideoSpec } from "./types";
 export const CPS_KO = 4.8;
 export const CPS_EN = 9;
 
+/**
+ * 화면에 떠 있는 글자(카드·항목·표)를 훑는 속도.
+ * 자막처럼 한 줄씩 따라가는 게 아니라 시선을 옮겨 가며 읽으므로 조금 빠르다.
+ *
+ * 나레이션 음성이 붙으면 씬 길이가 음성에 맞춰지는데, 화면의 글자는 나레이션이
+ * 다 읽어 주지 않는다. 그래서 "음성 길이"와 "화면 글자를 읽는 시간" 중 긴 쪽을 쓴다.
+ */
+const CPS_SCREEN = 7;
+const CPS_SCREEN_EN = 12;
+
+/** 화면에 떠 있는 글자들을 다 읽는 데 걸리는 프레임 */
+const screenFrames = (
+  texts: (string | undefined)[],
+  fps: number,
+  cps: number = CPS_SCREEN
+): number => readFrames(texts.filter(Boolean).join(" "), fps, cps);
+
 /** 음성이 끝난 뒤 다음 대사로 넘어가기까지의 숨 */
 const BREATH = 0.42;
 
@@ -143,32 +160,63 @@ export const sceneDuration = (s: Scene, fps: number, v: VoiceTrack): number => {
       f = Math.max(withSpeech, readFrames(s.caption, fps) + Math.round(1.8 * fps));
       break;
     }
+    // 아래 씬들은 화면에 글자가 많다. 나레이션 음성이 짧아도
+    // 아이들이 화면을 다 읽을 때까지는 넘어가면 안 된다.
     case "concept":
-      f = Math.max(f, readFrames(s.meaning, fps) + Math.round(1.6 * fps));
+      f = Math.max(f, screenFrames([s.term, s.meaning], fps) + Math.round(1.6 * fps));
       break;
     case "compare": {
-      const bullets = s.left.points.length + s.right.points.length;
-      f = Math.max(f, Math.round(2 * fps) + bullets * Math.round(0.5 * fps));
+      const items = [...s.left.points, ...s.right.points];
+      const stagger = items.length * Math.round(0.4 * fps); // 항목이 하나씩 나타나는 시간
+      f = Math.max(
+        f,
+        stagger +
+          screenFrames([s.heading, s.left.label, s.right.label, ...items], fps) +
+          Math.round(1.2 * fps)
+      );
       break;
     }
-    case "flow":
-      f = Math.max(f, Math.round(1.6 * fps) + s.steps.length * Math.round(0.62 * fps));
+    case "flow": {
+      const stagger = s.steps.length * Math.round(0.62 * fps);
+      f = Math.max(
+        f,
+        stagger + screenFrames([s.heading, ...s.steps.map((x) => x.label)], fps) + Math.round(1.4 * fps)
+      );
       break;
-    case "bars":
-      f = Math.max(f, Math.round(1.8 * fps) + s.bars.length * Math.round(0.4 * fps));
+    }
+    case "bars": {
+      const stagger = s.bars.length * Math.round(0.4 * fps);
+      f = Math.max(
+        f,
+        stagger +
+          screenFrames([s.heading, ...s.bars.map((b) => `${b.label} ${b.note ?? ""}`)], fps) +
+          Math.round(1.4 * fps)
+      );
       break;
+    }
     case "analogy":
-      f = Math.max(f, readFrames(s.because, fps) + Math.round(1.8 * fps));
+      f = Math.max(
+        f,
+        screenFrames([s.heading, s.concept.label, s.everyday.label, s.because], fps) +
+          Math.round(1.8 * fps)
+      );
       break;
     case "quote":
       f = Math.max(
         f,
-        readFrames(s.sentence, fps, CPS_EN) + readFrames(s.translation, fps) + Math.round(1.6 * fps)
+        screenFrames([s.sentence], fps, CPS_SCREEN_EN) +
+          screenFrames([s.translation], fps) +
+          Math.round(1.8 * fps)
       );
       break;
-    case "recap":
-      f = Math.max(f, Math.round(1.4 * fps) + s.points.length * Math.round(0.9 * fps));
+    case "recap": {
+      const stagger = s.points.length * Math.round(0.75 * fps);
+      f = Math.max(
+        f,
+        stagger + screenFrames([s.heading, ...s.points], fps) + Math.round(1.6 * fps)
+      );
       break;
+    }
   }
 
   return Math.max(Math.round(2.4 * fps), f);

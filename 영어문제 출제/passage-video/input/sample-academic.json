@@ -7,7 +7,7 @@
   "characters": {
     "mina": {
       "name": "미나",
-      "voice": { "name": "ko-KR-Neural2-B", "rate": 1.05, "pitch": 2.5 },
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
       "skin": "#F6D2B8",
       "hair": "ponytail",
       "hairColor": "#3B2A22",
@@ -19,7 +19,7 @@
     },
     "doctor": {
       "name": "정 박사",
-      "voice": { "name": "ko-KR-Neural2-C", "rate": 0.95, "pitch": -3 },
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
       "skin": "#E8C39E",
       "hair": "short",
       "hairColor": "#4A3B33",
