@@ -31,6 +31,50 @@ const SETS = {
       { label: "6번", name: "ko-KR-Chirp3-HD-Achernar", rate: 0.9 },
     ],
   },
+  // 역할별 후보 — 남성 배역
+  male: {
+    text: null,
+    candidates: [
+      { label: "남학생 1번", name: "ko-KR-Chirp3-HD-Puck", rate: 1.05,
+        text: "그게 진짜예요? 저는 한 번도 그렇게 생각해 본 적이 없는데요." },
+      { label: "남학생 2번", name: "ko-KR-Chirp3-HD-Fenrir", rate: 1.05,
+        text: "그게 진짜예요? 저는 한 번도 그렇게 생각해 본 적이 없는데요." },
+      { label: "남학생 3번", name: "ko-KR-Chirp3-HD-Achird", rate: 1.05,
+        text: "그게 진짜예요? 저는 한 번도 그렇게 생각해 본 적이 없는데요." },
+      { label: "삼촌 1번", name: "ko-KR-Chirp3-HD-Algenib", rate: 1,
+        text: "그건 말이지, 내가 젊었을 때랑은 사정이 많이 달라졌어." },
+      { label: "삼촌 2번", name: "ko-KR-Chirp3-HD-Umbriel", rate: 1,
+        text: "그건 말이지, 내가 젊었을 때랑은 사정이 많이 달라졌어." },
+      { label: "삼촌 3번", name: "ko-KR-Chirp3-HD-Sadaltager", rate: 1,
+        text: "그건 말이지, 내가 젊었을 때랑은 사정이 많이 달라졌어." },
+      { label: "할아버지 1번", name: "ko-KR-Chirp3-HD-Enceladus", rate: 0.85,
+        text: "예전에는 말이다, 이런 걸 전부 손으로 하나하나 했단다." },
+      { label: "할아버지 2번", name: "ko-KR-Chirp3-HD-Schedar", rate: 0.85,
+        text: "예전에는 말이다, 이런 걸 전부 손으로 하나하나 했단다." },
+      { label: "할아버지 3번", name: "ko-KR-Chirp3-HD-Rasalgethi", rate: 0.85,
+        text: "예전에는 말이다, 이런 걸 전부 손으로 하나하나 했단다." },
+    ],
+  },
+
+  // 역할별 후보 — 여성 배역
+  female: {
+    text: null,
+    candidates: [
+      { label: "이모 1번", name: "ko-KR-Chirp3-HD-Kore", rate: 1,
+        text: "얘, 그러다 감기 걸린다. 이거라도 좀 걸치고 나가렴." },
+      { label: "이모 2번", name: "ko-KR-Chirp3-HD-Autonoe", rate: 1,
+        text: "얘, 그러다 감기 걸린다. 이거라도 좀 걸치고 나가렴." },
+      { label: "이모 3번", name: "ko-KR-Chirp3-HD-Sulafat", rate: 1,
+        text: "얘, 그러다 감기 걸린다. 이거라도 좀 걸치고 나가렴." },
+      { label: "할머니 1번", name: "ko-KR-Chirp3-HD-Gacrux", rate: 0.85,
+        text: "괜찮다, 천천히 해도 된다. 급할 것 하나 없단다." },
+      { label: "할머니 2번", name: "ko-KR-Chirp3-HD-Vindemiatrix", rate: 0.85,
+        text: "괜찮다, 천천히 해도 된다. 급할 것 하나 없단다." },
+      { label: "할머니 3번", name: "ko-KR-Chirp3-HD-Despina", rate: 0.85,
+        text: "괜찮다, 천천히 해도 된다. 급할 것 하나 없단다." },
+    ],
+  },
+
   cast: {
     text: null, // 후보마다 다른 대사
     candidates: [
@@ -95,11 +139,13 @@ fs.rmSync(tmp, { recursive: true, force: true });
 // WAV 는 재생기·메신저에 따라 안 열리는 경우가 있어서 mp3 쪽을 전달한다.
 const mp3 = wav.replace(/\.wav$/, ".mp3");
 try {
+  // Windows 에서 npx.cmd 는 shell 없이 실행하면 EINVAL 이 난다.
+  // shell 을 쓰면 공백이 든 경로가 잘리므로 따옴표로 감싼다.
   execFileSync(
-    process.platform === "win32" ? "npx.cmd" : "npx",
+    "npx",
     ["remotion", "ffmpeg", "-hide_banner", "-loglevel", "error",
-     "-i", wav, "-c:a", "libmp3lame", "-b:a", "160k", "-ar", "44100", mp3, "-y"],
-    { cwd: ROOT, stdio: ["ignore", "ignore", "pipe"] }
+     "-i", `"${wav}"`, "-c:a", "libmp3lame", "-b:a", "160k", "-ar", "44100", `"${mp3}"`, "-y"],
+    { cwd: ROOT, stdio: ["ignore", "ignore", "pipe"], shell: true }
   );
   console.log(`\n완료: ${mp3}  (${(pcm.length / (SAMPLE_RATE * 2)).toFixed(1)}초)`);
   console.log(`      ${wav} (원본)`);

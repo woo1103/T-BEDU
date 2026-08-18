@@ -42,20 +42,19 @@ const hash = (s: string): number => {
 // ─────────────────────────────────────────────── 머리카락
 
 const hairBack = (style: HairStyle, color: string): React.ReactNode => {
-  const dark = shade(color, -18);
+  const dark = shade(color, -10);
   switch (style) {
     case "long":
+      // 너무 길고 넓으면 몸통까지 덮어 검은 망토처럼 보인다. 어깨선 근처에서 끝낸다.
       return (
-        <>
-          <path
-            d={`M ${HX - HRX - 6} ${HY - 10} Q ${HX - HRX - 16} ${HY + 130} ${HX - HRX + 6} ${HY + 150}
-                L ${HX + HRX - 6} ${HY + 150} Q ${HX + HRX + 16} ${HY + 130} ${HX + HRX + 6} ${HY - 10} Z`}
-            fill={dark}
-            stroke={OUTLINE}
-            strokeWidth={SW}
-            strokeLinejoin="round"
-          />
-        </>
+        <path
+          d={`M ${HX - HRX - 4} ${HY - 10} Q ${HX - HRX - 12} ${HY + 88} ${HX - HRX + 8} ${HY + 108}
+              L ${HX + HRX - 8} ${HY + 108} Q ${HX + HRX + 12} ${HY + 88} ${HX + HRX + 4} ${HY - 10} Z`}
+          fill={dark}
+          stroke={OUTLINE}
+          strokeWidth={SW}
+          strokeLinejoin="round"
+        />
       );
     case "bob":
       return (

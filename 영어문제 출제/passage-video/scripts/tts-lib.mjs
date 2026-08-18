@@ -48,12 +48,15 @@ export const DEFAULT_NARRATOR = { name: "ko-KR-Neural2-A", rate: 0.92, pitch: -1
  * Chirp3-HD 계열은 rate/pitch 를 받지 않으므로 구분해서 보낸다.
  */
 export const synthesize = async (text, voice, outFile) => {
+  // Chirp3-HD 는 speakingRate 는 받지만 pitch 는 거부한다
+  // ("This voice does not support pitch parameters at this time.")
   const isChirp = voice.name.includes("Chirp");
-  const audioConfig = { audioEncoding: "LINEAR16", sampleRateHertz: SAMPLE_RATE };
-  if (!isChirp) {
-    audioConfig.speakingRate = voice.rate ?? 1;
-    audioConfig.pitch = voice.pitch ?? 0;
-  }
+  const audioConfig = {
+    audioEncoding: "LINEAR16",
+    sampleRateHertz: SAMPLE_RATE,
+    speakingRate: voice.rate ?? 1,
+  };
+  if (!isChirp) audioConfig.pitch = voice.pitch ?? 0;
 
   const res = await fetch(
     `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey()}`,

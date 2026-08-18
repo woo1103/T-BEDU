@@ -152,6 +152,8 @@ export const Setting: React.FC<{ kind?: SettingKind; accent: string }> = ({
   }
 
   if (kind === "room") {
+    // 인물은 화면 좌우 끝에, 말풍선은 위쪽에 온다.
+    // 창문·액자는 가운데 아래쪽 띠에만 두어 어느 것과도 겹치지 않게 한다.
     return (
       <>
         <Paper tint="#F3EBDD" />
@@ -159,27 +161,27 @@ export const Setting: React.FC<{ kind?: SettingKind; accent: string }> = ({
         <div
           style={{
             position: "absolute",
-            left: 260,
-            top: 170,
-            width: 360,
-            height: 300,
+            left: 560,
+            top: 330,
+            width: 340,
+            height: 280,
             background: "#CDE8F5",
             border: `8px solid ${theme.line}`,
             borderRadius: 8,
           }}
         />
-        <div style={{ position: "absolute", left: 436, top: 170, width: 8, height: 300, background: theme.line }} />
-        <div style={{ position: "absolute", left: 260, top: 314, width: 360, height: 8, background: theme.line }} />
+        <div style={{ position: "absolute", left: 726, top: 330, width: 8, height: 280, background: theme.line }} />
+        <div style={{ position: "absolute", left: 560, top: 464, width: 340, height: 8, background: theme.line }} />
         {/* 액자 */}
         <div
           style={{
             position: "absolute",
-            right: 300,
-            top: 210,
+            left: 1030,
+            top: 360,
             width: 220,
             height: 170,
             background: accent,
-            opacity: 0.5,
+            opacity: 0.45,
             border: `8px solid ${theme.line}`,
             borderRadius: 6,
           }}

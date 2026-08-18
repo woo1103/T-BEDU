@@ -1,0 +1,92 @@
+{
+  "s0-narration": {
+    "file": "audio/team-disagreement/s0-narration.wav",
+    "seconds": 4.84,
+    "hash": "4a104c72c8cf",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/team-disagreement/s1-narration.wav",
+    "seconds": 4.32,
+    "hash": "c20199eba693",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/team-disagreement/s1-narrationOut.wav",
+    "seconds": 5.08,
+    "hash": "3947a34cd34e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/team-disagreement/s1-question.wav",
+    "seconds": 5.12,
+    "hash": "111c4410e444",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/team-disagreement/s2-narration.wav",
+    "seconds": 4,
+    "hash": "56760c1f3baf",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/team-disagreement/s3-narration.wav",
+    "seconds": 3.6,
+    "hash": "f7cd72f8da2c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/team-disagreement/s4-narration.wav",
+    "seconds": 4,
+    "hash": "baf64f0717b5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/team-disagreement/s4-narrationOut.wav",
+    "seconds": 4.52,
+    "hash": "144adca7e509",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-line0": {
+    "file": "audio/team-disagreement/s4-line0.wav",
+    "seconds": 4.44,
+    "hash": "4558f6b84eb7",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s4-line1": {
+    "file": "audio/team-disagreement/s4-line1.wav",
+    "seconds": 5.48,
+    "hash": "c3c4f86bab40",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s4-line2": {
+    "file": "audio/team-disagreement/s4-line2.wav",
+    "seconds": 3.88,
+    "hash": "d7721e943055",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-narration": {
+    "file": "audio/team-disagreement/s5-narration.wav",
+    "seconds": 4.08,
+    "hash": "6b2acdf26529",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/team-disagreement/s6-narration.wav",
+    "seconds": 3.44,
+    "hash": "e0739eb27862",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/team-disagreement/s7-narration.wav",
+    "seconds": 2.48,
+    "hash": "fe69f8403558",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-narration": {
+    "file": "audio/team-disagreement/s8-narration.wav",
+    "seconds": 3.68,
+    "hash": "fb8305582750",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

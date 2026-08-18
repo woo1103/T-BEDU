@@ -1,0 +1,128 @@
+{
+  "slug": "team-disagreement",
+  "title": "의견이 갈리는 건 문제가 아니다",
+  "subtitle": "리더가 오히려 찾아 나서야 하는 것이 있어요",
+  "source": "올림포스 독해의 기본1 12강 Practice 3",
+  "kind": "academic",
+  "characters": {
+    "dain": {
+      "name": "다인",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D3B9",
+      "hair": "long",
+      "hairColor": "#3A2A24",
+      "outfit": "suit",
+      "outfitColor": "#C2557F",
+      "accentColor": "#3B3040",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "kang": {
+      "name": "강 팀장",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C4A2",
+      "hair": "short",
+      "hairColor": "#2F2A26",
+      "outfit": "suit",
+      "outfitColor": "#4A6FA5",
+      "accentColor": "#2B3648",
+      "accessory": "glasses",
+      "prop": "pen",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "의견이 갈리는 건 문제가 아니다",
+      "subtitle": "리더십 · 팀 안의 이견 다루기",
+      "narration": "이번 지문은 팀 안에서 의견이 갈릴 때 리더가 할 일을 다루고 있어요.",
+      "cast": [
+        { "who": "dain", "expression": "happy", "pose": "raise" },
+        { "who": "kang", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "다인은 회의에서 의견이 갈리자 팀에 문제가 생긴 줄 알았어요.",
+      "question": "다들 생각이 다른데… 이러면 프로젝트가 어그러지는 거 아닐까?",
+      "thought": true,
+      "narrationOut": "하지만 지문은 정반대로 말해요. 리더는 이견을 예상하고 있어야 한다고요.",
+      "cast": [{ "who": "dain", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "숨은 이견 찾기",
+      "meaning": "이견이 드러나지 않으면 리더가 먼저 찾아 나서야 해요. 감춰진 이견이 더 위험하니까요.",
+      "icon": "🔍",
+      "narration": "지문은 이견을 없앨 대상이 아니라 꺼내야 할 것으로 봐요.",
+      "cast": [{ "who": "kang", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "이견을 만났을 때",
+      "left": {
+        "label": "흔한 대응",
+        "icon": "🙈",
+        "points": ["갈등이 생겼다고 본다", "빨리 덮으려 한다", "결정을 서둘러 내린다"]
+      },
+      "right": {
+        "label": "지문의 권고",
+        "icon": "🤝",
+        "points": ["생길 걸 예상하고 있다", "숨어 있으면 찾아낸다", "성급한 결정은 피한다"]
+      },
+      "narration": "리더가 이견을 대하는 방식이 프로젝트의 방향을 바꿔요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "다인은 팀장에게 왜 이견을 굳이 꺼내야 하는지 물었어요.",
+      "lines": [
+        { "who": "dain", "text": "의견이 갈리면 일이 늦어지잖아요. 그냥 정리하고 가면 안 되나요?" },
+        { "who": "kang", "text": "다른 관점에서 더 나은 방법이 나오는 경우가 많아요. 그게 첫 번째 이유예요." },
+        { "who": "dain", "text": "그러면 지금 꺼내는 게 나중보다 낫다는 말씀이시죠?" }
+      ],
+      "narrationOut": "이견은 늦게 터질수록 풀기 어려워진다는 것이 두 번째 이유예요.",
+      "cast": [
+        { "who": "dain", "expression": "confused", "pose": "shrug" },
+        { "who": "kang", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "flow",
+      "heading": "언제 꺼내느냐가 다르게 만든다",
+      "steps": [
+        { "label": "이견 생김", "icon": "💬" },
+        { "label": "일찍 꺼냄", "icon": "⏰" },
+        { "label": "서로 검토", "icon": "🤝" },
+        { "label": "쉽게 정리", "icon": "✅" }
+      ],
+      "narration": "같은 이견도 일찍 다루면 훨씬 쉽게 정리돼요."
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "이견을 덮어 두는 일", "icon": "🙈" },
+      "everyday": { "label": "새는 물을 그냥 두는 일", "icon": "💧" },
+      "because": "처음엔 걸레 한 장이면 되지만, 미루면 벽을 뜯어야 해요.",
+      "narration": "미루는 동안 문제가 커지는 구조가 똑같아요."
+    },
+    {
+      "type": "quote",
+      "sentence": "Members will generally defer to the leader if they believe their views have been given due consideration.",
+      "translation": "팀원들은 자기 의견이 충분히 검토되었다고 느끼면 대체로 리더의 결정을 따릅니다.",
+      "highlight": ["defer", "due", "consideration"],
+      "narration": "지문이 마지막에 내놓는 결론이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "이견은 예상해야 할 일이지 사고가 아니다",
+        "숨어 있으면 리더가 먼저 찾아내야 한다",
+        "일찍 다룰수록 쉽게 풀리고 팀도 따른다"
+      ],
+      "narration": "팀원들이 원하는 건 이기는 게 아니라 검토받는 거예요.",
+      "cast": [{ "who": "dain", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}
