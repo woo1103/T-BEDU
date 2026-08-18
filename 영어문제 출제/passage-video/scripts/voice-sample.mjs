@@ -9,6 +9,7 @@
  */
 import path from "node:path";
 import fs from "node:fs";
+import { execFileSync } from "node:child_process";
 import { ROOT, ensureDir } from "./lib.mjs";
 import { synthesize } from "./tts-lib.mjs";
 
@@ -86,8 +87,23 @@ header.writeUInt16LE(16, 34);
 header.write("data", 36);
 header.writeUInt32LE(pcm.length, 40);
 
-const out = path.join(ensureDir(path.join(ROOT, "out")), `voice-${kind}.wav`);
-fs.writeFileSync(out, Buffer.concat([header, pcm]));
+const wav = path.join(ensureDir(path.join(ROOT, "out")), `voice-${kind}.wav`);
+fs.writeFileSync(wav, Buffer.concat([header, pcm]));
 fs.rmSync(tmp, { recursive: true, force: true });
 
-console.log(`\n완료: ${out}  (${(pcm.length / (SAMPLE_RATE * 2)).toFixed(1)}초)`);
+// 들어 보는 용도이므로 mp3 로도 내보낸다.
+// WAV 는 재생기·메신저에 따라 안 열리는 경우가 있어서 mp3 쪽을 전달한다.
+const mp3 = wav.replace(/\.wav$/, ".mp3");
+try {
+  execFileSync(
+    process.platform === "win32" ? "npx.cmd" : "npx",
+    ["remotion", "ffmpeg", "-hide_banner", "-loglevel", "error",
+     "-i", wav, "-c:a", "libmp3lame", "-b:a", "160k", "-ar", "44100", mp3, "-y"],
+    { cwd: ROOT, stdio: ["ignore", "ignore", "pipe"] }
+  );
+  console.log(`\n완료: ${mp3}  (${(pcm.length / (SAMPLE_RATE * 2)).toFixed(1)}초)`);
+  console.log(`      ${wav} (원본)`);
+} catch (e) {
+  console.warn("\nmp3 변환 실패 — wav 만 만들었습니다.", e.message);
+  console.log(`완료: ${wav}  (${(pcm.length / (SAMPLE_RATE * 2)).toFixed(1)}초)`);
+}
