@@ -903,6 +903,14 @@ const BarsScene: React.FC<SceneProps<Extract<Scene, { type: "bars" }>>> = ({
   const hasCast = Boolean(scene.cast?.length);
   const trackW = hasCast ? 1000 : 1300;
 
+  // 막대가 적으면 두껍게 그리고 무대 가운데로 올린다.
+  // 그대로 두면 2개짜리 그래프에서 화면 아래가 텅 빈다.
+  const n = scene.bars.length;
+  const barH = n <= 2 ? 92 : n <= 3 ? 76 : 62;
+  const gap = n <= 3 ? 38 : 30;
+  const blockH = n * barH + (n - 1) * gap;
+  const top = 250 + Math.max(0, Math.round((580 - blockH) / 2));
+
   return (
     <SceneFrame
       index={index}
@@ -923,10 +931,10 @@ const BarsScene: React.FC<SceneProps<Extract<Scene, { type: "bars" }>>> = ({
         style={{
           position: "absolute",
           left: 130,
-          top: 260,
+          top,
           display: "flex",
           flexDirection: "column",
-          gap: 30,
+          gap,
         }}
       >
         {scene.bars.map((b, i) => {
@@ -955,7 +963,7 @@ const BarsScene: React.FC<SceneProps<Extract<Scene, { type: "bars" }>>> = ({
               <div
                 style={{
                   width: trackW,
-                  height: 62,
+                  height: barH,
                   background: "rgba(35,40,56,0.08)",
                   borderRadius: 12,
                   border: `3px solid ${theme.line}`,

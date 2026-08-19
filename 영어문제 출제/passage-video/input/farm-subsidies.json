@@ -1,0 +1,121 @@
+{
+  "slug": "farm-subsidies",
+  "title": "더 싸게 파는데 왜 못 팔까",
+  "subtitle": "자유무역이라는 말과 실제 사이의 틈이 있어요",
+  "source": "리딩파워 유형편 완성 11강 Practice 1",
+  "kind": "academic",
+  "characters": {
+    "harin": {
+      "name": "하린",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F3CFB2",
+      "hair": "braids",
+      "hairColor": "#2E241F",
+      "outfit": "uniform",
+      "outfitColor": "#6E7CC4",
+      "accentColor": "#343A54",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "oh": {
+      "name": "오 연구원",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#D9A87C",
+      "hair": "short",
+      "hairColor": "#241E1A",
+      "outfit": "tshirt",
+      "outfitColor": "#2E7D6B",
+      "accentColor": "#2B3B38",
+      "accessory": "cap",
+      "prop": "leaf",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "더 싸게 파는데 왜 못 팔까",
+      "subtitle": "경제 · 농업 보조금과 공정 경쟁",
+      "narration": "이번 지문은 아프리카 농민이 왜 시장에서 밀리는지를 다루고 있어요.",
+      "cast": [
+        { "who": "harin", "expression": "surprised", "pose": "raise" },
+        { "who": "oh", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "하린은 아프리카 농민이 값을 아주 싸게 내놓는다는 사실을 알게 되었어요.",
+      "question": "더 싸게 파는데 왜 경쟁에서 밀리는 걸까?",
+      "thought": true,
+      "narrationOut": "값이 싸다는 것만으로는 이길 수 없는 이유가 있어요.",
+      "cast": [{ "who": "harin", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "농업 보조금",
+      "meaning": "국가가 심고 거두고 수출하고 판매하는 비용까지 대신 내주는 지원이에요.",
+      "icon": "🏦",
+      "narration": "부유한 나라들이 자국 농민에게 주는 이 지원이 문제의 핵심이에요.",
+      "cast": [{ "who": "oh", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "같은 시장에 선 두 농민",
+      "left": {
+        "label": "아프리카 농민",
+        "icon": "🌾",
+        "points": ["시간당 임금이 매우 낮다", "아주 싼값에 내놓는다", "받는 지원이 없다"]
+      },
+      "right": {
+        "label": "보조금 받는 농민",
+        "icon": "🏦",
+        "points": ["국가가 비용을 대준다", "수출과 판매까지 지원", "더 낮은 값도 버틴다"]
+      },
+      "narration": "차·면화·카카오·바나나를 싸게 내놔도 지원을 받는 쪽을 이길 수 없어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "하린은 대다수 아프리카인이 농사로 생계를 잇는다는 말을 들었어요.",
+      "lines": [
+        { "who": "harin", "text": "그러면 불공정한 경쟁이 생계를 직접 흔드는 거잖아요." },
+        { "who": "oh", "text": "맞아요. 오늘날 아프리카인 대다수가 상업 농민이니까요." },
+        { "who": "harin", "text": "그럼 부유한 나라가 먼저 보조금을 줄여야 하는 거네요." }
+      ],
+      "narrationOut": "지문은 서방의 관여가 석유와 광물 구매를 훨씬 넘어서야 한다고 말해요.",
+      "cast": [
+        { "who": "harin", "expression": "confused", "pose": "shrug" },
+        { "who": "oh", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "flow",
+      "heading": "보조금이 만드는 결과",
+      "steps": [
+        { "label": "보조금 지급", "icon": "🏦" },
+        { "label": "값이 더 내려감", "icon": "📉" },
+        { "label": "경쟁에서 밀림", "icon": "⚖️" },
+        { "label": "생계 타격", "icon": "💔" }
+      ],
+      "narration": "자유시장의 불공정 경쟁은 이렇게 파괴적인 결과를 남겨요."
+    },
+    {
+      "type": "quote",
+      "sentence": "It is up to the rich countries to gradually stop these subsidies and to give African farmers their chance.",
+      "translation": "이 보조금을 점차 없애고 아프리카 농민에게 기회를 주는 일은 부유한 나라들에게 달려 있습니다.",
+      "highlight": ["rich", "countries", "stop", "chance"],
+      "narration": "자유무역을 진짜로 믿는다면 해야 할 일이라고 지문은 말해요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "아프리카인 대다수는 농사로 생계를 잇는다",
+        "값을 싸게 내놔도 보조금 받는 농민을 못 이긴다",
+        "부유한 나라가 보조금을 줄여야 기회가 생긴다"
+      ],
+      "narration": "희생은 서방과 비서방을 가리지 않고 부유한 모든 나라에 요구돼요.",
+      "cast": [{ "who": "harin", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

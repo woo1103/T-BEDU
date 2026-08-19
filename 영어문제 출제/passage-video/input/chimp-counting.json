@@ -1,0 +1,117 @@
+{
+  "slug": "chimp-counting",
+  "title": "침팬지가 더 많은 쪽을 고른다",
+  "subtitle": "숫자를 세지 못해도 양은 비교할 수 있어요",
+  "source": "리딩파워 유형편 완성 11강 Practice 2",
+  "kind": "academic",
+  "characters": {
+    "seoyun": {
+      "name": "서윤",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D4BA",
+      "hair": "curly",
+      "hairColor": "#3B2B22",
+      "outfit": "tshirt",
+      "outfitColor": "#E2A33C",
+      "accentColor": "#3A4048",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "baek": {
+      "name": "백 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C6A6",
+      "hair": "short",
+      "hairColor": "#3A322C",
+      "outfit": "labcoat",
+      "outfitColor": "#9BB8D4",
+      "accentColor": "#414D5A",
+      "accessory": "roundGlasses",
+      "facialHair": "beard",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "침팬지가 더 많은 쪽을 고른다",
+      "subtitle": "동물 인지 · 수량 비교 능력",
+      "narration": "이번 지문은 동물이 양을 비교할 수 있는지 알아본 실험을 다루고 있어요.",
+      "cast": [
+        { "who": "seoyun", "expression": "happy", "pose": "raise" },
+        { "who": "baek", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "서윤은 동물이 숫자를 다룰 수 있는지 궁금했어요.",
+      "question": "숫자를 배운 적도 없는데, 어느 쪽이 더 많은지 알 수 있을까?",
+      "thought": true,
+      "narrationOut": "여러 종이 어느 정도 정확하게 양을 비교할 수 있다고 지문은 말해요.",
+      "cast": [{ "who": "seoyun", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "수량 비교 능력",
+      "meaning": "정확히 세지는 못해도 어느 쪽이 더 많은지는 알아내는 능력이에요.",
+      "icon": "⚖️",
+      "narration": "영장류학자 럼바우 연구팀이 침팬지로 이 능력을 확인했어요.",
+      "cast": [{ "who": "baek", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "bars",
+      "heading": "실험에 쓰인 쟁반 두 개",
+      "unit": "개",
+      "bars": [
+        { "label": "쟁반 A (3개 + 4개)", "value": 7 },
+        { "label": "쟁반 B (7개 + 2개)", "value": 9 }
+      ],
+      "narration": "한 쟁반에는 3개와 4개를, 다른 쟁반에는 7개와 2개를 놓아 두었어요."
+    },
+    {
+      "type": "flow",
+      "heading": "침팬지가 풀어야 한 문제",
+      "steps": [
+        { "label": "쟁반 살펴봄", "icon": "👀" },
+        { "label": "무더기 합하기", "icon": "➕" },
+        { "label": "두 쟁반 비교", "icon": "⚖️" },
+        { "label": "많은 쪽 선택", "icon": "🍫" }
+      ],
+      "narration": "각 쟁반의 두 무더기를 먼저 합한 뒤 서로 비교해야 하는 문제였어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "서윤은 침팬지가 정말 정확했는지 물었어요.",
+      "lines": [
+        { "who": "seoyun", "text": "침팬지가 실제로 많은 쪽을 잘 골랐나요?" },
+        { "who": "baek", "text": "두 쟁반의 합이 아주 비슷할 때는 잠깐 망설였어요." },
+        { "who": "seoyun", "text": "그래도 대체로는 많은 쪽을 정확히 골랐다는 거네요." }
+      ],
+      "narrationOut": "망설임 자체가 침팬지가 양을 견주어 보고 있었다는 증거예요.",
+      "cast": [
+        { "who": "seoyun", "expression": "surprised", "pose": "shrug" },
+        { "who": "baek", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "They were generally highly accurate at choosing the tray which had the larger number of chips.",
+      "translation": "침팬지들은 칩이 더 많은 쟁반을 고르는 데 대체로 매우 정확했습니다.",
+      "highlight": ["generally", "accurate", "larger"],
+      "narration": "지문이 실험에서 확인한 결과예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "여러 종이 양을 어느 정도 정확히 비교한다",
+        "침팬지는 두 무더기를 합해서 견주어 보았다",
+        "비슷할 때만 망설이고 대체로 정확했다"
+      ],
+      "narration": "숫자를 배우지 않아도 양을 견주는 능력은 있는 거예요.",
+      "cast": [{ "who": "seoyun", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "slug": "ownership-trap",
+  "title": "한번 올리면 못 내려온다",
+  "subtitle": "소유는 우리가 보는 기준을 바꿔 놓아요",
+  "source": "리딩파워 유형편 완성 11강 Example 2",
+  "kind": "academic",
+  "characters": {
+    "yuna": {
+      "name": "유나",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F7D6BD",
+      "hair": "ponytail",
+      "hairColor": "#4A3126",
+      "outfit": "dress",
+      "outfitColor": "#D96C4F",
+      "accentColor": "#3E3540",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "noh": {
+      "name": "노 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#7A736C",
+      "outfit": "suit",
+      "outfitColor": "#3F5E8C",
+      "accentColor": "#2A3242",
+      "accessory": "glasses",
+      "facialHair": "mustache",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "한번 올리면 못 내려온다",
+      "subtitle": "심리 · 소유가 만드는 손실감",
+      "narration": "이번 지문은 무언가를 갖게 된 뒤 우리 마음이 어떻게 달라지는지 다루고 있어요.",
+      "cast": [
+        { "who": "yuna", "expression": "happy", "pose": "raise" },
+        { "who": "noh", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "유나는 더 큰 집으로 옮기면 삶이 나아질 거라고 생각했어요.",
+      "question": "더 좋은 걸로 바꿔도 언제든 돌아갈 수 있는 거 아닐까?",
+      "thought": true,
+      "narrationOut": "지문은 그 생각이 바로 환상이라고 말해요.",
+      "cast": [{ "who": "yuna", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "소유가 바꾸는 관점",
+      "meaning": "갖게 되는 순간, 그 전으로 돌아가는 일이 이득의 포기가 아니라 손실로 느껴져요.",
+      "icon": "🔒",
+      "narration": "소유는 물건이 아니라 우리가 보는 기준을 바꿔 놓아요.",
+      "cast": [{ "who": "noh", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "내려오지 못하게 되는 과정",
+      "steps": [
+        { "label": "더 좋은 걸 산다", "icon": "🛒" },
+        { "label": "금방 익숙해진다", "icon": "🛋️" },
+        { "label": "돌아가면 손실", "icon": "📉" },
+        { "label": "못 내려온다", "icon": "🔒" }
+      ],
+      "narration": "한 단계 올라가면 그 자리가 곧 기준이 되어 버려요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "유나는 왜 되돌리는 일이 그렇게 힘든지 물었어요.",
+      "lines": [
+        { "who": "yuna", "text": "작은 집으로 다시 옮기는 게 왜 그렇게 힘든 일이에요?" },
+        { "who": "noh", "text": "그건 절약이 아니라 손실로 느껴지기 때문이에요. 마음이 아프죠." },
+        { "who": "yuna", "text": "그래서 사람들이 그걸 피하려고 다른 걸 다 포기하는 거군요." }
+      ],
+      "narrationOut": "손실을 피하려고 온갖 희생을 감수하게 되는 거예요.",
+      "cast": [
+        { "who": "yuna", "expression": "sad", "pose": "shrug" },
+        { "who": "noh", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "compare",
+      "heading": "올라갈 때의 생각 vs 실제",
+      "left": {
+        "label": "올라갈 때 생각",
+        "icon": "💭",
+        "points": ["언제든 돌아갈 수 있다", "삶의 질이 올라간다", "선택은 자유롭다"]
+      },
+      "right": {
+        "label": "실제로 벌어지는 일",
+        "icon": "🔒",
+        "points": ["돌아가는 건 손실이다", "기준만 높아진다", "피하려 희생을 감수한다"]
+      },
+      "narration": "올라가면서 품는 생각과 실제로 벌어지는 일이 서로 달라요."
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "업그레이드에 익숙해지기", "icon": "🏠" },
+      "everyday": { "label": "뜨거운 물에 손을 담근 뒤", "icon": "🌡️" },
+      "because": "기준이 한번 올라가면 원래 괜찮던 것도 차갑고 나쁘게 느껴져요.",
+      "narration": "감각이 아니라 기준이 옮겨간 것이 문제예요."
+    },
+    {
+      "type": "quote",
+      "sentence": "Suddenly, moving backward to our pre-ownership state is a loss, one that we cannot accept.",
+      "translation": "갑자기, 소유하기 전의 상태로 돌아가는 일은 우리가 받아들일 수 없는 손실이 되어 버립니다.",
+      "highlight": ["loss", "cannot", "accept"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "소유는 물건이 아니라 기준을 바꾼다",
+        "되돌리는 일은 절약이 아니라 손실로 느껴진다",
+        "그래서 내려오지 않으려 희생을 감수한다"
+      ],
+      "narration": "치료법은 없지만, 알아차리는 것만으로도 도움이 돼요.",
+      "cast": [{ "who": "yuna", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

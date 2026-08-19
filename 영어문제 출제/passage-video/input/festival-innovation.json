@@ -1,0 +1,120 @@
+{
+  "slug": "festival-innovation",
+  "title": "모차르트 축제에 팝을 넣다",
+  "subtitle": "전통을 지키면서 새것을 들이는 방법이 있어요",
+  "source": "리딩파워 유형편 완성 11강 Practice 3",
+  "kind": "academic",
+  "characters": {
+    "nara": {
+      "name": "나라",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F4D1B6",
+      "hair": "long",
+      "hairColor": "#402C22",
+      "outfit": "dress",
+      "outfitColor": "#7C5CE0",
+      "accentColor": "#3A3350",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "mortier": {
+      "name": "모르티에",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#EBCBAB",
+      "hair": "short",
+      "hairColor": "#8A8580",
+      "outfit": "suit",
+      "outfitColor": "#2F4858",
+      "accentColor": "#232F38",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "모차르트 축제에 팝을 넣다",
+      "subtitle": "예술 · 전통과 혁신의 균형",
+      "narration": "이번 지문은 오래된 음악 축제를 바꿔 놓은 한 사람의 이야기를 다루고 있어요.",
+      "cast": [
+        { "who": "nara", "expression": "surprised", "pose": "raise" },
+        { "who": "mortier", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "나라는 잘츠부르크 축제 프로그램을 보고 눈을 의심했어요.",
+      "question": "모차르트 축제에 데이비드 보위가 왜 올라가 있지?",
+      "thought": true,
+      "narrationOut": "1991년 예술감독이 된 모르티에가 일부러 만든 변화였어요.",
+      "cast": [{ "who": "nara", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "전통과 혁신의 균형",
+      "meaning": "전통을 버리지 않으면서 새로운 것을 들여 축제를 이어 가는 방식이에요.",
+      "icon": "⚖️",
+      "narration": "보수적인 축제에 현대 예술가를 들이는 시도였어요.",
+      "cast": [{ "who": "mortier", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "프로그램을 네 갈래로",
+      "steps": [
+        { "label": "모차르트 음악", "icon": "🎼" },
+        { "label": "20세기 고전", "icon": "🎻" },
+        { "label": "현대 음악극", "icon": "🎭" },
+        { "label": "영화와 팝", "icon": "🎬" }
+      ],
+      "narration": "모르티에는 프로그램을 네 범주로 나누어 짰어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "나라는 왜 이런 위험한 시도를 했는지 물었어요.",
+      "lines": [
+        { "who": "nara", "text": "전통 축제에 팝 문화를 넣으면 반발이 크지 않나요?" },
+        { "who": "mortier", "text": "젊은 관객이 필요했고, 사회 현상을 함께 논의하고 싶었어요." },
+        { "who": "nara", "text": "그래서 영화와 팝까지 프로그램에 들어간 거군요." }
+      ],
+      "narrationOut": "팝 음악과 영성 같은 주제를 비판적으로 다루려는 뜻이었어요.",
+      "cast": [
+        { "who": "nara", "expression": "thinking", "pose": "shrug" },
+        { "who": "mortier", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "compare",
+      "heading": "비판과 의도",
+      "left": {
+        "label": "비판하는 쪽",
+        "icon": "😤",
+        "points": ["전통을 훼손한다", "너무 위험한 실험이다", "빈 엘리트와 상인들"]
+      },
+      "right": {
+        "label": "모르티에의 의도",
+        "icon": "🎯",
+        "points": ["젊은 관객이 필요하다", "사회 현상을 논의한다", "균형은 유지한다"]
+      },
+      "narration": "그의 전략은 끊임없이 비판을 받았어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "Fundamentally Mortier knows exactly how to retain the balance between tradition and innovation, which guarantees the continuity of this festival.",
+      "translation": "근본적으로 모르티에는 전통과 혁신 사이의 균형을 유지하는 방법을 정확히 알고 있으며, 그것이 이 축제의 지속을 보장합니다.",
+      "highlight": ["balance", "tradition", "innovation", "continuity"],
+      "narration": "지문이 마지막에 내리는 평가예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "보수적인 축제에 현대 예술가를 들였다",
+        "프로그램을 네 갈래로 나누어 균형을 잡았다",
+        "비판을 받았지만 축제는 이어졌다"
+      ],
+      "narration": "균형을 아는 사람이 전통을 오래 잇는다는 이야기예요.",
+      "cast": [{ "who": "nara", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

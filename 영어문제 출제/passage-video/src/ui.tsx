@@ -132,14 +132,14 @@ export const Setting: React.FC<{ kind?: SettingKind; accent: string }> = ({
     return (
       <>
         <Paper tint="#EFEAF7" />
-        {/* 칠판 */}
+        {/* 칠판 — 좌우 끝에 서는 인물과 겹치지 않도록 가운데로 좁힌다 */}
         <div
           style={{
             position: "absolute",
-            left: 210,
-            top: 150,
-            width: 1500,
-            height: 420,
+            left: 470,
+            top: 250,
+            width: 980,
+            height: 360,
             background: "#2E4A3E",
             border: `10px solid ${shade(theme.amber, -40)}`,
             borderRadius: 10,
@@ -195,9 +195,10 @@ export const Setting: React.FC<{ kind?: SettingKind; accent: string }> = ({
     return (
       <>
         <Paper tint="#F0E7D6" />
+        {/* 책장은 가운데에만. 좌우 끝에는 인물이 선다 */}
         {[0, 1].map((row) => (
-          <div key={row} style={{ position: "absolute", left: 150, top: 160 + row * 230, display: "flex", gap: 8 }}>
-            {Array.from({ length: 26 }).map((_, i) => (
+          <div key={row} style={{ position: "absolute", left: 500, top: 250 + row * 220, display: "flex", gap: 8 }}>
+            {Array.from({ length: 18 }).map((_, i) => (
               <div
                 key={i}
                 style={{
@@ -349,7 +350,8 @@ export const Setting: React.FC<{ kind?: SettingKind; accent: string }> = ({
           border: `6px solid ${theme.line}`,
         }}
       />
-      {[[240, 640, 170], [1500, 620, 200], [900, 660, 140]].map(([x, y, r], i) => (
+      {/* 인물은 좌우 끝에 선다. 언덕은 가운데에만 두어 인물 외곽선과 겹치지 않게 한다 */}
+      {[[600, 660, 150], [950, 640, 185], [1300, 665, 140]].map(([x, y, r], i) => (
         <div
           key={i}
           style={{

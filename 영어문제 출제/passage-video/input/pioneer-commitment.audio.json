@@ -1,0 +1,92 @@
+{
+  "s0-narration": {
+    "file": "audio/pioneer-commitment/s0-narration.wav",
+    "seconds": 5.92,
+    "hash": "1871e168ebce",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/pioneer-commitment/s1-narration.wav",
+    "seconds": 4.84,
+    "hash": "8b59add3f467",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/pioneer-commitment/s1-narrationOut.wav",
+    "seconds": 4.52,
+    "hash": "0142d5a6b552",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/pioneer-commitment/s1-question.wav",
+    "seconds": 5.04,
+    "hash": "deb7386dd2a3",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/pioneer-commitment/s2-narration.wav",
+    "seconds": 5.04,
+    "hash": "71405cb07b6b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/pioneer-commitment/s3-narration.wav",
+    "seconds": 3.64,
+    "hash": "ef5dfa7191e7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/pioneer-commitment/s4-narration.wav",
+    "seconds": 4,
+    "hash": "933918be7fae",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/pioneer-commitment/s4-narrationOut.wav",
+    "seconds": 2.92,
+    "hash": "5960bb29bc8c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-line0": {
+    "file": "audio/pioneer-commitment/s4-line0.wav",
+    "seconds": 3.88,
+    "hash": "7f1a60af46fe",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s4-line1": {
+    "file": "audio/pioneer-commitment/s4-line1.wav",
+    "seconds": 4.48,
+    "hash": "3507151540ad",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s4-line2": {
+    "file": "audio/pioneer-commitment/s4-line2.wav",
+    "seconds": 4.64,
+    "hash": "5b97ab4cb36e",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-narration": {
+    "file": "audio/pioneer-commitment/s5-narration.wav",
+    "seconds": 4.76,
+    "hash": "c4a03680cdbd",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/pioneer-commitment/s6-narration.wav",
+    "seconds": 4.64,
+    "hash": "30c859e66c9e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/pioneer-commitment/s7-narration.wav",
+    "seconds": 2.6,
+    "hash": "10658e049a95",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-narration": {
+    "file": "audio/pioneer-commitment/s8-narration.wav",
+    "seconds": 4.16,
+    "hash": "dde4823f820a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}
