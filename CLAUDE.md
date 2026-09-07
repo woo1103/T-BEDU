@@ -49,8 +49,24 @@ node scripts/render.mjs <slug>   # MP4
 
 ## 진행 상황
 
-- 영상 엔진·브랜드 인트로·TTS 파이프라인 완성. 무음 렌더는 검증 완료(`sample-academic`, 156초).
-- **다음 할 일: 목소리 확정.** 후보 샘플을 만들어 사용자에게 보냈고 선택을 기다리는 중이다.
-  `node scripts/voice-sample.mjs narrator` / `cast` 로 다시 만들 수 있다.
-  확정되면 `input/brand.json` 의 `narratorVoice` 와 각 캐릭터의 `voice` 를 고치고 음성 생성 → 재렌더.
-- 배경음악(`public/bgm.mp3`)은 아직 없다. 사용자가 직접 구해 넣기로 했다.
+엔진·브랜드 인트로·TTS·배경음악까지 모두 동작한다. **영상 14편 제작 완료.**
+
+확정된 것:
+- 나레이터 `ko-KR-Chirp3-HD-Achernar` (사용자가 후보를 듣고 선택). `input/brand.json` 에 고정
+- 인물 기본 조합: 여성/학생 `Chirp3-HD-Zephyr`, 남성/전문가 `Chirp3-HD-Charon`
+- 배경음악 `public/bgm-calm-piano.mp3` (볼륨 0.07). `bgm-ambient.mp3` 로 교체 가능
+
+**남은 일 — 배역별 목소리 확정.** 지금은 14편 전부 위 두 목소리만 쓰고 있어 단조롭다.
+특히 어린아이 배역(13강 P3 '하늘')이 성인 여성 목소리로 나간다.
+후보 샘플은 만들어 두었고(`node scripts/voice-sample.mjs male` / `female`) 사용자가 고르면 된다.
+아래 표는 **귀로 확인하지 않은 잠정 후보**다. 확정 전에는 임의로 쓰지 마라.
+
+| 배역 | 잠정 후보 | 속도 |
+|---|---|---|
+| 남학생 | Puck / Fenrir / Achird | 1.05 |
+| 삼촌·중년 남성 | Algenib / Umbriel / Sadaltager | 1.0 |
+| 할아버지 | Enceladus / Schedar / Rasalgethi | 0.85 |
+| 이모·중년 여성 | Kore / Autonoe / Sulafat | 1.0 |
+| 할머니 | Gacrux / Vindemiatrix / Despina | 0.85 |
+
+Chirp3-HD 는 `speakingRate` 는 받지만 `pitch` 는 거부한다. 나이 표현은 속도로만 조절한다.
