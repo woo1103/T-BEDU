@@ -1,0 +1,92 @@
+{
+  "s0-narration": {
+    "file": "audio/forest-loss/s0-narration.wav",
+    "seconds": 3.92,
+    "hash": "9bc0daa31780",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/forest-loss/s1-narration.wav",
+    "seconds": 4.28,
+    "hash": "ec4fad7a65eb",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/forest-loss/s1-narrationOut.wav",
+    "seconds": 5.28,
+    "hash": "2a89a8a4b1ed",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/forest-loss/s1-question.wav",
+    "seconds": 3.44,
+    "hash": "3c31f138df63",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/forest-loss/s2-narration.wav",
+    "seconds": 3.88,
+    "hash": "7487f371b476",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/forest-loss/s3-narration.wav",
+    "seconds": 4.48,
+    "hash": "a4d8b4ba52d4",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/forest-loss/s4-narration.wav",
+    "seconds": 4.6,
+    "hash": "0b8df50a0329",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/forest-loss/s5-narration.wav",
+    "seconds": 4.96,
+    "hash": "6c02b09fbe4d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/forest-loss/s5-narrationOut.wav",
+    "seconds": 3.36,
+    "hash": "c542bd7383d3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/forest-loss/s5-line0.wav",
+    "seconds": 4.04,
+    "hash": "ea1597145e8b",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/forest-loss/s5-line1.wav",
+    "seconds": 4.48,
+    "hash": "7445522d0f62",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/forest-loss/s5-line2.wav",
+    "seconds": 2.48,
+    "hash": "d40dfc9ddad9",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/forest-loss/s6-narration.wav",
+    "seconds": 4.4,
+    "hash": "99211fadb17d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/forest-loss/s7-narration.wav",
+    "seconds": 2.68,
+    "hash": "9c3fd89ec1a2",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-narration": {
+    "file": "audio/forest-loss/s8-narration.wav",
+    "seconds": 3.4,
+    "hash": "09ea02e6643e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

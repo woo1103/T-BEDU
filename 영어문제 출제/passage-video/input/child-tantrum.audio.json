@@ -1,0 +1,92 @@
+{
+  "s0-narration": {
+    "file": "audio/child-tantrum/s0-narration.wav",
+    "seconds": 4.84,
+    "hash": "8bcdb7da97c1",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/child-tantrum/s1-narration.wav",
+    "seconds": 4.24,
+    "hash": "c436af1670ae",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/child-tantrum/s1-narrationOut.wav",
+    "seconds": 4.72,
+    "hash": "63acd2ae8f06",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-speech": {
+    "file": "audio/child-tantrum/s1-speech.wav",
+    "seconds": 3.12,
+    "hash": "84bbed67a206",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/child-tantrum/s2-narration.wav",
+    "seconds": 4.32,
+    "hash": "391ef36f3c6c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/child-tantrum/s3-narration.wav",
+    "seconds": 4.48,
+    "hash": "386b97bf59fc",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/child-tantrum/s4-narration.wav",
+    "seconds": 4.36,
+    "hash": "2e89e60b2f3d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/child-tantrum/s5-narration.wav",
+    "seconds": 6,
+    "hash": "6b4ff0200f5a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/child-tantrum/s5-narrationOut.wav",
+    "seconds": 5.56,
+    "hash": "6161e8143e86",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/child-tantrum/s5-line0.wav",
+    "seconds": 3.84,
+    "hash": "de9818c27d19",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line1": {
+    "file": "audio/child-tantrum/s5-line1.wav",
+    "seconds": 3.68,
+    "hash": "b34cb3a2134b",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line2": {
+    "file": "audio/child-tantrum/s5-line2.wav",
+    "seconds": 3.52,
+    "hash": "edd6f5dc2250",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s6-narration": {
+    "file": "audio/child-tantrum/s6-narration.wav",
+    "seconds": 3.32,
+    "hash": "8cb4d7ea05cb",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/child-tantrum/s7-narration.wav",
+    "seconds": 2.6,
+    "hash": "10658e049a95",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-narration": {
+    "file": "audio/child-tantrum/s8-narration.wav",
+    "seconds": 3.92,
+    "hash": "7971a9a73cee",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

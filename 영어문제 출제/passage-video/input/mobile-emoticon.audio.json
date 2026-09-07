@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/mobile-emoticon/s0-narration.wav",
+    "seconds": 5.08,
+    "hash": "7e5fef8627c0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/mobile-emoticon/s1-narration.wav",
+    "seconds": 4.52,
+    "hash": "da5f1f2a03c5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/mobile-emoticon/s1-narrationOut.wav",
+    "seconds": 4.92,
+    "hash": "9ccbe8014cb7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/mobile-emoticon/s1-question.wav",
+    "seconds": 5.36,
+    "hash": "ab1db5f98a93",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/mobile-emoticon/s2-narration.wav",
+    "seconds": 4.36,
+    "hash": "15b2cb3caa6b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/mobile-emoticon/s3-narration.wav",
+    "seconds": 4.6,
+    "hash": "671230be8645",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/mobile-emoticon/s4-narration.wav",
+    "seconds": 4.04,
+    "hash": "557ca74eaed4",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/mobile-emoticon/s4-narrationOut.wav",
+    "seconds": 4.52,
+    "hash": "cf132955128b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-line0": {
+    "file": "audio/mobile-emoticon/s4-line0.wav",
+    "seconds": 3.2,
+    "hash": "c756af9870ad",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s4-line1": {
+    "file": "audio/mobile-emoticon/s4-line1.wav",
+    "seconds": 4.56,
+    "hash": "c1785b2ba7b6",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s4-line2": {
+    "file": "audio/mobile-emoticon/s4-line2.wav",
+    "seconds": 2.56,
+    "hash": "aa44a820c28c",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-narration": {
+    "file": "audio/mobile-emoticon/s5-narration.wav",
+    "seconds": 4.8,
+    "hash": "e9f3408d540b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/mobile-emoticon/s6-narration.wav",
+    "seconds": 3,
+    "hash": "5435f0e9e0c8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/mobile-emoticon/s7-narration.wav",
+    "seconds": 4.96,
+    "hash": "9dced0fe6025",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

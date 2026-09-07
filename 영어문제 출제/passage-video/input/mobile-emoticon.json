@@ -1,0 +1,121 @@
+{
+  "slug": "mobile-emoticon",
+  "title": "문자가 말보다 흔해졌다",
+  "subtitle": "목소리 없는 소통이 예외가 아니라 기본이 됐어요",
+  "source": "올림포스 독해의 기본 13강 Practice 2",
+  "kind": "academic",
+  "characters": {
+    "sol": {
+      "name": "솔",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B8",
+      "hair": "ponytail",
+      "hairColor": "#332622",
+      "outfit": "tshirt",
+      "outfitColor": "#4FA3C7",
+      "accentColor": "#39424E",
+      "accessory": "none",
+      "prop": "phone",
+      "build": "slim"
+    },
+    "cha": {
+      "name": "차 연구원",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C5A4",
+      "hair": "short",
+      "hairColor": "#2D2723",
+      "outfit": "hoodie",
+      "outfitColor": "#B5544A",
+      "accentColor": "#3C3238",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "문자가 말보다 흔해졌다",
+      "subtitle": "미디어 · 모바일 소통의 확산",
+      "narration": "이번 지문은 모바일 기기가 우리 소통 방식을 어떻게 바꿨는지 다루고 있어요.",
+      "cast": [
+        { "who": "sol", "expression": "happy", "pose": "raise" },
+        { "who": "cha", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "솔은 하루 동안 자기가 무엇으로 더 많이 소통했는지 세어 봤어요.",
+      "question": "오늘 말을 한 시간보다 문자로 주고받은 시간이 더 길지 않나?",
+      "thought": true,
+      "narrationOut": "이제는 목소리를 쓰지 않는 소통이 예외가 아니라 기본이 됐어요.",
+      "cast": [{ "who": "sol", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "비음성 소통",
+      "meaning": "목소리 대신 글자와 이모티콘으로 주고받는 소통이에요. 이제 이쪽이 기본이 됐어요.",
+      "icon": "💬",
+      "narration": "모바일에 쓰는 시간이 늘면서 이모티콘 사용도 함께 늘었어요.",
+      "cast": [{ "who": "cha", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "소통의 무게중심이 옮겨갔다",
+      "left": {
+        "label": "예전의 기본",
+        "icon": "📞",
+        "points": ["목소리로 통화한다", "문자는 예외적 수단", "기기가 소수에게만"]
+      },
+      "right": {
+        "label": "지금의 기본",
+        "icon": "📱",
+        "points": ["글자로 주고받는다", "통화가 오히려 드물다", "기기가 거의 모두에게"]
+      },
+      "narration": "휴대폰과 태블릿이 엄청난 속도로 퍼지면서 생긴 변화예요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "솔은 모바일 기기가 얼마나 퍼졌는지 듣고 놀랐어요.",
+      "lines": [
+        { "who": "sol", "text": "기기를 쓰는 사람이 그렇게까지 많아졌나요?" },
+        { "who": "cha", "text": "2013년에는 모바일 가입 수가 세계 인구 추정치와 거의 같았어요." },
+        { "who": "sol", "text": "한 사람당 하나씩 있는 셈이라는 말이네요." }
+      ],
+      "narrationOut": "사람들은 수십억 건의 메시지를 올리고 보내고 주고받았어요.",
+      "cast": [
+        { "who": "sol", "expression": "surprised", "pose": "shrug" },
+        { "who": "cha", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "flow",
+      "heading": "연구자들이 걱정하게 된 흐름",
+      "steps": [
+        { "label": "기기 보급", "icon": "📱" },
+        { "label": "사용 시간 증가", "icon": "⏱️" },
+        { "label": "이모티콘 확산", "icon": "😀" },
+        { "label": "대면 소통 우려", "icon": "🗣️" }
+      ],
+      "narration": "이 매체가 너무 널리 퍼지자 연구자들은 한 가지를 걱정하기 시작했어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "These communications media have become so prolific, researchers have worried that face-to-face communications could become extinct.",
+      "translation": "이런 소통 매체가 너무나 널리 퍼져서, 연구자들은 대면 소통이 사라질 수도 있다고 우려해 왔습니다.",
+      "highlight": ["prolific", "face-to-face", "extinct"],
+      "narration": "지문이 마지막에 던지는 걱정이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "모바일 기기가 아주 빠르게 퍼졌다",
+        "목소리 없는 소통이 기본이 되었다",
+        "대면 소통이 사라질까 우려가 나왔다"
+      ],
+      "narration": "소통이 늘어난 만큼 얼굴을 마주하는 일은 줄었다는 이야기예요.",
+      "cast": [{ "who": "sol", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

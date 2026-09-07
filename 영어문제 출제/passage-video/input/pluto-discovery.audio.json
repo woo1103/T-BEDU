@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/pluto-discovery/s0-narration.wav",
+    "seconds": 4.48,
+    "hash": "6a07c901e5ff",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/pluto-discovery/s1-narration.wav",
+    "seconds": 4.32,
+    "hash": "5465987e0d10",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/pluto-discovery/s1-narrationOut.wav",
+    "seconds": 4.04,
+    "hash": "b65944b8cd09",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/pluto-discovery/s1-question.wav",
+    "seconds": 4.08,
+    "hash": "466211649265",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/pluto-discovery/s2-narration.wav",
+    "seconds": 3.84,
+    "hash": "2376ae7677ab",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/pluto-discovery/s3-narration.wav",
+    "seconds": 4.52,
+    "hash": "232347c3536f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/pluto-discovery/s4-narration.wav",
+    "seconds": 4.32,
+    "hash": "da85a891ea5c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/pluto-discovery/s5-narration.wav",
+    "seconds": 3.28,
+    "hash": "a8235b8f6444",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/pluto-discovery/s5-narrationOut.wav",
+    "seconds": 4.36,
+    "hash": "323870b195d0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/pluto-discovery/s5-line0.wav",
+    "seconds": 2.8,
+    "hash": "02c417448882",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/pluto-discovery/s5-line1.wav",
+    "seconds": 5.24,
+    "hash": "dea4dd964025",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/pluto-discovery/s5-line2.wav",
+    "seconds": 2.84,
+    "hash": "390758fc1e05",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/pluto-discovery/s6-narration.wav",
+    "seconds": 3.28,
+    "hash": "a708726e993e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/pluto-discovery/s7-narration.wav",
+    "seconds": 3.92,
+    "hash": "9bf88e5b2129",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "slug": "child-tantrum",
+  "title": "떼쓰는 아이에게 먼저 할 일",
+  "subtitle": "말보다 포옹이 먼저인 이유가 있어요",
+  "source": "올림포스 독해의 기본 13강 Practice 3",
+  "kind": "academic",
+  "characters": {
+    "haneul": {
+      "name": "하늘",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F8D8C0",
+      "hair": "braids",
+      "hairColor": "#3A2A22",
+      "outfit": "dress",
+      "outfitColor": "#F0A03C",
+      "accentColor": "#4A3E36",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "appa": {
+      "name": "아빠",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E8C5A2",
+      "hair": "short",
+      "hairColor": "#2B2622",
+      "outfit": "tshirt",
+      "outfitColor": "#4C6B8A",
+      "accentColor": "#333B45",
+      "accessory": "none",
+      "build": "stout"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "떼쓰는 아이에게 먼저 할 일",
+      "subtitle": "심리 · 감정 뇌와 이성 뇌",
+      "narration": "이번 지문은 아이가 떼를 쓸 때 무슨 일이 벌어지는지 다루고 있어요.",
+      "cast": [
+        { "who": "haneul", "expression": "sad", "pose": "idle" },
+        { "who": "appa", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "room",
+      "caption": "갑자기 울음이 터진 순간",
+      "sfx": "으앙—",
+      "narration": "하늘이는 속상한 마음이 커지자 스스로를 어쩌지 못했어요.",
+      "speech": {
+        "who": "haneul",
+        "text": "싫어! 아무것도 안 할 거야!"
+      },
+      "narrationOut": "이럴 때 아이는 시키는 말을 따르지 못하고 자기 안으로 닫혀 버려요.",
+      "cast": [{ "who": "haneul", "expression": "sad", "pose": "shrug" }]
+    },
+    {
+      "type": "concept",
+      "term": "감정 뇌의 과흥분",
+      "meaning": "좌절이나 슬픔 같은 강한 감정이 몰리면 아이는 자기 기분을 담아 두지 못해요.",
+      "icon": "🧠",
+      "narration": "떼쓰기는 아이가 나빠서가 아니라 뇌가 과열되어 생기는 일이에요.",
+      "cast": [{ "who": "appa", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "떼쓰기가 일어나는 과정",
+      "steps": [
+        { "label": "강한 감정", "icon": "😢" },
+        { "label": "감정 뇌 과열", "icon": "🔥" },
+        { "label": "이성 바깥으로", "icon": "🚪" },
+        { "label": "떼쓰기", "icon": "😖" }
+      ],
+      "narration": "말 그대로 아이는 자기 바깥에, 이성적인 부분 바깥에 있는 상태예요."
+    },
+    {
+      "type": "compare",
+      "heading": "이럴 때 무엇을 먼저 할까",
+      "left": {
+        "label": "하기 쉬운 대응",
+        "icon": "😣",
+        "points": ["말로 따진다", "그만하라고 다그친다", "이유부터 설명한다"]
+      },
+      "right": {
+        "label": "지문이 권하는 것",
+        "icon": "🤗",
+        "points": ["먼저 안아 준다", "감정을 말로 비춰 준다", "강도를 낮춰 준다"]
+      },
+      "narration": "이성 바깥에 있는 아이에게 이치부터 들이대면 닿지 않아요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "아빠는 따지는 대신 하늘이를 안고 마음을 먼저 읽어 주었어요.",
+      "lines": [
+        { "who": "appa", "text": "많이 속상했구나. 하고 싶은 대로 안 돼서 화가 났지." },
+        { "who": "haneul", "text": "응… 나도 잘하고 싶었는데 안 됐단 말이야." },
+        { "who": "appa", "text": "그랬구나. 이제 아빠 얘기도 들을 수 있겠어?" }
+      ],
+      "narrationOut": "감정의 강도가 낮아지자 아이는 비로소 말을 들을 수 있게 됐어요.",
+      "cast": [
+        { "who": "haneul", "expression": "sad", "pose": "idle" },
+        { "who": "appa", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "공감해 주는 말 한마디", "icon": "💬" },
+      "everyday": { "label": "두 섬을 잇는 다리", "icon": "🌉" },
+      "because": "감정의 세계와 이성의 세계 사이에 건너갈 길을 놓아 주는 일이에요.",
+      "narration": "지문은 이것을 두 세계를 잇는 다리라고 표현해요."
+    },
+    {
+      "type": "quote",
+      "sentence": "A spoken word will form a bridge between the two worlds, allowing the child's rational brain to help soothe their emotions.",
+      "translation": "말 한마디가 두 세계 사이에 다리를 놓아, 아이의 이성 뇌가 감정을 달래도록 도와줍니다.",
+      "highlight": ["bridge", "rational", "soothe"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "떼쓰기는 감정 뇌가 과열되어 생긴다",
+        "그때 아이는 이성 바깥에 나가 있다",
+        "포옹과 공감이 먼저, 말은 그 다음이다"
+      ],
+      "narration": "감정이 가라앉아야 비로소 말이 들리기 시작해요.",
+      "cast": [{ "who": "haneul", "expression": "happy", "pose": "cheer" }]
+    }
+  ]
+}

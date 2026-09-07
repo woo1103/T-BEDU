@@ -1,0 +1,128 @@
+{
+  "slug": "forest-loss",
+  "title": "폭풍을 막으려 숲을 벤다",
+  "subtitle": "숲을 지켜야 하는 이유가 하나 더 있어요",
+  "source": "올림포스 독해의 기본 14강 Practice 3",
+  "kind": "academic",
+  "characters": {
+    "narae": {
+      "name": "나래",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F4D1B5",
+      "hair": "long",
+      "hairColor": "#37271F",
+      "outfit": "uniform",
+      "outfitColor": "#5E9E86",
+      "accentColor": "#33443E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "yeon": {
+      "name": "연 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#DDB289",
+      "hair": "short",
+      "hairColor": "#332B24",
+      "outfit": "tshirt",
+      "outfitColor": "#7A5C3D",
+      "accentColor": "#3A3129",
+      "accessory": "cap",
+      "prop": "leaf",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "폭풍을 막으려 숲을 벤다",
+      "subtitle": "환경 · 숲이 하는 일",
+      "narration": "이번 지문은 우리가 숲을 어떻게 쓰고 있는지를 다루고 있어요.",
+      "cast": [
+        { "who": "narae", "expression": "neutral", "pose": "raise" },
+        { "who": "yeon", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "나래는 나무를 베어도 다시 자라니 괜찮다고 생각했어요.",
+      "question": "나무는 또 자라잖아. 베어도 괜찮은 거 아닐까?",
+      "thought": true,
+      "narrationOut": "하지만 사람들이 베는 속도가 숲이 다시 자라는 속도보다 훨씬 빨라요.",
+      "cast": [{ "who": "narae", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "숲이 하는 일",
+      "meaning": "숲은 대기에서 탄소를 흡수해 온실가스를 줄이고, 우리가 숨 쉴 산소를 만들어요.",
+      "icon": "🌳",
+      "narration": "숲을 지켜야 하는 가장 중요한 이유가 바로 이 기능이에요.",
+      "cast": [{ "who": "yeon", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "숲을 지켜야 하는 이유",
+      "left": {
+        "label": "흔히 드는 이유",
+        "icon": "📉",
+        "points": ["목재 공급이 줄어든다", "동식물 종이 사라진다"]
+      },
+      "right": {
+        "label": "지문이 더 강조하는 것",
+        "icon": "🌍",
+        "points": ["탄소를 흡수한다", "온실가스를 줄인다", "산소를 만들어 준다"]
+      },
+      "narration": "지문은 공급이나 생물종만이 아니라 숲의 기능을 강조해요."
+    },
+    {
+      "type": "flow",
+      "heading": "합판이 쓰이고 버려지기까지",
+      "steps": [
+        { "label": "허리케인 접근", "icon": "🌀" },
+        { "label": "합판으로 창 막기", "icon": "🪵" },
+        { "label": "폭풍이 지나감", "icon": "🌤️" },
+        { "label": "합판을 버림", "icon": "🗑️" }
+      ],
+      "narration": "사소하고 근시안적인 목재 사용이 너무 많다고 지문은 말해요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "나래는 합판 이야기를 듣고 무언가 이상하다고 느꼈어요.",
+      "lines": [
+        { "who": "narae", "text": "폭풍을 막으려고 창을 가린 건데, 왜 이상하게 들리죠?" },
+        { "who": "yeon", "text": "그 합판을 만들려고 벤 숲이 원래 그 폭풍을 줄여 주거든요." },
+        { "who": "narae", "text": "막으려던 걸 오히려 키우고 있었던 거네요." }
+      ],
+      "narrationOut": "지문은 바로 이 점을 아이러니라고 짚어요.",
+      "cast": [
+        { "who": "narae", "expression": "surprised", "pose": "shrug" },
+        { "who": "yeon", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "폭풍 막으려 숲을 베는 일", "icon": "🪵" },
+      "everyday": { "label": "우산 만들려고 지붕을 뜯는 일", "icon": "☂️" },
+      "because": "당장 막아 보려다가 정작 오래 막아 줄 것을 없애 버리는 셈이에요.",
+      "narration": "눈앞의 쓰임이 더 큰 보호막을 갉아먹고 있어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "It's ironic to think that for purposes such as these, forests are cut down that otherwise would aid in controlling such storms.",
+      "translation": "이런 용도를 위해, 그러지 않았다면 그런 폭풍을 조절하는 데 도움이 되었을 숲이 베어진다는 것은 아이러니합니다.",
+      "highlight": ["ironic", "cut", "down", "controlling"],
+      "narration": "지문이 마지막에 남기는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "베는 속도가 다시 자라는 속도보다 빠르다",
+        "숲은 탄소를 흡수하고 산소를 만든다",
+        "폭풍을 막으려 그 숲을 베는 건 아이러니다"
+      ],
+      "narration": "목재 사용을 크게 줄여야 하는 이유가 여기에 있어요.",
+      "cast": [{ "who": "narae", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

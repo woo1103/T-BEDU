@@ -1,0 +1,120 @@
+{
+  "slug": "pluto-discovery",
+  "title": "움직이는 점 하나를 찾아내다",
+  "subtitle": "명왕성은 눈이 움직임을 알아챈 덕분에 발견됐어요",
+  "source": "올림포스 독해의 기본 14강 Practice 2",
+  "kind": "academic",
+  "characters": {
+    "byeol": {
+      "name": "별이",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B6",
+      "hair": "bob",
+      "hairColor": "#2F231D",
+      "outfit": "hoodie",
+      "outfitColor": "#3F5FA8",
+      "accentColor": "#2E3547",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "tombaugh": {
+      "name": "톰보",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#EACDAE",
+      "hair": "short",
+      "hairColor": "#4A4038",
+      "outfit": "labcoat",
+      "outfitColor": "#8C99A8",
+      "accentColor": "#3A4350",
+      "accessory": "roundGlasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "움직이는 점 하나를 찾아내다",
+      "subtitle": "천문학 · 움직임을 알아채는 능력",
+      "narration": "이번 지문은 명왕성이 어떻게 발견되었는지를 다루고 있어요.",
+      "cast": [
+        { "who": "byeol", "expression": "happy", "pose": "raise" },
+        { "who": "tombaugh", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "별이는 밤하늘 사진 속 수많은 점을 보고 막막해졌어요.",
+      "question": "이 많은 점들 중에서 움직이는 하나를 어떻게 찾아내지?",
+      "thought": true,
+      "narrationOut": "1930년, 클라이드 톰보가 바로 이 문제 앞에 서 있었어요.",
+      "cast": [{ "who": "byeol", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "움직임을 알아채는 눈",
+      "meaning": "사람의 눈은 가만히 있는 것들 사이에서 움직이는 하나를 아주 잘 찾아내요.",
+      "icon": "👀",
+      "narration": "이 능력이 천문학의 역사에서 흥미로운 역할을 했어요.",
+      "cast": [{ "who": "tombaugh", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "사진 속 별과 행성의 차이",
+      "left": {
+        "label": "별",
+        "icon": "⭐",
+        "points": ["사진에서 그대로 있다", "며칠 뒤에도 같은 자리", "수없이 많다"]
+      },
+      "right": {
+        "label": "행성",
+        "icon": "🪐",
+        "points": ["사진마다 자리가 바뀐다", "며칠 사이에 움직인다", "아주 작은 점 하나"]
+      },
+      "narration": "이 차이가 미발견 행성을 찾는 유일한 단서였어요."
+    },
+    {
+      "type": "flow",
+      "heading": "톰보가 쓴 방법",
+      "steps": [
+        { "label": "같은 하늘 촬영", "icon": "📷" },
+        { "label": "며칠 뒤 또 촬영", "icon": "📅" },
+        { "label": "번갈아 넘김", "icon": "🔁" },
+        { "label": "움직인 점 발견", "icon": "🔦" }
+      ],
+      "narration": "두 사진을 앞뒤로 넘기는 기계에 올려놓는 방법이었어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "night",
+      "narration": "별이는 그 방법이 왜 통했는지 물었어요.",
+      "lines": [
+        { "who": "byeol", "text": "사진을 번갈아 넘기면 무엇이 달라지나요?" },
+        { "who": "tombaugh", "text": "가만히 있는 점들 사이에서 움직이는 하나만 눈에 확 들어와요." },
+        { "who": "byeol", "text": "그래서 즉시 알아챌 수 있었던 거군요." }
+      ],
+      "narrationOut": "톰보는 한 사진 쌍에서 움직이는 점 하나를 바로 알아봤어요.",
+      "cast": [
+        { "who": "byeol", "expression": "surprised", "pose": "shrug" },
+        { "who": "tombaugh", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "He identified that dot as Pluto, which astronomers now list as a dwarf planet.",
+      "translation": "그는 그 점을 명왕성으로 확인했고, 천문학자들은 현재 이를 왜소행성으로 분류합니다.",
+      "highlight": ["Pluto", "dwarf", "planet"],
+      "narration": "그 점 하나가 바로 명왕성이었어요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "별은 그대로 있고 행성은 자리를 옮긴다",
+        "톰보는 두 사진을 번갈아 넘겨 비교했다",
+        "움직이는 점 하나가 명왕성이었다"
+      ],
+      "narration": "움직임을 알아채는 눈이 새 천체를 찾아낸 셈이에요.",
+      "cast": [{ "who": "byeol", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}
