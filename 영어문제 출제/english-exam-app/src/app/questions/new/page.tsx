@@ -15,6 +15,7 @@ interface GeneratedQuestion {
   points: number;
   questionType: string;
   questionTypeName: string;
+  warning?: string;
 }
 
 interface TypeSelection {
@@ -127,6 +128,7 @@ export default function NewQuestionPage() {
             points: data.points || 2,
             questionType: typeSelection.code,
             questionTypeName: typeSelection.name,
+            warning: data.warning,
           });
           // 중간 결과 업데이트
           setGeneratedQuestions([...results]);
@@ -594,6 +596,11 @@ export default function NewQuestionPage() {
                     <span className="px-2 py-1 text-xs rounded bg-gray-100 text-gray-600">
                       {currentQ.points}점
                     </span>
+                    {currentQ.warning && (
+                      <span className="px-2 py-1 text-xs rounded bg-amber-100 text-amber-700">
+                        ⚠ {currentQ.warning}
+                      </span>
+                    )}
                   </div>
 
                   <div>

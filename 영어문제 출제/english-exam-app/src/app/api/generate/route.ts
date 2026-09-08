@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateQuestion } from "@/lib/claude";
 import { getSystemPrompt } from "@/lib/prompts";
 import { getQuestionTypeInfo } from "@/lib/question-types";
+import { normalizeChoices, validateQuestion } from "@/lib/question-format";
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,9 +46,40 @@ export async function POST(request: NextRequest) {
       userPrompt += "\n\n위 조건에 맞는 영어 문제를 1개 생성해주세요.";
     }
 
-    const result = await generateQuestion(systemPrompt, userPrompt);
+    // 검증 실패 시 자동 재생성 (최대 3회 시도)
+    const maxAttempts = 3;
+    let result: Awaited<ReturnType<typeof generateQuestion>> | undefined;
+    let validation = { ok: false, errors: ["생성 실패"] as string[] };
 
-    return NextResponse.json(result);
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      const generated = await generateQuestion(systemPrompt, userPrompt);
+      generated.choices = normalizeChoices(questionType, generated.choices);
+      validation = validateQuestion(
+        questionType,
+        generated.passage,
+        generated.choices
+      );
+      result = generated;
+      if (validation.ok) break;
+    }
+
+    if (!result) {
+      return NextResponse.json(
+        { error: "AI 문제 생성에 실패했습니다." },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      ...result,
+      ...(validation.ok
+        ? {}
+        : {
+            warning: `검증 경고 (${maxAttempts}회 시도 후에도 미해결): ${validation.errors.join(
+              "; "
+            )}`,
+          }),
+    });
   } catch (err) {
     console.error("AI 생성 오류:", err);
     return NextResponse.json(
