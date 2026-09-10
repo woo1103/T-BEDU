@@ -1,0 +1,80 @@
+{
+  "s0-narration": {
+    "file": "audio/maggie-song/s0-narration.wav",
+    "seconds": 3.96,
+    "hash": "dc12db8a37aa",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/maggie-song/s1-narration.wav",
+    "seconds": 4.64,
+    "hash": "7b77e24250ee",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/maggie-song/s1-narrationOut.wav",
+    "seconds": 3,
+    "hash": "a628887d178f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-speech": {
+    "file": "audio/maggie-song/s1-speech.wav",
+    "seconds": 3.92,
+    "hash": "18ec0fec800f",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/maggie-song/s2-narration.wav",
+    "seconds": 4.48,
+    "hash": "3c390222ab2d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-narrationOut": {
+    "file": "audio/maggie-song/s2-narrationOut.wav",
+    "seconds": 3.44,
+    "hash": "6374cf4aa313",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/maggie-song/s3-narration.wav",
+    "seconds": 3.84,
+    "hash": "db725ed7c9d7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narrationOut": {
+    "file": "audio/maggie-song/s3-narrationOut.wav",
+    "seconds": 3.24,
+    "hash": "021b570fe1dc",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/maggie-song/s4-narration.wav",
+    "seconds": 4.6,
+    "hash": "a23d754e74d5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/maggie-song/s4-narrationOut.wav",
+    "seconds": 4.96,
+    "hash": "3cf8cfc4fb33",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/maggie-song/s5-narration.wav",
+    "seconds": 4.24,
+    "hash": "fc85f436e437",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/maggie-song/s6-narration.wav",
+    "seconds": 2.52,
+    "hash": "bcacf100c4a4",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/maggie-song/s7-narration.wav",
+    "seconds": 4.24,
+    "hash": "d6063b9cdb17",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

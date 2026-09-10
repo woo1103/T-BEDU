@@ -1,0 +1,120 @@
+{
+  "slug": "learning-game",
+  "title": "재미보다 몰입이 먼저다",
+  "subtitle": "학습 게임은 '충분히 재미있으면' 돼요",
+  "source": "2026년 9월 고1 모의고사 20번",
+  "kind": "academic",
+  "characters": {
+    "rua": {
+      "name": "루아",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B7",
+      "hair": "bob",
+      "hairColor": "#37281F",
+      "outfit": "hoodie",
+      "outfitColor": "#7B5FC4",
+      "accentColor": "#363048",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "kang": {
+      "name": "강 디렉터",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A2",
+      "hair": "short",
+      "hairColor": "#2B2622",
+      "outfit": "tshirt",
+      "outfitColor": "#C4703C",
+      "accentColor": "#3B342E",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "재미보다 몰입이 먼저다",
+      "subtitle": "교육공학 · 학습 게임 설계",
+      "narration": "이번 지문은 배우기 위한 게임을 어떻게 만들어야 하는지 다루고 있어요.",
+      "cast": [
+        { "who": "rua", "expression": "happy", "pose": "raise" },
+        { "who": "kang", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "루아는 학습 게임을 최대한 재미있게 만들면 될 거라고 생각했어요.",
+      "question": "재미있게만 만들면 아이들이 더 잘 배우지 않을까?",
+      "thought": true,
+      "narrationOut": "그런데 그렇게 하면 오히려 배우기가 더 어려워지는 경우가 많아요.",
+      "cast": [{ "who": "rua", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "충분히 재미있으면 된다",
+      "meaning": "학습 게임은 아주 재미있을 필요가 없어요. 은근한 재미면 충분하고, 목표는 배움이에요.",
+      "icon": "🎯",
+      "narration": "지문은 이것을 '충분히 재미있는' 정도라고 표현해요.",
+      "cast": [{ "who": "kang", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "두 게임은 목표가 다르다",
+      "left": {
+        "label": "상업용 오락 게임",
+        "icon": "🕹️",
+        "points": ["즐겁게 하는 게 목표", "재미로 성공을 잰다", "요소를 계속 쌓는다"]
+      },
+      "right": {
+        "label": "학습 게임",
+        "icon": "📘",
+        "points": ["배우게 하는 게 목표", "학습 성과로 성공을 잰다", "은근한 재미면 충분"]
+      },
+      "narration": "만드는 것은 오락용 대작이 아니라 학습용 게임이에요."
+    },
+    {
+      "type": "flow",
+      "heading": "빠지기 쉬운 함정",
+      "steps": [
+        { "label": "규칙을 잔뜩", "icon": "📜" },
+        { "label": "요소를 쌓음", "icon": "🧩" },
+        { "label": "게임이 복잡", "icon": "🌀" },
+        { "label": "배움이 밀림", "icon": "📉" }
+      ],
+      "narration": "흥미를 붙잡으려다 규칙과 장치를 쌓고 싶은 유혹을 견뎌야 해요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "루아는 그러면 무엇을 기준으로 삼아야 하는지 물었어요.",
+      "lines": [
+        { "who": "rua", "text": "재미가 아니면 무엇을 기준으로 만들어야 하나요?" },
+        { "who": "kang", "text": "학습자가 내용과 얼마나 주고받는지, 얼마나 몰입하는지를 보세요." },
+        { "who": "rua", "text": "즐겁게 하는 것보다 활발히 참여하게 하는 게 중요하다는 거네요." }
+      ],
+      "narrationOut": "연구가 보여 주는 것도 바로 상호작용과 몰입의 정도예요.",
+      "cast": [
+        { "who": "rua", "expression": "confused", "pose": "shrug" },
+        { "who": "kang", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Focus on engagement rather than entertainment.",
+      "translation": "오락이 아니라 몰입에 초점을 맞추세요.",
+      "highlight": ["engagement", "entertainment"],
+      "narration": "지문이 한 문장으로 요약해 주는 원칙이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "학습 게임은 '충분히 재미있으면' 된다",
+        "성공은 재미가 아니라 학습 성과로 잰다",
+        "오락보다 상호작용과 몰입이 중요하다"
+      ],
+      "narration": "즐겁게 하는 것보다 참여하게 하는 것이 훨씬 중요해요.",
+      "cast": [{ "who": "rua", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/learning-game/s0-narration.wav",
+    "seconds": 4.32,
+    "hash": "1a66cd1a9975",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/learning-game/s1-narration.wav",
+    "seconds": 4.6,
+    "hash": "1ca4c06a2879",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/learning-game/s1-narrationOut.wav",
+    "seconds": 4.52,
+    "hash": "21f1c9b9f337",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/learning-game/s1-question.wav",
+    "seconds": 4.12,
+    "hash": "a1fc8deb350a",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/learning-game/s2-narration.wav",
+    "seconds": 3.52,
+    "hash": "da5f53c7f8c9",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/learning-game/s3-narration.wav",
+    "seconds": 4.24,
+    "hash": "bb763a9f9147",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/learning-game/s4-narration.wav",
+    "seconds": 4.68,
+    "hash": "fffed84ede04",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/learning-game/s5-narration.wav",
+    "seconds": 4.32,
+    "hash": "46236b92e12a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/learning-game/s5-narrationOut.wav",
+    "seconds": 4.32,
+    "hash": "4fb90cc696bf",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/learning-game/s5-line0.wav",
+    "seconds": 3.4,
+    "hash": "e3f550a71712",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/learning-game/s5-line1.wav",
+    "seconds": 5.4,
+    "hash": "a3208a3dbd98",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/learning-game/s5-line2.wav",
+    "seconds": 4,
+    "hash": "69f6f676d68a",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/learning-game/s6-narration.wav",
+    "seconds": 3.12,
+    "hash": "caeb1826cd8a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/learning-game/s7-narration.wav",
+    "seconds": 4.24,
+    "hash": "c87cabea0002",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

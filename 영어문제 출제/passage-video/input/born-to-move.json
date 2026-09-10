@@ -1,0 +1,121 @@
+{
+  "slug": "born-to-move",
+  "title": "우리는 움직이도록 만들어졌다",
+  "subtitle": "의자에 앉아 보내는 시간이 너무 길어요",
+  "source": "2026년 9월 고1 모의고사 21번",
+  "kind": "academic",
+  "characters": {
+    "siwoo": {
+      "name": "시우",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D4B9",
+      "hair": "ponytail",
+      "hairColor": "#31241E",
+      "outfit": "tshirt",
+      "outfitColor": "#4A9BC4",
+      "accentColor": "#343D46",
+      "accessory": "none",
+      "prop": "phone",
+      "build": "slim"
+    },
+    "park": {
+      "name": "박 코치",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#DDB48A",
+      "hair": "short",
+      "hairColor": "#2A2521",
+      "outfit": "tshirt",
+      "outfitColor": "#C2513F",
+      "accentColor": "#3A3029",
+      "accessory": "cap",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "우리는 움직이도록 만들어졌다",
+      "subtitle": "건강 · 움직임과 성장",
+      "narration": "이번 지문은 우리가 얼마나 움직이지 않고 사는지를 다루고 있어요.",
+      "cast": [
+        { "who": "siwoo", "expression": "neutral", "pose": "raise" },
+        { "who": "park", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "시우는 하루 동안 자기가 앉아 있던 시간을 세어 봤어요.",
+      "question": "오늘 내가 움직인 시간이 얼마나 되지?",
+      "thought": true,
+      "narrationOut": "우리 대부분은 하루 종일 같은 의자 위에서 시간을 보내요.",
+      "cast": [{ "who": "siwoo", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "compare",
+      "heading": "설계된 모습과 지금의 모습",
+      "left": {
+        "label": "우리가 만들어진 모습",
+        "icon": "🏃",
+        "points": ["어디로든 움직인다", "달리고 뛰고 오른다", "몸으로 세상을 배운다"]
+      },
+      "right": {
+        "label": "지금 사는 모습",
+        "icon": "🪑",
+        "points": ["같은 자리에 앉아 있다", "화면에 붙잡혀 있다", "밖에 나가 놀지 않는다"]
+      },
+      "narration": "지문은 우리가 설계된 모습에서 점점 멀어지고 있다고 말해요."
+    },
+    {
+      "type": "concept",
+      "term": "움직임 레퍼토리",
+      "meaning": "몸을 쓰며 쌓는 동작의 목록이에요. 배우고 소통하고 감정이 자라는 데 바탕이 돼요.",
+      "icon": "🤸",
+      "narration": "움직이지 않으면 이 바탕 자체가 쌓이지 않아요.",
+      "cast": [{ "who": "park", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "움직이지 않으면 생기는 일",
+      "steps": [
+        { "label": "기기에 붙잡힘", "icon": "📱" },
+        { "label": "밖에 안 나감", "icon": "🚪" },
+        { "label": "몸도 사회성도", "icon": "🧩" },
+        { "label": "불안과 우울", "icon": "😔" }
+      ],
+      "narration": "달리는 법도 뛰는 법도 오르는 법도 배우지 못한 채 자라게 돼요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "시우는 움직임이 왜 그렇게 중요한지 물었어요.",
+      "lines": [
+        { "who": "siwoo", "text": "몸을 움직이는 게 공부랑 무슨 상관이 있어요?" },
+        { "who": "park", "text": "움직이면서 배우고 소통하고 감정도 자라거든요. 다 이어져 있어요." },
+        { "who": "siwoo", "text": "그러면 안 움직이는 게 마음에도 영향을 준다는 거네요." }
+      ],
+      "narrationOut": "아이들은 다른 사람의 몸짓을 읽는 법조차 배우지 못하고 있어요.",
+      "cast": [
+        { "who": "siwoo", "expression": "surprised", "pose": "shrug" },
+        { "who": "park", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "We were made to move ― and through movement, we are meant to live extraordinary lives.",
+      "translation": "우리는 움직이도록 만들어졌고, 움직임을 통해 특별한 삶을 살도록 되어 있습니다.",
+      "highlight": ["made", "move", "extraordinary"],
+      "narration": "지문이 마지막에 남기는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "우리는 움직이도록 만들어진 존재다",
+        "그런데 하루 대부분을 앉아서 보낸다",
+        "움직임이 배움과 마음의 바탕이 된다"
+      ],
+      "narration": "움직임은 우리에게 곧 생명이라고 지문은 말해요.",
+      "cast": [{ "who": "siwoo", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/law-of-attraction/s0-narration.wav",
+    "seconds": 4.24,
+    "hash": "51fd97cae1f6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/law-of-attraction/s1-narration.wav",
+    "seconds": 4.16,
+    "hash": "b254f2aedced",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/law-of-attraction/s1-narrationOut.wav",
+    "seconds": 3.08,
+    "hash": "96bf2bf2df4a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/law-of-attraction/s1-question.wav",
+    "seconds": 3.32,
+    "hash": "748ccbcbdf6a",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/law-of-attraction/s2-narration.wav",
+    "seconds": 3.84,
+    "hash": "6124abe3020a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/law-of-attraction/s3-narration.wav",
+    "seconds": 4.04,
+    "hash": "c02693b0b70f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/law-of-attraction/s4-narration.wav",
+    "seconds": 3.84,
+    "hash": "c54d1b8da3c1",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/law-of-attraction/s4-narrationOut.wav",
+    "seconds": 5.4,
+    "hash": "c9f67d2d673c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-line0": {
+    "file": "audio/law-of-attraction/s4-line0.wav",
+    "seconds": 3.92,
+    "hash": "ccb0cbdc50d9",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s4-line1": {
+    "file": "audio/law-of-attraction/s4-line1.wav",
+    "seconds": 5.12,
+    "hash": "e9502ca3025d",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s4-line2": {
+    "file": "audio/law-of-attraction/s4-line2.wav",
+    "seconds": 3.8,
+    "hash": "125f4a90e4c1",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-narration": {
+    "file": "audio/law-of-attraction/s5-narration.wav",
+    "seconds": 4.08,
+    "hash": "46231f441775",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/law-of-attraction/s6-narration.wav",
+    "seconds": 2.6,
+    "hash": "10658e049a95",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/law-of-attraction/s7-narration.wav",
+    "seconds": 3.72,
+    "hash": "0dd262fec465",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

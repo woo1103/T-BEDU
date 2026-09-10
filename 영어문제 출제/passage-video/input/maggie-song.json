@@ -1,0 +1,125 @@
+{
+  "slug": "maggie-song",
+  "title": "혼자가 아니었다",
+  "subtitle": "떨리던 목소리가 가라앉기까지",
+  "source": "2026년 9월 고1 모의고사 19번",
+  "kind": "story",
+  "characters": {
+    "maggie": {
+      "name": "매기",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F7D6BD",
+      "hair": "curly",
+      "hairColor": "#5A3A24",
+      "outfit": "dress",
+      "outfitColor": "#C96A9E",
+      "accentColor": "#3D3440",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "durwood": {
+      "name": "더우드",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E9C7A5",
+      "hair": "short",
+      "hairColor": "#2E2723",
+      "outfit": "tshirt",
+      "outfitColor": "#4E8C6A",
+      "accentColor": "#333E38",
+      "accessory": "none",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "혼자가 아니었다",
+      "subtitle": "이야기 · 무대에 선 매기",
+      "narration": "이번 지문은 처음으로 혼자 노래하게 된 아이의 이야기예요.",
+      "cast": [
+        { "who": "maggie", "expression": "sad", "pose": "idle" },
+        { "who": "durwood", "expression": "neutral", "pose": "idle" }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "classroom",
+      "caption": "혼자 부르는 첫 무대",
+      "sfx": "두근두근",
+      "narration": "매기는 앞자리 등받이를 꼭 붙잡고 자리에서 일어섰어요.",
+      "speech": {
+        "who": "maggie",
+        "text": "혼자 불러 본 적이 없는데… 가사를 잊으면 어떡하지.",
+        "thought": true
+      },
+      "narrationOut": "입을 열자마자 목소리가 떨리기 시작했어요.",
+      "cast": [{ "who": "maggie", "expression": "sad", "pose": "shrug" }]
+    },
+    {
+      "type": "story",
+      "setting": "classroom",
+      "caption": "몇몇 아이들이 뒤를 돌아보았다",
+      "narration": "아이들이 돌아보자 매기의 심장이 빠르게 뛰기 시작했어요.",
+      "narrationOut": "매기는 가사를 잊지 않으려고 온 신경을 집중했어요.",
+      "cast": [{ "who": "maggie", "expression": "surprised", "pose": "idle" }]
+    },
+    {
+      "type": "story",
+      "setting": "classroom",
+      "caption": "옆에서 조용히 일어선 아이",
+      "narration": "그때 매기는 옆쪽에서 무언가 움직이는 것을 느꼈어요.",
+      "narrationOut": "더우드가 조용히 일어나 함께 노래하기 시작했어요.",
+      "cast": [
+        { "who": "maggie", "expression": "surprised", "pose": "idle" },
+        { "who": "durwood", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "classroom",
+      "caption": "참고 있던 숨을 내쉰 순간",
+      "narration": "더우드의 목소리는 흔들림 없이 차분하게 노래를 이끌어 갔어요.",
+      "narrationOut": "매기는 참고 있던 줄도 몰랐던 숨을 그제야 내쉬었어요.",
+      "cast": [
+        { "who": "maggie", "expression": "happy", "pose": "idle" },
+        { "who": "durwood", "expression": "happy", "pose": "present" }
+      ]
+    },
+    {
+      "type": "compare",
+      "heading": "노래를 시작할 때와 마칠 때",
+      "left": {
+        "label": "처음",
+        "icon": "😰",
+        "points": ["목소리가 떨렸다", "심장이 빠르게 뛰었다", "어깨가 굳어 있었다"]
+      },
+      "right": {
+        "label": "나중",
+        "icon": "😌",
+        "points": ["참았던 숨을 내쉬었다", "어깨의 긴장이 풀렸다", "가슴이 편안해졌다"]
+      },
+      "narration": "옆에 한 사람이 서 준 것만으로 매기의 몸이 달라졌어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "With Durwood singing beside her, the tension in her chest eased.",
+      "translation": "더우드가 곁에서 함께 노래해 주자, 매기의 가슴에 있던 긴장이 풀렸습니다.",
+      "highlight": ["beside", "tension", "eased"],
+      "narration": "이 이야기의 마음이 바뀌는 지점이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "이야기가 남긴 것",
+      "points": [
+        "매기는 처음 혼자 노래하며 몹시 떨었다",
+        "더우드가 조용히 일어나 함께 불러 주었다",
+        "긴장이 풀리고 둘이 함께 노래를 끝냈다"
+      ],
+      "narration": "곁에 서 주는 사람 하나가 얼어붙은 마음을 녹였어요.",
+      "cast": [
+        { "who": "maggie", "expression": "excited", "pose": "cheer" },
+        { "who": "durwood", "expression": "happy", "pose": "raise" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/born-to-move/s0-narration.wav",
+    "seconds": 4.64,
+    "hash": "7f4688d406f0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/born-to-move/s1-narration.wav",
+    "seconds": 3.88,
+    "hash": "71005ef74a15",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/born-to-move/s1-narrationOut.wav",
+    "seconds": 3.68,
+    "hash": "222f694130bf",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/born-to-move/s1-question.wav",
+    "seconds": 2.52,
+    "hash": "001b3e06156e",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/born-to-move/s2-narration.wav",
+    "seconds": 4.08,
+    "hash": "05ff45e00f24",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/born-to-move/s3-narration.wav",
+    "seconds": 4.08,
+    "hash": "be389f159617",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/born-to-move/s4-narration.wav",
+    "seconds": 5.48,
+    "hash": "81e6260b3842",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/born-to-move/s5-narration.wav",
+    "seconds": 3.6,
+    "hash": "9598781eeff6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/born-to-move/s5-narrationOut.wav",
+    "seconds": 3.84,
+    "hash": "c8022340d606",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/born-to-move/s5-line0.wav",
+    "seconds": 3.2,
+    "hash": "504033752736",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/born-to-move/s5-line1.wav",
+    "seconds": 4.6,
+    "hash": "de6bb475e1c3",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/born-to-move/s5-line2.wav",
+    "seconds": 4.88,
+    "hash": "2208edd3f20f",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/born-to-move/s6-narration.wav",
+    "seconds": 2.92,
+    "hash": "9c3fd89ec1a2",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/born-to-move/s7-narration.wav",
+    "seconds": 3.36,
+    "hash": "dabfd8329dce",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

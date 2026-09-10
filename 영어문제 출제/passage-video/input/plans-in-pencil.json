@@ -1,0 +1,128 @@
+{
+  "slug": "plans-in-pencil",
+  "title": "계획은 연필로 쓰세요",
+  "subtitle": "불확실함을 마주할 용기에 관한 이야기예요",
+  "source": "2026년 9월 고1 모의고사 24번",
+  "kind": "academic",
+  "characters": {
+    "rumi": {
+      "name": "루미",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B9",
+      "hair": "bob",
+      "hairColor": "#36271F",
+      "outfit": "hoodie",
+      "outfitColor": "#4F9E8C",
+      "accentColor": "#334440",
+      "accessory": "none",
+      "prop": "pen",
+      "build": "slim"
+    },
+    "jung": {
+      "name": "정 선생",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E5C2A0",
+      "hair": "short",
+      "hairColor": "#4A423A",
+      "outfit": "suit",
+      "outfitColor": "#8A6BA8",
+      "accentColor": "#3B3345",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "계획은 연필로 쓰세요",
+      "subtitle": "마음 · 통제 욕구와 불확실성",
+      "narration": "이번 지문은 통제하고 싶은 마음을 내려놓는 일에 대해 다루고 있어요.",
+      "cast": [
+        { "who": "rumi", "expression": "neutral", "pose": "raise" },
+        { "who": "jung", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "루미는 계획이 어긋날 때마다 마음이 무너지곤 했어요.",
+      "question": "계획대로 안 되면 다 망한 것 같은데, 왜 이렇게 불안하지?",
+      "thought": true,
+      "narrationOut": "사람은 알고 싶어 하고, 모르는 상태에서는 겁을 내며 굳어 버려요.",
+      "cast": [{ "who": "rumi", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "통제 욕구 내려놓기",
+      "meaning": "모든 것을 정해 두려는 마음을 놓고, 알 수 없음을 마주할 용기를 내는 일이에요.",
+      "icon": "🍃",
+      "narration": "우리는 늘 엄청난 불확실함 속에서 살고 있어요.",
+      "cast": [{ "who": "jung", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "불안이 굳어지는 과정",
+      "steps": [
+        { "label": "모르면 두렵다", "icon": "😟" },
+        { "label": "예측되는 척", "icon": "🎭" },
+        { "label": "계획에 매달림", "icon": "📌" },
+        { "label": "어긋나면 무너짐", "icon": "💥" }
+      ],
+      "narration": "그래서 우리는 실제보다 세상이 더 예측 가능한 척하곤 해요."
+    },
+    {
+      "type": "compare",
+      "heading": "계획하기와 집착하기는 다르다",
+      "left": {
+        "label": "계획에 집착하기",
+        "icon": "🖊️",
+        "points": ["반드시 이뤄져야 한다", "어긋나면 실패로 본다", "다르게 갈 여지가 없다"]
+      },
+      "right": {
+        "label": "계획하기",
+        "icon": "✏️",
+        "points": ["방향을 잡아 두는 일", "바뀔 수 있다고 여긴다", "그래도 괜찮다고 본다"]
+      },
+      "narration": "계획을 세우는 일 자체는 잘못이 아니에요. 오히려 아름다운 일이에요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "루미는 계획을 세우는 게 소용없다는 말인지 물었어요.",
+      "lines": [
+        { "who": "rumi", "text": "그러면 계획은 세우지 말라는 말씀이신가요?" },
+        { "who": "jung", "text": "아니에요. 계획하되 그것이 꼭 이뤄져야 한다고 믿지 않는 거예요." },
+        { "who": "rumi", "text": "세우는 것과 매달리는 게 다르다는 거군요." }
+      ],
+      "narrationOut": "아이젠하워는 계획은 쓸모없지만 계획하는 일은 전부라고 말했어요.",
+      "cast": [
+        { "who": "rumi", "expression": "confused", "pose": "shrug" },
+        { "who": "jung", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "계획을 대하는 태도", "icon": "🗓️" },
+      "everyday": { "label": "잉크 대신 연필로 쓰기", "icon": "✏️" },
+      "because": "지울 수 있게 써 두면 달라져도 다시 적으면 그만이에요.",
+      "narration": "지문은 비유로도 실제로도 연필을 쓰자고 말해요."
+    },
+    {
+      "type": "quote",
+      "sentence": "Plans are worthless, but planning is everything.",
+      "translation": "계획은 쓸모없지만, 계획하는 일은 전부다.",
+      "highlight": ["Plans", "worthless", "planning", "everything"],
+      "narration": "아이젠하워가 남긴 말이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "모르는 상태가 두려워 예측되는 척을 한다",
+        "계획하기와 반드시 이뤄야 한다는 믿음은 다르다",
+        "달라질 수 있음을 받아들이는 것이 용기다"
+      ],
+      "narration": "적어 둔 대로 되지 않아도 괜찮다고 여기는 마음이 필요해요.",
+      "cast": [{ "who": "rumi", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

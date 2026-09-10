@@ -1,0 +1,122 @@
+{
+  "slug": "variation-minds",
+  "title": "다양한 마음이 종을 살린다",
+  "subtitle": "모두가 같은 마음이라면 위험해요",
+  "source": "2026년 9월 고1 모의고사 23번",
+  "kind": "academic",
+  "characters": {
+    "eunchae": {
+      "name": "은채",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "braids",
+      "hairColor": "#2E2320",
+      "outfit": "uniform",
+      "outfitColor": "#5A73C4",
+      "accentColor": "#333A52",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "seo": {
+      "name": "서 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E8C6A4",
+      "hair": "short",
+      "hairColor": "#6B635B",
+      "outfit": "labcoat",
+      "outfitColor": "#93A9BC",
+      "accentColor": "#3D4753",
+      "accessory": "roundGlasses",
+      "facialHair": "beard",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "다양한 마음이 종을 살린다",
+      "subtitle": "진화 · 변이와 자연선택",
+      "narration": "이번 지문은 사람마다 마음이 다른 것이 왜 중요한지를 다루고 있어요.",
+      "cast": [
+        { "who": "eunchae", "expression": "happy", "pose": "raise" },
+        { "who": "seo", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "은채는 사람마다 생각이 다른 것이 불편하다고 느낀 적이 있었어요.",
+      "question": "다들 비슷하게 생각하면 훨씬 편하지 않을까?",
+      "thought": true,
+      "narrationOut": "그런데 그 다름이야말로 종이 살아남는 조건이에요.",
+      "cast": [{ "who": "eunchae", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "변이",
+      "meaning": "같은 종 안에서도 서로 다른 특성이 있는 것이에요. 자연선택이 작동하려면 꼭 필요해요.",
+      "icon": "🧬",
+      "narration": "다윈의 가장 큰 통찰 가운데 하나가 바로 이것이었어요.",
+      "cast": [{ "who": "seo", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "큰 재난이 닥쳤을 때",
+      "left": {
+        "label": "변이가 적은 종",
+        "icon": "⚠️",
+        "points": ["모두가 비슷하다", "한 방식만 통한다", "통째로 사라질 수 있다"]
+      },
+      "right": {
+        "label": "변이가 큰 종",
+        "icon": "🌱",
+        "points": ["서로 많이 다르다", "누군가는 새 환경에 맞는다", "생존자가 남는다"]
+      },
+      "narration": "먹이가 급격히 줄거나 기온이 크게 오르는 상황을 떠올려 보세요."
+    },
+    {
+      "type": "flow",
+      "heading": "변이가 종을 지키는 방식",
+      "steps": [
+        { "label": "환경 급변", "icon": "🌪️" },
+        { "label": "기존 방식 무력", "icon": "🚫" },
+        { "label": "다른 이들이 적응", "icon": "🧭" },
+        { "label": "종이 살아남음", "icon": "🌿" }
+      ],
+      "narration": "새 환경에 잘 맞는 구성원이 남아 종을 이어 가게 돼요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "은채는 몸의 변이와 마음의 변이가 같은 원리인지 물었어요.",
+      "lines": [
+        { "who": "eunchae", "text": "다윈은 동물의 몸을 관찰한 거잖아요. 마음도 같나요?" },
+        { "who": "seo", "text": "같은 원리가 적용돼요. 인간의 마음이 한 종류뿐이라면 위험하죠." },
+        { "who": "eunchae", "text": "재난이 닥쳤을 때 다 같이 무너질 수 있다는 거네요." }
+      ],
+      "narrationOut": "다행히 우리 종에는 한 문화 안에서도, 문화들 사이에서도 여러 마음이 있어요.",
+      "cast": [
+        { "who": "eunchae", "expression": "confused", "pose": "shrug" },
+        { "who": "seo", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "One of Charles Darwin's greatest insights was that variation is a prerequisite for natural selection to work.",
+      "translation": "찰스 다윈의 가장 위대한 통찰 중 하나는 자연선택이 작동하려면 변이가 전제되어야 한다는 것이었습니다.",
+      "highlight": ["variation", "prerequisite", "selection"],
+      "narration": "지문이 기대고 있는 근거예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "변이는 자연선택이 작동하기 위한 조건이다",
+        "변이가 없으면 재난에 통째로 사라질 수 있다",
+        "여러 마음이 있어 우리 종은 덜 위태롭다"
+      ],
+      "narration": "이 다양함이 우리 종이 계속 진화할 수 있게 지켜 줘요.",
+      "cast": [{ "who": "eunchae", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

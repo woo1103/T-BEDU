@@ -1,0 +1,121 @@
+{
+  "slug": "field-trip-change",
+  "title": "현장학습 장소가 바뀝니다",
+  "subtitle": "놀이공원에서 과학관으로 바뀐 이유가 있어요",
+  "source": "2026년 9월 고1 모의고사 18번",
+  "kind": "academic",
+  "characters": {
+    "yerin": {
+      "name": "예린",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B8",
+      "hair": "ponytail",
+      "hairColor": "#33251F",
+      "outfit": "uniform",
+      "outfitColor": "#D96C8A",
+      "accentColor": "#3B333E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "thompson": {
+      "name": "톰슨 교감",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E9C8A7",
+      "hair": "short",
+      "hairColor": "#6E665E",
+      "outfit": "suit",
+      "outfitColor": "#3D6A93",
+      "accentColor": "#2B3A48",
+      "accessory": "glasses",
+      "prop": "pen",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "현장학습 장소가 바뀝니다",
+      "subtitle": "안내문 · 학교가 학부모에게 보낸 글",
+      "narration": "이번 지문은 학교가 학부모에게 보낸 안내문이에요.",
+      "cast": [
+        { "who": "yerin", "expression": "surprised", "pose": "raise" },
+        { "who": "thompson", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "예린이는 금요일 현장학습을 손꼽아 기다리고 있었어요.",
+      "question": "이번 금요일에 드림랜드 놀이공원 가는 거 맞지?",
+      "thought": true,
+      "narrationOut": "그런데 학교에서 안내문 한 통이 도착했어요.",
+      "cast": [{ "who": "yerin", "expression": "happy", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "안내문의 목적",
+      "meaning": "금요일 현장학습 장소가 바뀌었다는 사실을 알리고 양해를 구하는 글이에요.",
+      "icon": "✉️",
+      "narration": "학교는 먼저 학부모의 지지와 협조에 감사를 전했어요.",
+      "cast": [{ "who": "thompson", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "장소가 바뀌기까지",
+      "steps": [
+        { "label": "놀이공원 예정", "icon": "🎢" },
+        { "label": "한파 예보", "icon": "🥶" },
+        { "label": "야외는 위험", "icon": "⚠️" },
+        { "label": "과학관으로", "icon": "🔬" }
+      ],
+      "narration": "최신 일기예보에 금요일 내내 매우 낮은 기온이 예상됐어요."
+    },
+    {
+      "type": "compare",
+      "heading": "원래 계획과 바뀐 계획",
+      "left": {
+        "label": "원래 계획",
+        "icon": "🎢",
+        "points": ["드림랜드 놀이공원", "하루 종일 야외 활동", "추위에 오래 노출"]
+      },
+      "right": {
+        "label": "바뀐 계획",
+        "icon": "🔬",
+        "points": ["시립 과학관", "해설이 있는 전시 관람", "직접 해 보는 체험 활동"]
+      },
+      "narration": "학교는 신중히 검토한 끝에 장소를 바꾸기로 했어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "예린이는 왜 갑자기 장소가 바뀌었는지 물었어요.",
+      "lines": [
+        { "who": "yerin", "text": "놀이공원을 그렇게 기다렸는데 왜 바뀐 거예요?" },
+        { "who": "thompson", "text": "금요일에 기온이 너무 낮아서 야외에 오래 있으면 위험할 수 있어요." },
+        { "who": "yerin", "text": "그래서 실내인 과학관으로 옮긴 거군요." }
+      ],
+      "narrationOut": "학교는 마지막으로 학부모의 이해를 정중히 부탁했어요.",
+      "cast": [
+        { "who": "yerin", "expression": "sad", "pose": "shrug" },
+        { "who": "thompson", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Spending long hours outdoors under these conditions may be potentially unsafe for students.",
+      "translation": "이런 조건에서 야외에 오랜 시간 머무는 것은 학생들에게 잠재적으로 안전하지 않을 수 있습니다.",
+      "highlight": ["outdoors", "unsafe"],
+      "narration": "장소를 바꾼 이유가 이 문장에 담겨 있어요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "금요일 현장학습 장소가 바뀌었다",
+        "한파 예보로 야외 활동이 위험해졌다",
+        "놀이공원 대신 시립 과학관으로 간다"
+      ],
+      "narration": "안내문의 목적은 변경 사실을 알리고 양해를 구하는 것이에요.",
+      "cast": [{ "who": "yerin", "expression": "happy", "pose": "cheer" }]
+    }
+  ]
+}
