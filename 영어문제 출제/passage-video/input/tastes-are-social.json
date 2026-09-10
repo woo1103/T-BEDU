@@ -1,0 +1,116 @@
+{
+  "slug": "tastes-are-social",
+  "title": "입맛은 나 혼자 만든 게 아니다",
+  "subtitle": "취향은 사람에서 사람으로 옮겨 다녀요",
+  "source": "2026년 9월 고1 모의고사 31번",
+  "kind": "academic",
+  "characters": {
+    "miru": {
+      "name": "미루",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B8",
+      "hair": "bob",
+      "hairColor": "#3A2A21",
+      "outfit": "tshirt",
+      "outfitColor": "#D9743C",
+      "accentColor": "#3C3430",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "no": {
+      "name": "노 셰프",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C4A2",
+      "hair": "short",
+      "hairColor": "#2C2723",
+      "outfit": "apron",
+      "outfitColor": "#5B7F9E",
+      "accentColor": "#333C46",
+      "accessory": "none",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "입맛은 나 혼자 만든 게 아니다",
+      "subtitle": "문화 · 취향은 어떻게 생기나",
+      "narration": "이번 지문은 우리 입맛이 어디에서 왔는지를 다루고 있어요.",
+      "cast": [
+        { "who": "miru", "expression": "happy", "pose": "raise" },
+        { "who": "no", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "미루는 자기 입맛이 온전히 자기 것이라고 믿고 있었어요.",
+      "question": "내가 좋아하는 음식은 내가 고른 거 아닌가?",
+      "thought": true,
+      "narrationOut": "그런데 지문은 우리 취향이 처음부터 사회적이라고 말해요.",
+      "cast": [{ "who": "miru", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "취향은 사회적이다",
+      "meaning": "처음 우유를 마실 때도 우유만 있었던 게 아니라, 그 우유를 건넨 사람이 있었어요.",
+      "icon": "🥛",
+      "narration": "우리는 가족과 친구에게서, 학교와 일터에서 먹는 법을 배워요.",
+      "cast": [{ "who": "no", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "우리가 무언가를 원하는 이유",
+      "left": {
+        "label": "흔한 생각",
+        "icon": "🍽️",
+        "points": ["맛이 좋아서 고른다", "내 입맛은 내가 정한다", "음식의 품질이 기준"]
+      },
+      "right": {
+        "label": "지문이 말하는 것",
+        "icon": "👥",
+        "points": ["누구에게 배웠는지가 정한다", "내가 누구인지가 기준", "품질과 거의 상관없다"]
+      },
+      "narration": "우리는 그것이 무엇인지가 아니라 우리가 누구인지 때문에 원해요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "market",
+      "narration": "미루는 마을마다 다른 조리법 이야기를 듣고 고개를 갸웃했어요.",
+      "lines": [
+        { "who": "miru", "text": "마을 밖 사람은 아무도 안 좋아하는 사과파이를 왜 계속 만들어요?" },
+        { "who": "no", "text": "그 맛이 '우리 마을 것'이니까요. 바깥의 평가는 상관이 없어요." },
+        { "who": "miru", "text": "맛보다 누구의 것인지가 중요했던 거네요." }
+      ],
+      "narrationOut": "취향은 이렇게 사람에서 사람으로 옮겨 다녀요.",
+      "cast": [
+        { "who": "miru", "expression": "confused", "pose": "shrug" },
+        { "who": "no", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "퍼져 나가는 취향", "icon": "🍰" },
+      "everyday": { "label": "사람을 타고 도는 바이러스", "icon": "🦠" },
+      "because": "음식의 맛과 거의 상관없이 사람을 통해 옮겨 간다는 점이 닮았어요.",
+      "narration": "지문도 취향이 바이러스처럼 퍼진다고 표현해요."
+    },
+    {
+      "type": "quote",
+      "sentence": "We want these things not just because of what they are, but who we are.",
+      "translation": "우리가 그것을 원하는 이유는 그것이 무엇인지 때문만이 아니라, 우리가 누구인지 때문입니다.",
+      "highlight": ["what", "they", "who", "we"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "우리는 사람에게서 먹는 법을 배운다",
+        "취향은 사람을 타고 퍼져 나간다",
+        "무엇인지보다 누구인지가 선택을 정한다"
+      ],
+      "narration": "우리는 남의 식생활을 관찰하며 때로 판단하기도 해요.",
+      "cast": [{ "who": "miru", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

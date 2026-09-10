@@ -1,0 +1,120 @@
+{
+  "slug": "art-not-copying",
+  "title": "예술은 베끼는 일이 아니다",
+  "subtitle": "폴록이 그리스인의 정의를 무너뜨렸어요",
+  "source": "2026년 9월 고1 모의고사 33번",
+  "kind": "academic",
+  "characters": {
+    "yeeun": {
+      "name": "예은",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D2B7",
+      "hair": "long",
+      "hairColor": "#3B2A21",
+      "outfit": "dress",
+      "outfitColor": "#B0568C",
+      "accentColor": "#3B3140",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "gu": {
+      "name": "구 관장",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#63594F",
+      "outfit": "suit",
+      "outfitColor": "#3E6E75",
+      "accentColor": "#2C3A3D",
+      "accessory": "roundGlasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "예술은 베끼는 일이 아니다",
+      "subtitle": "예술 · 미메시스 논쟁",
+      "narration": "이번 지문은 예술이 무엇인지에 대한 오래된 정의를 다루고 있어요.",
+      "cast": [
+        { "who": "yeeun", "expression": "surprised", "pose": "raise" },
+        { "who": "gu", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "예은이는 미술관에서 아무것도 알아볼 수 없는 그림 앞에 섰어요.",
+      "question": "아무것도 안 닮았는데, 이것도 예술이라고 할 수 있을까?",
+      "thought": true,
+      "narrationOut": "고대 그리스인이라면 아니라고 답했을 거예요.",
+      "cast": [{ "who": "yeeun", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "미메시스",
+      "meaning": "예술을 '보이는 것을 베끼는 일'로 보는 관점이에요. 고대 그리스의 예술관이었어요.",
+      "icon": "🏺",
+      "narration": "그리스 조각과 도자기의 사실적인 표현에서 이 태도가 드러나요.",
+      "cast": [{ "who": "gu", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "예은이는 왜 그리스 회화는 볼 수 없는지 물었어요.",
+      "lines": [
+        { "who": "yeeun", "text": "그리스 조각은 남았는데 왜 그림은 하나도 없어요?" },
+        { "who": "gu", "text": "세월과 날씨 탓에 다 사라졌어요. 남은 건 이야기와 도자기 그림뿐이죠." },
+        { "who": "yeeun", "text": "그래서 그 솜씨를 짐작만 할 수 있는 거군요." }
+      ],
+      "narrationOut": "제욱시스와 파라시오스의 일화가 그 수준을 짐작하게 해 줄 뿐이에요.",
+      "cast": [
+        { "who": "yeeun", "expression": "sad", "pose": "shrug" },
+        { "who": "gu", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "compare",
+      "heading": "두 예술관이 부딪히다",
+      "left": {
+        "label": "고대 그리스",
+        "icon": "🏺",
+        "points": ["보이는 것을 베낀다", "닮을수록 좋은 작품", "사실적인 조각과 도자기"]
+      },
+      "right": {
+        "label": "잭슨 폴록",
+        "icon": "🎨",
+        "points": ["일부러 베끼지 않는다", "알아볼 형태를 피한다", "아무것도 닮지 않게"]
+      },
+      "narration": "1950년대 뉴욕 화파를 이끈 폴록은 정반대로 작업했어요."
+    },
+    {
+      "type": "flow",
+      "heading": "정의가 무너진 과정",
+      "steps": [
+        { "label": "예술 = 베끼기", "icon": "🏺" },
+        { "label": "폴록의 시도", "icon": "🖌️" },
+        { "label": "닮은 것 없음", "icon": "🚫" },
+        { "label": "정의가 부족", "icon": "❓" }
+      ],
+      "narration": "아무것도 베끼지 않은 작품이 실제로 만들어졌어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "The ancient Greek view of art as mimesis ― simple copying ― does not sufficiently define art.",
+      "translation": "예술을 미메시스, 곧 단순한 베끼기로 보는 고대 그리스의 관점은 예술을 충분히 정의하지 못합니다.",
+      "highlight": ["mimesis", "copying", "sufficiently"],
+      "narration": "지문이 마지막에 내리는 결론이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "그리스인은 예술을 베끼는 일로 보았다",
+        "폴록은 일부러 아무것도 베끼지 않았다",
+        "베끼기만으로는 예술을 정의할 수 없다"
+      ],
+      "narration": "정의를 무너뜨린 것은 논쟁이 아니라 실제 작품이었어요.",
+      "cast": [{ "who": "yeeun", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

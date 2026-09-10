@@ -1,0 +1,120 @@
+{
+  "slug": "stoic-emotions",
+  "title": "감정은 판단에서 나온다",
+  "subtitle": "사건이 아니라 해석이 감정을 만들어요",
+  "source": "2026년 9월 고1 모의고사 32번",
+  "kind": "academic",
+  "characters": {
+    "jian": {
+      "name": "지안",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B5",
+      "hair": "ponytail",
+      "hairColor": "#332520",
+      "outfit": "hoodie",
+      "outfitColor": "#5C6BC4",
+      "accentColor": "#343A52",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "stoa": {
+      "name": "선 선생",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E8C6A4",
+      "hair": "short",
+      "hairColor": "#5F574F",
+      "outfit": "robe",
+      "outfitColor": "#9E8560",
+      "accentColor": "#4A4038",
+      "accessory": "none",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "감정은 판단에서 나온다",
+      "subtitle": "철학 · 스토아 사상",
+      "narration": "이번 지문은 우리 감정이 어디에서 생기는지를 다루고 있어요.",
+      "cast": [
+        { "who": "jian", "expression": "sad", "pose": "raise" },
+        { "who": "stoa", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "지안이는 화가 치밀 때마다 자기도 어쩔 수 없다고 느꼈어요.",
+      "question": "감정은 그냥 저절로 올라오는 거 아닌가?",
+      "thought": true,
+      "narrationOut": "스토아 철학자들은 감정이 자동 반응이 아니라고 가르쳤어요.",
+      "cast": [{ "who": "jian", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "감정은 무작위가 아니다",
+      "meaning": "감정은 사건 자체가 아니라, 그 사건을 어떻게 해석했는지에서 생겨나요.",
+      "icon": "🧭",
+      "narration": "스토아 철학에서 가장 흥미로운 통찰 가운데 하나예요.",
+      "cast": [{ "who": "stoa", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "감정이 생기는 순서",
+      "steps": [
+        { "label": "일이 벌어짐", "icon": "⚡" },
+        { "label": "의미를 해석", "icon": "💭" },
+        { "label": "감정이 일어남", "icon": "❤️‍🔥" },
+        { "label": "해석을 바꾸면", "icon": "🔄" }
+      ],
+      "narration": "해석이 바뀌면 그 자리에서 감정도 함께 바뀌어요."
+    },
+    {
+      "type": "compare",
+      "heading": "무엇 때문에 힘든 걸까",
+      "left": {
+        "label": "겉으로 보이는 이유",
+        "icon": "🗣️",
+        "points": ["비판하는 말 때문에", "일자리를 잃어서", "사건 자체 때문에"]
+      },
+      "right": {
+        "label": "실제로 작동하는 것",
+        "icon": "🔍",
+        "points": ["부당하다고 여겨서", "내 가치가 정해진다 믿어서", "내가 내린 해석 때문에"]
+      },
+      "narration": "지문은 비판과 실직이라는 두 가지 예를 들어 설명해요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "지안이는 감정을 참으라는 말인지 물었어요.",
+      "lines": [
+        { "who": "jian", "text": "그러면 화가 나도 그냥 참으라는 말씀이세요?" },
+        { "who": "stoa", "text": "아니에요. 참는 게 아니라, 스스로에게 하던 이야기를 살펴보는 거예요." },
+        { "who": "jian", "text": "더 나은 이야기를 골라 쓸 수도 있다는 거네요." }
+      ],
+      "narrationOut": "감정을 억누르는 것과 해석을 살피는 것은 전혀 달라요.",
+      "cast": [
+        { "who": "jian", "expression": "confused", "pose": "shrug" },
+        { "who": "stoa", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Change the judgment, and you change the emotion.",
+      "translation": "판단을 바꾸면, 감정도 바뀝니다.",
+      "highlight": ["Change", "judgment", "emotion"],
+      "narration": "지문이 한 문장으로 요약해 주는 원리예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "감정은 무작위가 아니라 판단에서 나온다",
+        "사건 → 해석 → 감정의 순서로 일어난다",
+        "억누르지 말고 해석을 다시 골라야 한다"
+      ],
+      "narration": "스스로에게 들려주는 이야기를 살피는 일이 먼저예요.",
+      "cast": [{ "who": "jian", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

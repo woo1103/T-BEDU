@@ -19,9 +19,9 @@
   },
   "s1-speech": {
     "file": "audio/maggie-song/s1-speech.wav",
-    "seconds": 3.92,
-    "hash": "18ec0fec800f",
-    "voice": "ko-KR-Chirp3-HD-Zephyr"
+    "seconds": 3.5683333333333334,
+    "hash": "b0d9a4cdb560",
+    "voice": "ko-KR-Chirp3-HD-Leda"
   },
   "s2-narration": {
     "file": "audio/maggie-song/s2-narration.wav",

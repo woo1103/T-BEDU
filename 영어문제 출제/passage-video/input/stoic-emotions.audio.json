@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/stoic-emotions/s0-narration.wav",
+    "seconds": 4.32,
+    "hash": "50712ab42050",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/stoic-emotions/s1-narration.wav",
+    "seconds": 4.28,
+    "hash": "e37037d4f800",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/stoic-emotions/s1-narrationOut.wav",
+    "seconds": 4.96,
+    "hash": "31e088b40fdf",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/stoic-emotions/s1-question.wav",
+    "seconds": 2.32,
+    "hash": "8ce7ef5e02ba",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/stoic-emotions/s2-narration.wav",
+    "seconds": 3.24,
+    "hash": "91e1b0796911",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/stoic-emotions/s3-narration.wav",
+    "seconds": 3.84,
+    "hash": "be3662421305",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/stoic-emotions/s4-narration.wav",
+    "seconds": 4,
+    "hash": "47bfd606020a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/stoic-emotions/s5-narration.wav",
+    "seconds": 3.48,
+    "hash": "eeadeeeee365",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/stoic-emotions/s5-narrationOut.wav",
+    "seconds": 4.36,
+    "hash": "f1a63b9c57b3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/stoic-emotions/s5-line0.wav",
+    "seconds": 3.04,
+    "hash": "7bf58e046f6d",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/stoic-emotions/s5-line1.wav",
+    "seconds": 4.6,
+    "hash": "8f7121b8510a",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/stoic-emotions/s5-line2.wav",
+    "seconds": 3.24,
+    "hash": "1ecb8f7f3c3f",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/stoic-emotions/s6-narration.wav",
+    "seconds": 2.92,
+    "hash": "5b1f1373cfb0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/stoic-emotions/s7-narration.wav",
+    "seconds": 3.88,
+    "hash": "fe742c53351a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

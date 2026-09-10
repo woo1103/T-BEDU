@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/slang-internet/s0-narration.wav",
+    "seconds": 4.72,
+    "hash": "0b069138f71b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/slang-internet/s1-narration.wav",
+    "seconds": 4.52,
+    "hash": "b9d29744bc33",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/slang-internet/s1-narrationOut.wav",
+    "seconds": 4.56,
+    "hash": "1898709eec7f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/slang-internet/s1-question.wav",
+    "seconds": 3.32,
+    "hash": "49d7c028e10d",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/slang-internet/s2-narration.wav",
+    "seconds": 4,
+    "hash": "ae8a7cba91d7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/slang-internet/s3-narration.wav",
+    "seconds": 4.28,
+    "hash": "d36a3b3ec2f9",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/slang-internet/s4-narration.wav",
+    "seconds": 4.64,
+    "hash": "6610c05298c7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/slang-internet/s5-narration.wav",
+    "seconds": 3.84,
+    "hash": "d347ea00c02d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/slang-internet/s5-narrationOut.wav",
+    "seconds": 5.04,
+    "hash": "e699590b086f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/slang-internet/s5-line0.wav",
+    "seconds": 4.52,
+    "hash": "652bac7b5f28",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/slang-internet/s5-line1.wav",
+    "seconds": 4.72,
+    "hash": "6d72999cf96b",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/slang-internet/s5-line2.wav",
+    "seconds": 3.76,
+    "hash": "296deb78140f",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/slang-internet/s6-narration.wav",
+    "seconds": 2.88,
+    "hash": "0ec62f6a72fe",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/slang-internet/s7-narration.wav",
+    "seconds": 3.32,
+    "hash": "dfd058cb41df",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

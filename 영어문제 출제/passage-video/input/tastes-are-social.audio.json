@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/tastes-are-social/s0-narration.wav",
+    "seconds": 4.44,
+    "hash": "3c1228861294",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/tastes-are-social/s1-narration.wav",
+    "seconds": 4.48,
+    "hash": "2c7b844072bf",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/tastes-are-social/s1-narrationOut.wav",
+    "seconds": 4.16,
+    "hash": "4968bfad2372",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/tastes-are-social/s1-question.wav",
+    "seconds": 3.24,
+    "hash": "dedc9165c75a",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/tastes-are-social/s2-narration.wav",
+    "seconds": 4.96,
+    "hash": "d0bfd5f62630",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/tastes-are-social/s3-narration.wav",
+    "seconds": 4.96,
+    "hash": "1267100963e3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/tastes-are-social/s4-narration.wav",
+    "seconds": 4.4,
+    "hash": "0aa59eed243e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/tastes-are-social/s4-narrationOut.wav",
+    "seconds": 3.48,
+    "hash": "80719efc39bd",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-line0": {
+    "file": "audio/tastes-are-social/s4-line0.wav",
+    "seconds": 4.56,
+    "hash": "f00a02150ad3",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s4-line1": {
+    "file": "audio/tastes-are-social/s4-line1.wav",
+    "seconds": 4.36,
+    "hash": "99509a3991ee",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s4-line2": {
+    "file": "audio/tastes-are-social/s4-line2.wav",
+    "seconds": 3.72,
+    "hash": "06bebccdf8ee",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-narration": {
+    "file": "audio/tastes-are-social/s5-narration.wav",
+    "seconds": 3.76,
+    "hash": "a506911efe22",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/tastes-are-social/s6-narration.wav",
+    "seconds": 1.96,
+    "hash": "10658e049a95",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/tastes-are-social/s7-narration.wav",
+    "seconds": 4.12,
+    "hash": "b402240f7220",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

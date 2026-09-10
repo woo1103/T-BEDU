@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/self-esteem-monitor/s0-narration.wav",
+    "seconds": 4.96,
+    "hash": "937a4303e1cb",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/self-esteem-monitor/s1-narration.wav",
+    "seconds": 4.96,
+    "hash": "3468ea4090dd",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/self-esteem-monitor/s1-narrationOut.wav",
+    "seconds": 4.48,
+    "hash": "fa3e9e1a9458",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/self-esteem-monitor/s1-question.wav",
+    "seconds": 3.52,
+    "hash": "43589f3e862e",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/self-esteem-monitor/s2-narration.wav",
+    "seconds": 3.88,
+    "hash": "ac5a548b8504",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/self-esteem-monitor/s3-narration.wav",
+    "seconds": 4.84,
+    "hash": "36ea930727a2",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/self-esteem-monitor/s4-narration.wav",
+    "seconds": 2.36,
+    "hash": "422f091f4dc9",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/self-esteem-monitor/s5-narration.wav",
+    "seconds": 4.44,
+    "hash": "69ddaa6ed7e1",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/self-esteem-monitor/s5-narrationOut.wav",
+    "seconds": 4.52,
+    "hash": "e7fdd0048936",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/self-esteem-monitor/s5-line0.wav",
+    "seconds": 3.36,
+    "hash": "4a3552b796bc",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/self-esteem-monitor/s5-line1.wav",
+    "seconds": 4.12,
+    "hash": "a4dfce8b9cd5",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/self-esteem-monitor/s5-line2.wav",
+    "seconds": 3.28,
+    "hash": "14485a390107",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/self-esteem-monitor/s6-narration.wav",
+    "seconds": 1.96,
+    "hash": "55635d515ed7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/self-esteem-monitor/s7-narration.wav",
+    "seconds": 4,
+    "hash": "e070e77d0547",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

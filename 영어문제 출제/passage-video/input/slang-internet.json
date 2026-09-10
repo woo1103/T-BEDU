@@ -1,0 +1,121 @@
+{
+  "slug": "slang-internet",
+  "title": "규칙을 정하던 사람들이 사라졌다",
+  "subtitle": "인터넷이 슬랭의 자리를 완전히 바꿔 놓았어요",
+  "source": "2026년 9월 고1 모의고사 41~42번",
+  "kind": "academic",
+  "characters": {
+    "raon": {
+      "name": "라온",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D3B8",
+      "hair": "curly",
+      "hairColor": "#4A2E22",
+      "outfit": "tshirt",
+      "outfitColor": "#7C5CC4",
+      "accentColor": "#39334A",
+      "accessory": "none",
+      "prop": "phone",
+      "build": "slim"
+    },
+    "shin": {
+      "name": "신 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E8C6A4",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "suit",
+      "outfitColor": "#4A7A5E",
+      "accentColor": "#2F3E36",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "규칙을 정하던 사람들이 사라졌다",
+      "subtitle": "언어 · 인터넷과 슬랭",
+      "narration": "이번 지문은 인터넷이 슬랭의 자리를 어떻게 바꿨는지를 다루고 있어요.",
+      "cast": [
+        { "who": "raon", "expression": "happy", "pose": "raise" },
+        { "who": "shin", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "라온이는 친구들이 쓰는 말이 방송에는 잘 안 나오는 걸 눈치챘어요.",
+      "question": "우리가 매일 쓰는 말은 왜 뉴스에서는 안 나올까?",
+      "thought": true,
+      "narrationOut": "예전에는 어떤 말이 '올바른' 말인지 정하는 사람들이 따로 있었어요.",
+      "cast": [{ "who": "raon", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "규범을 정하던 사람들",
+      "meaning": "표준 영어가 등장한 뒤로 규칙을 만드는 사람들이 '올바른 영어'를 정해 왔어요.",
+      "icon": "📜",
+      "narration": "그 규범이 우리 소통 통로를 오랫동안 지배해 왔어요.",
+      "cast": [{ "who": "shin", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "목소리를 내는 방법이 달라졌다",
+      "left": {
+        "label": "예전 매체",
+        "icon": "📺",
+        "points": ["인쇄·방송의 기준에 맞춰야", "진행자는 슬랭을 못 썼다", "통과해야 목소리를 냈다"]
+      },
+      "right": {
+        "label": "지금 소셜미디어",
+        "icon": "📱",
+        "points": ["누구나 공적 인물이 된다", "크리에이터는 슬랭을 쓴다", "막을 사람이 없다"]
+      },
+      "narration": "소셜미디어가 그 장벽을 완전히 무너뜨렸어요."
+    },
+    {
+      "type": "flow",
+      "heading": "슬랭이 퍼지는 새 경로",
+      "steps": [
+        { "label": "장벽이 무너짐", "icon": "🧱" },
+        { "label": "누구나 발화", "icon": "🗣️" },
+        { "label": "말에 힘이 실림", "icon": "⭐" },
+        { "label": "빠르게 확산", "icon": "🚀" }
+      ],
+      "narration": "크리에이터의 영향력이 그 말을 정당화하고 널리 퍼뜨려요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "라온이는 예전과 무엇이 가장 크게 달라졌는지 물었어요.",
+      "lines": [
+        { "who": "raon", "text": "말이 퍼지는 속도가 예전보다 그렇게 빨라진 이유가 뭐예요?" },
+        { "who": "shin", "text": "크리에이터의 배경이 훨씬 다양해졌어요. 벽을 더 쉽게 넘죠." },
+        { "who": "raon", "text": "예전엔 경제적·사회적 장벽에 막혀 있었다는 거네요." }
+      ],
+      "narrationOut": "지리로 이어지던 느슨한 관계망이 온라인에서 더 단단해졌어요.",
+      "cast": [
+        { "who": "raon", "expression": "surprised", "pose": "shrug" },
+        { "who": "shin", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Social media completely broke that barrier. The playing field is now level, and public access is democratized.",
+      "translation": "소셜미디어가 그 장벽을 완전히 무너뜨렸습니다. 이제 운동장은 평평해졌고, 대중의 접근은 민주화되었습니다.",
+      "highlight": ["broke", "barrier", "level", "democratized"],
+      "narration": "지문에서 이 대목이 전환점이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "예전엔 규칙을 정하는 사람들이 말을 통제했다",
+        "소셜미디어가 그 장벽을 무너뜨렸다",
+        "슬랭이 장벽을 넘어 빠르게 퍼진다"
+      ],
+      "narration": "이제는 옛 규칙을 강제할 사람이 남아 있지 않아요.",
+      "cast": [{ "who": "raon", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

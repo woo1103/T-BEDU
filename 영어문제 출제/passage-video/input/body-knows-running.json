@@ -1,0 +1,116 @@
+{
+  "slug": "body-knows-running",
+  "title": "몸은 우리보다 잘 안다",
+  "subtitle": "달리기는 설명할 수 없을 만큼 복잡해요",
+  "source": "2026년 9월 고1 모의고사 34번",
+  "kind": "academic",
+  "characters": {
+    "taeo": {
+      "name": "태오",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F4D0B4",
+      "hair": "spiky",
+      "hairColor": "#2E241E",
+      "outfit": "tshirt",
+      "outfitColor": "#E0673F",
+      "accentColor": "#39332E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "ha": {
+      "name": "하 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E5C1A0",
+      "hair": "short",
+      "hairColor": "#39312A",
+      "outfit": "labcoat",
+      "outfitColor": "#7FA8B5",
+      "accentColor": "#3A464C",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "몸은 우리보다 잘 안다",
+      "subtitle": "신체 · 달리기의 복잡함",
+      "narration": "이번 지문은 달리기가 얼마나 복잡한 일인지를 다루고 있어요.",
+      "cast": [
+        { "who": "taeo", "expression": "neutral", "pose": "raise" },
+        { "who": "ha", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "태오는 달리다가 다친 뒤 이상하다고 생각했어요.",
+      "question": "달리기는 그냥 자연스러운 건데, 왜 이렇게 쉽게 다치지?",
+      "thought": true,
+      "narrationOut": "달리기가 쉬워 보이는 건 우리 몸이 그 일을 아주 잘하기 때문이에요.",
+      "cast": [{ "who": "taeo", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "달리기의 지능",
+      "meaning": "달리는 법은 근섬유와 세포, 유전자 깊숙이 묻혀 있어요. 의식이 닿지 않는 곳이에요.",
+      "icon": "🧬",
+      "narration": "그래서 우리는 달리기의 복잡함을 온전히 설명하지 못해요.",
+      "cast": [{ "who": "ha", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "누가 달리기를 아는가",
+      "left": {
+        "label": "우리의 의식",
+        "icon": "🧠",
+        "points": ["설명하지 못한다", "어떻게 하는지 모른다", "쉬워 보인다고 여긴다"]
+      },
+      "right": {
+        "label": "우리의 몸",
+        "icon": "🦵",
+        "points": ["이미 해내고 있다", "감각으로 알고 있다", "우리보다 더 잘 안다"]
+      },
+      "narration": "설명하지 못한다고 해서 몸이 모르는 것은 아니에요."
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "두 다리로 달리기", "icon": "🏃" },
+      "everyday": { "label": "최강 슈퍼컴퓨터도 못 하는 계산", "icon": "💻" },
+      "because": "지구에서 가장 강력한 컴퓨터도 그만한 연산을 해내지 못해요.",
+      "narration": "우리가 무심히 하는 일이 실은 그 정도로 복잡해요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "태오는 그러면 어떻게 달리기를 이해할 수 있는지 물었어요.",
+      "lines": [
+        { "who": "taeo", "text": "설명할 수 없다면 도대체 어떻게 배워야 해요?" },
+        { "who": "ha", "text": "감각을 쓰는 법을 익히고, 감각이 깨어나게 두면서 더듬어 가는 거예요." },
+        { "who": "taeo", "text": "머리로 아는 게 아니라 몸으로 다가가는 거군요." }
+      ],
+      "narrationOut": "몸이 우리보다 달리기를 더 잘 안다는 사실을 받아들이는 데서 시작해요.",
+      "cast": [
+        { "who": "taeo", "expression": "confused", "pose": "shrug" },
+        { "who": "ha", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Our bodies know more about running than we ever will.",
+      "translation": "우리 몸은 우리가 앞으로 알게 될 것보다 달리기에 대해 더 많이 알고 있습니다.",
+      "highlight": ["bodies", "know", "more"],
+      "narration": "지문이 마지막에 남기는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "달리기는 쉬워 보이지만 극도로 복잡하다",
+        "그 앎은 근육과 세포 깊이 묻혀 있다",
+        "설명 대신 감각으로 다가가야 한다"
+      ],
+      "narration": "몸이 더 잘 안다는 것을 인정하는 데서 이해가 시작돼요.",
+      "cast": [{ "who": "taeo", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

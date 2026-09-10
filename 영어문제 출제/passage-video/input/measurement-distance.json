@@ -1,0 +1,121 @@
+{
+  "slug": "measurement-distance",
+  "title": "재는 법이 같아야 거래가 된다",
+  "subtitle": "측정은 사람 사이의 거리를 잇는 기술이에요",
+  "source": "2026년 9월 고1 모의고사 38번",
+  "kind": "academic",
+  "characters": {
+    "boyeong": {
+      "name": "보영",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B7",
+      "hair": "braids",
+      "hairColor": "#31251F",
+      "outfit": "uniform",
+      "outfitColor": "#4E86C4",
+      "accentColor": "#33404E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "porter": {
+      "name": "임 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C5A3",
+      "hair": "short",
+      "hairColor": "#6A625A",
+      "outfit": "suit",
+      "outfitColor": "#8A6A4A",
+      "accentColor": "#3E362E",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "재는 법이 같아야 거래가 된다",
+      "subtitle": "과학사 · 측정과 일관성",
+      "narration": "이번 지문은 측정 단위에 왜 일관성이 필요한지를 다루고 있어요.",
+      "cast": [
+        { "who": "boyeong", "expression": "happy", "pose": "raise" },
+        { "who": "porter", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "보영이는 옛날 사람들이 팔 길이로 길이를 쟀다는 이야기를 들었어요.",
+      "question": "사람마다 팔 길이가 다른데, 그걸로 어떻게 재?",
+      "thought": true,
+      "narrationOut": "작은 마을 안에서는 그 정도로도 충분했어요.",
+      "cast": [{ "who": "boyeong", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "거리의 기술",
+      "meaning": "공유된 규칙으로 문화와 지리의 차이를 건너 정보를 주고받게 해 주는 도구예요.",
+      "icon": "📏",
+      "narration": "과학사학자 시어도어 포터는 측정을 이렇게 불렀어요.",
+      "cast": [{ "who": "porter", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "두 가지 재는 방식",
+      "left": {
+        "label": "주관적인 척도",
+        "icon": "🙋",
+        "points": ["개인 경험에 기댄다", "쓸모 있는 앎을 담는다", "남과 나누기 어렵다"]
+      },
+      "right": {
+        "label": "공유된 단위",
+        "icon": "📐",
+        "points": ["믿을 만한 정의가 있다", "누구에게나 같은 뜻", "정보를 주고받게 한다"]
+      },
+      "narration": "측정이 또 하나의 언어라면, 단어처럼 단위에도 정의가 필요해요."
+    },
+    {
+      "type": "flow",
+      "heading": "일관성이 필요해지기까지",
+      "steps": [
+        { "label": "작은 정착지", "icon": "🏡" },
+        { "label": "몸으로 재기", "icon": "🖐️" },
+        { "label": "공동체가 커짐", "icon": "🏘️" },
+        { "label": "분쟁이 생김", "icon": "⚖️" }
+      ],
+      "narration": "공동체가 커지자 이 방식의 허점이 드러나기 시작했어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "market",
+      "narration": "보영이는 언제부터 그 방식이 통하지 않게 됐는지 물었어요.",
+      "lines": [
+        { "who": "boyeong", "text": "마을 안에서는 됐는데, 언제부터 문제가 된 거예요?" },
+        { "who": "porter", "text": "교역이나 공물을 두고 다툼이 생기는 순간이죠. 서로 잰 값이 다르니까요." },
+        { "who": "boyeong", "text": "그 갈등이 더 정확한 기준을 요구하게 만든 거네요." }
+      ],
+      "narrationOut": "갈등의 순간이 더 큰 일관성을 요구하게 돼요.",
+      "cast": [
+        { "who": "boyeong", "expression": "surprised", "pose": "shrug" },
+        { "who": "porter", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Measurement is a 'technology of distance': a tool that uses shared rules to bridge differences of culture and geography.",
+      "translation": "측정은 '거리의 기술'입니다. 공유된 규칙으로 문화와 지리의 차이를 잇는 도구입니다.",
+      "highlight": ["technology", "distance", "shared", "bridge"],
+      "narration": "지문이 기대고 있는 정의예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "주관적 척도는 남과 나누기 어렵다",
+        "측정은 차이를 건너 잇는 기술이다",
+        "공동체가 커지면 일관성이 필요해진다"
+      ],
+      "narration": "단위에 믿을 만한 정의가 있어야 서로 통할 수 있어요.",
+      "cast": [{ "who": "boyeong", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

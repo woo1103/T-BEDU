@@ -1,0 +1,112 @@
+{
+  "slug": "self-esteem-monitor",
+  "title": "자존감은 경보 장치다",
+  "subtitle": "관계가 흔들릴 때 울리도록 만들어졌어요",
+  "source": "2026년 9월 고1 모의고사 40번",
+  "kind": "academic",
+  "characters": {
+    "sowon": {
+      "name": "소원",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D4B9",
+      "hair": "long",
+      "hairColor": "#38281F",
+      "outfit": "hoodie",
+      "outfitColor": "#C4577A",
+      "accentColor": "#3C333C",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "jo": {
+      "name": "조 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C4A2",
+      "hair": "short",
+      "hairColor": "#342D27",
+      "outfit": "labcoat",
+      "outfitColor": "#89A6B8",
+      "accentColor": "#3B454E",
+      "accessory": "roundGlasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "자존감은 경보 장치다",
+      "subtitle": "진화심리 · 관계를 지키는 감시 기제",
+      "narration": "이번 지문은 자존감이 왜 생겨났는지를 진화의 눈으로 다루고 있어요.",
+      "cast": [
+        { "who": "sowon", "expression": "sad", "pose": "raise" },
+        { "who": "jo", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "소원이는 사람들 반응에 자꾸 신경이 쓰이는 자신이 이상하게 느껴졌어요.",
+      "question": "왜 자꾸 남이 나를 어떻게 볼지 살피게 될까?",
+      "thought": true,
+      "narrationOut": "지문은 그 살핌이 정상이며 인간됨의 일부라고 말해요.",
+      "cast": [{ "who": "sowon", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "관계를 감시하는 장치",
+      "meaning": "자존감은 우리 관계가 어떤 상태인지 살피는 장치로 발달했어요.",
+      "icon": "📡",
+      "narration": "이 장치는 타인의 반응을 지켜보다가 신호를 보내요.",
+      "cast": [{ "who": "jo", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "경보가 울리는 순서",
+      "steps": [
+        { "label": "조용히 감시", "icon": "📡" },
+        { "label": "가치 하락 감지", "icon": "📉" },
+        { "label": "경보가 울림", "icon": "🔔" },
+        { "label": "상황을 평가", "icon": "🤔" }
+      ],
+      "narration": "평소에는 의식하지 못한 채로 작동하다가 필요할 때만 올라와요."
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "자존감이 보내는 신호", "icon": "🔔" },
+      "everyday": { "label": "자동차 연료 경고등", "icon": "🚗" },
+      "because": "평소엔 보이지 않다가 부족해질 때만 켜져서 우리를 움직이게 해요.",
+      "narration": "고장이 아니라 원래 그렇게 만들어진 장치예요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "소원이는 경보가 울리면 무엇을 하게 되는지 물었어요.",
+      "lines": [
+        { "who": "sowon", "text": "그 신호가 오면 저는 뭘 하고 있는 거예요?" },
+        { "who": "jo", "text": "받아들여지고 있는지, 밀려나고 있는지 스스로 묻게 돼요." },
+        { "who": "sowon", "text": "행동을 고쳐야 하나 따져 보는 것도 그래서군요." }
+      ],
+      "narrationOut": "생존이 관계에 걸려 있으니 몸과 뇌가 촘촘히 엮여 반응해요.",
+      "cast": [
+        { "who": "sowon", "expression": "confused", "pose": "shrug" },
+        { "who": "jo", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "The continuous scanning is normal, a part of being human.",
+      "translation": "끊임없이 살피는 일은 정상이며, 인간으로 산다는 것의 일부입니다.",
+      "highlight": ["continuous", "normal", "human"],
+      "narration": "지문이 마지막에 건네는 말이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "자존감은 관계를 살피는 장치로 발달했다",
+        "평소엔 조용하다가 위험할 때 경보를 울린다",
+        "끊임없이 살피는 것은 정상적인 일이다"
+      ],
+      "narration": "거부를 줄이고 수용을 늘리는 기제를 우리는 갖추게 됐어요.",
+      "cast": [{ "who": "sowon", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}
