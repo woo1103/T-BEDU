@@ -1,0 +1,117 @@
+{
+  "slug": "negotiation-emotions",
+  "title": "길 하나가 아니라 지형을 익혀라",
+  "subtitle": "최고의 협상가도 감정은 빠뜨려요",
+  "source": "리딩파워 유형편 완성 Chapter Review3 3번",
+  "kind": "academic",
+  "characters": {
+    "sian": {
+      "name": "시안",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "long",
+      "hairColor": "#352620",
+      "outfit": "suit",
+      "outfitColor": "#C46A5C",
+      "accentColor": "#3C3330",
+      "accessory": "none",
+      "prop": "pen",
+      "build": "slim"
+    },
+    "ko": {
+      "name": "고 위원",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C4A2",
+      "hair": "short",
+      "hairColor": "#4A423A",
+      "outfit": "suit",
+      "outfitColor": "#3E6A8A",
+      "accentColor": "#2C3A46",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "길 하나가 아니라 지형을 익혀라",
+      "subtitle": "협상 · 감정을 미리 헤아리기",
+      "narration": "이번 지문은 협상을 준비하는 올바른 방법을 다루고 있어요.",
+      "cast": [
+        { "who": "sian", "expression": "neutral", "pose": "raise" },
+        { "who": "ko", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "시안이는 협상 전에 할 말을 하나하나 적어 두곤 했어요.",
+      "question": "말할 순서를 다 짜 두면 잘 풀리지 않을까?",
+      "thought": true,
+      "narrationOut": "그런데 좋은 준비는 길 하나를 짜 두는 일이 아니에요.",
+      "cast": [{ "who": "sian", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "좋은 협상 준비", "icon": "🤝" },
+      "everyday": { "label": "숲의 지형을 익혀 두기", "icon": "🗺️" },
+      "because": "길 하나만 외우면 막혔을 때 갈 곳이 없지만, 지형을 알면 어디로든 돌아갈 수 있어요.",
+      "narration": "지문은 준비를 숲을 지나는 일에 빗대요."
+    },
+    {
+      "type": "concept",
+      "term": "감정을 미리 헤아리기",
+      "meaning": "협상 전에 어떤 감정이 올라올지 미리 생각해 두면, 실제로 생겼을 때 더 잘 다룰 수 있어요.",
+      "icon": "💗",
+      "narration": "그러려면 생길 수 있는 여러 문제를 폭넓게 떠올려야 해요.",
+      "cast": [{ "who": "ko", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "협상가가 챙기는 것과 빠뜨리는 것",
+      "left": {
+        "label": "대개 잘 챙긴다",
+        "icon": "📋",
+        "points": ["상대의 제안을 예상한다", "논리적 대응을 준비한다", "조건을 미리 따져 둔다"]
+      },
+      "right": {
+        "label": "자주 빠뜨린다",
+        "icon": "💗",
+        "points": ["내 감정 반응", "상대의 감정 반응", "성공을 가르는 요인인데도"]
+      },
+      "narration": "최고의 협상가조차 이 부분을 너무 자주 놓쳐요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "시안이는 감정까지 어떻게 미리 준비하는지 물었어요.",
+      "lines": [
+        { "who": "sian", "text": "감정은 그때 가 봐야 아는 거 아니에요?" },
+        { "who": "ko", "text": "어떤 말에 내가 욱할지 미리 떠올려 두면 그 순간이 달라져요." },
+        { "who": "sian", "text": "미리 생각해 둔 감정은 덜 휘둘리게 된다는 거네요." }
+      ],
+      "narrationOut": "미리 헤아려 두면 실제로 올라왔을 때 다루는 법이 달라져요.",
+      "cast": [
+        { "who": "sian", "expression": "confused", "pose": "shrug" },
+        { "who": "ko", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Good preparation for a negotiation does not consist of laying out a single path through the woods but of learning the terrain.",
+      "translation": "협상을 위한 좋은 준비는 숲을 지나는 하나의 길을 짜 두는 것이 아니라, 그 지형을 익히는 데 있습니다.",
+      "highlight": ["single", "path", "learning", "terrain"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "좋은 준비는 길 하나가 아니라 지형을 익히는 것",
+        "감정을 미리 헤아리면 다루기가 쉬워진다",
+        "최고의 협상가도 감정은 자주 빠뜨린다"
+      ],
+      "narration": "감정 준비가 협상의 성패를 가르는 중요한 요인이에요.",
+      "cast": [{ "who": "sian", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

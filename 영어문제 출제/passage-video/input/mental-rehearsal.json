@@ -1,0 +1,120 @@
+{
+  "slug": "mental-rehearsal",
+  "title": "머릿속에서 미리 겪어 둔다",
+  "subtitle": "상상해 본 상황에서는 얼어붙지 않아요",
+  "source": "리딩파워 유형편 완성 12과 Practice 1",
+  "kind": "academic",
+  "characters": {
+    "sena": {
+      "name": "세나",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D4B9",
+      "hair": "bob",
+      "hairColor": "#38281F",
+      "outfit": "suit",
+      "outfitColor": "#7A5CC4",
+      "accentColor": "#373048",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "geller": {
+      "name": "권 소장",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E5C2A0",
+      "hair": "short",
+      "hairColor": "#4A423A",
+      "outfit": "labcoat",
+      "outfitColor": "#8AA8B5",
+      "accentColor": "#3A464C",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "머릿속에서 미리 겪어 둔다",
+      "subtitle": "훈련 · 심상 리허설",
+      "narration": "이번 지문은 위험한 순간을 미리 대비하는 방법을 다루고 있어요.",
+      "cast": [
+        { "who": "sena", "expression": "neutral", "pose": "raise" },
+        { "who": "geller", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "세나는 위급한 상황이 닥치면 몸이 굳을까 봐 걱정이 됐어요.",
+      "question": "그런 일이 진짜 생기면 나는 움직일 수 있을까?",
+      "thought": true,
+      "narrationOut": "전문가들은 이럴 때 머릿속 연습을 활용해요.",
+      "cast": [{ "who": "sena", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "심상 리허설",
+      "meaning": "실제로 그 자리에 있지 않으면서 자신이 그 상황에 있는 모습을 그려 보는 기술이에요.",
+      "icon": "🎬",
+      "narration": "모든 분야의 전문가가 쓰는 방법이고, 사회복지사에게도 도움이 돼요.",
+      "cast": [{ "who": "geller", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "미리 겪어 두면 생기는 일",
+      "steps": [
+        { "label": "상황을 그린다", "icon": "🎬" },
+        { "label": "대응을 상상", "icon": "🚪" },
+        { "label": "몸이 익힌다", "icon": "💪" },
+        { "label": "실제로 움직임", "icon": "✅" }
+      ],
+      "narration": "머릿속으로 그 상황을 통과해 두면 몸과 마음이 더 잘 반응해요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "세나는 어떤 장면을 그려 두어야 하는지 물었어요.",
+      "lines": [
+        { "who": "sena", "text": "좋은 장면을 그리는 게 아니라 나쁜 상황을 그리라고요?" },
+        { "who": "geller", "text": "네. 화난 사람과 집 안에 갇혔다면 어떻게 빠져나올지까지 그려 두세요." },
+        { "who": "sena", "text": "그러면 실제로 닥쳤을 때 얼어붙지 않겠네요." }
+      ],
+      "narrationOut": "바람직하지 않은 상황일수록 미리 그려 두는 것이 현명해요.",
+      "cast": [
+        { "who": "sena", "expression": "surprised", "pose": "shrug" },
+        { "who": "geller", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "compare",
+      "heading": "미리 그려 두었는가",
+      "left": {
+        "label": "그려 두지 않으면",
+        "icon": "🧊",
+        "points": ["처음 겪는 일이 된다", "몸이 얼어붙는다", "판단이 늦어진다"]
+      },
+      "right": {
+        "label": "그려 두었다면",
+        "icon": "🎯",
+        "points": ["이미 겪어 본 일이 된다", "몸이 먼저 움직인다", "대응이 준비돼 있다"]
+      },
+      "narration": "미리 연습해 둔 덕분에 더 잘 대응할 수 있게 되는 거예요."
+    },
+    {
+      "type": "quote",
+      "sentence": "The more vividly individuals can imagine themselves performing desired behaviors, the greater the beneficial impact on actual performance.",
+      "translation": "원하는 행동을 하는 자신의 모습을 더 생생하게 그릴수록, 실제 수행에 미치는 이로운 효과도 더 커집니다.",
+      "highlight": ["vividly", "imagine", "actual", "performance"],
+      "narration": "연구자 겔러가 남긴 말이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "심상 리허설은 상황을 미리 그려 보는 기술이다",
+        "생생하게 그릴수록 실제 수행에 도움이 된다",
+        "나쁜 상황일수록 미리 그려 두어야 한다"
+      ],
+      "narration": "미리 겪어 둔 사람은 그 순간에 얼어붙지 않아요.",
+      "cast": [{ "who": "sena", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

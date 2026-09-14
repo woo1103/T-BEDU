@@ -1,0 +1,121 @@
+{
+  "slug": "birds-sing-better",
+  "title": "새가 훨씬 잘 부른다",
+  "subtitle": "포유류와 새의 소리는 크게 달라요",
+  "source": "리딩파워 유형편 완성 13과 Example 1",
+  "kind": "academic",
+  "characters": {
+    "chorong": {
+      "name": "초롱",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D4B9",
+      "hair": "braids",
+      "hairColor": "#33251F",
+      "outfit": "tshirt",
+      "outfitColor": "#4E9EC4",
+      "accentColor": "#33424E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "nam": {
+      "name": "남 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E5C2A0",
+      "hair": "short",
+      "hairColor": "#3A322B",
+      "outfit": "labcoat",
+      "outfitColor": "#8AA87F",
+      "accentColor": "#3A453A",
+      "accessory": "roundGlasses",
+      "prop": "leaf",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "새가 훨씬 잘 부른다",
+      "subtitle": "생물 · 소리로 하는 소통",
+      "narration": "이번 지문은 포유류와 새의 소리를 견주어 보는 이야기예요.",
+      "cast": [
+        { "who": "chorong", "expression": "happy", "pose": "raise" },
+        { "who": "nam", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "초롱이는 아침마다 들리는 새소리가 왜 그렇게 다양한지 궁금했어요.",
+      "question": "동물은 다 소리를 내는데, 왜 새소리만 노래처럼 들리지?",
+      "thought": true,
+      "narrationOut": "포유류와 새 모두 시끄러운 동물이지만, 소리의 결이 달라요.",
+      "cast": [{ "who": "chorong", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "의미 있는 소리의 폭",
+      "meaning": "많은 포유류가 대상마다 다른 소리를 내지만, 새가 내는 소리의 폭에는 좀처럼 미치지 못해요.",
+      "icon": "🎵",
+      "narration": "둘 다 소리로 존재를 알리고 소통하지만 새가 훨씬 능숙해요.",
+      "cast": [{ "who": "nam", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "포유류와 새",
+      "left": {
+        "label": "포유류",
+        "icon": "🐘",
+        "points": ["대체로 선율적이지 않다", "울부짖지만 노래는 드물다", "사람과 고래 정도가 예외"]
+      },
+      "right": {
+        "label": "새",
+        "icon": "🐦",
+        "points": ["의미 있는 소리가 많다", "노래로 이름이 났다", "가까이서 자주 들린다"]
+      },
+      "narration": "포유류가 선율적이려고 애쓴다는 증거도 거의 없어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "초롱이는 훌륭한 명금을 어디서 볼 수 있는지 물었어요.",
+      "lines": [
+        { "who": "chorong", "text": "노래 잘하는 새는 멀리 가야 볼 수 있나요?" },
+        { "who": "nam", "text": "아니에요. 가장 훌륭한 명금 중 일부는 우리가 가장 자주 마주치는 새예요." },
+        { "who": "chorong", "text": "매일 듣던 그 소리가 그렇게 대단한 거였네요." }
+      ],
+      "narrationOut": "귀 기울여 보면 익숙한 새들이 이미 노래를 들려주고 있어요.",
+      "cast": [
+        { "who": "chorong", "expression": "surprised", "pose": "shrug" },
+        { "who": "nam", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "flow",
+      "heading": "소리로 하는 일",
+      "steps": [
+        { "label": "존재를 알림", "icon": "📢" },
+        { "label": "서로 소통", "icon": "💬" },
+        { "label": "뜻을 나눔", "icon": "🎵" },
+        { "label": "노래가 됨", "icon": "🐦" }
+      ],
+      "narration": "같은 일을 하는데도 새 쪽이 훨씬 멀리 나아갔어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "Few can match the range of meaningful sounds that birds may give voice to.",
+      "translation": "새가 낼 수 있는 의미 있는 소리의 폭에 견줄 수 있는 동물은 거의 없습니다.",
+      "highlight": ["range", "meaningful", "birds"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "포유류와 새 모두 소리로 소통한다",
+        "의미 있는 소리의 폭은 새가 훨씬 넓다",
+        "훌륭한 명금은 우리 가까이에 있다"
+      ],
+      "narration": "사람을 빼면 포유류는 대체로 노래하지 않아요.",
+      "cast": [{ "who": "chorong", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

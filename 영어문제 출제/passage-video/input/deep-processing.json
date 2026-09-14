@@ -1,0 +1,121 @@
+{
+  "slug": "deep-processing",
+  "title": "몇 번 봤느냐보다 어떻게 봤느냐",
+  "subtitle": "의미와 씨름해야 기억에 남아요",
+  "source": "리딩파워 유형편 완성 12과 Example 1",
+  "kind": "academic",
+  "characters": {
+    "yuju": {
+      "name": "유주",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B8",
+      "hair": "ponytail",
+      "hairColor": "#33251F",
+      "outfit": "uniform",
+      "outfitColor": "#5E7FC4",
+      "accentColor": "#333B4E",
+      "accessory": "none",
+      "prop": "book",
+      "build": "slim"
+    },
+    "bae": {
+      "name": "배 선생",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C5A3",
+      "hair": "short",
+      "hairColor": "#3A322B",
+      "outfit": "suit",
+      "outfitColor": "#4C8A6E",
+      "accentColor": "#2F3E36",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "몇 번 봤느냐보다 어떻게 봤느냐",
+      "subtitle": "학습 · 처리의 깊이",
+      "narration": "이번 지문은 읽은 것을 기억에 남기는 방법을 다루고 있어요.",
+      "cast": [
+        { "who": "yuju", "expression": "sad", "pose": "raise" },
+        { "who": "bae", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "유주는 교과서를 다섯 번이나 읽었는데도 기억이 나지 않았어요.",
+      "question": "여러 번 봤는데 왜 하나도 안 남지?",
+      "thought": true,
+      "narrationOut": "얼마나 자주 보느냐는 생각만큼 중요하지 않아요.",
+      "cast": [{ "who": "yuju", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "처리의 깊이",
+      "meaning": "글의 의미와 얼마나 깊이 씨름했는지를 말해요. 기억을 가르는 건 횟수가 아니라 이쪽이에요.",
+      "icon": "🔍",
+      "narration": "읽은 것을 기억하려면 의미와 충분히 씨름해야 해요.",
+      "cast": [{ "who": "bae", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "같은 시간을 어디에 쓰는가",
+      "left": {
+        "label": "기계적 반복",
+        "icon": "🔁",
+        "points": ["같은 줄을 여러 번 본다", "눈으로만 훑는다", "의미는 건드리지 않는다"]
+      },
+      "right": {
+        "label": "깊이 있는 처리",
+        "icon": "🧠",
+        "points": ["뜻을 따져 가며 읽는다", "의미를 분석한다", "내 것으로 만든다"]
+      },
+      "narration": "많은 학생이 반복에 쓰는 시간을 줄이면 오히려 도움을 받을 거예요."
+    },
+    {
+      "type": "flow",
+      "heading": "내 것으로 만드는 방법",
+      "steps": [
+        { "label": "내용을 읽는다", "icon": "📖" },
+        { "label": "내 삶과 연결", "icon": "🔗" },
+        { "label": "아는 사람 떠올림", "icon": "👤" },
+        { "label": "오래 남는다", "icon": "💡" }
+      ],
+      "narration": "특히 그 내용을 나에게 의미 있게 만드는 것이 도움이 돼요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "유주는 어떻게 연결해야 하는지 잘 떠오르지 않았어요.",
+      "lines": [
+        { "who": "yuju", "text": "제 삶과 연결하라는 게 구체적으로 어떻게 하는 거예요?" },
+        { "who": "bae", "text": "자신감이라는 성격을 읽었다면, 주변에 자신감 있는 사람을 떠올려 보세요." },
+        { "who": "yuju", "text": "왜 그 사람을 그렇게 보는지까지 생각해 보라는 거군요." }
+      ],
+      "narrationOut": "책 속 개념이 아는 사람의 얼굴과 이어지면 훨씬 오래 남아요.",
+      "cast": [
+        { "who": "yuju", "expression": "confused", "pose": "shrug" },
+        { "who": "bae", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "If you expect to remember what you read, you have to wrestle fully with its meaning.",
+      "translation": "읽은 것을 기억하고자 한다면, 그 의미와 충분히 씨름해야 합니다.",
+      "highlight": ["remember", "wrestle", "meaning"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "횟수보다 처리의 깊이가 기억을 가른다",
+        "기계적 반복 대신 의미를 분석해야 한다",
+        "내 삶과 연결하면 훨씬 오래 남는다"
+      ],
+      "narration": "읽은 것을 나에게 의미 있게 만드는 일이 핵심이에요.",
+      "cast": [{ "who": "yuju", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/islands-of-cash/s0-narration.wav",
+    "seconds": 4.68,
+    "hash": "516297dce109",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/islands-of-cash/s1-narration.wav",
+    "seconds": 4.36,
+    "hash": "cd9ef1a8376c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/islands-of-cash/s1-narrationOut.wav",
+    "seconds": 4.08,
+    "hash": "5eac3569f9c8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/islands-of-cash/s1-question.wav",
+    "seconds": 2.56,
+    "hash": "e5c9d36405a2",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/islands-of-cash/s2-narration.wav",
+    "seconds": 3.44,
+    "hash": "169fd69a2dbf",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/islands-of-cash/s3-narration.wav",
+    "seconds": 3.08,
+    "hash": "198578e5301b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/islands-of-cash/s4-narration.wav",
+    "seconds": 6.52,
+    "hash": "995b363ed059",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/islands-of-cash/s5-narration.wav",
+    "seconds": 3.72,
+    "hash": "6400c45b4b8c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/islands-of-cash/s5-narrationOut.wav",
+    "seconds": 4.36,
+    "hash": "6454f86e7ed5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/islands-of-cash/s5-line0.wav",
+    "seconds": 3.88,
+    "hash": "d102225b55ce",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/islands-of-cash/s5-line1.wav",
+    "seconds": 4.08,
+    "hash": "383daef8ac0c",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/islands-of-cash/s5-line2.wav",
+    "seconds": 3.52,
+    "hash": "9e1438a71137",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/islands-of-cash/s6-narration.wav",
+    "seconds": 2.4,
+    "hash": "10658e049a95",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/islands-of-cash/s7-narration.wav",
+    "seconds": 3.68,
+    "hash": "81e9c6e6a879",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

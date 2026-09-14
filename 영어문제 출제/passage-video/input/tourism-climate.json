@@ -1,0 +1,120 @@
+{
+  "slug": "tourism-climate",
+  "title": "관광이 기후를 바꾸는 길",
+  "subtitle": "작은 자리의 변화가 지구까지 이어져요",
+  "source": "리딩파워 유형편 완성 13과 Example 2",
+  "kind": "academic",
+  "characters": {
+    "yeji": {
+      "name": "예지",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B7",
+      "hair": "ponytail",
+      "hairColor": "#32251F",
+      "outfit": "tshirt",
+      "outfitColor": "#3C9E8C",
+      "accentColor": "#304440",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "wi": {
+      "name": "위 연구원",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C4A2",
+      "hair": "short",
+      "hairColor": "#38302A",
+      "outfit": "labcoat",
+      "outfitColor": "#8A9EC4",
+      "accentColor": "#3A4353",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "관광이 기후를 바꾸는 길",
+      "subtitle": "환경 · 여러 공간 규모의 영향",
+      "narration": "이번 지문은 관광이 기후에 미치는 영향을 다루고 있어요.",
+      "cast": [
+        { "who": "yeji", "expression": "neutral", "pose": "raise" },
+        { "who": "wi", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "예지는 여행 한 번이 기후에 영향을 준다는 말이 잘 와닿지 않았어요.",
+      "question": "리조트 하나 짓는 게 기후랑 무슨 상관이지?",
+      "thought": true,
+      "narrationOut": "관광은 기후 체계를 바꾸는 여러 요인 가운데 하나예요.",
+      "cast": [{ "who": "yeji", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "공간 규모",
+      "meaning": "같은 활동이라도 그 자리, 지역, 지구 전체라는 서로 다른 크기에서 영향을 미쳐요.",
+      "icon": "🌍",
+      "narration": "관광은 여러 방식과 여러 규모에서 기후 변화에 기여해요.",
+      "cast": [{ "who": "wi", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "두 가지 크기의 영향",
+      "left": {
+        "label": "그 자리에서",
+        "icon": "🏨",
+        "points": ["숲이 건물로 바뀐다", "땅을 밀고 고른다", "그 지역 기후가 바뀐다"]
+      },
+      "right": {
+        "label": "지구 전체에서",
+        "icon": "✈️",
+        "points": ["관광객을 실어 나른다", "항공기 배출이 더해진다", "전 지구 기후를 움직인다"]
+      },
+      "narration": "국지적인 활동과 전 지구적인 힘이 함께 작동해요."
+    },
+    {
+      "type": "flow",
+      "heading": "작은 변화가 넓어지는 과정",
+      "steps": [
+        { "label": "숲이 건물로", "icon": "🏨" },
+        { "label": "오염물질 배출", "icon": "💨" },
+        { "label": "지역 기후 변화", "icon": "🗺️" },
+        { "label": "지구 기후까지", "icon": "🌍" }
+      ],
+      "narration": "소각로와 엔진, 개간 작업에서 나온 오염물질도 국지 기후를 바꿔요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "예지는 작은 변화가 어떻게 지구까지 닿는지 물었어요.",
+      "lines": [
+        { "who": "yeji", "text": "그 동네 기후가 바뀌는 거랑 지구가 더워지는 건 다른 얘기 아니에요?" },
+        { "who": "wi", "text": "공간과 시간이 쌓이면 국지적인 활동도 지역과 지구를 바꿔요." },
+        { "who": "yeji", "text": "작은 변화가 모여서 넓어지는 거군요." }
+      ],
+      "narrationOut": "여기에 관광객을 실어 나르는 항공기 배출이 더해져요.",
+      "cast": [
+        { "who": "yeji", "expression": "surprised", "pose": "shrug" },
+        { "who": "wi", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Even these locally focused human activities are known to change the climate, regionally and globally.",
+      "translation": "이처럼 국지적으로 이루어지는 인간 활동조차 지역적으로, 또 전 지구적으로 기후를 바꾸는 것으로 알려져 있습니다.",
+      "highlight": ["locally", "regionally", "globally"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "관광은 기후를 바꾸는 여러 요인 중 하나다",
+        "숲을 건물로 바꾸면 그 지역 기후가 바뀐다",
+        "쌓이면 지역과 지구 전체까지 영향을 준다"
+      ],
+      "narration": "국지적인 활동과 전 지구적인 힘이 함께 작동해요.",
+      "cast": [{ "who": "yeji", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

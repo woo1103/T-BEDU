@@ -1,0 +1,113 @@
+{
+  "slug": "islands-of-cash",
+  "title": "값싼 자연 위에 뜬 섬",
+  "subtitle": "돈이 도는 곳은 전체의 일부일 뿐이에요",
+  "source": "2026년 9월 고2 모의고사 29번",
+  "kind": "academic",
+  "characters": {
+    "jio": {
+      "name": "지오",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "ponytail",
+      "hairColor": "#31241E",
+      "outfit": "hoodie",
+      "outfitColor": "#3C8C9E",
+      "accentColor": "#2F4047",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "mun": {
+      "name": "문 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C5A3",
+      "hair": "short",
+      "hairColor": "#665E56",
+      "outfit": "suit",
+      "outfitColor": "#8A5A6E",
+      "accentColor": "#3E2F36",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "값싼 자연 위에 뜬 섬",
+      "subtitle": "경제 · 자본주의를 보는 다른 눈",
+      "narration": "이번 지문은 자본주의가 무엇 위에 서 있는지를 다루고 있어요.",
+      "cast": [
+        { "who": "jio", "expression": "surprised", "pose": "raise" },
+        { "who": "mun", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "지오는 자본주의라면 어디서나 돈이 오가는 줄로만 알았어요.",
+      "question": "값을 치르고 사고파는 게 전부 아니야?",
+      "thought": true,
+      "narrationOut": "지문은 돈이 오가는 영역이 전체의 일부일 뿐이라고 말해요.",
+      "cast": [{ "who": "jio", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "현금이 오가는 영역", "icon": "💵" },
+      "everyday": { "label": "넓은 바다에 떠 있는 섬", "icon": "🏝️" },
+      "because": "돈이 도는 곳은 섬처럼 일부이고, 그 둘레를 값싼 자연이 떠받치고 있어요.",
+      "narration": "지문은 자본주의를 바다 위의 섬에 빗대요."
+    },
+    {
+      "type": "concept",
+      "term": "값싼 자연",
+      "meaning": "아주 싼값에, 때로는 거의 공짜로 끌어다 쓰는 노동과 자원을 말해요.",
+      "icon": "🌊",
+      "narration": "이 값싼 것들이 있어야 섬이 유지될 수 있어요.",
+      "cast": [{ "who": "mun", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "싸던 것이 비싸지는 과정",
+      "steps": [
+        { "label": "값싸게 끌어씀", "icon": "🏝️" },
+        { "label": "존엄을 요구", "icon": "✊" },
+        { "label": "자원이 고갈", "icon": "🔥" },
+        { "label": "더는 싸지 않음", "icon": "📈" }
+      ],
+      "narration": "노동자가 존엄을 요구하면 노동이 비싸지고, 생산이 자원을 태우면 에너지도 비싸져요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "지오는 그러면 그다음에 무슨 일이 벌어지는지 물었어요.",
+      "lines": [
+        { "who": "jio", "text": "싸던 것이 다 비싸지면 그다음엔 어떻게 되나요?" },
+        { "who": "mun", "text": "새로 값싼 것을 차지할 수 있는 변경 지대를 찾아 나서게 돼요." },
+        { "who": "jio", "text": "그래서 그 경계 지역이 그렇게 중요한 거군요." }
+      ],
+      "narrationOut": "임금은 묶거나 깎을 수 있지만, 결국 불평등이 위기를 불러와요.",
+      "cast": [
+        { "who": "jio", "expression": "confused", "pose": "shrug" },
+        { "who": "mun", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Capitalism is not a system where cash is everywhere but rather one in which islands of cash exchange exist within oceans of cheap natures.",
+      "translation": "자본주의는 현금이 어디에나 있는 체계가 아니라, 값싼 자연이라는 바다 안에 현금 교환의 섬들이 존재하는 체계입니다.",
+      "highlight": ["islands", "oceans", "cheap"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "현금이 오가는 곳은 바다 위의 섬과 같다",
+        "값싼 노동과 자연이 그 섬을 떠받친다",
+        "싸던 것이 비싸지면 새 변경 지대를 찾는다"
+      ],
+      "narration": "기후가 바뀌면 작물도 예전만큼 자라지 않아요.",
+      "cast": [{ "who": "jio", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

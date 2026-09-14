@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/test-anxiety/s0-narration.wav",
+    "seconds": 4.64,
+    "hash": "6e53692d5d22",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/test-anxiety/s1-narration.wav",
+    "seconds": 3.68,
+    "hash": "a35e82e67a3e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/test-anxiety/s1-narrationOut.wav",
+    "seconds": 3.56,
+    "hash": "323bc739c27f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/test-anxiety/s1-question.wav",
+    "seconds": 2.52,
+    "hash": "2be1465b4a7e",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/test-anxiety/s2-narration.wav",
+    "seconds": 5.92,
+    "hash": "1e8b3b33853e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/test-anxiety/s3-narration.wav",
+    "seconds": 3.84,
+    "hash": "b7241221de0e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/test-anxiety/s4-narration.wav",
+    "seconds": 4.12,
+    "hash": "9b6274a0488d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/test-anxiety/s5-narration.wav",
+    "seconds": 4.56,
+    "hash": "c3aa1c7aa877",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/test-anxiety/s5-narrationOut.wav",
+    "seconds": 4.6,
+    "hash": "beb70aadcf0f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/test-anxiety/s5-line0.wav",
+    "seconds": 3.48,
+    "hash": "afde865af517",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/test-anxiety/s5-line1.wav",
+    "seconds": 4.12,
+    "hash": "f51c0e8aa8b5",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/test-anxiety/s5-line2.wav",
+    "seconds": 3.36,
+    "hash": "4834ea8915ed",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/test-anxiety/s6-narration.wav",
+    "seconds": 2.08,
+    "hash": "c7a49ade5483",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/test-anxiety/s7-narration.wav",
+    "seconds": 3.44,
+    "hash": "250106613c6d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

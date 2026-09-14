@@ -1,0 +1,120 @@
+{
+  "slug": "smiling-culture",
+  "title": "웃음을 끌어내는 방법이 다르다",
+  "subtitle": "장난감을 쥐여 줄까, 손을 맞잡을까",
+  "source": "리딩파워 유형편 완성 12과 Practice 2",
+  "kind": "academic",
+  "characters": {
+    "nari": {
+      "name": "나리",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F7D5BB",
+      "hair": "long",
+      "hairColor": "#3C2A20",
+      "outfit": "dress",
+      "outfitColor": "#D96C9E",
+      "accentColor": "#3E3440",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "koh": {
+      "name": "고 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C5A3",
+      "hair": "short",
+      "hairColor": "#3A322B",
+      "outfit": "labcoat",
+      "outfitColor": "#87A5C4",
+      "accentColor": "#3B4653",
+      "accessory": "roundGlasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "웃음을 끌어내는 방법이 다르다",
+      "subtitle": "문화 · 양육 목표의 차이",
+      "narration": "이번 지문은 아기의 미소를 끌어내는 방식이 문화마다 다르다는 이야기예요.",
+      "cast": [
+        { "who": "nari", "expression": "happy", "pose": "raise" },
+        { "who": "koh", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "나리는 아기가 웃는 모습은 어디서나 똑같다고 생각했어요.",
+      "question": "아기 웃음이야 다 비슷한 거 아닌가?",
+      "thought": true,
+      "narrationOut": "미소와 웃음이 자라는 과정은 비슷하지만, 끌어내는 방법은 달라요.",
+      "cast": [{ "who": "nari", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "compare",
+      "heading": "같은 웃음, 다른 방법",
+      "left": {
+        "label": "미국 어머니",
+        "icon": "🧸",
+        "points": ["장난감과 사물에 기댄다", "사물 세계를 탐색하게", "자율성을 중시한다"]
+      },
+      "right": {
+        "label": "일본 어머니",
+        "icon": "🤱",
+        "points": ["사회적 자극에 참여시킨다", "만지고 몸을 맞댄다", "서로 의존을 강화한다"]
+      },
+      "narration": "두 문화의 어머니 모두 아기 웃음을 끌어내는 데 똑같이 효과적이에요."
+    },
+    {
+      "type": "concept",
+      "term": "문화에 뿌리를 둔 양육 목표",
+      "meaning": "무엇을 중요하게 여기는지가 달라서, 아기를 대하는 방식도 달라지는 거예요.",
+      "icon": "🎯",
+      "narration": "방법의 차이는 솜씨가 아니라 목표의 차이에서 나와요.",
+      "cast": [{ "who": "koh", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "나리는 어느 쪽이 더 나은 방법인지 궁금했어요.",
+      "lines": [
+        { "who": "nari", "text": "그러면 둘 중에 어느 쪽이 더 좋은 방법이에요?" },
+        { "who": "koh", "text": "어느 쪽도 아니에요. 효과는 같고 목표가 다를 뿐이에요." },
+        { "who": "nari", "text": "무엇을 중요하게 보느냐가 방법을 갈랐다는 거군요." }
+      ],
+      "narrationOut": "미국은 독립적인 탐색을, 일본은 서로에게 이어짐을 높이 평가해요.",
+      "cast": [
+        { "who": "nari", "expression": "confused", "pose": "shrug" },
+        { "who": "koh", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "flow",
+      "heading": "목표가 방법을 정한다",
+      "steps": [
+        { "label": "문화의 가치", "icon": "🌏" },
+        { "label": "양육 목표", "icon": "🎯" },
+        { "label": "대하는 방식", "icon": "🤲" },
+        { "label": "같은 웃음", "icon": "😊" }
+      ],
+      "narration": "출발점이 다르면 도착점이 같아도 가는 길이 달라져요."
+    },
+    {
+      "type": "quote",
+      "sentence": "Mothers in both cultures are equally effective in eliciting these smiles, but they do it in different ways.",
+      "translation": "두 문화의 어머니들은 이 미소를 끌어내는 데 똑같이 효과적이지만, 서로 다른 방식으로 그렇게 합니다.",
+      "highlight": ["equally", "effective", "different", "ways"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "미소가 자라는 과정은 문화 간에 비슷하다",
+        "끌어내는 방법은 장난감과 접촉으로 갈린다",
+        "차이는 문화의 양육 목표에서 나온다"
+      ],
+      "narration": "무엇을 중요하게 여기느냐가 아이를 대하는 방식을 정해요.",
+      "cast": [{ "who": "nari", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

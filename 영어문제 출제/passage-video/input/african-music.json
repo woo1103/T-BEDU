@@ -1,0 +1,120 @@
+{
+  "slug": "african-music",
+  "title": "태어나면서부터 리듬 속에서",
+  "subtitle": "음악 훈련이 평생에 걸쳐 이어져요",
+  "source": "리딩파워 유형편 완성 13과 Practice 2",
+  "kind": "academic",
+  "characters": {
+    "areum": {
+      "name": "아름",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B5",
+      "hair": "curly",
+      "hairColor": "#2E231D",
+      "outfit": "dress",
+      "outfitColor": "#E0803C",
+      "accentColor": "#3E362E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "kwon": {
+      "name": "권 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#D9A87C",
+      "hair": "short",
+      "hairColor": "#2A211C",
+      "outfit": "tshirt",
+      "outfitColor": "#7A4E8A",
+      "accentColor": "#372E3C",
+      "accessory": "none",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "태어나면서부터 리듬 속에서",
+      "subtitle": "문화 · 전통 아프리카 사회의 음악",
+      "narration": "이번 지문은 아이들이 음악을 어떻게 익히는지를 다루고 있어요.",
+      "cast": [
+        { "who": "areum", "expression": "happy", "pose": "raise" },
+        { "who": "kwon", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "아름이는 음악은 배우러 다녀야 하는 것이라고만 생각했어요.",
+      "question": "학원에 안 다니면 리듬 감각은 어떻게 익히지?",
+      "thought": true,
+      "narrationOut": "전통 아프리카 사회의 아이들은 늘 음악에 둘러싸여 자라요.",
+      "cast": [{ "who": "areum", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "평생에 걸친 음악 훈련",
+      "meaning": "태어날 때 듣는 자장가에서 시작해 어른 생활의 모든 면에 참여할 준비를 시켜 줘요.",
+      "icon": "🥁",
+      "narration": "아이들은 기악과 노래와 춤에 끊임없이 둘러싸여 있어요.",
+      "cast": [{ "who": "kwon", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "자라면서 거치는 길",
+      "steps": [
+        { "label": "자장가로 시작", "icon": "🍼" },
+        { "label": "등에 업혀 리듬", "icon": "🎶" },
+        { "label": "손으로 두드림", "icon": "👐" },
+        { "label": "악기를 만듦", "icon": "🪘" }
+      ],
+      "narration": "서너 살이 되면 아이들은 자기 악기를 만들기 시작해요."
+    },
+    {
+      "type": "compare",
+      "heading": "리듬을 익히는 자리",
+      "left": {
+        "label": "일하는 자리에서",
+        "icon": "🧺",
+        "points": ["친척 등에 업힌다", "일의 리듬을 느낀다", "몸으로 먼저 안다"]
+      },
+      "right": {
+        "label": "축제와 행사에서",
+        "icon": "🎉",
+        "points": ["업힌 채 함께 춤춘다", "클 때까지 곁에 있는다", "때가 되면 직접 참여"]
+      },
+      "narration": "리듬 감각이 따로 배우는 것이 아니라 일상에 스며들어 있어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "아름이는 그렇게 익힌 감각이 무엇을 만들어 내는지 물었어요.",
+      "lines": [
+        { "who": "areum", "text": "그렇게 자라면 뭐가 달라지나요?" },
+        { "who": "kwon", "text": "두 박자 위에 세 박자가 겹치는 소리를 어릴 때부터 겪게 돼요." },
+        { "who": "areum", "text": "그래서 리듬을 여러 겹으로 느끼게 되는 거군요." }
+      ],
+      "narrationOut": "이것이 리듬을 두 겹으로 대하는 태도를 길러 줘요.",
+      "cast": [
+        { "who": "areum", "expression": "surprised", "pose": "shrug" },
+        { "who": "kwon", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Their musical training is a lifelong process that begins at birth with cradle songs.",
+      "translation": "그들의 음악 훈련은 태어날 때 듣는 자장가에서 시작되는 평생의 과정입니다.",
+      "highlight": ["lifelong", "birth", "cradle"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "아이들은 늘 음악에 둘러싸여 자란다",
+        "일과 축제 속에서 리듬을 몸으로 익힌다",
+        "서너 살이면 자기 악기를 만들기 시작한다"
+      ],
+      "narration": "음악 훈련이 태어날 때부터 평생에 걸쳐 이어져요.",
+      "cast": [{ "who": "areum", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

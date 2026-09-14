@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/meeting-like-tree/s0-narration.wav",
+    "seconds": 4.6,
+    "hash": "fcf859339761",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/meeting-like-tree/s1-narration.wav",
+    "seconds": 3.4,
+    "hash": "af08f76d874c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/meeting-like-tree/s1-narrationOut.wav",
+    "seconds": 4.6,
+    "hash": "3268ac04f96a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/meeting-like-tree/s1-question.wav",
+    "seconds": 4.04,
+    "hash": "a33da2d311a5",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/meeting-like-tree/s2-narration.wav",
+    "seconds": 3.2,
+    "hash": "127a59c3620e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/meeting-like-tree/s3-narration.wav",
+    "seconds": 3.72,
+    "hash": "0a192f891710",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/meeting-like-tree/s4-narration.wav",
+    "seconds": 3.68,
+    "hash": "2068d441a4ba",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/meeting-like-tree/s5-narration.wav",
+    "seconds": 3.64,
+    "hash": "a6141ae822d6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/meeting-like-tree/s5-narrationOut.wav",
+    "seconds": 4.8,
+    "hash": "fbe66ca03ad2",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/meeting-like-tree/s5-line0.wav",
+    "seconds": 3.64,
+    "hash": "ef6621f6d756",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/meeting-like-tree/s5-line1.wav",
+    "seconds": 4.36,
+    "hash": "d1f401966da5",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/meeting-like-tree/s5-line2.wav",
+    "seconds": 4.48,
+    "hash": "01b3fa3261a2",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/meeting-like-tree/s6-narration.wav",
+    "seconds": 2.04,
+    "hash": "79f765fef747",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/meeting-like-tree/s7-narration.wav",
+    "seconds": 3.72,
+    "hash": "0fc28be5732e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

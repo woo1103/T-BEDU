@@ -1,0 +1,120 @@
+{
+  "slug": "tv-and-attention",
+  "title": "4초마다 바뀌는 화면에 길들면",
+  "subtitle": "눈이 훑는 법을 잃어버려요",
+  "source": "리딩파워 유형편 완성 Chapter Review3 4번",
+  "kind": "academic",
+  "characters": {
+    "doyun": {
+      "name": "도윤",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B8",
+      "hair": "bob",
+      "hairColor": "#32251E",
+      "outfit": "hoodie",
+      "outfitColor": "#4E86C4",
+      "accentColor": "#33404E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "pyo": {
+      "name": "표 선생",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#453D35",
+      "outfit": "suit",
+      "outfitColor": "#8A5A4A",
+      "accentColor": "#3B302A",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "4초마다 바뀌는 화면에 길들면",
+      "subtitle": "교육 · 시청과 주의력",
+      "narration": "이번 지문은 화면을 보는 일이 아이의 눈을 어떻게 바꾸는지 다루고 있어요.",
+      "cast": [
+        { "who": "doyun", "expression": "neutral", "pose": "raise" },
+        { "who": "pyo", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "도윤이는 수업 시간에 자꾸 눈이 여기저기로 튀었어요.",
+      "question": "왜 가만히 한곳을 보고 있기가 이렇게 힘들지?",
+      "thought": true,
+      "narrationOut": "텔레비전에서는 장면이 평균 4초마다 바뀌어요.",
+      "cast": [{ "who": "doyun", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "flow",
+      "heading": "교실에서 벌어지는 일",
+      "steps": [
+        { "label": "4초마다 전환", "icon": "📺" },
+        { "label": "그 자극에 익숙", "icon": "⚡" },
+        { "label": "교실이 지루함", "icon": "😑" },
+        { "label": "눈이 튀어다님", "icon": "👀" }
+      ],
+      "narration": "익숙해진 자극 수준을 되찾으려 눈이 교실을 헤매게 돼요."
+    },
+    {
+      "type": "concept",
+      "term": "응시와 훑기",
+      "meaning": "화면을 보는 일은 눈을 한곳에 붙잡아 두게 하지만, 읽기를 배우려면 눈으로 훑을 줄 알아야 해요.",
+      "icon": "👁️",
+      "narration": "훑는 능력은 읽기를 배우는 데 꼭 필요한 기술이에요.",
+      "cast": [{ "who": "pyo", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "보는 일과 하는 일",
+      "left": {
+        "label": "텔레비전 앞에서",
+        "icon": "📺",
+        "points": ["눈동자가 고정된다", "손은 무릎에 늘어진다", "그저 구경꾼이 된다"]
+      },
+      "right": {
+        "label": "놀이와 읽기에서",
+        "icon": "📖",
+        "points": ["탐색하고 움직인다", "상상하며 참여한다", "문제를 풀어 나간다"]
+      },
+      "narration": "시청은 배움을 요구하지 않아요. 그냥 하는 것에 가깝죠."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "도윤이는 보는 것과 노는 것이 뭐가 다른지 물었어요.",
+      "lines": [
+        { "who": "doyun", "text": "화면 보는 것도 뭔가 하는 거 아니에요?" },
+        { "who": "pyo", "text": "더 정확히 말하면, 다른 걸 아무것도 하지 않는 거예요." },
+        { "who": "doyun", "text": "놀이나 읽기는 제가 직접 움직여야 하는 거고요." }
+      ],
+      "narrationOut": "읽기 역시 능동적으로 문제를 풀어 가는 활동이에요.",
+      "cast": [
+        { "who": "doyun", "expression": "surprised", "pose": "shrug" },
+        { "who": "pyo", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Watching television trains one's eyes to stare, rather than to scan.",
+      "translation": "텔레비전 시청은 눈이 훑기보다 응시하도록 훈련시킵니다.",
+      "highlight": ["stare", "scan"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "화면은 평균 4초마다 장면이 바뀐다",
+        "그 자극에 길들면 교실이 지루해진다",
+        "읽기에 필요한 훑는 눈을 잃게 된다"
+      ],
+      "narration": "놀이와 읽기는 반대로 직접 움직이기를 요구해요.",
+      "cast": [{ "who": "doyun", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

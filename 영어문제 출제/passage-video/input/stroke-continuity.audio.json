@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/stroke-continuity/s0-narration.wav",
+    "seconds": 4.96,
+    "hash": "892f9c51bff5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/stroke-continuity/s1-narration.wav",
+    "seconds": 3.68,
+    "hash": "1ba1613dcd2f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/stroke-continuity/s1-narrationOut.wav",
+    "seconds": 4.08,
+    "hash": "6a2ed6c6734e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/stroke-continuity/s1-question.wav",
+    "seconds": 3.48,
+    "hash": "eacf40de6775",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/stroke-continuity/s2-narration.wav",
+    "seconds": 4.32,
+    "hash": "2153f4f8d8ac",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/stroke-continuity/s3-narration.wav",
+    "seconds": 4.72,
+    "hash": "540138d9ec01",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/stroke-continuity/s4-narration.wav",
+    "seconds": 4.28,
+    "hash": "e633e5611fc9",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/stroke-continuity/s5-narration.wav",
+    "seconds": 4.24,
+    "hash": "ee02eaad92a7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/stroke-continuity/s5-narrationOut.wav",
+    "seconds": 4.8,
+    "hash": "6ecda1d9245d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/stroke-continuity/s5-line0.wav",
+    "seconds": 3.8,
+    "hash": "abb84e7d943d",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/stroke-continuity/s5-line1.wav",
+    "seconds": 4.24,
+    "hash": "4cd4b24de717",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/stroke-continuity/s5-line2.wav",
+    "seconds": 3.28,
+    "hash": "62374d05b668",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/stroke-continuity/s6-narration.wav",
+    "seconds": 2.64,
+    "hash": "bb24cf1b451a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/stroke-continuity/s7-narration.wav",
+    "seconds": 2.88,
+    "hash": "5e8715b1fabb",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

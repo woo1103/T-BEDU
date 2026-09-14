@@ -1,0 +1,120 @@
+{
+  "slug": "shade-grown-coffee",
+  "title": "햇빛에서 키우면 더 거둘까",
+  "subtitle": "수확량이 오른 대신 사라진 것이 있어요",
+  "source": "리딩파워 유형편 완성 12과 Practice 4",
+  "kind": "academic",
+  "characters": {
+    "ruda": {
+      "name": "루다",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F4D0B5",
+      "hair": "curly",
+      "hairColor": "#3B2A22",
+      "outfit": "tshirt",
+      "outfitColor": "#4E9E7A",
+      "accentColor": "#33443C",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "song": {
+      "name": "송 연구원",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#DDB48A",
+      "hair": "short",
+      "hairColor": "#2F2924",
+      "outfit": "tshirt",
+      "outfitColor": "#8A6A3C",
+      "accentColor": "#3B3229",
+      "accessory": "cap",
+      "prop": "leaf",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "햇빛에서 키우면 더 거둘까",
+      "subtitle": "환경 · 그늘 재배와 햇빛 재배",
+      "narration": "이번 지문은 커피와 코코아를 키우는 두 가지 방식을 다루고 있어요.",
+      "cast": [
+        { "who": "ruda", "expression": "happy", "pose": "raise" },
+        { "who": "song", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "루다는 햇빛에서 키우면 더 많이 거둔다는 말을 듣고 좋아했어요.",
+      "question": "더 많이 거둘 수 있다면 좋은 일 아닌가?",
+      "thought": true,
+      "narrationOut": "그런데 이 새로운 방식에는 치러야 할 대가가 있어요.",
+      "cast": [{ "who": "ruda", "expression": "happy", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "그늘 재배",
+      "meaning": "커다란 숲 나무의 우듬지 아래에서 커피와 코코아를 키우는 방식이에요.",
+      "icon": "🌳",
+      "narration": "몇십 년 전까지 세계 커피와 코코아는 대부분 이렇게 자랐어요.",
+      "cast": [{ "who": "song", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "두 가지 재배 방식",
+      "left": {
+        "label": "그늘 재배",
+        "icon": "🌳",
+        "points": ["나무 아래에서 자란다", "수확량은 적다", "농약이 덜 필요하다"]
+      },
+      "right": {
+        "label": "햇빛 재배",
+        "icon": "☀️",
+        "points": ["빽빽하게 심을 수 있다", "수확량이 많다", "나무가 일찍 죽는다"]
+      },
+      "narration": "햇빛을 더 받고 더 빽빽이 심을 수 있어 수확량이 올라가요."
+    },
+    {
+      "type": "bars",
+      "heading": "햇빛 재배지에 남은 새",
+      "unit": "%",
+      "bars": [
+        { "label": "새의 종류", "value": 50 },
+        { "label": "새의 마릿수", "value": 10 }
+      ],
+      "narration": "새의 종류는 절반으로 줄고, 마릿수는 90퍼센트까지 줄어들 수 있어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "루다는 새가 줄어든 것이 농사와 무슨 상관인지 물었어요.",
+      "lines": [
+        { "who": "ruda", "text": "새가 줄어드는 게 커피 농사랑 상관이 있나요?" },
+        { "who": "song", "text": "우듬지에 사는 새와 곤충이 해충을 잡아먹거든요." },
+        { "who": "ruda", "text": "그래서 그늘 재배는 농약이 덜 필요한 거군요." }
+      ],
+      "narrationOut": "새가 사라지면 그 일을 농약이 대신해야 해요.",
+      "cast": [
+        { "who": "ruda", "expression": "surprised", "pose": "shrug" },
+        { "who": "song", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Shade-grown coffee and cocoa generally require fewer pesticides because the birds and insects residing in the forest canopy eat many of the pests.",
+      "translation": "그늘에서 자란 커피와 코코아는 대체로 농약이 덜 필요한데, 숲 우듬지에 사는 새와 곤충이 해충을 많이 잡아먹기 때문입니다.",
+      "highlight": ["Shade-grown", "fewer", "pesticides", "canopy"],
+      "narration": "지문이 마지막에 짚는 대목이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "햇빛 재배는 수확량이 더 많다",
+        "대신 나무가 일찍 죽고 새가 크게 준다",
+        "그늘 재배는 새 덕분에 농약이 덜 든다"
+      ],
+      "narration": "더 거두는 대신 무엇을 잃는지도 함께 봐야 해요.",
+      "cast": [{ "who": "ruda", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

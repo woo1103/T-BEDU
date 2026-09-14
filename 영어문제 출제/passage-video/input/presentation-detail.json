@@ -1,0 +1,121 @@
+{
+  "slug": "presentation-detail",
+  "title": "발표에 다 담지 마세요",
+  "subtitle": "세부 자료는 다른 그릇에 담아야 해요",
+  "source": "리딩파워 유형편 완성 13과 Practice 3",
+  "kind": "academic",
+  "characters": {
+    "gyeol": {
+      "name": "결이",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B8",
+      "hair": "bob",
+      "hairColor": "#36271F",
+      "outfit": "suit",
+      "outfitColor": "#C46A8A",
+      "accentColor": "#3C3138",
+      "accessory": "none",
+      "prop": "pen",
+      "build": "slim"
+    },
+    "do": {
+      "name": "도 팀장",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#403830",
+      "outfit": "suit",
+      "outfitColor": "#4A7A6A",
+      "accentColor": "#2E3E38",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "발표에 다 담지 마세요",
+      "subtitle": "의사소통 · 발표와 문서의 역할",
+      "narration": "이번 지문은 발표에 무엇을 담아야 하는지를 다루고 있어요.",
+      "cast": [
+        { "who": "gyeol", "expression": "neutral", "pose": "raise" },
+        { "who": "do", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "결이는 발표 자료에 자료를 빠짐없이 넣으려 애쓰고 있었어요.",
+      "question": "중요한 건데 다 넣어야 성의 있는 거 아닐까?",
+      "thought": true,
+      "narrationOut": "발표를 만들 때는 얼마나 기술적이어야 하는지를 늘 자문해야 해요.",
+      "cast": [{ "who": "gyeol", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "그릇을 나누기",
+      "meaning": "구두 발표는 기술적 사실을 전하는 데 서면 보고서만큼 효과적이지 않아요.",
+      "icon": "🗂️",
+      "narration": "무엇을 어디에 담을지부터 정해야 해요.",
+      "cast": [{ "who": "do", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "무엇을 어디에 담을까",
+      "left": {
+        "label": "발표에 담을 것",
+        "icon": "🎤",
+        "points": ["핵심 결론", "가져갈 메시지", "왜 중요한지"]
+      },
+      "right": {
+        "label": "문서로 뺄 것",
+        "icon": "📄",
+        "points": ["원자료와 수치", "상세한 정보", "따로 볼 자료"]
+      },
+      "narration": "상세한 정보는 유인물이나 이메일로 보낼 문서에 담으세요."
+    },
+    {
+      "type": "flow",
+      "heading": "이렇게 나누면 됩니다",
+      "steps": [
+        { "label": "얼마나 기술적?", "icon": "❓" },
+        { "label": "세부는 빼낸다", "icon": "📄" },
+        { "label": "핵심만 말한다", "icon": "🎤" },
+        { "label": "나머지는 안내", "icon": "🔗" }
+      ],
+      "narration": "관심 있는 사람과는 나중에 따로 만나겠다고 제안해도 좋아요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "결이는 세부를 빼면 부실해 보일까 걱정했어요.",
+      "lines": [
+        { "who": "gyeol", "text": "자료를 덜어 내면 준비가 부족해 보이지 않을까요?" },
+        { "who": "do", "text": "오히려 반대예요. 핵심이 드러나야 사람들이 기억해요." },
+        { "who": "gyeol", "text": "나머지는 어디서 볼 수 있는지 알려 주면 되는 거군요." }
+      ],
+      "narrationOut": "발표는 핵심 결론을 끌어내는 자리로 쓰는 것이 좋아요.",
+      "cast": [
+        { "who": "gyeol", "expression": "confused", "pose": "shrug" },
+        { "who": "do", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "An oral presentation is not going to be as effective or efficient as a written report in conveying technical facts.",
+      "translation": "구두 발표는 기술적인 사실을 전달하는 데 있어 서면 보고서만큼 효과적이거나 효율적이지 않습니다.",
+      "highlight": ["oral", "written", "report", "technical"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "발표는 세부 사실 전달에 적합하지 않다",
+        "원자료와 상세 정보는 문서로 빼낸다",
+        "발표에서는 핵심 결론만 끌어낸다"
+      ],
+      "narration": "추가 세부는 다른 데서 찾도록 안내하면 돼요.",
+      "cast": [{ "who": "gyeol", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

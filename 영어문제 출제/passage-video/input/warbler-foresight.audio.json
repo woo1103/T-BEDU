@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/warbler-foresight/s0-narration.wav",
+    "seconds": 4.24,
+    "hash": "375175f6e396",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/warbler-foresight/s1-narration.wav",
+    "seconds": 5.36,
+    "hash": "c6c8f8c65c65",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/warbler-foresight/s1-narrationOut.wav",
+    "seconds": 3.84,
+    "hash": "0463ba7943b4",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/warbler-foresight/s1-question.wav",
+    "seconds": 4.12,
+    "hash": "5fd4ec5e9153",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/warbler-foresight/s2-narration.wav",
+    "seconds": 5.28,
+    "hash": "186a0ad50812",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/warbler-foresight/s3-narration.wav",
+    "seconds": 4.52,
+    "hash": "b8d09cc13452",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/warbler-foresight/s4-narration.wav",
+    "seconds": 4.92,
+    "hash": "4bfffc1ae1d8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/warbler-foresight/s5-narration.wav",
+    "seconds": 3.28,
+    "hash": "ad27847177ca",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/warbler-foresight/s5-narrationOut.wav",
+    "seconds": 5.92,
+    "hash": "b2d49f1eb10b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/warbler-foresight/s5-line0.wav",
+    "seconds": 3.64,
+    "hash": "170162030eea",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/warbler-foresight/s5-line1.wav",
+    "seconds": 4.16,
+    "hash": "3ace72f267ea",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/warbler-foresight/s5-line2.wav",
+    "seconds": 5.12,
+    "hash": "cdb0d0b1bf3c",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/warbler-foresight/s6-narration.wav",
+    "seconds": 2.04,
+    "hash": "bb24cf1b451a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/warbler-foresight/s7-narration.wav",
+    "seconds": 3.84,
+    "hash": "85186f358fc7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

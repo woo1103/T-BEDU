@@ -1,0 +1,121 @@
+{
+  "slug": "africa-imperialism",
+  "title": "유럽이 아프리카로 눈을 돌린 이유",
+  "subtitle": "필요한 것과 있는 것이 맞아떨어졌어요",
+  "source": "리딩파워 유형편 완성 13과 Practice 1",
+  "kind": "academic",
+  "characters": {
+    "jinu": {
+      "name": "진우",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B6",
+      "hair": "bob",
+      "hairColor": "#31241E",
+      "outfit": "uniform",
+      "outfitColor": "#6A5CC4",
+      "accentColor": "#363048",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "pyeon": {
+      "name": "편 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C5A3",
+      "hair": "short",
+      "hairColor": "#665E56",
+      "outfit": "suit",
+      "outfitColor": "#8A6A4A",
+      "accentColor": "#3C342C",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "유럽이 아프리카로 눈을 돌린 이유",
+      "subtitle": "역사 · 19세기 제국주의",
+      "narration": "이번 지문은 유럽이 왜 아프리카로 향했는지를 다루고 있어요.",
+      "cast": [
+        { "who": "jinu", "expression": "neutral", "pose": "raise" },
+        { "who": "pyeon", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "진우는 유럽이 갑자기 아프리카로 몰려간 이유가 궁금했어요.",
+      "question": "왜 하필 그 시기에, 하필 아프리카였을까?",
+      "thought": true,
+      "narrationOut": "19세기 후반, 유럽은 아프리카로 눈을 돌리기 시작했어요.",
+      "cast": [{ "who": "jinu", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "식민 팽창",
+      "meaning": "아프리카로의 팽창은 19세기 유럽 제국주의의 한 예였어요. 중국도 또 다른 예였고요.",
+      "icon": "🗺️",
+      "narration": "산업혁명으로 새 공장이 들어선 뒤에 벌어진 일이에요.",
+      "cast": [{ "who": "pyeon", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "필요한 것과 있는 것",
+      "left": {
+        "label": "유럽이 필요했던 것",
+        "icon": "🏭",
+        "points": ["공장에 쓸 원료", "만든 물건을 팔 시장", "넘치는 인구가 갈 땅"]
+      },
+      "right": {
+        "label": "아프리카에 있던 것",
+        "icon": "🌍",
+        "points": ["손대지 않은 광물", "새로운 시장의 기회", "개척자를 위한 변경"]
+      },
+      "narration": "필요한 것과 있는 것이 정확히 맞아떨어졌어요."
+    },
+    {
+      "type": "flow",
+      "heading": "일이 벌어진 순서",
+      "steps": [
+        { "label": "산업혁명", "icon": "🏭" },
+        { "label": "원료가 부족", "icon": "⛏️" },
+        { "label": "시장이 필요", "icon": "🛒" },
+        { "label": "식민지 확보", "icon": "🚩" }
+      ],
+      "narration": "새 공장을 돌리려면 원료와 시장이 함께 필요했어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "진우는 인구 이야기가 왜 나오는지 물었어요.",
+      "lines": [
+        { "who": "jinu", "text": "원료랑 시장은 알겠는데, 인구는 왜 이유가 되나요?" },
+        { "who": "pyeon", "text": "유럽의 인구가 너무 빽빽해서 흘러갈 새 땅이 필요했거든요." },
+        { "who": "jinu", "text": "그래서 아프리카가 세 가지를 한꺼번에 해결해 준 거군요." }
+      ],
+      "narrationOut": "아프리카는 재료와 시장과 변경을 한꺼번에 제공했어요.",
+      "cast": [
+        { "who": "jinu", "expression": "surprised", "pose": "shrug" },
+        { "who": "pyeon", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "These European imperialists needed colonies for trade and raw materials for their new factories built during the Industrial Revolution.",
+      "translation": "이 유럽 제국주의자들은 산업혁명 동안 지어진 새 공장을 위해 교역과 원료를 얻을 식민지가 필요했습니다.",
+      "highlight": ["colonies", "raw", "materials", "factories"],
+      "narration": "지문이 드는 첫 번째 이유예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "19세기 후반 유럽이 아프리카로 향했다",
+        "원료와 시장, 이주할 땅이 필요했다",
+        "아프리카가 그 세 가지를 제공했다"
+      ],
+      "narration": "산업혁명이 만든 필요가 팽창을 밀어붙였어요.",
+      "cast": [{ "who": "jinu", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

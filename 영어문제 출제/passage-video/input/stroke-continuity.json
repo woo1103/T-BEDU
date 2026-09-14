@@ -1,0 +1,121 @@
+{
+  "slug": "stroke-continuity",
+  "title": "끊긴 삶을 다시 잇는 일",
+  "subtitle": "같은 사람임을 보여야 회복이 시작돼요",
+  "source": "리딩파워 유형편 완성 Chapter Review3 2번",
+  "kind": "academic",
+  "characters": {
+    "boa": {
+      "name": "보아",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B6",
+      "hair": "bob",
+      "hairColor": "#372820",
+      "outfit": "uniform",
+      "outfitColor": "#8A5CC4",
+      "accentColor": "#383048",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "kaufman": {
+      "name": "카우프만",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C5A3",
+      "hair": "short",
+      "hairColor": "#6E665E",
+      "outfit": "labcoat",
+      "outfitColor": "#93A9B8",
+      "accentColor": "#3C4750",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "끊긴 삶을 다시 잇는 일",
+      "subtitle": "사회학 · 뇌졸중 환자 연구",
+      "narration": "이번 지문은 큰 병을 겪은 노인들의 이야기를 다루고 있어요.",
+      "cast": [
+        { "who": "boa", "expression": "sad", "pose": "raise" },
+        { "who": "kaufman", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "보아는 회복이란 몸이 낫는 일이라고만 생각했어요.",
+      "question": "몸이 예전 같지 않으면 회복한 게 아닌 거 아닐까?",
+      "thought": true,
+      "narrationOut": "그런데 연구가 찾아낸 회복의 조건은 몸이 아니었어요.",
+      "cast": [{ "who": "boa", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "삶의 연속성",
+      "meaning": "과거를 해석해 현재와 이어 붙이면서, 병 전후의 내가 같은 사람임을 지키는 일이에요.",
+      "icon": "🔗",
+      "narration": "카우프만은 노인 한 사람 한 사람의 목소리를 듣고자 했어요.",
+      "cast": [{ "who": "kaufman", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "환자들이 겪은 두 가지",
+      "left": {
+        "label": "갑작스러운 단절",
+        "icon": "✂️",
+        "points": ["예전 삶의 방식이 끊긴다", "하던 일을 못 하게 된다", "내가 낯설게 느껴진다"]
+      },
+      "right": {
+        "label": "이어 붙이려는 노력",
+        "icon": "🔗",
+        "points": ["과거를 다시 해석한다", "현재와 이어 붙인다", "미래까지 연결한다"]
+      },
+      "narration": "뇌졸중 환자들은 과거의 삶과 급격히 끊기는 경험을 했어요."
+    },
+    {
+      "type": "flow",
+      "heading": "회복이 이루어지는 순서",
+      "steps": [
+        { "label": "삶이 끊김", "icon": "✂️" },
+        { "label": "과거를 해석", "icon": "💭" },
+        { "label": "현재와 연결", "icon": "🔗" },
+        { "label": "회복에 이름", "icon": "🌱" }
+      ],
+      "narration": "이 일을 해낸 사람들은 몸에 장애가 남아도 회복에 이르렀어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "보아는 장애가 남았는데도 회복이라 부를 수 있는지 물었어요.",
+      "lines": [
+        { "who": "boa", "text": "몸이 불편한데도 회복했다고 볼 수 있는 거예요?" },
+        { "who": "kaufman", "text": "네. 스스로를 병 전과 같은 사람으로 보여 낸 사람들이 그랬어요." },
+        { "who": "boa", "text": "회복이 몸이 아니라 이야기의 문제였네요." }
+      ],
+      "narrationOut": "환자들은 자신이 예전과 같은 사람임을 보여야 했어요.",
+      "cast": [
+        { "who": "boa", "expression": "surprised", "pose": "shrug" },
+        { "who": "kaufman", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Stroke patients needed to show that they were the same people after their illness as before.",
+      "translation": "뇌졸중 환자들은 병을 앓은 뒤에도 이전과 같은 사람이라는 것을 보여야 했습니다.",
+      "highlight": ["same", "people", "after", "before"],
+      "narration": "지문이 마지막에 내리는 정리예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "뇌졸중은 과거 삶과의 급격한 단절을 가져온다",
+        "사람들은 과거를 현재와 이어 붙이려 애쓴다",
+        "이 일을 해내면 장애가 남아도 회복한다"
+      ],
+      "narration": "회복은 몸이 아니라 이어짐의 문제였어요.",
+      "cast": [{ "who": "boa", "expression": "happy", "pose": "cheer" }]
+    }
+  ]
+}

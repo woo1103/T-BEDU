@@ -1,0 +1,119 @@
+{
+  "slug": "good-deeds-donation",
+  "title": "좋은 일을 떠올리면 더 베푼다",
+  "subtitle": "다만 남의 시선을 의식하면 달라져요",
+  "source": "2026년 9월 고2 모의고사 40번",
+  "kind": "academic",
+  "characters": {
+    "serin": {
+      "name": "세린",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D4B9",
+      "hair": "bob",
+      "hairColor": "#3A2A22",
+      "outfit": "tshirt",
+      "outfitColor": "#C45C8A",
+      "accentColor": "#3B3138",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "han": {
+      "name": "한 연구원",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E5C2A0",
+      "hair": "short",
+      "hairColor": "#2F2924",
+      "outfit": "labcoat",
+      "outfitColor": "#7FA3B8",
+      "accentColor": "#3A454E",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "좋은 일을 떠올리면 더 베푼다",
+      "subtitle": "심리 · 선행과 관대함",
+      "narration": "이번 지문은 무엇을 떠올리느냐가 행동을 어떻게 바꾸는지를 다루고 있어요.",
+      "cast": [
+        { "who": "serin", "expression": "happy", "pose": "raise" },
+        { "who": "han", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "세린이는 지난주에 했던 좋은 일을 문득 떠올렸어요.",
+      "question": "좋은 일 한 걸 떠올리면 정말 뭔가 달라질까?",
+      "thought": true,
+      "narrationOut": "우리 뇌는 선하고 공정한 행동을 이어 가려는 성향을 지니고 있어요.",
+      "cast": [{ "who": "serin", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "선행이 선행을 부른다",
+      "meaning": "스스로를 좋은 일을 하는 사람으로 여기고 그렇게 행동하면, 더 큰 선행으로 이어져요.",
+      "icon": "🤲",
+      "narration": "대학생 백 명을 대상으로 한 실험이 이를 보여 줬어요.",
+      "cast": [{ "who": "han", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "bars",
+      "heading": "무엇을 떠올렸느냐에 따라",
+      "unit": "배",
+      "bars": [
+        { "label": "선행을 떠올린 쪽", "value": 2 },
+        { "label": "악행을 떠올린 쪽", "value": 1 }
+      ],
+      "narration": "선행을 적은 참가자들은 받은 보수의 절반 넘게 기부했고, 그 양은 거의 두 배였어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "세린이는 실험에서 또 무엇이 드러났는지 물었어요.",
+      "lines": [
+        { "who": "serin", "text": "그러면 좋은 일을 자세히 적을수록 더 많이 기부했겠네요?" },
+        { "who": "han", "text": "그게 그렇지 않았어요. 사람들 반응까지 적은 쪽이 오히려 적게 냈거든요." },
+        { "who": "serin", "text": "어떻게 보일지를 신경 쓴 게 영향을 준 거군요." }
+      ],
+      "narrationOut": "행동 자체에만 집중한 사람들이 훨씬 너그러웠어요.",
+      "cast": [
+        { "who": "serin", "expression": "surprised", "pose": "shrug" },
+        { "who": "han", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "compare",
+      "heading": "같은 선행, 다른 마음",
+      "left": {
+        "label": "행동 자체에 집중",
+        "icon": "🤲",
+        "points": ["무엇을 했는지만 적었다", "더 많이 기부했다", "선 자체를 마음에 뒀다"]
+      },
+      "right": {
+        "label": "반응까지 신경",
+        "icon": "👀",
+        "points": ["사람들 반응까지 적었다", "눈에 띄게 적게 냈다", "겉모습을 의식했다"]
+      },
+      "narration": "같은 선행을 떠올려도 어디에 마음을 두었는지가 결과를 갈랐어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "People who seemed concerned about appearances were less generous than those who cared more about doing good for its own sake.",
+      "translation": "겉으로 어떻게 보일지를 신경 쓴 사람들은, 선 그 자체를 위해 선을 행하는 데 더 마음을 쓴 사람들보다 덜 너그러웠습니다.",
+      "highlight": ["appearances", "generous", "own", "sake"],
+      "narration": "지문이 마지막에 내리는 정리예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "선행을 떠올리면 더 크게 베풀게 된다",
+        "악행을 떠올린 쪽보다 거의 두 배를 기부했다",
+        "남의 시선을 의식하면 오히려 덜 너그러워진다"
+      ],
+      "narration": "선을 선 자체로 대하는 마음이 결국 더 멀리 가요.",
+      "cast": [{ "who": "serin", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

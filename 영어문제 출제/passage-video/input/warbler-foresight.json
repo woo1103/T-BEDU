@@ -1,0 +1,121 @@
+{
+  "slug": "warbler-foresight",
+  "title": "솔새는 미래를 보고 고른다",
+  "subtitle": "지금보다 나중에 필요할 곳을 먼저 잡아요",
+  "source": "2026년 9월 고2 모의고사 36번",
+  "kind": "academic",
+  "characters": {
+    "daon": {
+      "name": "다온",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B8",
+      "hair": "braids",
+      "hairColor": "#2F241E",
+      "outfit": "uniform",
+      "outfitColor": "#5E9E5A",
+      "accentColor": "#33443A",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "yu": {
+      "name": "유 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#3A322B",
+      "outfit": "labcoat",
+      "outfitColor": "#8FA8C4",
+      "accentColor": "#3C4653",
+      "accessory": "roundGlasses",
+      "prop": "leaf",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "솔새는 미래를 보고 고른다",
+      "subtitle": "생태 · 서식지 선택 능력",
+      "narration": "이번 지문은 동물이 살 곳을 어떻게 고르는지를 다루고 있어요.",
+      "cast": [
+        { "who": "daon", "expression": "happy", "pose": "raise" },
+        { "who": "yu", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "다온이는 솔새가 먹이가 적은 나무를 먼저 차지한다는 말을 듣고 의아했어요.",
+      "question": "먹이가 더 많은 나무를 두고 왜 굳이 저쪽을 고르지?",
+      "thought": true,
+      "narrationOut": "그 선택의 이유는 지금이 아니라 나중에 드러나요.",
+      "cast": [{ "who": "daon", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "서식지 선택 능력",
+      "meaning": "먹이를 구하고 포식자를 피하고 짝을 만나기 좋은 곳을 고르는 능력이에요.",
+      "icon": "📍",
+      "narration": "이 능력은 생물학적 성공을 가르는 가장 중요한 요인 가운데 하나예요.",
+      "cast": [{ "who": "yu", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "솔새 앞에 놓인 두 나무",
+      "left": {
+        "label": "붉은가문비나무",
+        "icon": "🌲",
+        "points": ["여름 초엔 먹이가 적다", "그런데도 먼저 차지한다", "나중에 먹이가 늘어난다"]
+      },
+      "right": {
+        "label": "흰가문비나무",
+        "icon": "🌳",
+        "points": ["여름 초엔 먹이가 많다", "솔새가 고르지 않는다", "나중엔 유리하지 않다"]
+      },
+      "narration": "북미 동부 가문비나무 숲에 사는 작은 명금의 이야기예요."
+    },
+    {
+      "type": "flow",
+      "heading": "시간이 지나면서 드러나는 것",
+      "steps": [
+        { "label": "여름 초 자리잡기", "icon": "📍" },
+        { "label": "둥지를 짓는다", "icon": "🪺" },
+        { "label": "새끼가 태어남", "icon": "🐣" },
+        { "label": "먹이가 넉넉", "icon": "🍽️" }
+      ],
+      "narration": "새끼가 배고파질 무렵에는 붉은가문비 숲이 먹이를 더 쉽게 내줘요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "다온이는 솔새가 정말 앞일을 아는 것인지 물었어요.",
+      "lines": [
+        { "who": "daon", "text": "솔새가 나중 일을 미리 알고 고른다는 건가요?" },
+        { "who": "yu", "text": "많은 연구가 동물이 미래의 필요까지 내다본다는 걸 보여 줘요." },
+        { "who": "daon", "text": "지금 배부른 곳이 아니라 나중에 필요한 곳을 고른 거네요." }
+      ],
+      "narrationOut": "동물은 최적의 장소를 찾아낼 뿐 아니라 그곳이 앞으로 어떨지도 가늠해요.",
+      "cast": [
+        { "who": "daon", "expression": "surprised", "pose": "shrug" },
+        { "who": "yu", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Somehow, the warbler has been guided to settle in locations that will suit its future parenting needs better than its present ones.",
+      "translation": "어떤 식으로든 솔새는 현재의 필요보다 미래의 양육 필요에 더 잘 맞는 곳에 자리잡도록 이끌려 왔습니다.",
+      "highlight": ["future", "parenting", "present"],
+      "narration": "지문이 마지막에 내리는 정리예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "살 곳을 고르는 능력이 생존을 크게 좌우한다",
+        "솔새는 먹이가 적은 나무를 먼저 차지한다",
+        "새끼를 키울 무렵 그곳이 더 유리해진다"
+      ],
+      "narration": "지금이 아니라 나중에 맞는 자리를 고르는 셈이에요.",
+      "cast": [{ "who": "daon", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

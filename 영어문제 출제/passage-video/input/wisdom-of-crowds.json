@@ -1,0 +1,117 @@
+{
+  "slug": "wisdom-of-crowds",
+  "title": "787명의 평균이 정답에 닿다",
+  "subtitle": "아무도 못 맞혔는데 평균은 거의 정확했어요",
+  "source": "리딩파워 유형편 완성 Chapter Review3 1번",
+  "kind": "academic",
+  "characters": {
+    "yuna": {
+      "name": "유나",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B8",
+      "hair": "ponytail",
+      "hairColor": "#34261F",
+      "outfit": "hoodie",
+      "outfitColor": "#5C7FC4",
+      "accentColor": "#333B4E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "galton": {
+      "name": "골턴",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E9C8A7",
+      "hair": "short",
+      "hairColor": "#8A8278",
+      "outfit": "suit",
+      "outfitColor": "#7A6A4A",
+      "accentColor": "#3A332A",
+      "accessory": "glasses",
+      "facialHair": "beard",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "787명의 평균이 정답에 닿다",
+      "subtitle": "집단 지혜 · 골턴의 관찰",
+      "narration": "이번 지문은 여럿이 모이면 왜 똑똑해지는지를 다루고 있어요.",
+      "cast": [
+        { "who": "yuna", "expression": "surprised", "pose": "raise" },
+        { "who": "galton", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "유나는 소 무게 맞히기 대회 이야기를 듣고 고개를 갸웃했어요.",
+      "question": "아무도 못 맞혔다면서, 그게 왜 대단한 일이야?",
+      "thought": true,
+      "narrationOut": "놀라운 것은 개인이 아니라 모두의 평균이었어요.",
+      "cast": [{ "who": "yuna", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "수에 있는 힘",
+      "meaning": "여럿이 모이면 안전만 얻는 게 아니라, 함께 아는 힘도 생겨요.",
+      "icon": "👥",
+      "narration": "사람은 방법을 따지기 훨씬 전부터 함께 사냥하고 불을 피우고 마을을 지었어요.",
+      "cast": [{ "who": "galton", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "1906년 박람회에서",
+      "steps": [
+        { "label": "소 무게 맞히기", "icon": "🐂" },
+        { "label": "6펜스 내고 응모", "icon": "🎟️" },
+        { "label": "787명이 참가", "icon": "👥" },
+        { "label": "평균을 내 보니", "icon": "🧮" }
+      ],
+      "narration": "가장 가까이 맞힌 사람에게 상을 주는 대회였어요."
+    },
+    {
+      "type": "bars",
+      "heading": "실제 무게와 787명의 평균",
+      "unit": "파운드",
+      "bars": [
+        { "label": "소의 실제 무게", "value": 1198 },
+        { "label": "787명 추측의 평균", "value": 1197 }
+      ],
+      "narration": "단 1파운드 차이였어요. 아무도 정확히 맞히지 못했는데도요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "market",
+      "narration": "유나는 이 결과가 무엇을 뜻하는지 물었어요.",
+      "lines": [
+        { "who": "yuna", "text": "한 사람도 못 맞혔는데 평균은 어떻게 이렇게 가까워요?" },
+        { "who": "galton", "text": "제각각 빗나간 추측들이 서로를 상쇄하며 가운데로 모인 거예요." },
+        { "who": "yuna", "text": "여럿의 판단이 생각보다 믿을 만하다는 거네요." }
+      ],
+      "narrationOut": "골턴은 이 결과를 네이처에 보낸 편지에 적었어요.",
+      "cast": [
+        { "who": "yuna", "expression": "surprised", "pose": "shrug" },
+        { "who": "galton", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "This result is more creditable to the trustworthiness of a democratic judgment than might have been expected.",
+      "translation": "이 결과는 예상했던 것보다 민주적 판단의 신뢰성을 더 인정할 만하게 해 줍니다.",
+      "highlight": ["trustworthiness", "democratic", "judgment"],
+      "narration": "골턴이 남긴 말이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "사람은 오래전부터 함께 일해 왔다",
+        "787명 중 아무도 정답을 맞히지 못했다",
+        "그런데 평균은 단 1파운드 차이였다"
+      ],
+      "narration": "수에는 안전만이 아니라 집단의 지혜도 들어 있어요.",
+      "cast": [{ "who": "yuna", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

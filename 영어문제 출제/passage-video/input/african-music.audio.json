@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/african-music/s0-narration.wav",
+    "seconds": 4.52,
+    "hash": "93609f2385b0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/african-music/s1-narration.wav",
+    "seconds": 4.84,
+    "hash": "dc8c99258758",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/african-music/s1-narrationOut.wav",
+    "seconds": 4.48,
+    "hash": "044968550740",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/african-music/s1-question.wav",
+    "seconds": 3.32,
+    "hash": "c0ec72fb26eb",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/african-music/s2-narration.wav",
+    "seconds": 4.68,
+    "hash": "9d12fcd302e2",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/african-music/s3-narration.wav",
+    "seconds": 4.4,
+    "hash": "1dd4d296778b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/african-music/s4-narration.wav",
+    "seconds": 4.12,
+    "hash": "0ca74d558a73",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/african-music/s5-narration.wav",
+    "seconds": 3.64,
+    "hash": "3f4da9840d50",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/african-music/s5-narrationOut.wav",
+    "seconds": 4,
+    "hash": "ea49a78729bc",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/african-music/s5-line0.wav",
+    "seconds": 2.48,
+    "hash": "15fbfe98e235",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/african-music/s5-line1.wav",
+    "seconds": 4.12,
+    "hash": "c774c830e587",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/african-music/s5-line2.wav",
+    "seconds": 3.48,
+    "hash": "93f50ab9c4f4",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/african-music/s6-narration.wav",
+    "seconds": 2.88,
+    "hash": "10658e049a95",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/african-music/s7-narration.wav",
+    "seconds": 3.92,
+    "hash": "0de4f8efe5bf",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

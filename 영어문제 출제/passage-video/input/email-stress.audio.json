@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/email-stress/s0-narration.wav",
+    "seconds": 4.16,
+    "hash": "eb2efa840a81",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/email-stress/s1-narration.wav",
+    "seconds": 4.8,
+    "hash": "9d7aac96cb73",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/email-stress/s1-narrationOut.wav",
+    "seconds": 4.44,
+    "hash": "510632c98315",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/email-stress/s1-question.wav",
+    "seconds": 4.08,
+    "hash": "c0a2b06ee748",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/email-stress/s2-narration.wav",
+    "seconds": 5.16,
+    "hash": "1898219254ce",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/email-stress/s3-narration.wav",
+    "seconds": 4.48,
+    "hash": "9936c3671f08",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/email-stress/s4-narration.wav",
+    "seconds": 4.88,
+    "hash": "958cdd67bd03",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/email-stress/s5-narration.wav",
+    "seconds": 3.36,
+    "hash": "7b891fd5254b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/email-stress/s5-narrationOut.wav",
+    "seconds": 5.12,
+    "hash": "21fa9031727b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/email-stress/s5-line0.wav",
+    "seconds": 3.72,
+    "hash": "a228e59cf118",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/email-stress/s5-line1.wav",
+    "seconds": 4.4,
+    "hash": "e30379f00e98",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/email-stress/s5-line2.wav",
+    "seconds": 3.56,
+    "hash": "f078030e2e43",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/email-stress/s6-narration.wav",
+    "seconds": 2.28,
+    "hash": "6f52209752f7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/email-stress/s7-narration.wav",
+    "seconds": 3.4,
+    "hash": "00342a4824ca",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

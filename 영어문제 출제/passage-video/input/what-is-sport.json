@@ -1,0 +1,120 @@
+{
+  "slug": "what-is-sport",
+  "title": "스포츠의 경계는 흐릿하다",
+  "subtitle": "안다고 생각했지만 선을 긋기는 어려워요",
+  "source": "리딩파워 유형편 완성 12과 Example 2",
+  "kind": "academic",
+  "characters": {
+    "chan": {
+      "name": "찬우",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B7",
+      "hair": "spiky",
+      "hairColor": "#2E241E",
+      "outfit": "tshirt",
+      "outfitColor": "#E07A3C",
+      "accentColor": "#3A342E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "ryu": {
+      "name": "류 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C4A2",
+      "hair": "short",
+      "hairColor": "#5F574F",
+      "outfit": "suit",
+      "outfitColor": "#3E6E93",
+      "accentColor": "#2C3A48",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "스포츠의 경계는 흐릿하다",
+      "subtitle": "체육 · 스포츠의 정의",
+      "narration": "이번 지문은 무엇을 스포츠라고 부를 수 있는지를 다루고 있어요.",
+      "cast": [
+        { "who": "chan", "expression": "happy", "pose": "raise" },
+        { "who": "ryu", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "찬우는 스포츠 세 가지를 대 보라는 말에 곧바로 답했어요.",
+      "question": "축구, 농구, 수영. 이 정도는 누구나 알잖아?",
+      "thought": true,
+      "narrationOut": "그런데 스포츠와 여가, 놀이 사이의 선은 늘 분명하지는 않아요.",
+      "cast": [{ "who": "chan", "expression": "happy", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "정의의 어려움",
+      "meaning": "어떤 활동을 넣고 뺄지 분명한 기준을 세우는 일은 생각보다 꽤 어려워요.",
+      "icon": "📏",
+      "narration": "대부분은 스포츠가 무엇인지 안다고 생각하지만 그렇지 않아요.",
+      "cast": [{ "who": "ryu", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "안다고 생각하지만",
+      "left": {
+        "label": "우리의 느낌",
+        "icon": "💭",
+        "points": ["셋쯤은 쉽게 댄다", "무엇이 스포츠인지 안다", "경계가 분명해 보인다"]
+      },
+      "right": {
+        "label": "실제 사정",
+        "icon": "🌫️",
+        "points": ["여가·놀이와 겹친다", "기준 세우기가 어렵다", "시간이 지나면 바뀐다"]
+      },
+      "narration": "오늘 놀이로 여겨지는 활동이 나중에 스포츠가 되기도 해요."
+    },
+    {
+      "type": "flow",
+      "heading": "배드민턴이 걸어온 길",
+      "steps": [
+        { "label": "뒷마당 놀이", "icon": "🏡" },
+        { "label": "널리 퍼짐", "icon": "👥" },
+        { "label": "경기로 자리잡음", "icon": "🏸" },
+        { "label": "올림픽 종목", "icon": "🏅" }
+      ],
+      "narration": "배드민턴은 1992년부터 올림픽 종목이 되었어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "찬우는 그러면 무엇을 기준으로 나눠야 하는지 물었어요.",
+      "lines": [
+        { "who": "chan", "text": "그럼 스포츠랑 놀이는 뭘로 나눠야 하는 거예요?" },
+        { "who": "ryu", "text": "그 선을 깔끔하게 긋는 정의를 만드는 일 자체가 어려워요." },
+        { "who": "chan", "text": "뒷마당 배드민턴이 올림픽에 간 것도 그래서군요." }
+      ],
+      "narrationOut": "경계는 고정된 것이 아니라 시대에 따라 움직여요.",
+      "cast": [
+        { "who": "chan", "expression": "confused", "pose": "shrug" },
+        { "who": "ryu", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "The line drawn between examples of sports, leisure, and play is not always clear.",
+      "translation": "스포츠와 여가, 놀이의 사례들 사이에 그어진 선은 항상 분명한 것은 아닙니다.",
+      "highlight": ["line", "not", "always", "clear"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "우리는 스포츠가 뭔지 안다고 생각한다",
+        "그러나 여가·놀이와의 경계는 흐릿하다",
+        "놀이가 나중에 스포츠가 되기도 한다"
+      ],
+      "narration": "기준을 세우는 일이 생각보다 어렵다는 이야기예요.",
+      "cast": [{ "who": "chan", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

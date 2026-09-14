@@ -1,0 +1,120 @@
+{
+  "slug": "test-anxiety",
+  "title": "알고도 못 쓰는 이유",
+  "subtitle": "시험 불안은 주의를 빼앗아 가요",
+  "source": "리딩파워 유형편 완성 12과 Practice 3",
+  "kind": "academic",
+  "characters": {
+    "haeun": {
+      "name": "하은",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B7",
+      "hair": "braids",
+      "hairColor": "#31251F",
+      "outfit": "uniform",
+      "outfitColor": "#C45C7A",
+      "accentColor": "#3B3138",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "min": {
+      "name": "민 상담사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#453D35",
+      "outfit": "suit",
+      "outfitColor": "#4E7A8A",
+      "accentColor": "#2F3D44",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "알고도 못 쓰는 이유",
+      "subtitle": "심리 · 시험 불안과 수행",
+      "narration": "이번 지문은 감정이 어떻게 실력을 가로막는지를 다루고 있어요.",
+      "cast": [
+        { "who": "haeun", "expression": "sad", "pose": "raise" },
+        { "who": "min", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "하은이는 시험을 마치고 나올 때마다 억울했어요.",
+      "question": "분명히 아는 내용이었는데 왜 못 썼을까?",
+      "thought": true,
+      "narrationOut": "그렇게 말하는 학생들 상당수는 사실을 말하고 있어요.",
+      "cast": [{ "who": "haeun", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "시험 불안",
+      "meaning": "시험과 관련된 불안이에요. 불안이 높을수록 점수가 낮아지는 관계가 확인됐어요.",
+      "icon": "😰",
+      "narration": "연구자들은 시험 불안과 성적 사이에서 반대 방향의 관계를 찾아냈어요.",
+      "cast": [{ "who": "min", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "불안이 시험을 방해하는 길",
+      "steps": [
+        { "label": "불안이 커짐", "icon": "😰" },
+        { "label": "걱정에 시간 낭비", "icon": "⏳" },
+        { "label": "자기통제 고갈", "icon": "🔋" },
+        { "label": "돌아오지 못함", "icon": "🌀" }
+      ],
+      "narration": "핵심은 시험 자체에 쏟아야 할 주의가 흐트러진다는 점이에요."
+    },
+    {
+      "type": "compare",
+      "heading": "시험지 앞에서 무엇을 하는가",
+      "left": {
+        "label": "불안이 높을 때",
+        "icon": "😵",
+        "points": ["잘하고 있나 걱정한다", "남들도 그런지 살핀다", "문제에서 눈이 떠난다"]
+      },
+      "right": {
+        "label": "주의가 모일 때",
+        "icon": "🎯",
+        "points": ["문제에만 집중한다", "아는 것을 꺼내 쓴다", "흐름을 잃지 않는다"]
+      },
+      "narration": "걱정하느라 쓰는 시간이 곧 문제에서 멀어지는 시간이에요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "하은이는 한번 흔들리면 왜 되돌리기 어려운지 물었어요.",
+      "lines": [
+        { "who": "haeun", "text": "한번 딴생각이 들면 왜 다시 집중이 안 될까요?" },
+        { "who": "min", "text": "불안이 자기통제에 쓸 힘까지 써 버리기 때문이에요." },
+        { "who": "haeun", "text": "그래서 궤도로 돌아올 힘이 남아 있지 않은 거군요." }
+      ],
+      "narrationOut": "한번 흐트러지면 스스로 되돌릴 여력이 남지 않을 수 있어요.",
+      "cast": [
+        { "who": "haeun", "expression": "confused", "pose": "shrug" },
+        { "who": "min", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Students who display high test anxiety tend to score low on exams.",
+      "translation": "시험 불안이 높게 나타나는 학생들은 시험에서 낮은 점수를 받는 경향이 있습니다.",
+      "highlight": ["anxiety", "score", "low"],
+      "narration": "연구가 확인한 관계예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "아는데 못 쓰는 일은 실제로 일어난다",
+        "불안이 시험에 쏟을 주의를 빼앗는다",
+        "자기통제까지 고갈되면 되돌리기 어렵다"
+      ],
+      "narration": "실력이 아니라 주의가 무너진 것이라는 이야기예요.",
+      "cast": [{ "who": "haeun", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

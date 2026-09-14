@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/shade-grown-coffee/s0-narration.wav",
+    "seconds": 4.6,
+    "hash": "bf3f4f243120",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/shade-grown-coffee/s1-narration.wav",
+    "seconds": 4.56,
+    "hash": "9fd40394c650",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/shade-grown-coffee/s1-narrationOut.wav",
+    "seconds": 3.76,
+    "hash": "3f24473a0fa0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/shade-grown-coffee/s1-question.wav",
+    "seconds": 3,
+    "hash": "340bd2f0aaff",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/shade-grown-coffee/s2-narration.wav",
+    "seconds": 4.92,
+    "hash": "0c8d13b540ce",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/shade-grown-coffee/s3-narration.wav",
+    "seconds": 4.6,
+    "hash": "906c241ccb02",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/shade-grown-coffee/s4-narration.wav",
+    "seconds": 5.12,
+    "hash": "029d1b99bba1",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/shade-grown-coffee/s5-narration.wav",
+    "seconds": 4.52,
+    "hash": "7a7bf0a775bf",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/shade-grown-coffee/s5-narrationOut.wav",
+    "seconds": 3.4,
+    "hash": "51b73f8154e1",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/shade-grown-coffee/s5-line0.wav",
+    "seconds": 3.36,
+    "hash": "aa946037c070",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/shade-grown-coffee/s5-line1.wav",
+    "seconds": 4.44,
+    "hash": "8c547ee4a789",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/shade-grown-coffee/s5-line2.wav",
+    "seconds": 3.76,
+    "hash": "584961a41f60",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/shade-grown-coffee/s6-narration.wav",
+    "seconds": 2.04,
+    "hash": "79f765fef747",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/shade-grown-coffee/s7-narration.wav",
+    "seconds": 4.12,
+    "hash": "3e0cf079ddc0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}
