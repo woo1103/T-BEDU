@@ -21,8 +21,34 @@ function getSecret(): Uint8Array {
   return new TextEncoder().encode(secret);
 }
 
+// 학생 PWA는 다른 오리진(별도 배포/포트)에서 토큰으로 호출하므로 CORS 허용.
+// 토큰은 Authorization 헤더로 전달(쿠키 아님)이라 credentials 불필요 → origin "*" 허용.
+const CORS_HEADERS: Record<string, string> = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET,POST,PATCH,DELETE,OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Max-Age": "86400",
+};
+
+function isStudentApi(pathname: string): boolean {
+  return (
+    pathname.startsWith("/api/student") ||
+    pathname.startsWith("/api/auth/student")
+  );
+}
+
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  // 학생 API: CORS 처리 후 통과 (인가는 각 핸들러가 Bearer로 수행)
+  if (isStudentApi(pathname)) {
+    if (req.method === "OPTIONS") {
+      return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+    }
+    const res = NextResponse.next();
+    for (const [k, v] of Object.entries(CORS_HEADERS)) res.headers.set(k, v);
+    return res;
+  }
 
   if (PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
     return NextResponse.next();
