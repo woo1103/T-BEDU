@@ -32,6 +32,7 @@ model Question {
   updatedAt   DateTime @updatedAt
 
   examItems   ExamItem[]
+  questionTags QuestionTag[]
 
   @@index([passageId])
 }
@@ -238,4 +239,33 @@ model Enrollment {
 
   @@unique([studentId, classId])
   @@index([classId])
+}
+
+// ─── 문항 태그 (P2): 능력영역/단원/개념 → 취약점 분석 근거 ───
+
+model Tag {
+  id        String   @id @default(cuid())
+  subject   String   // "english" | "math"
+  kind      String   @default("영역") // "영역" | "단원" | "개념"
+  name      String
+  parentId  String?  // 계층(대분류>소분류) 대비
+  createdAt DateTime @default(now())
+
+  parent       Tag?          @relation("TagHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children     Tag[]         @relation("TagHierarchy")
+  questionTags QuestionTag[]
+
+  @@unique([subject, kind, name])
+  @@index([subject])
+}
+
+model QuestionTag {
+  questionId String
+  tagId      String
+
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([questionId, tagId])
+  @@index([tagId])
 }
