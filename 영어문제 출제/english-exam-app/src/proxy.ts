@@ -2,7 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 const COOKIE_NAME = "teb_session";
-const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/auth/logout"];
+// 학생 API(/api/student/*)와 학생 인증(/api/auth/student/*)은 쿠키 세션이 아니라
+// Authorization: Bearer 토큰으로 인가한다. 따라서 프록시의 쿠키 게이트를 건너뛰고,
+// 각 학생 API 핸들러가 getStudentFromRequest()로 직접 인증한다.
+const PUBLIC_PATHS = [
+  "/login",
+  "/api/auth/login",
+  "/api/auth/logout",
+  "/api/auth/student",
+  "/api/student",
+];
 
 function getSecret(): Uint8Array {
   const secret = process.env.AUTH_SECRET;
