@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { EXAM_TYPE_MAP, getQuestionTypes, DIFFICULTY_MAP } from "@/lib/question-types";
 import type { Choice, ExamType, Difficulty } from "@/types";
 import { PassageText } from "@/components/PassageText";
+import { QuestionTagEditor } from "@/components/QuestionTagEditor";
 
 const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
 
@@ -273,6 +274,8 @@ export default function QuestionDetailPage({
           )}
         </div>
       )}
+
+      <QuestionTagEditor questionId={id} />
     </div>
   );
 }
