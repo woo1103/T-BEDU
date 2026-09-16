@@ -54,6 +54,13 @@ export default function Home({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (enrolled) {
+      import("../lib/push").then((m) => m.registerPush()).catch(() => {});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     (async () => {
       try {
         const [a, ac, tr, nt] = await Promise.all([

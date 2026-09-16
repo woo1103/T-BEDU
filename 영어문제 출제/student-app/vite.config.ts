@@ -10,7 +10,13 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.ts",
       registerType: "autoUpdate",
+      injectManifest: {
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,webmanifest}"],
+      },
       manifest: {
         name: "T&BEDU 학습",
         short_name: "T&BEDU",
@@ -20,8 +26,14 @@ export default defineConfig({
         background_color: "#ffffff",
         display: "standalone",
         start_url: "/",
-        // 아이콘(pwa-192.png / pwa-512.png)은 로고 확정 후 public/ 에 추가 예정
-        icons: [],
+        icons: [
+          {
+            src: "/pwa-icon.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+        ],
       },
     }),
   ],

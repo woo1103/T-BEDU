@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
+import { sendPushToUsers } from "@/lib/web-push";
 
-// 반의 활성 재원생들에게 알림 생성. 반환: 수신자 수.
+// 반의 활성 재원생들에게 인앱 알림 + 웹 푸시 발송. 반환: 수신자 수.
 export async function notifyClassStudents(
   classId: string,
   n: { type: string; title: string; body?: string; linkUrl?: string }
@@ -21,5 +22,13 @@ export async function notifyClassStudents(
       linkUrl: n.linkUrl || null,
     })),
   });
+
+  // 웹 푸시 (구독한 학생에게)
+  await sendPushToUsers(userIds, {
+    title: n.title,
+    body: n.body,
+    url: n.linkUrl,
+  });
+
   return userIds.length;
 }
