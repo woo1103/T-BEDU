@@ -52,6 +52,7 @@ model Exam {
   updatedAt    DateTime @updatedAt
 
   items        ExamItem[]
+  assessments  Assessment[]
 }
 
 model ExamItem {
@@ -202,6 +203,7 @@ model StudentProfile {
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   center      Center?      @relation(fields: [centerId], references: [id], onDelete: SetNull)
   enrollments Enrollment[]
+  submissions Submission[]
 
   @@index([centerId])
   @@index([status])
@@ -222,6 +224,7 @@ model Class {
   center      Center       @relation(fields: [centerId], references: [id], onDelete: Cascade)
   teacher     User?        @relation("ClassTeacher", fields: [teacherId], references: [id], onDelete: SetNull)
   enrollments Enrollment[]
+  assignments Assignment[]
 
   @@index([centerId])
   @@index([code])
@@ -268,4 +271,76 @@ model QuestionTag {
 
   @@id([questionId, tagId])
   @@index([tagId])
+}
+
+// ─── 배정·제출·채점 (P3) ───
+
+// 영어(Exam) / 수학(Worksheet, P5)을 공통으로 배정·채점하기 위한 추상화
+model Assessment {
+  id          String   @id @default(cuid())
+  subject     String   // "english" | "math"
+  type        String   // "exam" | "worksheet"
+  title       String
+  examId      String?
+  worksheetId String?  // P5(수학)에서 사용
+  createdAt   DateTime @default(now())
+
+  exam        Exam?    @relation(fields: [examId], references: [id], onDelete: SetNull)
+  assignments Assignment[]
+
+  @@index([examId])
+}
+
+// 반에 문제지를 배정 (마감 포함)
+model Assignment {
+  id           String    @id @default(cuid())
+  classId      String
+  assessmentId String
+  title        String
+  assignedAt   DateTime  @default(now())
+  dueAt        DateTime?
+  active       Boolean   @default(true)
+
+  class        Class       @relation(fields: [classId], references: [id], onDelete: Cascade)
+  assessment   Assessment  @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  submissions  Submission[]
+
+  @@index([classId])
+  @@index([assessmentId])
+}
+
+// 학생의 1회 응시(제출)
+model Submission {
+  id           String    @id @default(cuid())
+  studentId    String    // StudentProfile.id
+  assignmentId String
+  startedAt    DateTime  @default(now())
+  submittedAt  DateTime?
+  status       String    @default("in_progress") // in_progress | submitted | graded
+  score        Int       @default(0)
+  totalPoints  Int       @default(0)
+  correctCount Int       @default(0)
+  itemCount    Int       @default(0)
+
+  student      StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  assignment   Assignment     @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  answers      Answer[]
+
+  @@index([studentId])
+  @@index([assignmentId])
+}
+
+// 문항별 학생 답 + 정오
+model Answer {
+  id           String   @id @default(cuid())
+  submissionId String
+  refType      String   // "question" | "worksheet_item"
+  refId        String   // Question.id 또는 WorksheetItem.id
+  selected     String   // 학생이 고른 값 (①~⑤ 라벨 또는 텍스트)
+  isCorrect    Boolean  @default(false)
+  points       Int      @default(0)
+
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
 }
