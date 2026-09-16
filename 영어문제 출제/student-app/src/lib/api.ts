@@ -78,7 +78,7 @@ export function register(input: RegisterInput): Promise<AuthResult> {
   return postJson("/api/auth/student/register", input);
 }
 
-// 인증이 필요한 GET (다음 단계에서 사용)
+// 인증이 필요한 GET
 export async function authGet(path: string) {
   const token = getToken();
   const res = await fetch(`${API_BASE}${path}`, {
@@ -87,4 +87,87 @@ export async function authGet(path: string) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || "요청에 실패했습니다");
   return data;
+}
+
+async function authPost(path: string, body: unknown) {
+  const token = getToken();
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || "요청에 실패했습니다");
+  return data;
+}
+
+export interface AssignmentRow {
+  id: string;
+  title: string;
+  dueAt: string | null;
+  subject: string;
+  className: string;
+  submission: {
+    id: string;
+    status: string;
+    score: number;
+    totalPoints: number;
+    submittedAt: string | null;
+  } | null;
+}
+
+export function getAssignments(): Promise<{ assignments: AssignmentRow[] }> {
+  return authGet("/api/student/assignments");
+}
+
+export interface AssessmentItem {
+  orderNum: number;
+  questionId: string;
+  questionType: string;
+  points: number;
+  passage: string;
+  question: string;
+  choices: { label: string; text: string }[];
+}
+
+export function getAssessment(
+  assignmentId: string
+): Promise<{ assignment: { id: string; title: string; dueAt: string | null }; items: AssessmentItem[] }> {
+  return authGet(`/api/student/assessments/${assignmentId}`);
+}
+
+export interface GradeResult {
+  submissionId: string;
+  score: number;
+  totalPoints: number;
+  correctCount: number;
+  itemCount: number;
+  rate: number;
+}
+
+export function submitAnswers(
+  assignmentId: string,
+  answers: { questionId: string; selected: string }[]
+): Promise<GradeResult> {
+  return authPost("/api/student/submissions", { assignmentId, answers });
+}
+
+export interface AreaStat {
+  name: string;
+  correct: number;
+  total: number;
+  rate: number;
+}
+
+export function getAchievement(): Promise<{
+  overall: { correct: number; total: number; rate: number };
+  areas: AreaStat[];
+  weak: AreaStat[];
+  strong: AreaStat[];
+  submissionCount: number;
+}> {
+  return authGet("/api/student/achievement");
 }

@@ -3,27 +3,45 @@ import { getStudent, clearSession, type Student } from "./lib/api";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+import Solve from "./pages/Solve";
+
+type View = { name: "home" } | { name: "solve"; assignmentId: string; title: string };
 
 export default function App() {
   const [student, setStudent] = useState<Student | null>(getStudent());
   const [mode, setMode] = useState<"login" | "register">("login");
+  const [view, setView] = useState<View>({ name: "home" });
 
-  if (student) {
+  if (!student) {
+    return mode === "login" ? (
+      <Login onSuccess={setStudent} goRegister={() => setMode("register")} />
+    ) : (
+      <Register onSuccess={setStudent} goLogin={() => setMode("login")} />
+    );
+  }
+
+  if (view.name === "solve") {
     return (
-      <Home
-        student={student}
-        onLogout={() => {
-          clearSession();
-          setStudent(null);
-          setMode("login");
-        }}
+      <Solve
+        assignmentId={view.assignmentId}
+        title={view.title}
+        onDone={() => setView({ name: "home" })}
       />
     );
   }
 
-  return mode === "login" ? (
-    <Login onSuccess={setStudent} goRegister={() => setMode("register")} />
-  ) : (
-    <Register onSuccess={setStudent} goLogin={() => setMode("login")} />
+  return (
+    <Home
+      student={student}
+      onLogout={() => {
+        clearSession();
+        setStudent(null);
+        setMode("login");
+        setView({ name: "home" });
+      }}
+      onSolve={(assignmentId, title) =>
+        setView({ name: "solve", assignmentId, title })
+      }
+    />
   );
 }
