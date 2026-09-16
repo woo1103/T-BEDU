@@ -2,15 +2,18 @@ import { useEffect, useState } from "react";
 import {
   getAssignments,
   getAchievement,
+  getTrend,
   type Student,
   type AssignmentRow,
   type AreaStat,
+  type TrendPoint,
 } from "../lib/api";
 
 interface Props {
   student: Student;
   onLogout: () => void;
   onSolve: (assignmentId: string, title: string) => void;
+  onWrongNotes: () => void;
 }
 
 interface Achievement {
@@ -21,18 +24,24 @@ interface Achievement {
   submissionCount: number;
 }
 
-export default function Home({ student, onLogout, onSolve }: Props) {
+export default function Home({ student, onLogout, onSolve, onWrongNotes }: Props) {
   const enrolled = student.status === "enrolled";
   const [assignments, setAssignments] = useState<AssignmentRow[]>([]);
   const [ach, setAch] = useState<Achievement | null>(null);
+  const [trend, setTrend] = useState<TrendPoint[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const [a, ac] = await Promise.all([getAssignments(), getAchievement()]);
+        const [a, ac, tr] = await Promise.all([
+          getAssignments(),
+          getAchievement(),
+          getTrend(),
+        ]);
         setAssignments(a.assignments);
         setAch(ac);
+        setTrend(tr.points);
       } catch {
         /* ignore */
       } finally {
@@ -118,7 +127,36 @@ export default function Home({ student, onLogout, onSolve }: Props) {
                 </div>
               </div>
             )}
+
+            {trend.length >= 2 && (
+              <div className="mt-4">
+                <p className="text-xs text-gray-500 mb-2">성적 추이</p>
+                <div className="flex items-end gap-1 h-16">
+                  {trend.map((p, i) => (
+                    <div
+                      key={i}
+                      className="flex-1 bg-[#245B3E]/80 rounded-t"
+                      style={{ height: `${Math.max(4, p.rate)}%` }}
+                      title={`${p.rate}%`}
+                    />
+                  ))}
+                </div>
+                <p className="text-[11px] text-gray-400 mt-1 text-right">
+                  최근 {trend.length}회 · 최신 {trend[trend.length - 1].rate}%
+                </p>
+              </div>
+            )}
           </div>
+        )}
+
+        {enrolled && (
+          <button
+            onClick={onWrongNotes}
+            className="w-full bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between text-left"
+          >
+            <span className="font-medium text-gray-800">오답노트</span>
+            <span className="text-sm text-[#245B3E]">복습하기 ›</span>
+          </button>
         )}
 
         {/* 과제 목록 */}

@@ -171,3 +171,49 @@ export function getAchievement(): Promise<{
 }> {
   return authGet("/api/student/achievement");
 }
+
+export interface WrongNote {
+  id: string;
+  note: string | null;
+  resolved: boolean;
+  createdAt: string;
+  selected: string;
+  question: {
+    question: string;
+    passage: string;
+    choices: { label: string; text: string }[];
+    correct: string | null;
+    explanation: string | null;
+  } | null;
+}
+
+export function getWrongNotes(all = false): Promise<{ notes: WrongNote[] }> {
+  return authGet(`/api/student/wrong-notes${all ? "?all=1" : ""}`);
+}
+
+export async function updateWrongNote(
+  id: string,
+  patch: { note?: string; resolved?: boolean }
+) {
+  const token = getToken();
+  const res = await fetch(`${API_BASE}/api/student/wrong-notes/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(patch),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || "수정 실패");
+  return data;
+}
+
+export interface TrendPoint {
+  rate: number;
+  at: string;
+}
+
+export function getTrend(): Promise<{ points: TrendPoint[] }> {
+  return authGet("/api/student/trend");
+}

@@ -4,8 +4,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Solve from "./pages/Solve";
+import WrongNotes from "./pages/WrongNotes";
 
-type View = { name: "home" } | { name: "solve"; assignmentId: string; title: string };
+type View =
+  | { name: "home" }
+  | { name: "solve"; assignmentId: string; title: string }
+  | { name: "wrongnotes" };
 
 export default function App() {
   const [student, setStudent] = useState<Student | null>(getStudent());
@@ -30,6 +34,10 @@ export default function App() {
     );
   }
 
+  if (view.name === "wrongnotes") {
+    return <WrongNotes onDone={() => setView({ name: "home" })} />;
+  }
+
   return (
     <Home
       student={student}
@@ -42,6 +50,7 @@ export default function App() {
       onSolve={(assignmentId, title) =>
         setView({ name: "solve", assignmentId, title })
       }
+      onWrongNotes={() => setView({ name: "wrongnotes" })}
     />
   );
 }
