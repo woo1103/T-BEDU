@@ -206,6 +206,7 @@ model StudentProfile {
   submissions     Submission[]
   achievements    AchievementSnapshot[]
   teacherComments TeacherComment[]
+  wrongNotes      WrongNote[]
 
   @@index([centerId])
   @@index([status])
@@ -343,6 +344,7 @@ model Answer {
   points       Int      @default(0)
 
   submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  wrongNote    WrongNote?
 
   @@index([submissionId])
 }
@@ -358,6 +360,21 @@ model AchievementSnapshot {
   createdAt    DateTime @default(now())
 
   student      StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}
+
+// 오답노트 (오답 채점 시 자동 생성, 학생이 메모/완료 표시)
+model WrongNote {
+  id        String   @id @default(cuid())
+  studentId String
+  answerId  String   @unique
+  note      String?
+  resolved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  student   StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  answer    Answer         @relation(fields: [answerId], references: [id], onDelete: Cascade)
 
   @@index([studentId])
 }

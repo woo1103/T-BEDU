@@ -113,6 +113,20 @@ export async function POST(request: NextRequest) {
     },
   });
 
+  // 오답노트 자동 생성 (틀린 문항)
+  const wrongAnswers = await prisma.answer.findMany({
+    where: { submissionId: submission.id, isCorrect: false },
+    select: { id: true },
+  });
+  if (wrongAnswers.length > 0) {
+    await prisma.wrongNote.createMany({
+      data: wrongAnswers.map((a) => ({
+        studentId: student.studentId,
+        answerId: a.id,
+      })),
+    });
+  }
+
   return NextResponse.json(
     {
       submissionId: submission.id,
