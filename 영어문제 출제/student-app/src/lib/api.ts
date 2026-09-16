@@ -133,9 +133,24 @@ export interface AssessmentItem {
   choices: { label: string; text: string }[];
 }
 
+export interface WorksheetSolveItem {
+  itemId: string;
+  number: number;
+  points: number;
+  choicesCount: number | null; // 객관식이면 선지 수, 주관식이면 null
+}
+
+export interface AssessmentResponse {
+  assignment: { id: string; title: string; dueAt: string | null };
+  type: "exam" | "worksheet";
+  items: AssessmentItem[] | WorksheetSolveItem[];
+  fileUrl?: string | null;
+  worksheetTitle?: string;
+}
+
 export function getAssessment(
   assignmentId: string
-): Promise<{ assignment: { id: string; title: string; dueAt: string | null }; items: AssessmentItem[] }> {
+): Promise<AssessmentResponse> {
   return authGet(`/api/student/assessments/${assignmentId}`);
 }
 

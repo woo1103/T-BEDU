@@ -3,6 +3,7 @@ import {
   getAssessment,
   submitAnswers,
   type AssessmentItem,
+  type WorksheetSolveItem,
   type GradeResult,
 } from "../lib/api";
 
@@ -12,8 +13,13 @@ interface Props {
   onDone: () => void;
 }
 
+const CIRCLE = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"];
+
 export default function Solve({ assignmentId, title, onDone }: Props) {
-  const [items, setItems] = useState<AssessmentItem[]>([]);
+  const [type, setType] = useState<"exam" | "worksheet">("exam");
+  const [examItems, setExamItems] = useState<AssessmentItem[]>([]);
+  const [wsItems, setWsItems] = useState<WorksheetSolveItem[]>([]);
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -24,7 +30,13 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
     (async () => {
       try {
         const d = await getAssessment(assignmentId);
-        setItems(d.items);
+        setType(d.type);
+        if (d.type === "worksheet") {
+          setWsItems(d.items as WorksheetSolveItem[]);
+          setFileUrl(d.fileUrl ?? null);
+        } else {
+          setExamItems(d.items as AssessmentItem[]);
+        }
       } catch (e) {
         setErr(e instanceof Error ? e.message : "불러오기 실패");
       } finally {
@@ -33,16 +45,23 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
     })();
   }, [assignmentId]);
 
-  const answeredCount = Object.keys(selected).length;
+  const total = type === "worksheet" ? wsItems.length : examItems.length;
+  const answeredCount = Object.values(selected).filter((v) => v.trim() !== "").length;
 
   async function submit() {
     setSubmitting(true);
     setErr("");
     try {
-      const answers = items.map((it) => ({
-        questionId: it.questionId,
-        selected: selected[it.questionId] ?? "",
-      }));
+      const answers =
+        type === "worksheet"
+          ? wsItems.map((it) => ({
+              questionId: it.itemId,
+              selected: selected[it.itemId] ?? "",
+            }))
+          : examItems.map((it) => ({
+              questionId: it.questionId,
+              selected: selected[it.questionId] ?? "",
+            }));
       const r = await submitAnswers(assignmentId, answers);
       setResult(r);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -86,9 +105,67 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
           <div className="bg-white rounded-2xl p-6 text-center text-gray-400 text-sm shadow-sm">
             불러오는 중...
           </div>
+        ) : result ? null : type === "worksheet" ? (
+          <>
+            {/* 문제지 파일 */}
+            {fileUrl ? (
+              <a href={fileUrl} target="_blank" rel="noreferrer">
+                <img
+                  src={fileUrl}
+                  alt="문제지"
+                  className="w-full rounded-2xl border border-gray-200"
+                />
+              </a>
+            ) : (
+              <div className="bg-white rounded-2xl p-4 text-center text-gray-400 text-sm shadow-sm">
+                문제지 파일이 없습니다. 배포된 문제지를 참고해 답을 입력하세요.
+              </div>
+            )}
+            {/* 답 마킹 */}
+            <div className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+              <p className="text-sm font-medium text-gray-800">답안 마킹</p>
+              {wsItems.map((it) => (
+                <div key={it.itemId} className="flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-full bg-[#245B3E] text-white text-xs font-bold flex items-center justify-center shrink-0">
+                    {it.number}
+                  </span>
+                  {it.choicesCount ? (
+                    <div className="flex gap-1 flex-wrap">
+                      {CIRCLE.slice(0, it.choicesCount).map((label) => {
+                        const on = selected[it.itemId] === label;
+                        return (
+                          <button
+                            key={label}
+                            onClick={() =>
+                              setSelected((p) => ({ ...p, [it.itemId]: label }))
+                            }
+                            className={`w-8 h-8 rounded-full text-sm font-bold ${
+                              on
+                                ? "bg-[#245B3E] text-white"
+                                : "bg-gray-100 text-gray-500"
+                            }`}
+                          >
+                            {label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <input
+                      value={selected[it.itemId] ?? ""}
+                      onChange={(e) =>
+                        setSelected((p) => ({ ...p, [it.itemId]: e.target.value }))
+                      }
+                      placeholder="정답 입력(주관식)"
+                      className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
         ) : (
-          !result &&
-          items.map((it) => (
+          examItems.map((it) => (
             <div key={it.questionId} className="bg-white rounded-2xl p-4 shadow-sm">
               <div className="flex items-center gap-2 mb-2">
                 <span className="w-6 h-6 rounded-full bg-[#245B3E] text-white text-xs font-bold flex items-center justify-center">
@@ -110,10 +187,7 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
                     <button
                       key={c.label}
                       onClick={() =>
-                        setSelected((prev) => ({
-                          ...prev,
-                          [it.questionId]: c.label,
-                        }))
+                        setSelected((prev) => ({ ...prev, [it.questionId]: c.label }))
                       }
                       className={`w-full text-left flex items-start gap-2 rounded-xl border px-3 py-2.5 text-sm transition-colors ${
                         on
@@ -138,7 +212,7 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
         )}
       </main>
 
-      {!result && !loading && items.length > 0 && (
+      {!result && !loading && total > 0 && (
         <div className="fixed bottom-0 inset-x-0 p-4 bg-gradient-to-t from-[#f4f6f5] to-transparent">
           <div className="max-w-md mx-auto">
             <button
@@ -148,7 +222,7 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
             >
               {submitting
                 ? "채점 중..."
-                : `제출하고 채점 (${answeredCount}/${items.length})`}
+                : `제출하고 채점 (${answeredCount}/${total})`}
             </button>
           </div>
         </div>

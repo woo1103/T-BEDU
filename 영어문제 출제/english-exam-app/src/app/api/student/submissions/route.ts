@@ -2,9 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getStudentFromRequest } from "@/lib/student-auth";
 import { correctLabel } from "@/lib/grading";
-import { areaNamesByQuestion, computeBreakdown } from "@/lib/achievement";
+import { areaNamesForAnswers, computeBreakdown } from "@/lib/achievement";
 
-// 학생 마킹 제출 → 자동 채점. body: { assignmentId, answers: [{questionId, selected}] }
+interface AnswerRow {
+  refType: string;
+  refId: string;
+  selected: string;
+  isCorrect: boolean;
+  points: number;
+}
+
+// 학생 마킹 제출 → 자동 채점 (영어 시험지 / 수학 문제지 공통).
+// body: { assignmentId, answers: [{questionId|refId, selected}] }
 export async function POST(request: NextRequest) {
   const student = await getStudentFromRequest(request);
   if (!student) return NextResponse.json({ error: "인증 필요" }, { status: 401 });
@@ -24,6 +33,7 @@ export async function POST(request: NextRequest) {
               items: { include: { question: true }, orderBy: { orderNum: "asc" } },
             },
           },
+          worksheet: { include: { items: { orderBy: { number: "asc" } } } },
         },
       },
     },
@@ -43,44 +53,65 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "이 과제에 접근할 수 없습니다" }, { status: 403 });
   }
 
-  const items = assignment.assessment.exam?.items ?? [];
-
-  const selectedByQ = new Map<string, string>();
+  // 학생 답: refId 또는 questionId 키 모두 허용
+  const selectedByRef = new Map<string, string>();
   for (const a of body.answers) {
-    if (a && typeof a.questionId === "string" && typeof a.selected === "string") {
-      selectedByQ.set(a.questionId, a.selected);
+    const key =
+      typeof a?.refId === "string"
+        ? a.refId
+        : typeof a?.questionId === "string"
+        ? a.questionId
+        : null;
+    if (key && typeof a.selected === "string" && !selectedByRef.has(key)) {
+      selectedByRef.set(key, a.selected);
     }
   }
 
   let score = 0;
   let totalPoints = 0;
   let correctCount = 0;
-  const answerRows: {
-    refType: string;
-    refId: string;
-    selected: string;
-    isCorrect: boolean;
-    points: number;
-  }[] = [];
+  const answerRows: AnswerRow[] = [];
 
-  for (const item of items) {
-    const q = item.question;
-    const pts = item.customPoints ?? q.points;
-    totalPoints += pts;
-    const selected = selectedByQ.get(q.id) ?? "";
-    const correct = correctLabel(q);
-    const isCorrect = !!correct && selected === correct;
-    if (isCorrect) {
-      score += pts;
-      correctCount++;
+  if (assignment.assessment.type === "worksheet") {
+    const items = assignment.assessment.worksheet?.items ?? [];
+    for (const item of items) {
+      const pts = item.points;
+      totalPoints += pts;
+      const selected = (selectedByRef.get(item.id) ?? "").trim();
+      const isCorrect = selected !== "" && selected === item.answer.trim();
+      if (isCorrect) {
+        score += pts;
+        correctCount++;
+      }
+      answerRows.push({
+        refType: "worksheet_item",
+        refId: item.id,
+        selected,
+        isCorrect,
+        points: isCorrect ? pts : 0,
+      });
     }
-    answerRows.push({
-      refType: "question",
-      refId: q.id,
-      selected,
-      isCorrect,
-      points: isCorrect ? pts : 0,
-    });
+  } else {
+    const items = assignment.assessment.exam?.items ?? [];
+    for (const item of items) {
+      const q = item.question;
+      const pts = item.customPoints ?? q.points;
+      totalPoints += pts;
+      const selected = selectedByRef.get(q.id) ?? "";
+      const correct = correctLabel(q);
+      const isCorrect = !!correct && selected === correct;
+      if (isCorrect) {
+        score += pts;
+        correctCount++;
+      }
+      answerRows.push({
+        refType: "question",
+        refId: q.id,
+        selected,
+        isCorrect,
+        points: isCorrect ? pts : 0,
+      });
+    }
   }
 
   const submission = await prisma.submission.create({
@@ -92,13 +123,15 @@ export async function POST(request: NextRequest) {
       score,
       totalPoints,
       correctCount,
-      itemCount: items.length,
+      itemCount: answerRows.length,
       answers: { create: answerRows },
     },
   });
 
-  // 성취도 스냅샷 저장 (영역별 정답률 → 추이/성능)
-  const areaMap = await areaNamesByQuestion(answerRows.map((r) => r.refId));
+  // 성취도 스냅샷
+  const areaMap = await areaNamesForAnswers(
+    answerRows.map((r) => ({ refId: r.refId, refType: r.refType }))
+  );
   const breakdown = computeBreakdown(
     answerRows.map((r) => ({ refId: r.refId, isCorrect: r.isCorrect })),
     areaMap
@@ -107,13 +140,13 @@ export async function POST(request: NextRequest) {
     data: {
       studentId: student.studentId,
       submissionId: submission.id,
-      subject: "english",
+      subject: assignment.assessment.subject,
       overallRate: breakdown.overall.rate,
       byArea: JSON.stringify(breakdown.areas),
     },
   });
 
-  // 오답노트 자동 생성 (틀린 문항)
+  // 오답노트 자동 생성
   const wrongAnswers = await prisma.answer.findMany({
     where: { submissionId: submission.id, isCorrect: false },
     select: { id: true },
@@ -133,7 +166,7 @@ export async function POST(request: NextRequest) {
       score,
       totalPoints,
       correctCount,
-      itemCount: items.length,
+      itemCount: answerRows.length,
       rate: totalPoints > 0 ? Math.round((score / totalPoints) * 100) : 0,
     },
     { status: 201 }

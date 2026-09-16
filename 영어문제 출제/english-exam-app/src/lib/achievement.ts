@@ -12,20 +12,42 @@ export interface Breakdown {
   areas: AreaStat[]; // 정답률 오름차순(취약 → 강점)
 }
 
-// questionId → 능력영역(kind="영역") 태그 이름 배열
-export async function areaNamesByQuestion(
-  questionIds: string[]
+// 답안(refType/refId) → 능력영역/단원 태그 이름 배열.
+// 영어(question)는 QuestionTag(kind=영역), 수학(worksheet_item)은 WorksheetItemTag(kind=영역/단원).
+export async function areaNamesForAnswers(
+  answers: { refId: string; refType: string }[]
 ): Promise<Map<string, string[]>> {
   const map = new Map<string, string[]>();
-  if (questionIds.length === 0) return map;
-  const links = await prisma.questionTag.findMany({
-    where: { questionId: { in: questionIds }, tag: { kind: "영역" } },
-    select: { questionId: true, tag: { select: { name: true } } },
-  });
-  for (const l of links) {
-    const arr = map.get(l.questionId) ?? [];
-    arr.push(l.tag.name);
-    map.set(l.questionId, arr);
+  const questionIds = [
+    ...new Set(answers.filter((a) => a.refType === "question").map((a) => a.refId)),
+  ];
+  const itemIds = [
+    ...new Set(
+      answers.filter((a) => a.refType === "worksheet_item").map((a) => a.refId)
+    ),
+  ];
+
+  if (questionIds.length > 0) {
+    const links = await prisma.questionTag.findMany({
+      where: { questionId: { in: questionIds }, tag: { kind: "영역" } },
+      select: { questionId: true, tag: { select: { name: true } } },
+    });
+    for (const l of links) {
+      const arr = map.get(l.questionId) ?? [];
+      arr.push(l.tag.name);
+      map.set(l.questionId, arr);
+    }
+  }
+  if (itemIds.length > 0) {
+    const links = await prisma.worksheetItemTag.findMany({
+      where: { itemId: { in: itemIds }, tag: { kind: { in: ["영역", "단원"] } } },
+      select: { itemId: true, tag: { select: { name: true } } },
+    });
+    for (const l of links) {
+      const arr = map.get(l.itemId) ?? [];
+      arr.push(l.tag.name);
+      map.set(l.itemId, arr);
+    }
   }
   return map;
 }
@@ -69,15 +91,13 @@ export function computeBreakdown(
   };
 }
 
-// 한 학생의 전체 성취도 (학생/교사 공용). 취약 <60%, 강점 >=80%.
+// 한 학생의 전체 성취도(영어+수학). 취약 <60%, 강점 >=80%.
 export async function studentAchievement(studentId: string) {
   const answers = await prisma.answer.findMany({
-    where: { refType: "question", submission: { studentId } },
-    select: { refId: true, isCorrect: true },
+    where: { submission: { studentId } },
+    select: { refId: true, refType: true, isCorrect: true },
   });
-  const areaMap = await areaNamesByQuestion([
-    ...new Set(answers.map((a) => a.refId)),
-  ]);
+  const areaMap = await areaNamesForAnswers(answers);
   const breakdown = computeBreakdown(answers, areaMap);
   const weak = breakdown.areas.filter((a) => a.total >= 1 && a.rate < 60);
   const strong = breakdown.areas.filter((a) => a.total >= 1 && a.rate >= 80);

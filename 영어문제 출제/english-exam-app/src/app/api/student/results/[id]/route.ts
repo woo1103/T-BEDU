@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getStudentFromRequest } from "@/lib/student-auth";
-import { areaNamesByQuestion, computeBreakdown } from "@/lib/achievement";
+import { areaNamesForAnswers, computeBreakdown } from "@/lib/achievement";
 
 // 단일 제출 결과: 점수·영역별·문항별 정오. [id] = submissionId
 export async function GET(
@@ -23,8 +23,9 @@ export async function GET(
     return NextResponse.json({ error: "결과를 찾을 수 없습니다" }, { status: 404 });
   }
 
-  const qIds = submission.answers.map((a) => a.refId);
-  const areaMap = await areaNamesByQuestion(qIds);
+  const areaMap = await areaNamesForAnswers(
+    submission.answers.map((a) => ({ refId: a.refId, refType: a.refType }))
+  );
   const breakdown = computeBreakdown(
     submission.answers.map((a) => ({ refId: a.refId, isCorrect: a.isCorrect })),
     areaMap
