@@ -25,6 +25,17 @@ interface Achievement {
   submissionCount: number;
 }
 
+function dueBadge(dueAt: string | null): { label: string; cls: string } | null {
+  if (!dueAt) return null;
+  const days = Math.ceil(
+    (new Date(dueAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  );
+  if (days < 0) return { label: "마감됨", cls: "bg-red-50 text-red-500" };
+  if (days === 0) return { label: "오늘 마감", cls: "bg-red-50 text-red-500" };
+  if (days <= 3) return { label: `D-${days}`, cls: "bg-amber-50 text-amber-600" };
+  return { label: `D-${days}`, cls: "bg-gray-100 text-gray-500" };
+}
+
 export default function Home({
   student,
   onLogout,
@@ -190,13 +201,23 @@ export default function Home({
             <ul className="space-y-2">
               {assignments.map((a) => {
                 const done = a.submission?.status === "graded";
+                const due = dueBadge(a.dueAt);
                 return (
                   <li
                     key={a.id}
                     className="bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between gap-3"
                   >
                     <div className="min-w-0">
-                      <p className="font-medium text-gray-800 truncate">{a.title}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-gray-800 truncate">{a.title}</p>
+                        {due && (
+                          <span
+                            className={`text-[11px] px-1.5 py-0.5 rounded-full shrink-0 ${due.cls}`}
+                          >
+                            {due.label}
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs text-gray-400 mt-0.5">
                         {a.className}
                         {done &&
