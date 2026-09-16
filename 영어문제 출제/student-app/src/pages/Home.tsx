@@ -14,6 +14,7 @@ interface Props {
   onLogout: () => void;
   onSolve: (assignmentId: string, title: string) => void;
   onWrongNotes: () => void;
+  onVideos: () => void;
 }
 
 interface Achievement {
@@ -24,7 +25,13 @@ interface Achievement {
   submissionCount: number;
 }
 
-export default function Home({ student, onLogout, onSolve, onWrongNotes }: Props) {
+export default function Home({
+  student,
+  onLogout,
+  onSolve,
+  onWrongNotes,
+  onVideos,
+}: Props) {
   const enrolled = student.status === "enrolled";
   const [assignments, setAssignments] = useState<AssignmentRow[]>([]);
   const [ach, setAch] = useState<Achievement | null>(null);
@@ -150,13 +157,22 @@ export default function Home({ student, onLogout, onSolve, onWrongNotes }: Props
         )}
 
         {enrolled && (
-          <button
-            onClick={onWrongNotes}
-            className="w-full bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between text-left"
-          >
-            <span className="font-medium text-gray-800">오답노트</span>
-            <span className="text-sm text-[#245B3E]">복습하기 ›</span>
-          </button>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={onWrongNotes}
+              className="bg-white rounded-2xl p-4 shadow-sm text-left"
+            >
+              <span className="block font-medium text-gray-800">오답노트</span>
+              <span className="text-sm text-[#245B3E]">복습하기 ›</span>
+            </button>
+            <button
+              onClick={onVideos}
+              className="bg-white rounded-2xl p-4 shadow-sm text-left"
+            >
+              <span className="block font-medium text-gray-800">영상 강의</span>
+              <span className="text-sm text-[#245B3E]">시청하기 ›</span>
+            </button>
+          </div>
         )}
 
         {/* 과제 목록 */}

@@ -232,3 +232,37 @@ export interface TrendPoint {
 export function getTrend(): Promise<{ points: TrendPoint[] }> {
   return authGet("/api/student/trend");
 }
+
+export interface StudentVideo {
+  id: string;
+  title: string;
+  subject: string;
+  description: string | null;
+  url: string;
+  provider: string;
+  progress: { positionSec: number; percent: number; completed: boolean } | null;
+}
+
+export function getVideos(): Promise<{ videos: StudentVideo[] }> {
+  return authGet("/api/student/videos");
+}
+
+export async function updateWatchProgress(
+  videoId: string,
+  data: { positionSec: number; percent: number; completed?: boolean }
+): Promise<void> {
+  const token = getToken();
+  try {
+    await fetch(`${API_BASE}/api/student/videos/${videoId}/progress`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(data),
+      keepalive: true,
+    });
+  } catch {
+    /* 진도 저장 실패는 무시 */
+  }
+}
