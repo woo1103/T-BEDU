@@ -15,6 +15,7 @@ const navItems = [
   { href: "/classes", label: "반 편성", icon: "🏫" },
   { href: "/admin/tags", label: "문항 태그", icon: "🏷️" },
   { href: "/worksheets", label: "수학 문제지", icon: "🧮" },
+  { href: "/videos", label: "영상 강의", icon: "🎬" },
 ];
 
 const adminItems = [

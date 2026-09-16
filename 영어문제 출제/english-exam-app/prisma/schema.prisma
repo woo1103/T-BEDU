@@ -207,6 +207,7 @@ model StudentProfile {
   achievements    AchievementSnapshot[]
   teacherComments TeacherComment[]
   wrongNotes      WrongNote[]
+  watchProgress   WatchProgress[]
 
   @@index([centerId])
   @@index([status])
@@ -228,6 +229,7 @@ model Class {
   teacher     User?        @relation("ClassTeacher", fields: [teacherId], references: [id], onDelete: SetNull)
   enrollments Enrollment[]
   assignments Assignment[]
+  videoAssignments VideoAssignment[]
 
   @@index([centerId])
   @@index([code])
@@ -334,6 +336,52 @@ model Submission {
 
   @@index([studentId])
   @@index([assignmentId])
+}
+
+// ─── 영상 (P6) : 영어·수학 공통 ───
+
+model Video {
+  id          String   @id @default(cuid())
+  subject     String   @default("english") // "english" | "math" | "etc"
+  title       String
+  description String?
+  provider    String   @default("url") // "url" | "cloudflare" | "mux" | "vimeo"
+  url         String   // 재생 URL(HLS .m3u8 또는 mp4) 또는 playbackId
+  durationSec Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  assignments   VideoAssignment[]
+  watchProgress WatchProgress[]
+}
+
+model VideoAssignment {
+  id        String   @id @default(cuid())
+  videoId   String
+  classId   String
+  createdAt DateTime @default(now())
+
+  video     Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  class     Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@unique([videoId, classId])
+  @@index([classId])
+}
+
+model WatchProgress {
+  id          String   @id @default(cuid())
+  studentId   String
+  videoId     String
+  positionSec Int      @default(0) // 마지막 시청 위치
+  percent     Int      @default(0) // 0~100
+  completed   Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+
+  student     StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  video       Video          @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, videoId])
+  @@index([videoId])
 }
 
 // ─── 수학 외부 문제지 (P5) ───
