@@ -31,6 +31,8 @@ export default function VideosPage() {
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
   const [saving, setSaving] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   async function load() {
     const [vRes, cRes] = await Promise.all([
@@ -65,6 +67,48 @@ export default function VideosPage() {
     setUrl("");
     setDescription("");
     await load();
+  }
+
+  async function uploadFile() {
+    if (!title.trim() || !file) {
+      alert("제목과 업로드할 영상 파일을 선택하세요.");
+      return;
+    }
+    setUploading(true);
+    try {
+      const ctype = file.type || "video/mp4";
+      const u = await fetch("/api/videos/upload-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename: file.name, contentType: ctype }),
+      });
+      if (!u.ok) throw new Error((await u.json()).error || "업로드 URL 발급 실패");
+      const { uploadUrl, key } = await u.json();
+
+      const put = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: { "Content-Type": ctype },
+        body: file,
+      });
+      if (!put.ok) throw new Error("R2 업로드 실패");
+
+      const res = await fetch("/api/videos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject, title, description, provider: "r2", url: key }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error || "등록 실패");
+
+      setTitle("");
+      setDescription("");
+      setFile(null);
+      alert("업로드 및 등록 완료");
+      await load();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "업로드 실패");
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function assign(v: VideoRow) {
@@ -136,13 +180,40 @@ export default function VideosPage() {
             className="md:col-span-4 border border-gray-300 rounded-lg px-3 py-2 text-sm"
           />
         </div>
-        <button
-          onClick={create}
-          disabled={saving}
-          className="px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg disabled:opacity-50"
-        >
-          {saving ? "저장 중..." : "영상 등록"}
-        </button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={create}
+            disabled={saving}
+            className="px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg disabled:opacity-50"
+          >
+            {saving ? "저장 중..." : "URL로 등록"}
+          </button>
+        </div>
+
+        {/* R2 파일 업로드 */}
+        <div className="border-t border-gray-100 pt-4">
+          <p className="text-sm font-medium text-gray-700 mb-2">
+            또는 파일 업로드 (Cloudflare R2)
+          </p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <input
+              type="file"
+              accept="video/*"
+              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+              className="text-sm"
+            />
+            <button
+              onClick={uploadFile}
+              disabled={uploading}
+              className="px-5 py-2.5 bg-[#245B3E] text-white text-sm font-medium rounded-lg disabled:opacity-50"
+            >
+              {uploading ? "업로드 중..." : "파일 업로드 & 등록"}
+            </button>
+          </div>
+          <p className="text-xs text-gray-400 mt-1">
+            제목·과목을 먼저 입력한 뒤 파일을 선택하세요. R2 미설정 시 안내가 표시됩니다.
+          </p>
+        </div>
       </div>
 
       {/* 목록 */}

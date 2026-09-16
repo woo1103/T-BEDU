@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getStudentFromRequest } from "@/lib/student-auth";
+import { isR2Configured, presignGet } from "@/lib/r2";
 
 // 학생의 활성 반에 노출된 영상 + 내 시청 진도
 export async function GET(request: NextRequest) {
@@ -28,20 +29,31 @@ export async function GET(request: NextRequest) {
   });
   const progMap = new Map(progress.map((p) => [p.videoId, p]));
 
-  return NextResponse.json({
-    videos: videos.map((v) => {
+  const r2On = isR2Configured();
+  const result = await Promise.all(
+    videos.map(async (v) => {
       const p = progMap.get(v.id);
+      let url = v.url;
+      if (v.provider === "r2" && r2On) {
+        try {
+          url = await presignGet(v.url);
+        } catch {
+          /* 실패 시 원본 key 유지 */
+        }
+      }
       return {
         id: v.id,
         title: v.title,
         subject: v.subject,
         description: v.description,
-        url: v.url,
+        url,
         provider: v.provider,
         progress: p
           ? { positionSec: p.positionSec, percent: p.percent, completed: p.completed }
           : null,
       };
-    }),
-  });
+    })
+  );
+
+  return NextResponse.json({ videos: result });
 }
