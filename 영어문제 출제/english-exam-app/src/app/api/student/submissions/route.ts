@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getStudentFromRequest } from "@/lib/student-auth";
 import { correctLabel } from "@/lib/grading";
+import { areaNamesByQuestion, computeBreakdown } from "@/lib/achievement";
 
 // 학생 마킹 제출 → 자동 채점. body: { assignmentId, answers: [{questionId, selected}] }
 export async function POST(request: NextRequest) {
@@ -93,6 +94,22 @@ export async function POST(request: NextRequest) {
       correctCount,
       itemCount: items.length,
       answers: { create: answerRows },
+    },
+  });
+
+  // 성취도 스냅샷 저장 (영역별 정답률 → 추이/성능)
+  const areaMap = await areaNamesByQuestion(answerRows.map((r) => r.refId));
+  const breakdown = computeBreakdown(
+    answerRows.map((r) => ({ refId: r.refId, isCorrect: r.isCorrect })),
+    areaMap
+  );
+  await prisma.achievementSnapshot.create({
+    data: {
+      studentId: student.studentId,
+      submissionId: submission.id,
+      subject: "english",
+      overallRate: breakdown.overall.rate,
+      byArea: JSON.stringify(breakdown.areas),
     },
   });
 
