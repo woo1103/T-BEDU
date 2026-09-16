@@ -200,11 +200,12 @@ model StudentProfile {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  center       Center?                @relation(fields: [centerId], references: [id], onDelete: SetNull)
-  enrollments  Enrollment[]
-  submissions  Submission[]
-  achievements AchievementSnapshot[]
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  center          Center?               @relation(fields: [centerId], references: [id], onDelete: SetNull)
+  enrollments     Enrollment[]
+  submissions     Submission[]
+  achievements    AchievementSnapshot[]
+  teacherComments TeacherComment[]
 
   @@index([centerId])
   @@index([status])
@@ -355,6 +356,23 @@ model AchievementSnapshot {
   overallRate  Int      @default(0) // 0~100
   byArea       String   // JSON: [{name, rate, correct, total}]
   createdAt    DateTime @default(now())
+
+  student      StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}
+
+// 교사가 학생의 취약점 분석에 다는 코멘트 (수정 가능)
+model TeacherComment {
+  id           String   @id @default(cuid())
+  teacherId    String   // User.id
+  studentId    String   // StudentProfile.id
+  scope        String   @default("overall") // "overall" | "area" | "submission"
+  tagId        String?  // scope=area 일 때 능력영역 태그
+  submissionId String?  // scope=submission 일 때
+  body         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   student      StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
 

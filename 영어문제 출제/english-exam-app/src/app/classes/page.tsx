@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Center {
   id: string;
@@ -268,7 +269,14 @@ export default function ClassesPage() {
                         <tbody>
                           {students.map((s) => (
                             <tr key={s.id} className="border-t border-gray-200">
-                              <td className="py-1.5">{s.student.name}</td>
+                              <td className="py-1.5">
+                                <Link
+                                  href={`/students/${s.student.id}`}
+                                  className="text-blue-600 hover:underline"
+                                >
+                                  {s.student.name}
+                                </Link>
+                              </td>
                               <td className="py-1.5 text-gray-500">
                                 {s.student.user.username}
                               </td>

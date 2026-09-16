@@ -68,3 +68,21 @@ export function computeBreakdown(
     areas,
   };
 }
+
+// 한 학생의 전체 성취도 (학생/교사 공용). 취약 <60%, 강점 >=80%.
+export async function studentAchievement(studentId: string) {
+  const answers = await prisma.answer.findMany({
+    where: { refType: "question", submission: { studentId } },
+    select: { refId: true, isCorrect: true },
+  });
+  const areaMap = await areaNamesByQuestion([
+    ...new Set(answers.map((a) => a.refId)),
+  ]);
+  const breakdown = computeBreakdown(answers, areaMap);
+  const weak = breakdown.areas.filter((a) => a.total >= 1 && a.rate < 60);
+  const strong = breakdown.areas.filter((a) => a.total >= 1 && a.rate >= 80);
+  const submissionCount = await prisma.submission.count({
+    where: { studentId, status: "graded" },
+  });
+  return { overall: breakdown.overall, areas: breakdown.areas, weak, strong, submissionCount };
+}
