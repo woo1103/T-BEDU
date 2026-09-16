@@ -257,9 +257,10 @@ model Tag {
   parentId  String?  // 계층(대분류>소분류) 대비
   createdAt DateTime @default(now())
 
-  parent       Tag?          @relation("TagHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
-  children     Tag[]         @relation("TagHierarchy")
-  questionTags QuestionTag[]
+  parent           Tag?               @relation("TagHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children         Tag[]              @relation("TagHierarchy")
+  questionTags     QuestionTag[]
+  worksheetItemTags WorksheetItemTag[]
 
   @@unique([subject, kind, name])
   @@index([subject])
@@ -288,10 +289,12 @@ model Assessment {
   worksheetId String?  // P5(수학)에서 사용
   createdAt   DateTime @default(now())
 
-  exam        Exam?    @relation(fields: [examId], references: [id], onDelete: SetNull)
+  exam        Exam?      @relation(fields: [examId], references: [id], onDelete: SetNull)
+  worksheet   Worksheet? @relation(fields: [worksheetId], references: [id], onDelete: SetNull)
   assignments Assignment[]
 
   @@index([examId])
+  @@index([worksheetId])
 }
 
 // 반에 문제지를 배정 (마감 포함)
@@ -331,6 +334,49 @@ model Submission {
 
   @@index([studentId])
   @@index([assignmentId])
+}
+
+// ─── 수학 외부 문제지 (P5) ───
+
+// 업로드한 문제지(이미지/PDF) + 정답키. 문제 본문은 파일로 보고, 학생은 답만 마킹.
+model Worksheet {
+  id        String   @id @default(cuid())
+  subject   String   @default("math")
+  title     String
+  source    String?  // 출처
+  grade     String?
+  fileUrl   String?  // 문제지 이미지/PDF URL
+  itemCount Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items       WorksheetItem[]
+  assessments Assessment[]
+}
+
+model WorksheetItem {
+  id           String @id @default(cuid())
+  worksheetId  String
+  number       Int    // 문항 번호
+  answer       String // 정답키 (예: "③" 또는 "42")
+  points       Int    @default(1)
+  choicesCount Int?   // 객관식이면 선지 수(예: 5=①~⑤), 주관식이면 null
+
+  worksheet    Worksheet          @relation(fields: [worksheetId], references: [id], onDelete: Cascade)
+  itemTags     WorksheetItemTag[]
+
+  @@index([worksheetId])
+}
+
+model WorksheetItemTag {
+  itemId String
+  tagId  String
+
+  item   WorksheetItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  tag    Tag           @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([itemId, tagId])
+  @@index([tagId])
 }
 
 // 문항별 학생 답 + 정오
