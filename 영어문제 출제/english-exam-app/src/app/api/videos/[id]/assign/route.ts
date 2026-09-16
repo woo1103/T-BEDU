@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireStaff } from "@/lib/api-auth";
+import { notifyClassStudents } from "@/lib/notify";
 
 // 영상을 반에 노출(배정) / 해제. [id] = videoId
 export async function POST(
@@ -19,6 +20,15 @@ export async function POST(
   try {
     const assignment = await prisma.videoAssignment.create({
       data: { videoId: id, classId: body.classId },
+    });
+    const video = await prisma.video.findUnique({
+      where: { id },
+      select: { title: true },
+    });
+    await notifyClassStudents(body.classId, {
+      type: "new_video",
+      title: "새 영상 강의",
+      body: video?.title,
     });
     return NextResponse.json({ assignment }, { status: 201 });
   } catch {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireStaff } from "@/lib/api-auth";
+import { notifyClassStudents } from "@/lib/notify";
 
 export async function GET(request: NextRequest) {
   const staff = await requireStaff();
@@ -74,6 +75,12 @@ export async function POST(request: NextRequest) {
       dueAt: body.dueAt ? new Date(body.dueAt) : null,
     },
     include: { assessment: true, class: { select: { id: true, name: true } } },
+  });
+
+  await notifyClassStudents(body.classId, {
+    type: "new_assignment",
+    title: "새 과제가 배정되었습니다",
+    body: title,
   });
 
   return NextResponse.json({ assignment }, { status: 201 });

@@ -6,12 +6,15 @@ import Home from "./pages/Home";
 import Solve from "./pages/Solve";
 import WrongNotes from "./pages/WrongNotes";
 import Videos from "./pages/Videos";
+import Notifications from "./pages/Notifications";
+import InstallPrompt from "./components/InstallPrompt";
 
 type View =
   | { name: "home" }
   | { name: "solve"; assignmentId: string; title: string }
   | { name: "wrongnotes" }
-  | { name: "videos" };
+  | { name: "videos" }
+  | { name: "notifications" };
 
 export default function App() {
   const [student, setStudent] = useState<Student | null>(getStudent());
@@ -44,20 +47,28 @@ export default function App() {
     return <Videos onDone={() => setView({ name: "home" })} />;
   }
 
+  if (view.name === "notifications") {
+    return <Notifications onDone={() => setView({ name: "home" })} />;
+  }
+
   return (
-    <Home
-      student={student}
-      onLogout={() => {
-        clearSession();
-        setStudent(null);
-        setMode("login");
-        setView({ name: "home" });
-      }}
-      onSolve={(assignmentId, title) =>
-        setView({ name: "solve", assignmentId, title })
-      }
-      onWrongNotes={() => setView({ name: "wrongnotes" })}
-      onVideos={() => setView({ name: "videos" })}
-    />
+    <>
+      <InstallPrompt />
+      <Home
+        student={student}
+        onLogout={() => {
+          clearSession();
+          setStudent(null);
+          setMode("login");
+          setView({ name: "home" });
+        }}
+        onSolve={(assignmentId, title) =>
+          setView({ name: "solve", assignmentId, title })
+        }
+        onWrongNotes={() => setView({ name: "wrongnotes" })}
+        onVideos={() => setView({ name: "videos" })}
+        onNotifications={() => setView({ name: "notifications" })}
+      />
+    </>
   );
 }

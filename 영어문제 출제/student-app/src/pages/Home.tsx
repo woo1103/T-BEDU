@@ -3,6 +3,7 @@ import {
   getAssignments,
   getAchievement,
   getTrend,
+  getNotifications,
   type Student,
   type AssignmentRow,
   type AreaStat,
@@ -15,6 +16,7 @@ interface Props {
   onSolve: (assignmentId: string, title: string) => void;
   onWrongNotes: () => void;
   onVideos: () => void;
+  onNotifications: () => void;
 }
 
 interface Achievement {
@@ -42,24 +44,28 @@ export default function Home({
   onSolve,
   onWrongNotes,
   onVideos,
+  onNotifications,
 }: Props) {
   const enrolled = student.status === "enrolled";
   const [assignments, setAssignments] = useState<AssignmentRow[]>([]);
   const [ach, setAch] = useState<Achievement | null>(null);
   const [trend, setTrend] = useState<TrendPoint[]>([]);
+  const [unread, setUnread] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const [a, ac, tr] = await Promise.all([
+        const [a, ac, tr, nt] = await Promise.all([
           getAssignments(),
           getAchievement(),
           getTrend(),
+          getNotifications(),
         ]);
         setAssignments(a.assignments);
         setAch(ac);
         setTrend(tr.points);
+        setUnread(nt.unread);
       } catch {
         /* ignore */
       } finally {
@@ -77,9 +83,19 @@ export default function Home({
           </div>
           <span className="font-semibold">T&amp;BEDU 학습</span>
         </div>
-        <button onClick={onLogout} className="text-sm text-white/80 underline">
-          로그아웃
-        </button>
+        <div className="flex items-center gap-3">
+          <button onClick={onNotifications} className="relative" aria-label="알림">
+            <span className="text-lg">🔔</span>
+            {unread > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] leading-none rounded-full min-w-4 h-4 px-1 flex items-center justify-center">
+                {unread > 9 ? "9+" : unread}
+              </span>
+            )}
+          </button>
+          <button onClick={onLogout} className="text-sm text-white/80 underline">
+            로그아웃
+          </button>
+        </div>
       </header>
 
       <main className="p-5 max-w-md mx-auto space-y-4">

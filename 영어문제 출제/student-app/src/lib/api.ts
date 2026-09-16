@@ -247,6 +247,27 @@ export function getVideos(): Promise<{ videos: StudentVideo[] }> {
   return authGet("/api/student/videos");
 }
 
+export interface AppNotification {
+  id: string;
+  type: string;
+  title: string;
+  body: string | null;
+  linkUrl: string | null;
+  read: boolean;
+  createdAt: string;
+}
+
+export function getNotifications(): Promise<{
+  notifications: AppNotification[];
+  unread: number;
+}> {
+  return authGet("/api/student/notifications");
+}
+
+export function markNotificationsRead(id?: string) {
+  return authPost("/api/student/notifications", id ? { id } : {});
+}
+
 export async function updateWatchProgress(
   videoId: string,
   data: { positionSec: number; percent: number; completed?: boolean }

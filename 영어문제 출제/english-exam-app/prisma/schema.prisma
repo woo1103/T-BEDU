@@ -338,6 +338,34 @@ model Submission {
   @@index([assignmentId])
 }
 
+// ─── 알림 (P8) ───
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String   // 수신자 User.id
+  type      String   // "new_video" | "new_assignment" | "result" | "due" | "notice"
+  title     String
+  body      String?
+  linkUrl   String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, read])
+}
+
+// 웹 푸시 구독 (P8-2)
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
 // ─── 영상 (P6) : 영어·수학 공통 ───
 
 model Video {
