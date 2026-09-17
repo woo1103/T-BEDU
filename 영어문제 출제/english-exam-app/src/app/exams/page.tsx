@@ -15,9 +15,22 @@ interface ExamRow {
   items: { id: string }[];
 }
 
+interface ClassRow {
+  id: string;
+  name: string;
+  center: { name: string };
+}
+
 export default function ExamsPage() {
   const [exams, setExams] = useState<ExamRow[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // 반 배정(과제 할당) 모달
+  const [classes, setClasses] = useState<ClassRow[]>([]);
+  const [assignTarget, setAssignTarget] = useState<ExamRow | null>(null);
+  const [assignClassId, setAssignClassId] = useState("");
+  const [assignDue, setAssignDue] = useState("");
+  const [assigning, setAssigning] = useState(false);
 
   useEffect(() => {
     fetch("/api/exams")
@@ -26,12 +39,52 @@ export default function ExamsPage() {
         setExams(data);
         setLoading(false);
       });
+    fetch("/api/classes")
+      .then((res) => res.json())
+      .then((data) => setClasses(data.classes || []))
+      .catch(() => {});
   }, []);
 
   async function handleDelete(id: string) {
     if (!confirm("이 시험지를 삭제하시겠습니까?")) return;
     await fetch(`/api/exams/${id}`, { method: "DELETE" });
     setExams((prev) => prev.filter((e) => e.id !== id));
+  }
+
+  function openAssign(exam: ExamRow) {
+    setAssignTarget(exam);
+    setAssignClassId(classes[0]?.id ?? "");
+    setAssignDue("");
+  }
+
+  async function submitAssign() {
+    if (!assignTarget || !assignClassId) {
+      alert("배정할 반을 선택하세요.");
+      return;
+    }
+    setAssigning(true);
+    try {
+      const res = await fetch("/api/assignments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          classId: assignClassId,
+          examId: assignTarget.id,
+          dueAt: assignDue ? new Date(assignDue).toISOString() : undefined,
+        }),
+      });
+      if (!res.ok) {
+        alert((await res.json()).error || "배정 실패");
+        return;
+      }
+      const cls = classes.find((c) => c.id === assignClassId);
+      alert(`'${cls?.name ?? "반"}'에 '${assignTarget.title}' 과제를 배정했습니다.`);
+      setAssignTarget(null);
+    } catch {
+      alert("배정 중 오류가 발생했습니다.");
+    } finally {
+      setAssigning(false);
+    }
   }
 
   return (
@@ -87,6 +140,12 @@ export default function ExamsPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => openAssign(exam)}
+                    className="text-xs px-3 py-1.5 bg-[#245B3E] text-white rounded-lg hover:bg-[#1d4a32]"
+                  >
+                    반 배정
+                  </button>
                   <Link
                     href={`/exams/${exam.id}/preview`}
                     className="text-xs text-blue-600 hover:text-blue-700"
@@ -111,6 +170,77 @@ export default function ExamsPage() {
           </ul>
         )}
       </div>
+
+      {/* 반 배정(과제 할당) 모달 */}
+      {assignTarget && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+          onClick={() => !assigning && setAssignTarget(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>
+              <h3 className="text-lg font-bold text-gray-800">반 배정 (과제 할당)</h3>
+              <p className="text-sm text-gray-500 mt-1 truncate">
+                시험지: <span className="font-medium">{assignTarget.title}</span>
+              </p>
+            </div>
+
+            {classes.length === 0 ? (
+              <p className="text-sm text-gray-500">
+                먼저 반을 만들어 주세요. (반 편성)
+              </p>
+            ) : (
+              <>
+                <div>
+                  <label className="block text-sm text-gray-600 mb-1">배정할 반</label>
+                  <select
+                    value={assignClassId}
+                    onChange={(e) => setAssignClassId(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                  >
+                    {classes.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.center.name} · {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-600 mb-1">
+                    마감일 (선택)
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={assignDue}
+                    onChange={(e) => setAssignDue(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                  />
+                </div>
+              </>
+            )}
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={() => setAssignTarget(null)}
+                disabled={assigning}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm"
+              >
+                취소
+              </button>
+              <button
+                onClick={submitAssign}
+                disabled={assigning || classes.length === 0}
+                className="px-4 py-2 bg-[#245B3E] text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              >
+                {assigning ? "배정 중..." : "배정하기"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
