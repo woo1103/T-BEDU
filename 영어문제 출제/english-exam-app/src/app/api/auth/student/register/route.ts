@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
 import { signStudentToken } from "@/lib/student-auth";
+import { generateUniqueClassCode } from "@/lib/class-code";
 
 // 학생 회원가입: 반 코드가 있으면 재원생(enrolled)+반 등록, 없으면 비재원생(guest)
 export async function POST(request: NextRequest) {
@@ -70,6 +71,14 @@ export async function POST(request: NextRequest) {
     }
     return { user, profile };
   });
+
+  // 반 코드로 가입 성공 시, 그 코드는 1회용처럼 폐기하고 새 코드로 갱신 (유동IP식)
+  if (matchedClass) {
+    const newCode = await generateUniqueClassCode();
+    await prisma.class
+      .update({ where: { id: matchedClass.id }, data: { code: newCode } })
+      .catch(() => {});
+  }
 
   const token = await signStudentToken({
     sub: result.user.id,

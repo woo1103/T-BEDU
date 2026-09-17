@@ -13,6 +13,7 @@ const navItems = [
   { href: "/exams/new", label: "시험지 구성", icon: "📋" },
   { href: "/textbooks", label: "교재 관리", icon: "📚" },
   { href: "/classes", label: "반 편성", icon: "🏫" },
+  { href: "/admin/students", label: "학생 관리", icon: "🧑‍🎓" },
   { href: "/admin/tags", label: "문항 태그", icon: "🏷️" },
   { href: "/worksheets", label: "수학 문제지", icon: "🧮" },
   { href: "/videos", label: "영상 강의", icon: "🎬" },
