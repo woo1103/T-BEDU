@@ -4,6 +4,19 @@ import { requireStaff } from "@/lib/api-auth";
 
 const VALID_SUBJECTS = ["english", "math", "etc"];
 
+function isYouTubeUrl(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, "");
+    return (
+      host === "youtu.be" ||
+      host.endsWith("youtube.com") ||
+      host.endsWith("youtube-nocookie.com")
+    );
+  } catch {
+    return false;
+  }
+}
+
 export async function GET() {
   const staff = await requireStaff();
   if (!staff) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
@@ -30,14 +43,18 @@ export async function POST(request: NextRequest) {
     );
   }
   const subject = VALID_SUBJECTS.includes(body.subject) ? body.subject : "english";
+  const rawUrl = body.url.trim();
+  // provider가 명시되지 않았고 유튜브 링크면 자동으로 "youtube"로 저장
+  const provider =
+    body.provider?.trim() || (isYouTubeUrl(rawUrl) ? "youtube" : "url");
 
   const video = await prisma.video.create({
     data: {
       subject,
       title: body.title.trim(),
       description: body.description?.trim() || null,
-      provider: body.provider?.trim() || "url",
-      url: body.url.trim(),
+      provider,
+      url: rawUrl,
       durationSec: typeof body.durationSec === "number" ? body.durationSec : null,
     },
     include: { _count: { select: { assignments: true, watchProgress: true } } },

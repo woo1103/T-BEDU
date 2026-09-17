@@ -143,8 +143,8 @@ export default function VideosPage() {
       <div>
         <h2 className="text-2xl font-bold text-gray-900">영상 강의</h2>
         <p className="text-sm text-gray-500 mt-1">
-          재생 URL(HLS .m3u8 또는 mp4)을 등록하고 반에 노출하면, 학생 앱에서 시청·진도율이
-          기록됩니다.
+          유튜브 링크 또는 재생 URL(HLS .m3u8 / mp4)을 등록하고 반에 노출하면, 학생 앱에서
+          시청·진도율이 기록됩니다. 유튜브는 <b>미등록(일부 공개)</b>으로 올린 뒤 링크를 붙여넣으세요.
         </p>
       </div>
 
@@ -170,7 +170,7 @@ export default function VideosPage() {
           <input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="재생 URL (.m3u8 또는 .mp4)"
+            placeholder="유튜브 링크 또는 재생 URL (.m3u8 / .mp4)"
             className="md:col-span-4 border border-gray-300 rounded-lg px-3 py-2 text-sm"
           />
           <input
