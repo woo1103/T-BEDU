@@ -12,7 +12,9 @@ export async function GET() {
   const admin = await requireAdmin();
   if (!admin) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
 
+  // 계정 관리에는 선생님(관리자/담당자)만 노출. 학생은 학생 관리에서 처리.
   const users = await prisma.user.findMany({
+    where: { role: { in: ["admin", "teacher"] } },
     select: { id: true, username: true, role: true, createdAt: true },
     orderBy: { createdAt: "asc" },
   });

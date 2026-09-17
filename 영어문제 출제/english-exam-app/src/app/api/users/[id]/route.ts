@@ -16,6 +16,22 @@ export async function PATCH(
   if (!admin) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
 
   const { id } = await params;
+
+  // 학생 계정은 계정 관리에서 수정 불가 (학생 관리에서 처리)
+  const target = await prisma.user.findUnique({
+    where: { id },
+    select: { role: true },
+  });
+  if (!target) {
+    return NextResponse.json({ error: "사용자를 찾을 수 없습니다" }, { status: 404 });
+  }
+  if (target.role === "student") {
+    return NextResponse.json(
+      { error: "학생 계정은 학생 관리에서 수정하세요" },
+      { status: 400 }
+    );
+  }
+
   const body = await request.json();
   const data: Record<string, string> = {};
 
@@ -56,6 +72,21 @@ export async function DELETE(
 
   if (id === admin.sub) {
     return NextResponse.json({ error: "자기 자신은 삭제할 수 없습니다" }, { status: 400 });
+  }
+
+  // 학생 계정은 계정 관리에서 삭제 불가 (학생 관리에서 처리)
+  const target = await prisma.user.findUnique({
+    where: { id },
+    select: { role: true },
+  });
+  if (!target) {
+    return NextResponse.json({ error: "사용자를 찾을 수 없습니다" }, { status: 404 });
+  }
+  if (target.role === "student") {
+    return NextResponse.json(
+      { error: "학생 계정은 학생 관리에서 삭제하세요" },
+      { status: 400 }
+    );
   }
 
   await prisma.user.delete({ where: { id } });
