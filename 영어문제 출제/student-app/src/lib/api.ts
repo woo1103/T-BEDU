@@ -154,6 +154,14 @@ export function getAssessment(
   return authGet(`/api/student/assessments/${assignmentId}`);
 }
 
+export interface WritingResult {
+  questionId: string;
+  orderNum: number;
+  awarded: number;
+  points: number;
+  feedback: string;
+}
+
 export interface GradeResult {
   submissionId: string;
   score: number;
@@ -161,6 +169,7 @@ export interface GradeResult {
   correctCount: number;
   itemCount: number;
   rate: number;
+  writingResults?: WritingResult[];
 }
 
 export function submitAnswers(

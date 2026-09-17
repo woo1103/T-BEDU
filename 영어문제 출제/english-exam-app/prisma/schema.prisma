@@ -464,6 +464,7 @@ model Answer {
   selected     String   // 학생이 고른 값 (①~⑤ 라벨 또는 텍스트)
   isCorrect    Boolean  @default(false)
   points       Int      @default(0)
+  feedback     String?  // 서술형 AI 자동 채점 피드백 (선택형은 null)
 
   submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   wrongNote    WrongNote?

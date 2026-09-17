@@ -90,6 +90,28 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
               {result.correctCount}/{result.itemCount}문항 정답 · {result.score}/
               {result.totalPoints}점
             </p>
+            {result.writingResults && result.writingResults.length > 0 && (
+              <div className="mt-4 text-left space-y-2 border-t border-gray-100 pt-4">
+                <p className="text-sm font-semibold text-gray-700">서술형 채점 (AI)</p>
+                {result.writingResults.map((w) => (
+                  <div key={w.questionId} className="bg-[#f4f6f5] rounded-xl p-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700">
+                        {w.orderNum}번
+                      </span>
+                      <span className="text-sm font-bold text-[#245B3E]">
+                        {w.awarded}/{w.points}점
+                      </span>
+                    </div>
+                    {w.feedback && (
+                      <p className="text-xs text-gray-600 mt-1 leading-relaxed">
+                        {w.feedback}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
             <button
               onClick={onDone}
               className="mt-4 w-full py-3 rounded-xl bg-[#245B3E] text-white font-medium text-sm"
@@ -180,6 +202,25 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
                   </p>
                 </div>
               )}
+              {it.choices.length === 0 ? (
+                <div>
+                  <textarea
+                    value={selected[it.questionId] ?? ""}
+                    onChange={(e) =>
+                      setSelected((prev) => ({
+                        ...prev,
+                        [it.questionId]: e.target.value,
+                      }))
+                    }
+                    rows={4}
+                    placeholder="답안을 영어로 작성하세요 (서술형)"
+                    className="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm leading-relaxed focus:border-[#245B3E] focus:ring-1 focus:ring-[#245B3E]"
+                  />
+                  <p className="mt-1 text-xs text-gray-400">
+                    서술형 문항입니다. 제출 시 AI가 자동 채점합니다.
+                  </p>
+                </div>
+              ) : (
               <div className="space-y-2">
                 {it.choices.map((c) => {
                   const on = selected[it.questionId] === c.label;
@@ -207,6 +248,7 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
                   );
                 })}
               </div>
+              )}
             </div>
           ))
         )}

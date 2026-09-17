@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getStudentFromRequest } from "@/lib/student-auth";
 import { correctLabel } from "@/lib/grading";
+import { gradeWritingAnswer } from "@/lib/claude";
 import { areaNamesForAnswers, computeBreakdown } from "@/lib/achievement";
 
 interface AnswerRow {
@@ -10,6 +11,12 @@ interface AnswerRow {
   selected: string;
   isCorrect: boolean;
   points: number;
+  feedback?: string | null;
+}
+
+// 서술형(주관식) 유형 판별
+function isWritingType(questionType: string): boolean {
+  return questionType.startsWith("naesin_writing");
 }
 
 // 학생 마킹 제출 → 자동 채점 (영어 시험지 / 수학 문제지 공통).
@@ -71,6 +78,13 @@ export async function POST(request: NextRequest) {
   let totalPoints = 0;
   let correctCount = 0;
   const answerRows: AnswerRow[] = [];
+  const writingResults: {
+    questionId: string;
+    orderNum: number;
+    awarded: number;
+    points: number;
+    feedback: string;
+  }[] = [];
 
   if (assignment.assessment.type === "worksheet") {
     const items = assignment.assessment.worksheet?.items ?? [];
@@ -98,19 +112,65 @@ export async function POST(request: NextRequest) {
       const pts = item.customPoints ?? q.points;
       totalPoints += pts;
       const selected = selectedByRef.get(q.id) ?? "";
-      const correct = correctLabel(q);
-      const isCorrect = !!correct && selected === correct;
-      if (isCorrect) {
-        score += pts;
-        correctCount++;
+
+      if (isWritingType(q.questionType)) {
+        // 서술형: AI 자동 채점 (모범답안=answer, 채점기준=explanation)
+        let awarded = 0;
+        let feedback: string | null = null;
+        if (selected.trim() === "") {
+          feedback = "답안이 제출되지 않았습니다.";
+        } else {
+          try {
+            const graded = await gradeWritingAnswer({
+              question: q.question,
+              passage: q.passage,
+              modelAnswer: q.answer,
+              rubric: q.explanation ?? undefined,
+              studentAnswer: selected,
+              maxPoints: pts,
+            });
+            awarded = graded.awardedPoints;
+            feedback = graded.feedback;
+          } catch {
+            // AI 채점 실패 시 0점 처리하고 수동 확인 안내
+            awarded = 0;
+            feedback = "자동 채점에 실패했습니다. 담당 선생님의 확인이 필요합니다.";
+          }
+        }
+        // 만점의 60% 이상이면 정답으로 간주(성취도/오답노트 기준)
+        const isCorrect = pts > 0 && awarded >= Math.ceil(pts * 0.6);
+        score += awarded;
+        if (isCorrect) correctCount++;
+        answerRows.push({
+          refType: "question",
+          refId: q.id,
+          selected,
+          isCorrect,
+          points: awarded,
+          feedback,
+        });
+        writingResults.push({
+          questionId: q.id,
+          orderNum: item.orderNum,
+          awarded,
+          points: pts,
+          feedback: feedback ?? "",
+        });
+      } else {
+        const correct = correctLabel(q);
+        const isCorrect = !!correct && selected === correct;
+        if (isCorrect) {
+          score += pts;
+          correctCount++;
+        }
+        answerRows.push({
+          refType: "question",
+          refId: q.id,
+          selected,
+          isCorrect,
+          points: isCorrect ? pts : 0,
+        });
       }
-      answerRows.push({
-        refType: "question",
-        refId: q.id,
-        selected,
-        isCorrect,
-        points: isCorrect ? pts : 0,
-      });
     }
   }
 
@@ -168,6 +228,7 @@ export async function POST(request: NextRequest) {
       correctCount,
       itemCount: answerRows.length,
       rate: totalPoints > 0 ? Math.round((score / totalPoints) * 100) : 0,
+      writingResults,
     },
     { status: 201 }
   );
