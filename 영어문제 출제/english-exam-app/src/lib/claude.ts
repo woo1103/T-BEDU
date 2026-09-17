@@ -99,3 +99,67 @@ ${studentAnswer || "(빈 답안)"}
     feedback: typeof parsed.feedback === "string" ? parsed.feedback : "",
   };
 }
+
+// 정답지(이미지/PDF)를 읽어 문항별 정답을 자동 추출한다.
+export async function recognizeAnswerKey(input: {
+  base64: string;
+  mediaType: string; // image/png|jpeg|webp|gif 또는 application/pdf
+  expectedCount?: number;
+}): Promise<{ items: { number: number; answer: string; objective: boolean }[] }> {
+  const { base64, mediaType, expectedCount } = input;
+  const isPdf = mediaType === "application/pdf";
+
+  const mediaBlock = isPdf
+    ? {
+        type: "document" as const,
+        source: {
+          type: "base64" as const,
+          media_type: "application/pdf" as const,
+          data: base64,
+        },
+      }
+    : {
+        type: "image" as const,
+        source: {
+          type: "base64" as const,
+          media_type: mediaType as
+            | "image/png"
+            | "image/jpeg"
+            | "image/webp"
+            | "image/gif",
+          data: base64,
+        },
+      };
+
+  const instruction = `이 정답지를 읽고 각 문항의 번호와 정답을 추출하세요.
+- 객관식 정답은 반드시 ①②③④⑤ 원문자로 표기하세요(1→①, 2→②, 3→③, 4→④, 5→⑤). 이 경우 objective=true.
+- 주관식(단답형) 정답은 숫자나 텍스트를 그대로 적고 objective=false.
+${expectedCount ? `- 정답지에는 총 ${expectedCount}문항이 있습니다.` : ""}
+- 배점/점수 표기는 무시하고 "정답"만 추출하세요.
+- 번호 순서대로 빠짐없이 정리하세요.
+반드시 아래 JSON 형식만 출력하세요(다른 텍스트 금지):
+{"items":[{"number":1,"answer":"③","objective":true},{"number":2,"answer":"42","objective":false}]}`;
+
+  const message = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 4096,
+    messages: [
+      { role: "user", content: [mediaBlock, { type: "text", text: instruction }] },
+    ],
+  });
+
+  const text =
+    message.content[0].type === "text" ? message.content[0].text : "";
+  const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error("정답 인식 결과를 파싱할 수 없습니다.");
+  const parsed = JSON.parse(m[1] || m[0]);
+  const rawItems = Array.isArray(parsed.items) ? parsed.items : [];
+  const items = rawItems.map(
+    (it: { number?: number; answer?: string; objective?: boolean }, i: number) => ({
+      number: typeof it.number === "number" ? it.number : i + 1,
+      answer: String(it.answer ?? "").trim(),
+      objective: it.objective !== false,
+    })
+  );
+  return { items };
+}
