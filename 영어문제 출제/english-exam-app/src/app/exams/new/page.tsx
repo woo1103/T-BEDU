@@ -2,8 +2,32 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { EXAM_TYPE_MAP, getQuestionTypeInfo } from "@/lib/question-types";
-import type { ExamType, Choice } from "@/types";
+import { EXAM_TYPE_MAP, getQuestionTypeInfo, getQuestionTypes, DIFFICULTY_MAP } from "@/lib/question-types";
+import type { ExamType, Choice, Difficulty } from "@/types";
+
+const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
+
+function isWritingType(questionType: string): boolean {
+  return questionType.startsWith("naesin_writing");
+}
+
+interface AiTypeSel {
+  code: string;
+  name: string;
+  count: number;
+}
+
+interface AiGenerated {
+  passage: string;
+  question: string;
+  choices: Choice[];
+  answer: string;
+  explanation: string;
+  points: number;
+  questionType: string;
+  questionTypeName: string;
+  include: boolean;
+}
 
 interface QuestionRow {
   id: string;
@@ -58,6 +82,145 @@ export default function NewExamPage() {
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [detailQuestion, setDetailQuestion] = useState<QuestionRow | null>(null);
+
+  // ===== AI 문제 생성 (시험지 구성 내부) =====
+  const [showAi, setShowAi] = useState(false);
+  const [aiTypes, setAiTypes] = useState<AiTypeSel[]>([]);
+  const [aiDifficulty, setAiDifficulty] = useState<Difficulty>("medium");
+  const [aiTopic, setAiTopic] = useState("");
+  const [aiPassage, setAiPassage] = useState("");
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [aiSaving, setAiSaving] = useState(false);
+  const [aiResults, setAiResults] = useState<AiGenerated[]>([]);
+
+  const aiQuestionTypes = getQuestionTypes(examType);
+  const aiTypesTotal = aiTypes.reduce((sum, t) => sum + t.count, 0);
+
+  function toggleAiType(code: string, name: string) {
+    setAiTypes((prev) => {
+      const exists = prev.find((t) => t.code === code);
+      if (exists) return prev.filter((t) => t.code !== code);
+      return [...prev, { code, name, count: 1 }];
+    });
+  }
+  function updateAiTypeCount(code: string, count: number) {
+    setAiTypes((prev) =>
+      prev.map((t) => (t.code === code ? { ...t, count: Math.max(1, count) } : t))
+    );
+  }
+
+  async function handleAiGenerate() {
+    if (aiTypes.length === 0) {
+      alert("최소 1개 이상의 문제 유형을 선택해주세요.");
+      return;
+    }
+    setAiGenerating(true);
+    setAiResults([]);
+    const results: AiGenerated[] = [];
+    for (const t of aiTypes) {
+      const siblings: { question: string; answer?: string }[] = [];
+      for (let i = 0; i < t.count; i++) {
+        try {
+          const res = await fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              examType,
+              questionType: t.code,
+              difficulty: aiDifficulty,
+              topic: aiTopic,
+              sourcePassage: aiPassage.trim() || undefined,
+              passageMode: aiPassage.trim() ? "original" : undefined,
+              priorQuestions: siblings.length > 0 ? siblings : undefined,
+            }),
+          });
+          if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "생성 실패");
+          }
+          const data = await res.json();
+          results.push({
+            passage: data.passage || "",
+            question: data.question || "",
+            choices: (data.choices || []).map(
+              (c: { text: string; isCorrect: boolean }, idx: number) => ({
+                label: CIRCLE_LABELS[idx] || `(${idx + 1})`,
+                text: c.text,
+                isCorrect: c.isCorrect,
+              })
+            ),
+            answer: data.answer || "",
+            explanation: data.explanation || "",
+            points: data.points || 2,
+            questionType: t.code,
+            questionTypeName: t.name,
+            include: true,
+          });
+          siblings.push({ question: data.question || "", answer: data.answer || undefined });
+          setAiResults([...results]);
+        } catch (err) {
+          alert(`${t.name} ${i + 1}번째 생성 실패: ${err instanceof Error ? err.message : "오류"}`);
+        }
+      }
+    }
+    setAiResults(results);
+    setAiGenerating(false);
+  }
+
+  async function handleAiSaveAndAdd() {
+    const picks = aiResults.filter((q) => q.include);
+    if (picks.length === 0) {
+      alert("추가할 문제를 1개 이상 선택해주세요.");
+      return;
+    }
+    setAiSaving(true);
+    const savedIds: string[] = [];
+    for (const q of picks) {
+      const writing = isWritingType(q.questionType);
+      const correctIndex = q.choices.findIndex((c) => c.isCorrect);
+      const answer = writing ? q.answer : q.choices[correctIndex]?.label || "";
+      try {
+        const res = await fetch("/api/questions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            examType,
+            questionType: q.questionType,
+            points: q.points,
+            passage: q.passage,
+            question: q.question,
+            choices: writing ? [] : q.choices,
+            answer,
+            explanation: q.explanation,
+            difficulty: aiDifficulty,
+            aiGenerated: true,
+            source: "AI 생성 (Claude)",
+          }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.id) savedIds.push(data.id as string);
+        }
+      } catch {
+        /* skip */
+      }
+    }
+    // 문제 은행 새로고침 후 새 문제들을 시험지에 자동 추가
+    try {
+      const fresh = await fetch("/api/questions").then((r) => r.json());
+      setAvailableQuestions(fresh);
+      addQuestions((fresh as QuestionRow[]).filter((q) => savedIds.includes(q.id)));
+    } catch {
+      /* ignore */
+    }
+    setAiSaving(false);
+    setShowAi(false);
+    setAiResults([]);
+    setAiTypes([]);
+    setAiTopic("");
+    setAiPassage("");
+    alert(`${savedIds.length}개 문제를 생성해 시험지에 추가했습니다.`);
+  }
 
   // 트리 펼침 상태 (학년 / 교과서 / 과 / 지문 / 유형)
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
@@ -353,9 +516,18 @@ export default function NewExamPage() {
         {/* 문제 은행 (왼쪽) */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-800">
-              문제 은행 ({availableQuestions.length}개)
-            </h3>
+            <div className="flex items-center gap-3">
+              <h3 className="font-semibold text-gray-800">
+                문제 은행 ({availableQuestions.length}개)
+              </h3>
+              <button
+                onClick={() => setShowAi(true)}
+                className="text-xs bg-purple-600 text-white hover:bg-purple-700 font-medium px-3 py-1.5 rounded"
+                title="AI로 새 영어 문제를 생성해 이 시험지에 바로 추가합니다"
+              >
+                ✨ AI 문제 생성
+              </button>
+            </div>
             {checkedIds.size > 0 && (
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-500">
@@ -763,6 +935,190 @@ export default function NewExamPage() {
                 </button>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* AI 문제 생성 모달 */}
+      {showAi && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+          onClick={() => !aiGenerating && !aiSaving && setShowAi(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[88vh] overflow-y-auto p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-gray-800">✨ AI 영어 문제 생성</h3>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  현재 시험 유형: {EXAM_TYPE_MAP[examType]?.name} · 생성 후 이 시험지에 바로 추가됩니다.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowAi(false)}
+                disabled={aiGenerating || aiSaving}
+                className="text-gray-400 hover:text-gray-600 text-xl disabled:opacity-40"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* 난이도 */}
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">난이도</label>
+              <div className="flex gap-2">
+                {(
+                  Object.entries(DIFFICULTY_MAP) as [
+                    Difficulty,
+                    { name: string; color: string },
+                  ][]
+                ).map(([key, val]) => (
+                  <button
+                    key={key}
+                    onClick={() => setAiDifficulty(key)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      aiDifficulty === key
+                        ? val.color + " ring-2 ring-offset-1 ring-current"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {val.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 유형 선택 */}
+            <div>
+              <label className="block text-sm text-gray-600 mb-2">문제 유형 (복수 선택)</label>
+              {(() => {
+                const categories = new Map<string, typeof aiQuestionTypes>();
+                aiQuestionTypes.forEach((qt) => {
+                  if (!categories.has(qt.category)) categories.set(qt.category, []);
+                  categories.get(qt.category)!.push(qt);
+                });
+                return Array.from(categories.entries()).map(([cat, types]) => (
+                  <div key={cat} className="mb-2">
+                    <p className="text-xs text-gray-400 font-medium mb-1">{cat}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {types.map((qt) => {
+                        const isSel = aiTypes.some((t) => t.code === qt.code);
+                        return (
+                          <button
+                            key={qt.code}
+                            onClick={() => toggleAiType(qt.code, qt.name)}
+                            className={`px-2.5 py-1 rounded-lg text-xs transition-colors ${
+                              isSel
+                                ? "bg-purple-600 text-white"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            }`}
+                          >
+                            {qt.number}번 {qt.name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ));
+              })()}
+              {aiTypes.length > 0 && (
+                <div className="border-t border-gray-100 pt-3 mt-2 space-y-2">
+                  {aiTypes.map((st) => (
+                    <div key={st.code} className="flex items-center gap-3 bg-purple-50 rounded-lg px-3 py-1.5">
+                      <span className="text-sm text-purple-800 flex-1">{st.name}</span>
+                      <button onClick={() => updateAiTypeCount(st.code, st.count - 1)} className="w-6 h-6 rounded bg-purple-200 text-purple-700 text-sm">-</button>
+                      <span className="text-sm font-medium w-6 text-center">{st.count}</span>
+                      <button onClick={() => updateAiTypeCount(st.code, st.count + 1)} className="w-6 h-6 rounded bg-purple-200 text-purple-700 text-sm">+</button>
+                      <button onClick={() => toggleAiType(st.code, st.name)} className="text-red-400 hover:text-red-600 text-sm ml-1">✕</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 주제 + 지문 */}
+            <div className="grid grid-cols-1 gap-3">
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">주제/키워드 (선택)</label>
+                <input
+                  type="text"
+                  value={aiTopic}
+                  onChange={(e) => setAiTopic(e.target.value)}
+                  placeholder="예: 환경, 기술, 교육..."
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">출제 지문 (선택 — 비우면 AI가 새 지문 생성)</label>
+                <textarea
+                  value={aiPassage}
+                  onChange={(e) => setAiPassage(e.target.value)}
+                  rows={4}
+                  placeholder="교과서/원본 영어 지문을 붙여넣으면 그 지문으로 출제합니다."
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono leading-relaxed"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={handleAiGenerate}
+              disabled={aiGenerating || aiTypes.length === 0}
+              className="w-full px-6 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50"
+            >
+              {aiGenerating
+                ? `생성 중... (${aiResults.length}/${aiTypesTotal})`
+                : `${aiTypesTotal}개 문제 AI 생성`}
+            </button>
+
+            {/* 생성 결과 */}
+            {aiResults.length > 0 && (
+              <div className="border-t border-gray-100 pt-4 space-y-2">
+                <p className="text-sm font-medium text-gray-700">
+                  생성 결과 ({aiResults.filter((r) => r.include).length}/{aiResults.length}개 선택됨) — 체크한 문제만 추가됩니다
+                </p>
+                <ul className="space-y-2 max-h-64 overflow-y-auto">
+                  {aiResults.map((q, i) => (
+                    <li key={i} className="flex items-start gap-2 p-2 rounded border border-gray-200 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={q.include}
+                        onChange={() =>
+                          setAiResults((prev) =>
+                            prev.map((r, ri) => (ri === i ? { ...r, include: !r.include } : r))
+                          )
+                        }
+                        className="mt-1"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex gap-1.5 mb-1">
+                          <span className="text-xs text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded">{q.questionTypeName}</span>
+                          <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">{q.points}점</span>
+                        </div>
+                        <p className="text-gray-700 truncate">{q.question}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    onClick={() => setShowAi(false)}
+                    disabled={aiSaving}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300"
+                  >
+                    닫기
+                  </button>
+                  <button
+                    onClick={handleAiSaveAndAdd}
+                    disabled={aiSaving}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {aiSaving ? "저장 중..." : "선택 문제 시험지에 추가"}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
