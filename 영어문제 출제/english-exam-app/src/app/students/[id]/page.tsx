@@ -40,7 +40,21 @@ interface Data {
     submittedAt: string | null;
   }[];
   comments: Comment[];
+  videoProgress: {
+    videoId: string;
+    title: string;
+    subject: string;
+    percent: number;
+    completed: boolean;
+    updatedAt: string;
+  }[];
 }
+
+const SUBJECT_LABEL: Record<string, string> = {
+  english: "영어",
+  math: "수학",
+  etc: "기타",
+};
 
 function barColor(rate: number) {
   if (rate < 60) return "bg-red-400";
@@ -101,7 +115,7 @@ export default function StudentDetailPage({
   if (!data)
     return <div className="text-center text-gray-400 py-12">학생을 찾을 수 없습니다.</div>;
 
-  const { student, achievement, submissions, comments } = data;
+  const { student, achievement, submissions, comments, videoProgress } = data;
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -245,6 +259,34 @@ export default function StudentDetailPage({
                 <span className="text-sm text-gray-700">{s.title}</span>
                 <span className="text-sm text-gray-500">
                   {s.score}/{s.totalPoints}점 ({s.rate}%)
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* 영상 시청 진도 */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 className="font-semibold text-gray-800 mb-3">영상 시청 진도</h3>
+        {videoProgress.length === 0 ? (
+          <p className="text-sm text-gray-400">시청 기록이 없습니다.</p>
+        ) : (
+          <ul className="space-y-2">
+            {videoProgress.map((v) => (
+              <li key={v.videoId} className="flex items-center gap-3">
+                <span className="text-xs px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 shrink-0">
+                  {SUBJECT_LABEL[v.subject] || v.subject}
+                </span>
+                <span className="text-sm text-gray-700 truncate flex-1">{v.title}</span>
+                <div className="w-28 bg-gray-100 rounded-full h-2 shrink-0">
+                  <div
+                    className={`h-2 rounded-full ${v.completed ? "bg-green-500" : "bg-[#245B3E]"}`}
+                    style={{ width: `${v.percent}%` }}
+                  />
+                </div>
+                <span className="text-xs text-gray-500 w-16 text-right shrink-0">
+                  {v.completed ? "완료" : `${v.percent}%`}
                 </span>
               </li>
             ))}

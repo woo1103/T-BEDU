@@ -41,6 +41,13 @@ export async function GET(
     orderBy: { updatedAt: "desc" },
   });
 
+  // 영상 시청 진도
+  const watch = await prisma.watchProgress.findMany({
+    where: { studentId: id },
+    include: { video: { select: { title: true, subject: true } } },
+    orderBy: { updatedAt: "desc" },
+  });
+
   return NextResponse.json({
     student: {
       id: profile.id,
@@ -63,5 +70,13 @@ export async function GET(
       submittedAt: s.submittedAt,
     })),
     comments,
+    videoProgress: watch.map((w) => ({
+      videoId: w.videoId,
+      title: w.video.title,
+      subject: w.video.subject,
+      percent: w.percent,
+      completed: w.completed,
+      updatedAt: w.updatedAt,
+    })),
   });
 }
