@@ -40,8 +40,8 @@ function LoginForm() {
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-sky-50 to-blue-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800">T&BEDU</h1>
-          <p className="text-sm text-gray-500 mt-1">영어 문제 출제 시스템</p>
+          <h1 className="text-2xl font-bold text-gray-800">Bench Mark</h1>
+          <p className="text-sm text-gray-500 mt-1">T&amp;BEDU 교사용</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

@@ -15,14 +15,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "영어 문제 출제",
-  description: "AI 기반 영어 시험 문제 출제 및 시험지 생성 도구",
+  title: "Bench Mark",
+  description: "T&BEDU 교사용 학습·출제 관리 (Bench Mark)",
   manifest: "/manifest.json",
-  themeColor: "#2563eb",
+  themeColor: "#245B3E",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "영어출제",
+    title: "Bench Mark",
   },
   viewport: {
     width: "device-width",
