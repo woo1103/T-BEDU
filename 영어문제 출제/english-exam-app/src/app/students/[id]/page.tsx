@@ -56,6 +56,20 @@ const SUBJECT_LABEL: Record<string, string> = {
   etc: "기타",
 };
 
+interface GradeItem {
+  answerId: string;
+  label: string;
+  order: number;
+  selected: string;
+  correct: string;
+  isCorrect: boolean;
+  points: number;
+  maxPoints: number;
+  writing: boolean;
+  feedback: string | null;
+  question: string;
+}
+
 function barColor(rate: number) {
   if (rate < 60) return "bg-red-400";
   if (rate < 80) return "bg-yellow-400";
@@ -71,6 +85,53 @@ export default function StudentDetailPage({
   const [data, setData] = useState<Data | null>(null);
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState("");
+
+  // 채점 수동 정정
+  const [editSubId, setEditSubId] = useState<string | null>(null);
+  const [editItems, setEditItems] = useState<GradeItem[]>([]);
+  const [gradeLoading, setGradeLoading] = useState(false);
+  const [savingGrade, setSavingGrade] = useState(false);
+
+  async function openGrade(subId: string) {
+    if (editSubId === subId) {
+      setEditSubId(null);
+      return;
+    }
+    setEditSubId(subId);
+    setGradeLoading(true);
+    setEditItems([]);
+    const res = await fetch(`/api/teacher/submissions/${subId}`);
+    if (res.ok) setEditItems((await res.json()).items || []);
+    setGradeLoading(false);
+  }
+  function patchItem(answerId: string, patch: Partial<GradeItem>) {
+    setEditItems((prev) =>
+      prev.map((it) => (it.answerId === answerId ? { ...it, ...patch } : it))
+    );
+  }
+  async function saveGrade() {
+    if (!editSubId) return;
+    setSavingGrade(true);
+    const res = await fetch(`/api/teacher/submissions/${editSubId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: editItems.map((it) => ({
+          answerId: it.answerId,
+          isCorrect: it.isCorrect,
+          points: it.points,
+          feedback: it.feedback,
+        })),
+      }),
+    });
+    setSavingGrade(false);
+    if (res.ok) {
+      setEditSubId(null);
+      await load();
+    } else {
+      alert((await res.json()).error || "저장 실패");
+    }
+  }
 
   async function load() {
     const res = await fetch(`/api/teacher/students/${id}`);
@@ -255,11 +316,134 @@ export default function StudentDetailPage({
         ) : (
           <ul className="divide-y divide-gray-100">
             {submissions.map((s) => (
-              <li key={s.id} className="flex items-center justify-between py-2">
-                <span className="text-sm text-gray-700">{s.title}</span>
-                <span className="text-sm text-gray-500">
-                  {s.score}/{s.totalPoints}점 ({s.rate}%)
-                </span>
+              <li key={s.id} className="py-2">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm text-gray-700 truncate">{s.title}</span>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="text-sm text-gray-500">
+                      {s.score}/{s.totalPoints}점 ({s.rate}%)
+                    </span>
+                    <button
+                      onClick={() => openGrade(s.id)}
+                      className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded"
+                    >
+                      {editSubId === s.id ? "닫기" : "채점 수정"}
+                    </button>
+                  </div>
+                </div>
+
+                {editSubId === s.id && (
+                  <div className="mt-3 bg-gray-50 rounded-lg p-3 space-y-2">
+                    {gradeLoading ? (
+                      <p className="text-sm text-gray-400 text-center py-3">
+                        불러오는 중...
+                      </p>
+                    ) : (
+                      <>
+                        {editItems.map((it) => (
+                          <div
+                            key={it.answerId}
+                            className="bg-white rounded-lg border border-gray-200 p-3"
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-sm font-medium text-gray-800">
+                                {it.label}
+                                {!it.writing && (
+                                  <span className="text-xs text-gray-400 ml-2">
+                                    내 답 {it.selected || "미응답"}
+                                    {it.correct && ` · 정답 ${it.correct}`}
+                                  </span>
+                                )}
+                              </span>
+                              <div className="flex items-center gap-2 shrink-0">
+                                <button
+                                  onClick={() =>
+                                    patchItem(it.answerId, {
+                                      isCorrect: true,
+                                      points: it.maxPoints,
+                                    })
+                                  }
+                                  className={`text-xs px-2 py-1 rounded ${
+                                    it.isCorrect
+                                      ? "bg-green-500 text-white"
+                                      : "bg-gray-100 text-gray-500"
+                                  }`}
+                                >
+                                  정답
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    patchItem(it.answerId, {
+                                      isCorrect: false,
+                                      points: 0,
+                                    })
+                                  }
+                                  className={`text-xs px-2 py-1 rounded ${
+                                    !it.isCorrect
+                                      ? "bg-red-500 text-white"
+                                      : "bg-gray-100 text-gray-500"
+                                  }`}
+                                >
+                                  오답
+                                </button>
+                                <div className="flex items-center gap-1">
+                                  <input
+                                    type="number"
+                                    min={0}
+                                    max={it.maxPoints}
+                                    value={it.points}
+                                    onChange={(e) =>
+                                      patchItem(it.answerId, {
+                                        points: Number(e.target.value),
+                                      })
+                                    }
+                                    className="w-14 border border-gray-300 rounded px-2 py-1 text-xs"
+                                  />
+                                  <span className="text-xs text-gray-400">
+                                    /{it.maxPoints}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            {it.writing && (
+                              <div className="mt-2 space-y-1">
+                                <p className="text-xs text-gray-500 whitespace-pre-wrap">
+                                  답안: {it.selected || "미응답"}
+                                </p>
+                                <textarea
+                                  value={it.feedback ?? ""}
+                                  onChange={(e) =>
+                                    patchItem(it.answerId, {
+                                      feedback: e.target.value,
+                                    })
+                                  }
+                                  rows={2}
+                                  placeholder="피드백(선택)"
+                                  className="w-full border border-gray-300 rounded px-2 py-1 text-xs"
+                                />
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                        <div className="flex justify-end gap-2 pt-1">
+                          <button
+                            onClick={() => setEditSubId(null)}
+                            className="text-xs px-3 py-1.5 bg-gray-200 rounded"
+                          >
+                            취소
+                          </button>
+                          <button
+                            onClick={saveGrade}
+                            disabled={savingGrade}
+                            className="text-xs px-3 py-1.5 bg-[#245B3E] text-white rounded disabled:opacity-50"
+                          >
+                            {savingGrade ? "저장 중..." : "채점 저장"}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
               </li>
             ))}
           </ul>
