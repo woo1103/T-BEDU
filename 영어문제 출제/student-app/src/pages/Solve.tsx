@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   getAssessment,
   submitAnswers,
+  getSubmissionResult,
   type AssessmentItem,
   type WorksheetSolveItem,
   type GradeResult,
@@ -10,12 +11,13 @@ import {
 interface Props {
   assignmentId: string;
   title: string;
+  initialDone?: boolean; // 이미 제출한 과제 → 결과 보기 모드
   onDone: () => void;
 }
 
 const CIRCLE = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"];
 
-export default function Solve({ assignmentId, title, onDone }: Props) {
+export default function Solve({ assignmentId, title, initialDone, onDone }: Props) {
   const [type, setType] = useState<"exam" | "worksheet">("exam");
   const [examItems, setExamItems] = useState<AssessmentItem[]>([]);
   const [wsItems, setWsItems] = useState<WorksheetSolveItem[]>([]);
@@ -29,6 +31,14 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
   useEffect(() => {
     (async () => {
       try {
+        // 이미 제출한 과제면 저장된 결과만 보여준다(재채점 없음).
+        if (initialDone) {
+          const r = await getSubmissionResult(assignmentId);
+          if (r.submitted) {
+            setResult(r as GradeResult);
+            return;
+          }
+        }
         const d = await getAssessment(assignmentId);
         setType(d.type);
         if (d.type === "worksheet") {
@@ -43,7 +53,7 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
         setLoading(false);
       }
     })();
-  }, [assignmentId]);
+  }, [assignmentId, initialDone]);
 
   const total = type === "worksheet" ? wsItems.length : examItems.length;
   const answeredCount = Object.values(selected).filter((v) => v.trim() !== "").length;
@@ -83,35 +93,69 @@ export default function Solve({ assignmentId, title, onDone }: Props) {
 
       <main className="p-4 max-w-md mx-auto space-y-4">
         {result && (
-          <div className="bg-white rounded-2xl p-5 shadow-sm text-center">
-            <p className="text-sm text-gray-500">채점 결과</p>
-            <p className="text-4xl font-bold text-[#245B3E] mt-1">{result.rate}%</p>
-            <p className="text-sm text-gray-600 mt-1">
-              {result.correctCount}/{result.itemCount}문항 정답 · {result.score}/
-              {result.totalPoints}점
-            </p>
-            {result.writingResults && result.writingResults.length > 0 && (
-              <div className="mt-4 text-left space-y-2 border-t border-gray-100 pt-4">
-                <p className="text-sm font-semibold text-gray-700">서술형 채점 (AI)</p>
-                {result.writingResults.map((w) => (
-                  <div key={w.questionId} className="bg-[#f4f6f5] rounded-xl p-3">
+          <div className="bg-white rounded-2xl p-5 shadow-sm">
+            <div className="text-center">
+              <p className="text-sm text-gray-500">채점 결과</p>
+              <p className="text-4xl font-bold text-[#245B3E] mt-1">{result.rate}%</p>
+              <p className="text-sm text-gray-600 mt-1">
+                {result.correctCount}/{result.itemCount}문항 정답 · {result.score}/
+                {result.totalPoints}점
+              </p>
+              {result.alreadySubmitted && (
+                <p className="text-xs text-gray-400 mt-2">
+                  이미 제출한 과제입니다. 재채점은 선생님만 가능합니다.
+                </p>
+              )}
+            </div>
+
+            {/* 문항별 정답/오답 */}
+            {result.results && result.results.length > 0 && (
+              <div className="mt-4 space-y-2 border-t border-gray-100 pt-4">
+                <p className="text-sm font-semibold text-gray-700">문항별 결과</p>
+                {result.results.map((r) => (
+                  <div
+                    key={r.refId}
+                    className={`rounded-xl p-3 border ${
+                      r.isCorrect
+                        ? "border-green-100 bg-green-50"
+                        : "border-red-100 bg-red-50"
+                    }`}
+                  >
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">
-                        {w.orderNum}번
+                      <span className="text-sm font-medium text-gray-800">
+                        {r.label}{" "}
+                        <span
+                          className={
+                            r.isCorrect ? "text-green-600" : "text-red-500"
+                          }
+                        >
+                          {r.isCorrect ? "○ 정답" : "✕ 오답"}
+                        </span>
                       </span>
-                      <span className="text-sm font-bold text-[#245B3E]">
-                        {w.awarded}/{w.points}점
+                      <span className="text-xs font-semibold text-gray-600">
+                        {r.points}/{r.maxPoints}점
                       </span>
                     </div>
-                    {w.feedback && (
+                    {!r.writing && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        내 답: <b>{r.selected || "미응답"}</b>
+                        {!r.isCorrect && r.correct && (
+                          <>
+                            {" "}· 정답: <b className="text-green-700">{r.correct}</b>
+                          </>
+                        )}
+                      </p>
+                    )}
+                    {r.writing && r.feedback && (
                       <p className="text-xs text-gray-600 mt-1 leading-relaxed">
-                        {w.feedback}
+                        {r.feedback}
                       </p>
                     )}
                   </div>
                 ))}
               </div>
             )}
+
             <button
               onClick={onDone}
               className="mt-4 w-full py-3 rounded-xl bg-[#245B3E] text-white font-medium text-sm"

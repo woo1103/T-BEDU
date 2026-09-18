@@ -13,7 +13,7 @@ import {
 interface Props {
   student: Student;
   onLogout: () => void;
-  onSolve: (assignmentId: string, title: string) => void;
+  onSolve: (assignmentId: string, title: string, done: boolean) => void;
   onWrongNotes: () => void;
   onVideos: () => void;
   onNotifications: () => void;
@@ -248,14 +248,14 @@ export default function Home({
                       </p>
                     </div>
                     <button
-                      onClick={() => onSolve(a.id, a.title)}
+                      onClick={() => onSolve(a.id, a.title, done)}
                       className={`shrink-0 text-sm px-4 py-2 rounded-xl font-medium ${
                         done
                           ? "bg-gray-100 text-gray-600"
                           : "bg-[#245B3E] text-white"
                       }`}
                     >
-                      {done ? "다시 풀기" : "풀기"}
+                      {done ? "결과 보기" : "풀기"}
                     </button>
                   </li>
                 );

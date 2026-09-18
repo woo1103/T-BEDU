@@ -154,12 +154,17 @@ export function getAssessment(
   return authGet(`/api/student/assessments/${assignmentId}`);
 }
 
-export interface WritingResult {
-  questionId: string;
-  orderNum: number;
-  awarded: number;
+export interface ResultItem {
+  refId: string;
+  label: string; // "1번" 등
+  order: number;
+  selected: string;
+  correct: string; // 표시용 정답(서술형은 "")
+  isCorrect: boolean;
   points: number;
-  feedback: string;
+  maxPoints: number;
+  writing: boolean;
+  feedback: string | null;
 }
 
 export interface GradeResult {
@@ -169,7 +174,8 @@ export interface GradeResult {
   correctCount: number;
   itemCount: number;
   rate: number;
-  writingResults?: WritingResult[];
+  results?: ResultItem[];
+  alreadySubmitted?: boolean;
 }
 
 export function submitAnswers(
@@ -177,6 +183,13 @@ export function submitAnswers(
   answers: { questionId: string; selected: string }[]
 ): Promise<GradeResult> {
   return authPost("/api/student/submissions", { assignmentId, answers });
+}
+
+// 이미 제출한 과제의 결과 조회 (재채점 없음)
+export function getSubmissionResult(
+  assignmentId: string
+): Promise<{ submitted: boolean } & Partial<GradeResult>> {
+  return authGet(`/api/student/submissions?assignmentId=${assignmentId}`);
 }
 
 export interface AreaStat {

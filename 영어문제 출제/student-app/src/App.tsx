@@ -11,7 +11,7 @@ import InstallPrompt from "./components/InstallPrompt";
 
 type View =
   | { name: "home" }
-  | { name: "solve"; assignmentId: string; title: string }
+  | { name: "solve"; assignmentId: string; title: string; done: boolean }
   | { name: "wrongnotes" }
   | { name: "videos" }
   | { name: "notifications" };
@@ -34,6 +34,7 @@ export default function App() {
       <Solve
         assignmentId={view.assignmentId}
         title={view.title}
+        initialDone={view.done}
         onDone={() => setView({ name: "home" })}
       />
     );
@@ -62,8 +63,8 @@ export default function App() {
           setMode("login");
           setView({ name: "home" });
         }}
-        onSolve={(assignmentId, title) =>
-          setView({ name: "solve", assignmentId, title })
+        onSolve={(assignmentId, title, done) =>
+          setView({ name: "solve", assignmentId, title, done })
         }
         onWrongNotes={() => setView({ name: "wrongnotes" })}
         onVideos={() => setView({ name: "videos" })}
