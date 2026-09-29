@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { EXAM_TYPE_MAP, getQuestionTypeInfo, getQuestionTypes, DIFFICULTY_MAP } from "@/lib/question-types";
+import { VARIATIONS } from "@/lib/variations";
 import type { ExamType, Choice, Difficulty } from "@/types";
 
 const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
@@ -92,6 +93,13 @@ export default function NewExamPage() {
   const [aiGenerating, setAiGenerating] = useState(false);
   const [aiSaving, setAiSaving] = useState(false);
   const [aiResults, setAiResults] = useState<AiGenerated[]>([]);
+  const [aiVariations, setAiVariations] = useState<string[]>([]);
+
+  function toggleAiVariation(key: string) {
+    setAiVariations((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  }
 
   const aiQuestionTypes = getQuestionTypes(examType);
   const aiTypesTotal = aiTypes.reduce((sum, t) => sum + t.count, 0);
@@ -131,6 +139,7 @@ export default function NewExamPage() {
               topic: aiTopic,
               sourcePassage: aiPassage.trim() || undefined,
               passageMode: aiPassage.trim() ? "original" : undefined,
+              variations: aiVariations.length > 0 ? aiVariations : undefined,
               priorQuestions: siblings.length > 0 ? siblings : undefined,
             }),
           });
@@ -1059,6 +1068,33 @@ export default function NewExamPage() {
                   placeholder="교과서/원본 영어 지문을 붙여넣으면 그 지문으로 출제합니다."
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono leading-relaxed"
                 />
+              </div>
+            </div>
+
+            {/* 고난도 변형 갈래 */}
+            <div>
+              <label className="block text-sm text-gray-600 mb-2">
+                고난도 변형 갈래 (선택 · 복수 가능)
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {VARIATIONS.map((v) => {
+                  const on = aiVariations.includes(v.key);
+                  return (
+                    <button
+                      key={v.key}
+                      type="button"
+                      onClick={() => toggleAiVariation(v.key)}
+                      title={v.desc}
+                      className={`px-2.5 py-1 rounded-lg text-xs transition-colors ${
+                        on
+                          ? "bg-purple-600 text-white"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      {v.label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 

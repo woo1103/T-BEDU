@@ -47,10 +47,45 @@ export default function QuestionsPage() {
   const [sortKey, setSortKey] = useState<SortKey>("date_desc");
   const [filterGrade, setFilterGrade] = useState("");
   const [filterTextbook, setFilterTextbook] = useState("");
+  const [cleaning, setCleaning] = useState(false);
 
   useEffect(() => {
     fetchQuestions();
   }, [filterExamType, filterDifficulty]);
+
+  // 구조 오류(어법/순서/삽입) 문항 검사 → 확인 후 삭제
+  async function cleanupBroken() {
+    setCleaning(true);
+    try {
+      const res = await fetch("/api/questions/cleanup");
+      if (!res.ok) {
+        alert("검사 실패");
+        return;
+      }
+      const { count, broken } = await res.json();
+      if (count === 0) {
+        alert("구조 오류 문항이 없습니다. 👍");
+        return;
+      }
+      const inExams = (broken as { inExams: number }[]).filter((b) => b.inExams > 0).length;
+      const ok = confirm(
+        `구조가 깨진 문항 ${count}개를 발견했습니다` +
+          (inExams > 0 ? ` (그중 ${inExams}개는 시험지에 배치됨 → 배치도 함께 제거)` : "") +
+          `.\n삭제할까요? (되돌릴 수 없음)`
+      );
+      if (!ok) return;
+      const del = await fetch("/api/questions/cleanup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: true }),
+      });
+      const r = await del.json();
+      alert(`${r.deleted}개 삭제 완료 (시험지 배치 ${r.removedFromExams}건 제거).`);
+      await fetchQuestions();
+    } finally {
+      setCleaning(false);
+    }
+  }
 
   async function fetchQuestions() {
     setLoading(true);
@@ -98,6 +133,18 @@ export default function QuestionsPage() {
 
   return (
     <div className="space-y-6">
+      {/* 상단 도구 */}
+      <div className="flex justify-end">
+        <button
+          onClick={cleanupBroken}
+          disabled={cleaning}
+          className="text-xs px-3 py-1.5 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 disabled:opacity-50"
+          title="어법/순서배열/문장삽입 중 마커·선지·정답이 어긋난 깨진 문항을 검사해 삭제"
+        >
+          {cleaning ? "검사 중..." : "🧹 구조 오류 문항 검사/정리"}
+        </button>
+      </div>
+
       {/* 필터 바 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
         <div className="flex flex-wrap gap-4 items-end">

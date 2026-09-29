@@ -1,5 +1,6 @@
 import { getSuneungPrompt, getSuneungDifficulty } from "./suneung";
 import { getNaesinPrompt } from "./naesin";
+import { buildVariationBlock } from "../variations";
 
 export function getSystemPrompt(
   examType: string,
@@ -7,7 +8,8 @@ export function getSystemPrompt(
   difficulty: string,
   sourcePassage?: string,
   passageMode?: string,
-  priorQuestions?: { question: string; answer?: string }[]
+  priorQuestions?: { question: string; answer?: string }[],
+  variations?: string[]
 ): string | null {
   let basePrompt: string | null = null;
 
@@ -76,6 +78,11 @@ ${sourcePassage}
 
 이미 출제된 문제 목록:
 ${list}`;
+  }
+
+  // 고난도 변형 갈래(선택) 주입
+  if (basePrompt) {
+    basePrompt += buildVariationBlock(variations);
   }
 
   return basePrompt;

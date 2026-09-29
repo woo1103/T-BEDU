@@ -3,6 +3,7 @@ import { generateQuestion } from "@/lib/claude";
 import { getSystemPrompt } from "@/lib/prompts";
 import { getQuestionTypeInfo } from "@/lib/question-types";
 import { prisma } from "@/lib/db";
+import { isMarkerMappedType, validateQuestionStructure } from "@/lib/question-validate";
 
 async function getActiveDirectives(examType: string, questionType: string): Promise<string> {
   const list = await prisma.promptDirective.findMany({
@@ -25,7 +26,7 @@ async function getActiveDirectives(examType: string, questionType: string): Prom
 
 export async function POST(request: NextRequest) {
   try {
-    const { examType, questionType, difficulty, topic, sourcePassage, passageMode, priorQuestions } = await request.json();
+    const { examType, questionType, difficulty, topic, sourcePassage, passageMode, priorQuestions, variations } = await request.json();
 
     if (!examType || !questionType) {
       return NextResponse.json(
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const basePrompt = getSystemPrompt(examType, questionType, difficulty, sourcePassage, passageMode, priorQuestions);
+    const basePrompt = getSystemPrompt(examType, questionType, difficulty, sourcePassage, passageMode, priorQuestions, variations);
     if (!basePrompt) {
       return NextResponse.json(
         { error: `이 문제 유형(${questionType})에 대한 프롬프트가 아직 준비되지 않았습니다.` },
@@ -67,7 +68,38 @@ export async function POST(request: NextRequest) {
       userPrompt += "\n\n위 조건에 맞는 영어 문제를 1개 생성해주세요.";
     }
 
-    const result = await generateQuestion(systemPrompt, userPrompt);
+    const CIRCLE = ["①", "②", "③", "④", "⑤"];
+    const toValChoices = (
+      choices: { text: string; isCorrect: boolean }[]
+    ) => choices.map((c, i) => ({ label: CIRCLE[i] ?? "", isCorrect: c.isCorrect }));
+
+    // 마커 대응 유형(어법/순서/삽입)은 구조 검증 → 깨지면 1회 재생성 → 그래도 깨지면 400
+    let result = await generateQuestion(systemPrompt, userPrompt);
+    if (isMarkerMappedType(questionType)) {
+      let check = validateQuestionStructure(
+        questionType,
+        result.passage,
+        toValChoices(result.choices)
+      );
+      if (!check.ok) {
+        result = await generateQuestion(
+          systemPrompt +
+            "\n\n[재생성 지시] 직전 생성물이 구조 검증에 실패했다. 반드시 지문에 ①~⑤ 마커 5곳(또는 순서=(A)(B)(C), 삽입=①~⑤)을 정확히 넣고, 선지 5개와 정답이 지문 마커와 1:1로 대응하게 하라.",
+          userPrompt
+        );
+        check = validateQuestionStructure(
+          questionType,
+          result.passage,
+          toValChoices(result.choices)
+        );
+      }
+      if (!check.ok) {
+        return NextResponse.json(
+          { error: `문항 구조 검증 실패(${check.reason}). 다시 시도해주세요.` },
+          { status: 422 }
+        );
+      }
+    }
 
     return NextResponse.json(result);
   } catch (err) {

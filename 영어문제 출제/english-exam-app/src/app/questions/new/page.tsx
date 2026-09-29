@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { EXAM_TYPE_MAP, getQuestionTypes, DIFFICULTY_MAP } from "@/lib/question-types";
+import { isMarkerMappedType } from "@/lib/question-validate";
+import { VARIATIONS } from "@/lib/variations";
 import type { Choice, ExamType, Difficulty, PassageMode } from "@/types";
 
 interface SavedPassage {
@@ -60,6 +62,13 @@ export default function NewQuestionPage() {
   const [topic, setTopic] = useState("");
   const [sourcePassage, setSourcePassage] = useState("");
   const [passageMode, setPassageMode] = useState<PassageMode>("original");
+  const [selectedVariations, setSelectedVariations] = useState<string[]>([]);
+
+  function toggleVariation(key: string) {
+    setSelectedVariations((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  }
 
   // 저장된 지문
   const [savedPassages, setSavedPassages] = useState<SavedPassage[]>([]);
@@ -160,6 +169,7 @@ export default function NewQuestionPage() {
                 sourcePassage: p.content,
                 passageMode,
                 priorQuestions: siblings.length > 0 ? siblings : undefined,
+                variations: selectedVariations.length > 0 ? selectedVariations : undefined,
               }),
             });
             if (!res.ok) {
@@ -330,7 +340,13 @@ export default function NewQuestionPage() {
     }
 
     return questions.map((q, idx) => {
-      if (isWritingType(q.questionType) || q.choices.length === 0) return q;
+      // 서술형/선지없음/마커대응(어법·순서·삽입) 유형은 선지 재배치 금지
+      if (
+        isWritingType(q.questionType) ||
+        isMarkerMappedType(q.questionType) ||
+        q.choices.length === 0
+      )
+        return q;
       const targetCorrectIdx = answerSlots[idx];
       const correctIdx = q.choices.findIndex((c) => c.isCorrect);
       if (correctIdx === -1 || correctIdx === targetCorrectIdx) return q;
@@ -406,6 +422,7 @@ export default function NewQuestionPage() {
                 sourcePassage: passageItem.content || undefined,
                 passageMode: passageItem.content ? passageMode : undefined,
                 priorQuestions: siblings.length > 0 ? siblings : undefined,
+                variations: selectedVariations.length > 0 ? selectedVariations : undefined,
               }),
             });
             if (!res.ok) {
@@ -1030,6 +1047,39 @@ export default function NewQuestionPage() {
                 className="w-full border border-purple-300 rounded-lg px-3 py-2 text-sm"
               />
             </div>
+
+            {/* 고난도 변형 갈래 (선택) */}
+            <div>
+              <label className="block text-sm text-purple-700 mb-2">
+                고난도 변형 갈래 (선택 · 복수 가능) — 선지·본문에 함정을 심어 변별력↑
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {VARIATIONS.map((v) => {
+                  const on = selectedVariations.includes(v.key);
+                  return (
+                    <button
+                      key={v.key}
+                      type="button"
+                      onClick={() => toggleVariation(v.key)}
+                      title={v.desc}
+                      className={`px-2.5 py-1 rounded-lg text-xs transition-colors ${
+                        on
+                          ? "bg-purple-600 text-white"
+                          : "bg-white text-purple-700 border border-purple-300 hover:bg-purple-100"
+                      }`}
+                    >
+                      {v.label}
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedVariations.length > 0 && (
+                <p className="text-xs text-purple-500 mt-1">
+                  {selectedVariations.length}개 적용
+                </p>
+              )}
+            </div>
+
             <button
               onClick={handleGenerate}
               disabled={generating || selectedTypes.length === 0}
