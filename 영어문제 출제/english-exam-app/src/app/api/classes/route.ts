@@ -2,16 +2,29 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireStaff } from "@/lib/api-auth";
 import { generateUniqueClassCode } from "@/lib/class-code";
+import { getCurrentTermId } from "@/lib/terms";
 
 const VALID_SUBJECTS = ["english", "math", "both"];
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const staff = await requireStaff();
   if (!staff) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
 
+  // ?termId= 로 학년도 필터. "current"면 현재 학년도.
+  const termParam = new URL(request.url).searchParams.get("termId");
+  let where: { termId?: string } = {};
+  if (termParam === "current") {
+    const cur = await getCurrentTermId();
+    if (cur) where = { termId: cur };
+  } else if (termParam) {
+    where = { termId: termParam };
+  }
+
   const classes = await prisma.class.findMany({
+    where,
     include: {
       center: true,
+      term: { select: { id: true, name: true, year: true } },
       _count: { select: { enrollments: true } },
     },
     orderBy: { createdAt: "desc" },
@@ -41,6 +54,8 @@ export async function POST(request: NextRequest) {
 
   const validSubject = VALID_SUBJECTS.includes(subject) ? subject : "both";
   const code = await generateUniqueClassCode();
+  // 새 반은 현재 학년도(또는 body.termId)에 소속
+  const termId = body.termId || (await getCurrentTermId());
 
   const created = await prisma.class.create({
     data: {
@@ -50,8 +65,13 @@ export async function POST(request: NextRequest) {
       centerId,
       code,
       teacherId: staff.sub,
+      termId: termId || undefined,
     },
-    include: { center: true, _count: { select: { enrollments: true } } },
+    include: {
+      center: true,
+      term: { select: { id: true, name: true, year: true } },
+      _count: { select: { enrollments: true } },
+    },
   });
 
   return NextResponse.json({ class: created }, { status: 201 });

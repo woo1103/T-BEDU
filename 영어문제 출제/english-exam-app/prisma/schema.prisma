@@ -213,9 +213,21 @@ model StudentProfile {
   @@index([status])
 }
 
+// 학년도 (2026학년도 등). 반·이력을 학년도로 분리해 진급 롤오버를 깔끔하게.
+model AcademicTerm {
+  id        String   @id @default(cuid())
+  name      String   // "2026학년도"
+  year      Int      // 2026
+  isCurrent Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  classes   Class[]
+}
+
 model Class {
   id        String   @id @default(cuid())
   centerId  String
+  termId    String?  // 소속 학년도 (없으면 미분류)
   name      String   // "고2 심화 A"
   grade     String
   subject   String   @default("both") // "english" | "math" | "both"
@@ -225,8 +237,9 @@ model Class {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  center      Center       @relation(fields: [centerId], references: [id], onDelete: Cascade)
-  teacher     User?        @relation("ClassTeacher", fields: [teacherId], references: [id], onDelete: SetNull)
+  center      Center        @relation(fields: [centerId], references: [id], onDelete: Cascade)
+  term        AcademicTerm? @relation(fields: [termId], references: [id], onDelete: SetNull)
+  teacher     User?         @relation("ClassTeacher", fields: [teacherId], references: [id], onDelete: SetNull)
   enrollments Enrollment[]
   assignments Assignment[]
   videoAssignments VideoAssignment[]

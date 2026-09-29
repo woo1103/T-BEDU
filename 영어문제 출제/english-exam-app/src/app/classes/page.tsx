@@ -16,7 +16,16 @@ interface ClassRow {
   code: string;
   active: boolean;
   center: Center;
+  term?: { id: string; name: string; year: number } | null;
   _count: { enrollments: number };
+}
+
+interface Term {
+  id: string;
+  name: string;
+  year: number;
+  isCurrent: boolean;
+  _count: { classes: number };
 }
 
 interface StudentRow {
@@ -42,6 +51,10 @@ export default function ClassesPage() {
   const [classes, setClasses] = useState<ClassRow[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 학년도
+  const [terms, setTerms] = useState<Term[]>([]);
+  const [selectedTerm, setSelectedTerm] = useState<string>("all");
+
   // 생성 폼
   const [name, setName] = useState("");
   const [grade, setGrade] = useState("고1");
@@ -55,17 +68,48 @@ export default function ClassesPage() {
   const [studentsLoading, setStudentsLoading] = useState(false);
 
   async function load() {
-    const [cRes, clsRes] = await Promise.all([
+    const [cRes, clsRes, tRes] = await Promise.all([
       fetch("/api/centers"),
       fetch("/api/classes"),
+      fetch("/api/terms"),
     ]);
     const c = await cRes.json();
     const cls = await clsRes.json();
+    const t = await tRes.json();
     setCenters(c.centers || []);
     setClasses(cls.classes || []);
+    setTerms(t.terms || []);
     if (!centerId && c.centers?.[0]) setCenterId(c.centers[0].id);
     setLoading(false);
   }
+
+  async function createTerm() {
+    const name = prompt("새 학년도 이름 (예: 2027학년도)");
+    if (!name?.trim()) return;
+    const yearMatch = name.match(/\d{4}/);
+    const year = yearMatch ? Number(yearMatch[0]) : new Date().getFullYear();
+    const res = await fetch("/api/terms", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name.trim(), year }),
+    });
+    if (res.ok) await load();
+    else alert((await res.json()).error || "생성 실패");
+  }
+
+  async function setCurrentTerm(id: string) {
+    const res = await fetch(`/api/terms/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ setCurrent: true }),
+    });
+    if (res.ok) await load();
+  }
+
+  const visibleClasses =
+    selectedTerm === "all"
+      ? classes
+      : classes.filter((c) => c.term?.id === selectedTerm);
 
   useEffect(() => {
     load();
@@ -143,6 +187,56 @@ export default function ClassesPage() {
         </p>
       </div>
 
+      {/* 학년도 바 */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center gap-2 flex-wrap">
+        <span className="text-sm font-semibold text-gray-700">학년도</span>
+        <button
+          onClick={() => setSelectedTerm("all")}
+          className={`text-xs px-2.5 py-1 rounded-lg ${
+            selectedTerm === "all"
+              ? "bg-gray-800 text-white"
+              : "bg-gray-100 text-gray-600"
+          }`}
+        >
+          전체
+        </button>
+        {terms.map((t) => (
+          <div key={t.id} className="flex items-center">
+            <button
+              onClick={() => setSelectedTerm(t.id)}
+              className={`text-xs px-2.5 py-1 rounded-lg ${
+                selectedTerm === t.id
+                  ? "bg-[#245B3E] text-white"
+                  : "bg-gray-100 text-gray-600"
+              }`}
+            >
+              {t.name} ({t._count.classes}){t.isCurrent && " ★현재"}
+            </button>
+            {!t.isCurrent && (
+              <button
+                onClick={() => setCurrentTerm(t.id)}
+                className="ml-1 text-[11px] text-blue-600 hover:underline"
+                title="현재 학년도로 설정"
+              >
+                현재로
+              </button>
+            )}
+          </div>
+        ))}
+        <button
+          onClick={createTerm}
+          className="text-xs px-2.5 py-1 rounded-lg bg-blue-50 text-blue-600 border border-blue-200"
+        >
+          + 새 학년도
+        </button>
+        <Link
+          href="/admin/promotion"
+          className="ml-auto text-xs px-3 py-1.5 rounded-lg bg-[#245B3E] text-white"
+        >
+          진급 마법사 ↗
+        </Link>
+      </div>
+
       {/* 생성 폼 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h3 className="font-semibold text-gray-800 mb-4">새 반 만들기</h3>
@@ -200,16 +294,16 @@ export default function ClassesPage() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
         <div className="p-4 border-b border-gray-100">
           <h3 className="font-semibold text-gray-800">
-            반 목록 {loading ? "" : `(${classes.length})`}
+            반 목록 {loading ? "" : `(${visibleClasses.length})`}
           </h3>
         </div>
         {loading ? (
           <div className="p-8 text-center text-gray-400">불러오는 중...</div>
-        ) : classes.length === 0 ? (
-          <div className="p-8 text-center text-gray-400">아직 만든 반이 없습니다.</div>
+        ) : visibleClasses.length === 0 ? (
+          <div className="p-8 text-center text-gray-400">이 학년도에 반이 없습니다.</div>
         ) : (
           <ul className="divide-y divide-gray-100">
-            {classes.map((c) => (
+            {visibleClasses.map((c) => (
               <li key={c.id} className="p-4">
                 <div className="flex items-center justify-between gap-4 flex-wrap">
                   <div className="flex items-center gap-3">
