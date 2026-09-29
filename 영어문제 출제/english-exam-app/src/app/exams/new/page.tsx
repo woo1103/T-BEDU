@@ -101,6 +101,123 @@ export default function NewExamPage() {
     );
   }
 
+  // ===== 학년별·유형별 자동 구성 =====
+  const [gyOpen, setGyOpen] = useState(false);
+  const [gyGrade, setGyGrade] = useState("고1");
+  const [gyTypes, setGyTypes] = useState<AiTypeSel[]>([]);
+  const [gyRunning, setGyRunning] = useState(false);
+  const [gyLog, setGyLog] = useState("");
+  const GY_GRADES = ["중1", "중2", "중3", "고1", "고2", "고3"];
+
+  function toggleGyType(code: string, name: string) {
+    setGyTypes((prev) => {
+      const ex = prev.find((t) => t.code === code);
+      if (ex) return prev.filter((t) => t.code !== code);
+      return [...prev, { code, name, count: 1 }];
+    });
+  }
+  function updateGyCount(code: string, count: number) {
+    setGyTypes((prev) =>
+      prev.map((t) => (t.code === code ? { ...t, count: Math.max(1, count) } : t))
+    );
+  }
+
+  // AI로 1문항 생성 후 은행 저장 → id 반환
+  async function generateAndSaveOne(code: string): Promise<string | null> {
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ examType, questionType: code, difficulty: "medium" }),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      const writing = isWritingType(code);
+      const ci = (data.choices || []).map(
+        (c: { text: string; isCorrect: boolean }, i: number) => ({
+          label: CIRCLE_LABELS[i] ?? `(${i + 1})`,
+          text: c.text,
+          isCorrect: c.isCorrect,
+        })
+      );
+      const ans = writing
+        ? data.answer
+        : ci.find((c: { isCorrect: boolean }) => c.isCorrect)?.label || "";
+      const save = await fetch("/api/questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          examType,
+          questionType: code,
+          points: data.points || 2,
+          passage: data.passage,
+          question: data.question,
+          choices: writing ? [] : ci,
+          answer: ans,
+          explanation: data.explanation,
+          difficulty: "medium",
+          aiGenerated: true,
+          source: "AI 생성 (Claude)",
+        }),
+      });
+      if (save.ok) return (await save.json()).id as string;
+    } catch {
+      /* skip */
+    }
+    return null;
+  }
+
+  // 학년+유형별: 은행에서 우선 채우고, 모자라면 AI로 부족분 생성
+  async function autoCompose() {
+    if (gyTypes.length === 0) {
+      alert("유형을 1개 이상 선택하세요.");
+      return;
+    }
+    setGyRunning(true);
+    setGyLog("");
+    let picked = 0;
+    let generated = 0;
+    const newIds: string[] = [];
+    const alreadySelected = new Set(selectedItems.map((i) => i.questionId));
+
+    for (const t of gyTypes) {
+      const matches = availableQuestions.filter(
+        (q) =>
+          q.questionType === t.code &&
+          q.passageRef?.grade === gyGrade &&
+          !alreadySelected.has(q.id) &&
+          !newIds.includes(q.id)
+      );
+      const take = matches.slice(0, t.count);
+      if (take.length > 0) {
+        addQuestions(take);
+        take.forEach((q) => alreadySelected.add(q.id));
+        picked += take.length;
+      }
+      const shortfall = t.count - take.length;
+      for (let i = 0; i < shortfall; i++) {
+        setGyLog(`${t.name} 생성 중... (${i + 1}/${shortfall})`);
+        const id = await generateAndSaveOne(t.code);
+        if (id) {
+          newIds.push(id);
+          generated++;
+        }
+      }
+    }
+
+    if (newIds.length > 0) {
+      try {
+        const fresh = (await (await fetch("/api/questions")).json()) as QuestionRow[];
+        setAvailableQuestions(fresh);
+        addQuestions(fresh.filter((q) => newIds.includes(q.id)));
+      } catch {
+        /* ignore */
+      }
+    }
+    setGyRunning(false);
+    setGyLog(`완료: 은행 ${picked}문항 + 생성 ${generated}문항 추가`);
+  }
+
   const aiQuestionTypes = getQuestionTypes(examType);
   const aiTypesTotal = aiTypes.reduce((sum, t) => sum + t.count, 0);
 
@@ -519,6 +636,99 @@ export default function NewExamPage() {
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
           />
         </div>
+      </div>
+
+      {/* 학년별·유형별 자동 구성 */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <button
+          onClick={() => setGyOpen((v) => !v)}
+          className="flex items-center gap-2 font-semibold text-gray-800"
+        >
+          <span>🎯 학년별·유형별 자동 구성</span>
+          <span className="text-xs text-gray-400">{gyOpen ? "▲" : "▼"}</span>
+        </button>
+        {gyOpen && (
+          <div className="mt-4 space-y-4">
+            <p className="text-xs text-gray-500">
+              학년과 유형·개수를 정하면 <b>문제 은행에서 먼저 채우고, 모자라면 AI가 부족분만 생성</b>해 시험지에 추가합니다.
+            </p>
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-gray-600">학년</label>
+              <select
+                value={gyGrade}
+                onChange={(e) => setGyGrade(e.target.value)}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              >
+                {GY_GRADES.map((g) => (
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
+                ))}
+              </select>
+              <span className="text-xs text-gray-400">
+                (은행은 지문에 연결된 학년 기준)
+              </span>
+            </div>
+
+            {/* 유형 선택 */}
+            {(() => {
+              const cats = new Map<string, typeof aiQuestionTypes>();
+              aiQuestionTypes.forEach((qt) => {
+                if (!cats.has(qt.category)) cats.set(qt.category, []);
+                cats.get(qt.category)!.push(qt);
+              });
+              return Array.from(cats.entries()).map(([cat, types]) => (
+                <div key={cat}>
+                  <p className="text-xs text-gray-400 font-medium mb-1">{cat}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {types.map((qt) => {
+                      const sel = gyTypes.some((t) => t.code === qt.code);
+                      return (
+                        <button
+                          key={qt.code}
+                          onClick={() => toggleGyType(qt.code, qt.name)}
+                          className={`px-2.5 py-1 rounded-lg text-xs ${
+                            sel
+                              ? "bg-blue-600 text-white"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          {qt.number}번 {qt.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ));
+            })()}
+
+            {/* 선택 유형별 개수 */}
+            {gyTypes.length > 0 && (
+              <div className="border-t border-gray-100 pt-3 space-y-2">
+                {gyTypes.map((st) => (
+                  <div key={st.code} className="flex items-center gap-3 bg-blue-50 rounded-lg px-3 py-1.5">
+                    <span className="text-sm text-blue-800 flex-1">{st.name}</span>
+                    <button onClick={() => updateGyCount(st.code, st.count - 1)} className="w-6 h-6 rounded bg-blue-200 text-blue-700 text-sm">-</button>
+                    <span className="text-sm font-medium w-6 text-center">{st.count}</span>
+                    <button onClick={() => updateGyCount(st.code, st.count + 1)} className="w-6 h-6 rounded bg-blue-200 text-blue-700 text-sm">+</button>
+                    <span className="text-xs text-blue-600">문항</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={autoCompose}
+                disabled={gyRunning || gyTypes.length === 0}
+                className="px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              >
+                {gyRunning ? "구성 중..." : "자동 구성"}
+              </button>
+              {gyLog && <span className="text-xs text-gray-500">{gyLog}</span>}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-6">
