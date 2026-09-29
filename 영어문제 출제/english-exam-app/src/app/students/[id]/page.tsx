@@ -91,6 +91,7 @@ export default function StudentDetailPage({
   const [editItems, setEditItems] = useState<GradeItem[]>([]);
   const [gradeLoading, setGradeLoading] = useState(false);
   const [savingGrade, setSavingGrade] = useState(false);
+  const [wrongOnly, setWrongOnly] = useState(false);
 
   async function openGrade(subId: string) {
     if (editSubId === subId) {
@@ -340,7 +341,17 @@ export default function StudentDetailPage({
                       </p>
                     ) : (
                       <>
-                        {editItems.map((it) => (
+                        <label className="flex items-center gap-1.5 text-xs text-gray-600 mb-1">
+                          <input
+                            type="checkbox"
+                            checked={wrongOnly}
+                            onChange={(e) => setWrongOnly(e.target.checked)}
+                          />
+                          틀린 것만 보기 ({editItems.filter((i) => !i.isCorrect).length}개)
+                        </label>
+                        {editItems
+                          .filter((it) => !wrongOnly || !it.isCorrect)
+                          .map((it) => (
                           <div
                             key={it.answerId}
                             className="bg-white rounded-lg border border-gray-200 p-3"

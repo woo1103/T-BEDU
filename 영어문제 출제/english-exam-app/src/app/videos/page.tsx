@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 interface VideoRow {
   id: string;
   subject: string;
+  grade: string | null;
   title: string;
   url: string;
   _count: { assignments: number; watchProgress: number };
@@ -12,6 +13,7 @@ interface VideoRow {
 interface ClassRow {
   id: string;
   name: string;
+  grade?: string | null;
   center: { name: string };
 }
 
@@ -20,19 +22,32 @@ const SUBJECT_LABEL: Record<string, string> = {
   math: "수학",
   etc: "기타",
 };
+const GRADES = ["중1", "중2", "중3", "고1", "고2", "고3"];
 
 export default function VideosPage() {
   const [videos, setVideos] = useState<VideoRow[]>([]);
   const [classes, setClasses] = useState<ClassRow[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 등록 폼
   const [subject, setSubject] = useState("english");
+  const [grade, setGrade] = useState("");
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
   const [saving, setSaving] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+
+  // 필터 + 선택
+  const [filterSubject, setFilterSubject] = useState("");
+  const [filterGrade, setFilterGrade] = useState("");
+  const [checked, setChecked] = useState<Set<string>>(new Set());
+
+  // 배정 모달
+  const [assignVideoIds, setAssignVideoIds] = useState<string[]>([]);
+  const [assignClassIds, setAssignClassIds] = useState<Set<string>>(new Set());
+  const [assigning, setAssigning] = useState(false);
 
   async function load() {
     const [vRes, cRes] = await Promise.all([
@@ -56,7 +71,7 @@ export default function VideosPage() {
     const res = await fetch("/api/videos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ subject, title, url, description }),
+      body: JSON.stringify({ subject, grade: grade || undefined, title, url, description }),
     });
     setSaving(false);
     if (!res.ok) {
@@ -95,7 +110,7 @@ export default function VideosPage() {
       const res = await fetch("/api/videos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject, title, description, provider: "r2", url: key }),
+        body: JSON.stringify({ subject, grade: grade || undefined, title, description, provider: "r2", url: key }),
       });
       if (!res.ok) throw new Error((await res.json()).error || "등록 실패");
 
@@ -111,31 +126,77 @@ export default function VideosPage() {
     }
   }
 
-  async function assign(v: VideoRow) {
-    if (classes.length === 0) {
-      alert("먼저 반을 만들어 주세요.");
-      return;
-    }
-    const list = classes.map((c, i) => `${i + 1}. ${c.center.name} ${c.name}`).join("\n");
-    const pick = prompt(`영상을 노출할 반 번호:\n${list}`);
-    if (!pick) return;
-    const cls = classes[parseInt(pick, 10) - 1];
-    if (!cls) return;
-    const res = await fetch(`/api/videos/${v.id}/assign`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ classId: cls.id }),
-    });
-    if (res.ok) {
-      alert(`'${cls.name}'에 노출되었습니다.`);
-      await load();
-    } else alert((await res.json()).error || "실패");
-  }
-
   async function remove(v: VideoRow) {
     if (!confirm("이 영상을 삭제할까요?")) return;
     const res = await fetch(`/api/videos/${v.id}`, { method: "DELETE" });
     if (res.ok) await load();
+  }
+
+  const filtered = videos.filter(
+    (v) =>
+      (!filterSubject || v.subject === filterSubject) &&
+      (!filterGrade || v.grade === filterGrade)
+  );
+
+  function toggleVideo(id: string) {
+    setChecked((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+  }
+  function toggleAllVisible() {
+    const ids = filtered.map((v) => v.id);
+    const allOn = ids.every((id) => checked.has(id));
+    setChecked((prev) => {
+      const n = new Set(prev);
+      if (allOn) ids.forEach((id) => n.delete(id));
+      else ids.forEach((id) => n.add(id));
+      return n;
+    });
+  }
+
+  function openAssign(videoIds: string[]) {
+    if (classes.length === 0) {
+      alert("먼저 반을 만들어 주세요.");
+      return;
+    }
+    setAssignVideoIds(videoIds);
+    setAssignClassIds(new Set());
+  }
+  function toggleAssignClass(id: string) {
+    setAssignClassIds((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+  }
+  async function submitAssign() {
+    if (assignClassIds.size === 0) {
+      alert("노출할 반을 1개 이상 선택하세요.");
+      return;
+    }
+    setAssigning(true);
+    const res = await fetch("/api/videos/assign-bulk", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        videoIds: assignVideoIds,
+        classIds: [...assignClassIds],
+      }),
+    });
+    setAssigning(false);
+    if (res.ok) {
+      const r = await res.json();
+      alert(`${r.created}건 노출 완료.`);
+      setAssignVideoIds([]);
+      setChecked(new Set());
+      await load();
+    } else {
+      alert((await res.json()).error || "배정 실패");
+    }
   }
 
   return (
@@ -144,14 +205,14 @@ export default function VideosPage() {
         <h2 className="text-2xl font-bold text-gray-900">영상 강의</h2>
         <p className="text-sm text-gray-500 mt-1">
           유튜브 링크 또는 재생 URL(HLS .m3u8 / mp4)을 등록하고 반에 노출하면, 학생 앱에서
-          시청·진도율이 기록됩니다. 유튜브는 <b>미등록(일부 공개)</b>으로 올린 뒤 링크를 붙여넣으세요.
+          시청·진도율이 기록됩니다. 여러 영상을 체크해 <b>여러 반에 한 번에</b> 노출할 수 있어요.
         </p>
       </div>
 
       {/* 등록 폼 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-3">
         <h3 className="font-semibold text-gray-800">새 영상 등록</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <select
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
@@ -161,23 +222,35 @@ export default function VideosPage() {
             <option value="math">수학</option>
             <option value="etc">기타</option>
           </select>
+          <select
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+          >
+            <option value="">학년 전체</option>
+            {GRADES.map((g) => (
+              <option key={g} value={g}>
+                {g}
+              </option>
+            ))}
+          </select>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="영상 제목"
-            className="md:col-span-3 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="col-span-2 md:col-span-2 border border-gray-300 rounded-lg px-3 py-2 text-sm"
           />
           <input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="유튜브 링크 또는 재생 URL (.m3u8 / .mp4)"
-            className="md:col-span-4 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="col-span-2 md:col-span-4 border border-gray-300 rounded-lg px-3 py-2 text-sm"
           />
           <input
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="설명 (선택)"
-            className="md:col-span-4 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="col-span-2 md:col-span-4 border border-gray-300 rounded-lg px-3 py-2 text-sm"
           />
         </div>
         <div className="flex items-center gap-2 flex-wrap">
@@ -210,30 +283,85 @@ export default function VideosPage() {
               {uploading ? "업로드 중..." : "파일 업로드 & 등록"}
             </button>
           </div>
-          <p className="text-xs text-gray-400 mt-1">
-            제목·과목을 먼저 입력한 뒤 파일을 선택하세요. R2 미설정 시 안내가 표시됩니다.
-          </p>
         </div>
       </div>
 
-      {/* 목록 */}
+      {/* 목록 + 필터 + 다중배정 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-        <div className="p-4 border-b border-gray-100 font-semibold text-gray-800">
-          등록된 영상 {loading ? "" : `(${videos.length})`}
+        <div className="p-4 border-b border-gray-100 flex items-center gap-2 flex-wrap">
+          <span className="font-semibold text-gray-800">
+            등록된 영상 {loading ? "" : `(${filtered.length})`}
+          </span>
+          <select
+            value={filterSubject}
+            onChange={(e) => setFilterSubject(e.target.value)}
+            className="ml-auto border border-gray-300 rounded-lg px-2 py-1 text-xs"
+          >
+            <option value="">과목 전체</option>
+            <option value="english">영어</option>
+            <option value="math">수학</option>
+            <option value="etc">기타</option>
+          </select>
+          <select
+            value={filterGrade}
+            onChange={(e) => setFilterGrade(e.target.value)}
+            className="border border-gray-300 rounded-lg px-2 py-1 text-xs"
+          >
+            <option value="">학년 전체</option>
+            {GRADES.map((g) => (
+              <option key={g} value={g}>
+                {g}
+              </option>
+            ))}
+          </select>
         </div>
+
+        {/* 다중 선택 바 */}
+        {!loading && filtered.length > 0 && (
+          <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 flex items-center gap-3 text-sm">
+            <label className="flex items-center gap-1.5 text-gray-600">
+              <input
+                type="checkbox"
+                checked={filtered.every((v) => checked.has(v.id))}
+                onChange={toggleAllVisible}
+              />
+              전체 선택
+            </label>
+            <span className="text-xs text-gray-400">{checked.size}개 선택됨</span>
+            {checked.size > 0 && (
+              <button
+                onClick={() => openAssign([...checked])}
+                className="ml-auto text-xs px-3 py-1.5 bg-[#245B3E] text-white rounded-lg"
+              >
+                선택 {checked.size}개 → 반에 노출
+              </button>
+            )}
+          </div>
+        )}
+
         {loading ? (
           <div className="p-8 text-center text-gray-400">불러오는 중...</div>
-        ) : videos.length === 0 ? (
-          <div className="p-8 text-center text-gray-400">등록된 영상이 없습니다.</div>
+        ) : filtered.length === 0 ? (
+          <div className="p-8 text-center text-gray-400">영상이 없습니다.</div>
         ) : (
           <ul className="divide-y divide-gray-100">
-            {videos.map((v) => (
-              <li key={v.id} className="p-4 flex items-center justify-between gap-3">
-                <div className="min-w-0">
+            {filtered.map((v) => (
+              <li key={v.id} className="p-4 flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={checked.has(v.id)}
+                  onChange={() => toggleVideo(v.id)}
+                />
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-xs px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">
                       {SUBJECT_LABEL[v.subject] || v.subject}
                     </span>
+                    {v.grade && (
+                      <span className="text-xs px-1.5 py-0.5 rounded bg-blue-50 text-blue-600">
+                        {v.grade}
+                      </span>
+                    )}
                     <p className="font-medium text-gray-800 truncate">{v.title}</p>
                   </div>
                   <p className="text-xs text-gray-400 mt-0.5">
@@ -242,7 +370,7 @@ export default function VideosPage() {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
-                    onClick={() => assign(v)}
+                    onClick={() => openAssign([v.id])}
                     className="text-sm px-3 py-1.5 bg-[#245B3E] text-white rounded-lg"
                   >
                     반 노출
@@ -259,6 +387,75 @@ export default function VideosPage() {
           </ul>
         )}
       </div>
+
+      {/* 반 배정 모달 (여러 반 동시) */}
+      {assignVideoIds.length > 0 && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+          onClick={() => !assigning && setAssignVideoIds([])}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[80vh] overflow-y-auto p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>
+              <h3 className="text-lg font-bold text-gray-800">반에 노출</h3>
+              <p className="text-sm text-gray-500 mt-1">
+                영상 {assignVideoIds.length}개 → 선택한 반(들)에 한 번에 노출
+              </p>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">반 선택</span>
+              <button
+                onClick={() =>
+                  setAssignClassIds((prev) =>
+                    prev.size === classes.length
+                      ? new Set()
+                      : new Set(classes.map((c) => c.id))
+                  )
+                }
+                className="text-xs text-[#245B3E] hover:underline"
+              >
+                전체 선택/해제
+              </button>
+            </div>
+            <div className="space-y-1 max-h-64 overflow-y-auto border border-gray-100 rounded-lg p-2">
+              {classes.map((c) => (
+                <label
+                  key={c.id}
+                  className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 cursor-pointer text-sm"
+                >
+                  <input
+                    type="checkbox"
+                    checked={assignClassIds.has(c.id)}
+                    onChange={() => toggleAssignClass(c.id)}
+                  />
+                  <span className="text-gray-700">
+                    {c.center.name} · {c.name}
+                    {c.grade && <span className="text-gray-400"> ({c.grade})</span>}
+                  </span>
+                </label>
+              ))}
+            </div>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setAssignVideoIds([])}
+                disabled={assigning}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm"
+              >
+                취소
+              </button>
+              <button
+                onClick={submitAssign}
+                disabled={assigning || assignClassIds.size === 0}
+                className="px-4 py-2 bg-[#245B3E] text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              >
+                {assigning ? "노출 중..." : `${assignClassIds.size}개 반에 노출`}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

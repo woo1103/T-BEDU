@@ -371,6 +371,7 @@ model PushSubscription {
 model Video {
   id          String   @id @default(cuid())
   subject     String   @default("english") // "english" | "math" | "etc"
+  grade       String?  // "중1"~"고3" 등 (없으면 전체)
   title       String
   description String?
   provider    String   @default("url") // "url" | "cloudflare" | "mux" | "vimeo"

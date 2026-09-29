@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
   const video = await prisma.video.create({
     data: {
       subject,
+      grade: body.grade?.trim() || null,
       title: body.title.trim(),
       description: body.description?.trim() || null,
       provider,
