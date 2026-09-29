@@ -11,6 +11,7 @@ const PUBLIC_PATHS = [
   "/api/auth/logout",
   "/api/auth/student",
   "/api/student",
+  "/api/cron", // Vercel Cron 호출 (CRON_SECRET로 각 핸들러가 자체 보호)
 ];
 
 function getSecret(): Uint8Array {
