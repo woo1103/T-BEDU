@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getStudentFromRequest } from "@/lib/student-auth";
+import { normalizeMarkerChoices } from "@/lib/passage-parser";
 
 // 학생이 풀 문항을 내려준다 (정답 제거). [id] = assignmentId
 // 영어(exam): 문항 텍스트+선지. 수학(worksheet): 문제지 파일 + 문항 메타(정답키 제외).
@@ -68,9 +69,18 @@ export async function GET(
   const items = (exam?.items ?? []).map((item) => {
     let choices: { label: string; text: string }[] = [];
     try {
-      choices = (
-        JSON.parse(item.question.choices) as { label: string; text: string }[]
-      ).map((c) => ({ label: c.label, text: c.text }));
+      const parsed = (
+        JSON.parse(item.question.choices) as {
+          label: string;
+          text: string;
+          isCorrect?: boolean;
+        }[]
+      ).map((c) => ({ label: c.label, text: c.text, isCorrect: !!c.isCorrect }));
+      // 마커전용 선지(어법/어휘/삽입 등)는 ①→⑤ 순서로 정렬·정리
+      choices = normalizeMarkerChoices(parsed).map((c) => ({
+        label: c.label,
+        text: c.text,
+      }));
     } catch {
       /* empty */
     }

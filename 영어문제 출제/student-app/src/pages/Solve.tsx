@@ -287,7 +287,10 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
                       >
                         {c.label}
                       </span>
-                      <span>{c.text}</span>
+                      {/* 마커전용 선지(어법/어휘/삽입: text가 ①~⑤)는 라벨과 중복이므로 숨김 */}
+                      {c.text && c.text.trim() !== c.label.trim() && (
+                        <span>{c.text}</span>
+                      )}
                     </button>
                   );
                 })}
