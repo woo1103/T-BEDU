@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, canAccessClass } from "@/lib/api-auth";
 
 // 과제 수정: 마감일/활성/제목
 export async function PATCH(
@@ -44,6 +44,14 @@ export async function DELETE(
   if (!staff) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
 
   const { id } = await params;
+  const asg = await prisma.assignment.findUnique({
+    where: { id },
+    select: { classId: true },
+  });
+  if (!asg) return NextResponse.json({ error: "과제를 찾을 수 없습니다" }, { status: 404 });
+  if (!(await canAccessClass(staff, asg.classId))) {
+    return NextResponse.json({ error: "담당 반이 아닙니다" }, { status: 403 });
+  }
   await prisma.assignment.delete({ where: { id } });
   return NextResponse.json({ success: true });
 }

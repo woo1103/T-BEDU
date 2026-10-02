@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff, canAccessClass } from "@/lib/api-auth";
+import { requireStaff, canAccessClass, isAdmin } from "@/lib/api-auth";
 import { notifyClassStudents } from "@/lib/notify";
 
 export async function GET(request: NextRequest) {
@@ -10,8 +10,10 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const classId = searchParams.get("classId");
 
+  // 담당자는 본인 담당반 과제만
+  const scope = isAdmin(staff) ? {} : { class: { teacherId: staff.sub } };
   const assignments = await prisma.assignment.findMany({
-    where: classId ? { classId } : {},
+    where: classId ? { classId, ...scope } : scope,
     include: {
       assessment: {
         include: { exam: { select: { id: true, title: true } } },

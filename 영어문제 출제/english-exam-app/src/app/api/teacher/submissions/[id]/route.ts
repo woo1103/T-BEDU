@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, canAccessClass } from "@/lib/api-auth";
 import { correctLabel } from "@/lib/grading";
 import { areaNamesForAnswers, computeBreakdown } from "@/lib/achievement";
 
@@ -212,4 +212,27 @@ export async function PATCH(
     totalPoints: sub.totalPoints,
     rate: sub.totalPoints > 0 ? Math.round((score / sub.totalPoints) * 100) : 0,
   });
+}
+
+// 교사: 학생 제출 삭제 (해당 과제를 그 학생이 다시 풀 수 있게). 담당반만.
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const staff = await requireStaff();
+  if (!staff) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
+
+  const { id } = await params;
+  const sub = await prisma.submission.findUnique({
+    where: { id },
+    select: { assignment: { select: { classId: true } } },
+  });
+  if (!sub) return NextResponse.json({ error: "제출을 찾을 수 없습니다" }, { status: 404 });
+  if (!(await canAccessClass(staff, sub.assignment.classId))) {
+    return NextResponse.json({ error: "담당 반이 아닙니다" }, { status: 403 });
+  }
+  // 성취도 스냅샷 정리 후 제출 삭제(답안·오답노트는 cascade)
+  await prisma.achievementSnapshot.deleteMany({ where: { submissionId: id } });
+  await prisma.submission.delete({ where: { id } });
+  return NextResponse.json({ success: true });
 }

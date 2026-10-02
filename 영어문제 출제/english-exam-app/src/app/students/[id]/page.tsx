@@ -110,6 +110,22 @@ export default function StudentDetailPage({
       prev.map((it) => (it.answerId === answerId ? { ...it, ...patch } : it))
     );
   }
+  async function deleteSubmission(subId: string, title: string) {
+    if (
+      !confirm(
+        `'${title}' 제출 기록을 삭제할까요?\n삭제하면 이 학생은 해당 과제를 다시 풀 수 있습니다. (되돌릴 수 없음)`
+      )
+    )
+      return;
+    const res = await fetch(`/api/teacher/submissions/${subId}`, { method: "DELETE" });
+    if (res.ok) {
+      if (editSubId === subId) setEditSubId(null);
+      await load();
+    } else {
+      alert((await res.json()).error || "삭제 실패");
+    }
+  }
+
   async function saveGrade() {
     if (!editSubId) return;
     setSavingGrade(true);
@@ -329,6 +345,12 @@ export default function StudentDetailPage({
                       className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded"
                     >
                       {editSubId === s.id ? "닫기" : "채점 수정"}
+                    </button>
+                    <button
+                      onClick={() => deleteSubmission(s.id, s.title)}
+                      className="text-xs px-2 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded"
+                    >
+                      제출 삭제
                     </button>
                   </div>
                 </div>
