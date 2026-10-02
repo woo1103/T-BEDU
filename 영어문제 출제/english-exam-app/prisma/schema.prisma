@@ -41,6 +41,8 @@ model Exam {
   id           String   @id @default(cuid())
   title        String   // "2학기 중간고사 영어"
   examType     String   // "suneung" | "naesin" 등
+  grade        String?  // 트리용 학년 (고1 등)
+  source       String?  // 트리용 지문 출처 (교과서/올림포스/모의고사 등)
   description  String?
   totalPoints  Int      @default(100)
   timeLimit    Int?     // 분 단위
@@ -385,6 +387,7 @@ model Video {
   id          String   @id @default(cuid())
   subject     String   @default("english") // "english" | "math" | "etc"
   grade       String?  // "중1"~"고3" 등 (없으면 전체)
+  source      String?  // 지문 출처 (교과서/올림포스/모의고사 등, 영어)
   title       String
   description String?
   provider    String   @default("url") // "url" | "cloudflare" | "mux" | "vimeo"

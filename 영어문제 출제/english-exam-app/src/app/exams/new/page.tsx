@@ -74,6 +74,7 @@ export default function NewExamPage() {
   const [timeLimit, setTimeLimit] = useState<number | undefined>(70);
   const [school, setSchool] = useState("");
   const [grade, setGrade] = useState("");
+  const [examSource, setExamSource] = useState("");
   const [instructions, setInstructions] = useState(
     "문항에 따라 배점이 다릅니다. 3점 문항에는 점수가 표시되어 있습니다. 점수 표시가 없는 문항은 모두 2점입니다."
   );
@@ -562,6 +563,8 @@ export default function NewExamPage() {
         body: JSON.stringify({
           title,
           examType,
+          grade: grade || undefined,
+          source: examSource || undefined,
           totalPoints: calculatedTotal,
           timeLimit,
           headerInfo: { school, grade, date: new Date().toISOString().split("T")[0] },
@@ -628,6 +631,16 @@ export default function NewExamPage() {
               value={grade}
               onChange={(e) => setGrade(e.target.value)}
               placeholder="예: 고2"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">지문 출처</label>
+            <input
+              type="text"
+              value={examSource}
+              onChange={(e) => setExamSource(e.target.value)}
+              placeholder="교과서/올림포스/모의고사 등"
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
             />
           </div>

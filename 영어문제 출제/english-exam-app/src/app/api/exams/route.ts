@@ -16,6 +16,8 @@ export async function POST(request: NextRequest) {
     data: {
       title: body.title,
       examType: body.examType,
+      grade: body.grade || body.headerInfo?.grade || null,
+      source: body.source || null,
       description: body.description || null,
       totalPoints: body.totalPoints || 100,
       timeLimit: body.timeLimit || null,

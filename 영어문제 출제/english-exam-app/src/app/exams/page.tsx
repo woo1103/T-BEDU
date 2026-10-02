@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { EXAM_TYPE_MAP } from "@/lib/question-types";
+import SourceTree from "@/components/SourceTree";
 import type { ExamType } from "@/types";
 
 interface ExamRow {
   id: string;
   title: string;
   examType: string;
+  grade: string | null;
+  source: string | null;
   totalPoints: number;
   timeLimit: number | null;
   createdAt: string;
@@ -115,59 +118,46 @@ export default function ExamsPage() {
             </Link>
           </div>
         ) : (
-          <ul className="divide-y divide-gray-100">
-            {exams.map((exam) => (
-              <li key={exam.id} className="flex items-center justify-between p-4 hover:bg-gray-50">
-                <div>
+          <SourceTree
+            items={exams.map((e) => ({ ...e, subject: "english" }))}
+            renderItem={(exam) => (
+              <div className="flex items-center justify-between gap-3 py-1.5">
+                <div className="min-w-0">
                   <Link
                     href={`/exams/${exam.id}`}
                     className="text-sm font-medium text-gray-800 hover:text-blue-600"
                   >
                     {exam.title}
                   </Link>
-                  <div className="flex gap-2 mt-1">
+                  <div className="flex gap-2 mt-0.5">
                     <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded">
                       {EXAM_TYPE_MAP[exam.examType as ExamType]?.name || exam.examType}
                     </span>
                     <span className="text-xs text-gray-400">
                       {exam.items.length}문항 / {exam.totalPoints}점
                     </span>
-                    {exam.timeLimit && (
-                      <span className="text-xs text-gray-400">
-                        {exam.timeLimit}분
-                      </span>
-                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 shrink-0">
                   <button
                     onClick={() => openAssign(exam)}
                     className="text-xs px-3 py-1.5 bg-[#245B3E] text-white rounded-lg hover:bg-[#1d4a32]"
                   >
                     반 배정
                   </button>
-                  <Link
-                    href={`/exams/${exam.id}/preview`}
-                    className="text-xs text-blue-600 hover:text-blue-700"
-                  >
+                  <Link href={`/exams/${exam.id}/preview`} className="text-xs text-blue-600 hover:text-blue-700">
                     미리보기
                   </Link>
-                  <Link
-                    href={`/exams/${exam.id}/edit`}
-                    className="text-xs text-amber-600 hover:text-amber-700"
-                  >
+                  <Link href={`/exams/${exam.id}/edit`} className="text-xs text-amber-600 hover:text-amber-700">
                     편집
                   </Link>
-                  <button
-                    onClick={() => handleDelete(exam.id)}
-                    className="text-xs text-red-500 hover:text-red-700"
-                  >
+                  <button onClick={() => handleDelete(exam.id)} className="text-xs text-red-500 hover:text-red-700">
                     삭제
                   </button>
                 </div>
-              </li>
-            ))}
-          </ul>
+              </div>
+            )}
+          />
         )}
       </div>
 

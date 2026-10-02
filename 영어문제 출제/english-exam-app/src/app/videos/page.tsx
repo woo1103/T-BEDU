@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import SourceTree from "@/components/SourceTree";
 
 interface VideoRow {
   id: string;
   subject: string;
   grade: string | null;
+  source: string | null;
   title: string;
   url: string;
   _count: { assignments: number; watchProgress: number };
@@ -32,6 +34,7 @@ export default function VideosPage() {
   // 등록 폼
   const [subject, setSubject] = useState("english");
   const [grade, setGrade] = useState("");
+  const [source, setSource] = useState("");
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
@@ -71,7 +74,7 @@ export default function VideosPage() {
     const res = await fetch("/api/videos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ subject, grade: grade || undefined, title, url, description }),
+      body: JSON.stringify({ subject, grade: grade || undefined, source: source || undefined, title, url, description }),
     });
     setSaving(false);
     if (!res.ok) {
@@ -110,7 +113,7 @@ export default function VideosPage() {
       const res = await fetch("/api/videos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject, grade: grade || undefined, title, description, provider: "r2", url: key }),
+        body: JSON.stringify({ subject, grade: grade || undefined, source: source || undefined, title, description, provider: "r2", url: key }),
       });
       if (!res.ok) throw new Error((await res.json()).error || "등록 실패");
 
@@ -137,6 +140,7 @@ export default function VideosPage() {
       (!filterSubject || v.subject === filterSubject) &&
       (!filterGrade || v.grade === filterGrade)
   );
+  const sourceOptions = [...new Set(videos.map((v) => v.source).filter(Boolean))] as string[];
 
   function toggleVideo(id: string) {
     setChecked((prev) => {
@@ -234,6 +238,18 @@ export default function VideosPage() {
               </option>
             ))}
           </select>
+          <input
+            value={source}
+            onChange={(e) => setSource(e.target.value)}
+            list="video-sources"
+            placeholder="출처 (교과서/올림포스/모의고사 등)"
+            className="col-span-2 md:col-span-2 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+          />
+          <datalist id="video-sources">
+            {sourceOptions.map((s) => (
+              <option key={s} value={s} />
+            ))}
+          </datalist>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -344,26 +360,17 @@ export default function VideosPage() {
         ) : filtered.length === 0 ? (
           <div className="p-8 text-center text-gray-400">영상이 없습니다.</div>
         ) : (
-          <ul className="divide-y divide-gray-100">
-            {filtered.map((v) => (
-              <li key={v.id} className="p-4 flex items-center gap-3">
+          <SourceTree
+            items={filtered}
+            renderItem={(v) => (
+              <div className="flex items-center gap-3 py-1.5">
                 <input
                   type="checkbox"
                   checked={checked.has(v.id)}
                   onChange={() => toggleVideo(v.id)}
                 />
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">
-                      {SUBJECT_LABEL[v.subject] || v.subject}
-                    </span>
-                    {v.grade && (
-                      <span className="text-xs px-1.5 py-0.5 rounded bg-blue-50 text-blue-600">
-                        {v.grade}
-                      </span>
-                    )}
-                    <p className="font-medium text-gray-800 truncate">{v.title}</p>
-                  </div>
+                  <p className="font-medium text-gray-800 truncate text-sm">{v.title}</p>
                   <p className="text-xs text-gray-400 mt-0.5">
                     노출 {v._count.assignments}개 반 · 시청 {v._count.watchProgress}명
                   </p>
@@ -371,7 +378,7 @@ export default function VideosPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => openAssign([v.id])}
-                    className="text-sm px-3 py-1.5 bg-[#245B3E] text-white rounded-lg"
+                    className="text-xs px-3 py-1.5 bg-[#245B3E] text-white rounded-lg"
                   >
                     반 노출
                   </button>
@@ -382,9 +389,9 @@ export default function VideosPage() {
                     삭제
                   </button>
                 </div>
-              </li>
-            ))}
-          </ul>
+              </div>
+            )}
+          />
         )}
       </div>
 

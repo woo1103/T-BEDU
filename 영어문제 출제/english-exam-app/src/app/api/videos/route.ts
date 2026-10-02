@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
     data: {
       subject,
       grade: body.grade?.trim() || null,
+      source: body.source?.trim() || null,
       title: body.title.trim(),
       description: body.description?.trim() || null,
       provider,
