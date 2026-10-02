@@ -122,13 +122,22 @@ export default function NewExamPage() {
     );
   }
 
-  // AI로 1문항 생성 후 은행 저장 → id 반환
-  async function generateAndSaveOne(code: string): Promise<string | null> {
+  // AI로 1문항 생성 후 은행 저장 → {id, question, answer} 반환
+  async function generateAndSaveOne(
+    code: string,
+    priorQuestions?: { question: string; answer?: string }[]
+  ): Promise<{ id: string; question: string; answer: string } | null> {
     try {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ examType, questionType: code, difficulty: "medium" }),
+        body: JSON.stringify({
+          examType,
+          questionType: code,
+          difficulty: "medium",
+          priorQuestions:
+            priorQuestions && priorQuestions.length > 0 ? priorQuestions : undefined,
+        }),
       });
       if (!res.ok) return null;
       const data = await res.json();
@@ -160,7 +169,10 @@ export default function NewExamPage() {
           source: "AI 생성 (Claude)",
         }),
       });
-      if (save.ok) return (await save.json()).id as string;
+      if (save.ok) {
+        const id = (await save.json()).id as string;
+        return { id, question: data.question || "", answer: ans };
+      }
     } catch {
       /* skip */
     }
@@ -195,11 +207,14 @@ export default function NewExamPage() {
         picked += take.length;
       }
       const shortfall = t.count - take.length;
+      // 번호마다 소재·구성이 달라지도록 직전 생성 문항을 단서로 누적
+      const siblings: { question: string; answer?: string }[] = [];
       for (let i = 0; i < shortfall; i++) {
         setGyLog(`${t.name} 생성 중... (${i + 1}/${shortfall})`);
-        const id = await generateAndSaveOne(t.code);
-        if (id) {
-          newIds.push(id);
+        const r = await generateAndSaveOne(t.code, siblings.length > 0 ? siblings : undefined);
+        if (r) {
+          newIds.push(r.id);
+          siblings.push({ question: r.question, answer: r.answer || undefined });
           generated++;
         }
       }

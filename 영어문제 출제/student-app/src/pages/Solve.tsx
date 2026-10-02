@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PassageView from "../components/PassageView";
 import {
   getAssessment,
   submitAnswers,
@@ -240,11 +241,7 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
                 <p className="text-sm font-medium text-gray-800">{it.question}</p>
               </div>
               {it.passage && (
-                <div className="bg-gray-50 rounded-lg p-3 mb-3">
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-700">
-                    {it.passage}
-                  </p>
-                </div>
+                <PassageView passage={it.passage} questionType={it.questionType} />
               )}
               {it.choices.length === 0 ? (
                 <div>
