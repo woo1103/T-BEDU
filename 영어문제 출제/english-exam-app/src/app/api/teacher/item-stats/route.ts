@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, isAdmin, canAccessClass } from "@/lib/api-auth";
 import { getQuestionTypeInfo } from "@/lib/question-types";
 
 // 정답률 낮은 문항 리포트. GET ?classId=(선택)&limit=
@@ -12,11 +12,18 @@ export async function GET(request: NextRequest) {
   const classId = url.searchParams.get("classId");
   const limit = Number(url.searchParams.get("limit")) || 20;
 
-  // 대상 제출의 답안 수집 (반 필터 선택)
+  if (classId && !(await canAccessClass(staff, classId))) {
+    return NextResponse.json({ error: "담당 반이 아닙니다" }, { status: 403 });
+  }
+
+  // 답안 범위: 특정 반 지정 시 그 반, 아니면 담당자는 본인 담당반 전체(관리자는 전부)
+  const answerWhere = classId
+    ? { submission: { assignment: { classId } } }
+    : isAdmin(staff)
+    ? {}
+    : { submission: { assignment: { class: { teacherId: staff.sub } } } };
   const answers = await prisma.answer.findMany({
-    where: classId
-      ? { submission: { assignment: { classId } } }
-      : {},
+    where: answerWhere,
     select: { refId: true, refType: true, isCorrect: true },
   });
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, canAccessClass } from "@/lib/api-auth";
 import { notifyClassStudents } from "@/lib/notify";
 
 export async function GET(request: NextRequest) {
@@ -39,6 +39,9 @@ export async function POST(request: NextRequest) {
 
   const cls = await prisma.class.findUnique({ where: { id: body.classId } });
   if (!cls) return NextResponse.json({ error: "반을 찾을 수 없습니다" }, { status: 400 });
+  if (!(await canAccessClass(staff, body.classId))) {
+    return NextResponse.json({ error: "담당 반이 아닙니다" }, { status: 403 });
+  }
 
   let assessmentData: {
     subject: string;

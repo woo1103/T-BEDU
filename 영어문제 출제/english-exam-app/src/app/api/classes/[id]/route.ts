@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, isAdmin } from "@/lib/api-auth";
 import { generateUniqueClassCode } from "@/lib/class-code";
 
 const VALID_SUBJECTS = ["english", "math", "both"];
@@ -51,6 +51,10 @@ export async function PATCH(
   if (VALID_SUBJECTS.includes(body.subject)) data.subject = body.subject;
   if (typeof body.active === "boolean") data.active = body.active;
   if (body.regenerateCode === true) data.code = await generateUniqueClassCode();
+  // 담당자 지정은 관리자만
+  if (body.teacherId !== undefined && isAdmin(staff)) {
+    data.teacherId = body.teacherId || null;
+  }
 
   if (Object.keys(data).length === 0) {
     return NextResponse.json({ error: "변경할 내용이 없습니다" }, { status: 400 });

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, classScopeWhere } from "@/lib/api-auth";
 import { generateUniqueClassCode } from "@/lib/class-code";
 import { getCurrentTermId } from "@/lib/terms";
 
@@ -11,13 +11,16 @@ export async function GET(request: NextRequest) {
   if (!staff) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
 
   // ?termId= 로 학년도 필터. "current"면 현재 학년도.
+  // 담당자는 본인 담당반만, 관리자는 전체.
   const termParam = new URL(request.url).searchParams.get("termId");
-  let where: { termId?: string } = {};
+  const where: { termId?: string; teacherId?: string } = {
+    ...classScopeWhere(staff),
+  };
   if (termParam === "current") {
     const cur = await getCurrentTermId();
-    if (cur) where = { termId: cur };
+    if (cur) where.termId = cur;
   } else if (termParam) {
-    where = { termId: termParam };
+    where.termId = termParam;
   }
 
   const classes = await prisma.class.findMany({
@@ -25,6 +28,7 @@ export async function GET(request: NextRequest) {
     include: {
       center: true,
       term: { select: { id: true, name: true, year: true } },
+      teacher: { select: { id: true, username: true } },
       _count: { select: { enrollments: true } },
     },
     orderBy: { createdAt: "desc" },

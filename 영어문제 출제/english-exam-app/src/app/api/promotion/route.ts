@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, isAdmin } from "@/lib/api-auth";
 import { generateUniqueClassCode } from "@/lib/class-code";
 
 interface Plan {
@@ -21,6 +21,18 @@ export async function POST(request: NextRequest) {
   const plans: Plan[] = Array.isArray(body?.plans) ? body.plans : [];
   if (plans.length === 0) {
     return NextResponse.json({ error: "진급할 반을 선택하세요" }, { status: 400 });
+  }
+
+  // 담당자는 본인 담당반만 진급 처리 가능
+  if (!isAdmin(staff)) {
+    const ids = plans.map((p) => p.classId);
+    const owned = await prisma.class.findMany({
+      where: { id: { in: ids }, teacherId: staff.sub },
+      select: { id: true },
+    });
+    if (owned.length !== ids.length) {
+      return NextResponse.json({ error: "담당 반만 진급할 수 있습니다" }, { status: 403 });
+    }
   }
 
   // 1) 대상 학년도 확정 (기존 or 신규) → 현재 학년도로 설정

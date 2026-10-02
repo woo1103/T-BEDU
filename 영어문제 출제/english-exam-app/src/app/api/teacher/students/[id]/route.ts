@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, isAdmin } from "@/lib/api-auth";
 import { studentAchievement } from "@/lib/achievement";
 
 // 교사: 한 학생의 프로필 + 성취도 + 최근 제출 + 코멘트. [id] = StudentProfile.id
@@ -25,6 +25,17 @@ export async function GET(
   });
   if (!profile) {
     return NextResponse.json({ error: "학생을 찾을 수 없습니다" }, { status: 404 });
+  }
+
+  // 담당자는 본인 담당반 소속 학생만 열람
+  if (!isAdmin(staff)) {
+    const owned = await prisma.enrollment.findFirst({
+      where: { studentId: id, class: { teacherId: staff.sub } },
+      select: { id: true },
+    });
+    if (!owned) {
+      return NextResponse.json({ error: "담당 학생이 아닙니다" }, { status: 403 });
+    }
   }
 
   const achievement = await studentAchievement(id);

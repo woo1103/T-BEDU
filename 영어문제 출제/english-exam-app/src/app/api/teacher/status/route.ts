@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, canAccessClass } from "@/lib/api-auth";
 
 // 반별 현황판: 과제 미제출자 + 영상 미시청자. GET ?classId=
 export async function GET(request: NextRequest) {
@@ -10,6 +10,9 @@ export async function GET(request: NextRequest) {
   const classId = new URL(request.url).searchParams.get("classId");
   if (!classId) {
     return NextResponse.json({ error: "classId가 필요합니다" }, { status: 400 });
+  }
+  if (!(await canAccessClass(staff, classId))) {
+    return NextResponse.json({ error: "담당 반이 아닙니다" }, { status: 403 });
   }
 
   const cls = await prisma.class.findUnique({

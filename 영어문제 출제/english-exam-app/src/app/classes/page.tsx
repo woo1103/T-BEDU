@@ -17,7 +17,14 @@ interface ClassRow {
   active: boolean;
   center: Center;
   term?: { id: string; name: string; year: number } | null;
+  teacher?: { id: string; username: string } | null;
   _count: { enrollments: number };
+}
+
+interface StaffUser {
+  id: string;
+  username: string;
+  role: string;
 }
 
 interface Term {
@@ -55,6 +62,10 @@ export default function ClassesPage() {
   const [terms, setTerms] = useState<Term[]>([]);
   const [selectedTerm, setSelectedTerm] = useState<string>("all");
 
+  // 권한(담당자 지정용)
+  const [role, setRole] = useState<string>("");
+  const [teachers, setTeachers] = useState<StaffUser[]>([]);
+
   // 생성 폼
   const [name, setName] = useState("");
   const [grade, setGrade] = useState("고1");
@@ -81,6 +92,27 @@ export default function ClassesPage() {
     setTerms(t.terms || []);
     if (!centerId && c.centers?.[0]) setCenterId(c.centers[0].id);
     setLoading(false);
+
+    // 권한 + 담당자(교사) 목록 (관리자만 users 접근 가능)
+    try {
+      const me = await (await fetch("/api/auth/me")).json();
+      setRole(me.user?.role ?? "");
+      if (me.user?.role === "admin") {
+        const u = await (await fetch("/api/users")).json();
+        setTeachers((u.users || []).filter((x: StaffUser) => x.role === "teacher"));
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function setClassTeacher(classId: string, teacherId: string) {
+    const res = await fetch(`/api/classes/${classId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ teacherId: teacherId || null }),
+    });
+    if (res.ok) await load();
   }
 
   async function createTerm() {
@@ -314,6 +346,27 @@ export default function ClassesPage() {
                     <span className="text-xs text-gray-500">
                       {c.grade} · {SUBJECT_LABEL[c.subject] || c.subject}
                     </span>
+                    {role === "admin" ? (
+                      <select
+                        value={c.teacher?.id ?? ""}
+                        onChange={(e) => setClassTeacher(c.id, e.target.value)}
+                        className="text-xs border border-gray-200 rounded px-1.5 py-0.5 text-gray-600"
+                        title="담당자 지정"
+                      >
+                        <option value="">담당자 미지정</option>
+                        {teachers.map((t) => (
+                          <option key={t.id} value={t.id}>
+                            담당: {t.username}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      c.teacher && (
+                        <span className="text-xs px-1.5 py-0.5 rounded bg-green-50 text-green-700">
+                          담당: {c.teacher.username}
+                        </span>
+                      )
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <button

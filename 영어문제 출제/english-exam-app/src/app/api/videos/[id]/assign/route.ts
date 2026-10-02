@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, canAccessClass } from "@/lib/api-auth";
 import { notifyClassStudents } from "@/lib/notify";
 
 // 영상을 반에 노출(배정) / 해제. [id] = videoId
@@ -15,6 +15,9 @@ export async function POST(
   const body = await request.json().catch(() => null);
   if (!body?.classId) {
     return NextResponse.json({ error: "반을 선택하세요" }, { status: 400 });
+  }
+  if (!(await canAccessClass(staff, body.classId))) {
+    return NextResponse.json({ error: "담당 반이 아닙니다" }, { status: 403 });
   }
 
   try {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, isAdmin } from "@/lib/api-auth";
 import { notifyClassStudents } from "@/lib/notify";
 
 // 여러 영상을 여러 반에 한 번에 노출(배정). body: { videoIds: [], classIds: [] }
@@ -18,16 +18,29 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // 담당자는 본인 담당반에만 배정 가능
+  let allowedClassIds = classIds;
+  if (!isAdmin(staff)) {
+    const owned = await prisma.class.findMany({
+      where: { id: { in: classIds }, teacherId: staff.sub },
+      select: { id: true },
+    });
+    allowedClassIds = owned.map((c) => c.id);
+    if (allowedClassIds.length === 0) {
+      return NextResponse.json({ error: "담당 반이 없습니다" }, { status: 403 });
+    }
+  }
+
   // 이미 배정된 조합은 건너뛰기
   const existing = await prisma.videoAssignment.findMany({
-    where: { videoId: { in: videoIds }, classId: { in: classIds } },
+    where: { videoId: { in: videoIds }, classId: { in: allowedClassIds } },
     select: { videoId: true, classId: true },
   });
   const existingSet = new Set(existing.map((e) => `${e.videoId}::${e.classId}`));
 
   const toCreate: { videoId: string; classId: string }[] = [];
   for (const v of videoIds) {
-    for (const c of classIds) {
+    for (const c of allowedClassIds) {
       if (!existingSet.has(`${v}::${c}`)) toCreate.push({ videoId: v, classId: c });
     }
   }

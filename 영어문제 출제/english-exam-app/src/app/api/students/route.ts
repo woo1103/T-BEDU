@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireStaff } from "@/lib/api-auth";
+import { requireStaff, isAdmin } from "@/lib/api-auth";
 
 // 학생만 목록 (관리자/담당자). 계정관리(교사/관리자)와 분리.
+// 담당자는 본인 담당반에 소속된 학생만.
 export async function GET() {
   const staff = await requireStaff();
   if (!staff) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
 
   const students = await prisma.studentProfile.findMany({
+    where: isAdmin(staff)
+      ? {}
+      : { enrollments: { some: { class: { teacherId: staff.sub } } } },
     include: {
       user: { select: { username: true } },
       center: { select: { name: true } },
