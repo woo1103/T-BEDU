@@ -32,6 +32,15 @@ export default function WorksheetsPage() {
   const [classes, setClasses] = useState<ClassRow[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 반 배정 모달 (반 + 개인 복수 선택)
+  const [assignTarget, setAssignTarget] = useState<WorksheetRow | null>(null);
+  const [assignClassId, setAssignClassId] = useState("");
+  const [assignDue, setAssignDue] = useState("");
+  const [assigning, setAssigning] = useState(false);
+  const [assignStudents, setAssignStudents] = useState<{ id: string; name: string }[]>([]);
+  const [assignStudentIds, setAssignStudentIds] = useState<Set<string>>(new Set());
+  const [studentsLoading, setStudentsLoading] = useState(false);
+
   // 생성 폼
   const [title, setTitle] = useState("");
   const [grade, setGrade] = useState("고1");
@@ -175,24 +184,87 @@ export default function WorksheetsPage() {
     await load();
   }
 
-  async function assign(ws: WorksheetRow) {
+  function openAssign(ws: WorksheetRow) {
     if (classes.length === 0) {
       alert("먼저 반을 만들어 주세요.");
       return;
     }
-    const list = classes.map((c, i) => `${i + 1}. ${c.center.name} ${c.name}`).join("\n");
-    const pick = prompt(`배정할 반 번호를 입력하세요:\n${list}`);
-    if (!pick) return;
-    const idx = parseInt(pick, 10) - 1;
-    const cls = classes[idx];
-    if (!cls) return;
-    const res = await fetch("/api/assignments", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ classId: cls.id, worksheetId: ws.id }),
+    setAssignTarget(ws);
+    const first = classes[0]?.id ?? "";
+    setAssignClassId(first);
+    setAssignDue("");
+    loadClassStudents(first);
+  }
+
+  async function loadClassStudents(classId: string) {
+    if (!classId) {
+      setAssignStudents([]);
+      setAssignStudentIds(new Set());
+      return;
+    }
+    setStudentsLoading(true);
+    try {
+      const d = await (await fetch(`/api/classes/${classId}`)).json();
+      const list = (d.class?.enrollments || []).map(
+        (e: { student: { id: string; name: string } }) => ({
+          id: e.student.id,
+          name: e.student.name,
+        })
+      );
+      setAssignStudents(list);
+      setAssignStudentIds(new Set(list.map((s: { id: string }) => s.id)));
+    } catch {
+      setAssignStudents([]);
+      setAssignStudentIds(new Set());
+    } finally {
+      setStudentsLoading(false);
+    }
+  }
+
+  function toggleAssignStudent(id: string) {
+    setAssignStudentIds((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
     });
-    if (res.ok) alert(`'${cls.name}'에 배정되었습니다.`);
-    else alert((await res.json()).error || "배정 실패");
+  }
+
+  async function submitAssign() {
+    if (!assignTarget || !assignClassId) {
+      alert("배정할 반을 선택하세요.");
+      return;
+    }
+    if (assignStudents.length > 0 && assignStudentIds.size === 0) {
+      alert("대상 학생을 1명 이상 선택하세요.");
+      return;
+    }
+    setAssigning(true);
+    try {
+      const allSelected =
+        assignStudents.length > 0 && assignStudentIds.size === assignStudents.length;
+      const res = await fetch("/api/assignments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          classId: assignClassId,
+          worksheetId: assignTarget.id,
+          dueAt: assignDue ? new Date(assignDue).toISOString() : undefined,
+          studentIds: allSelected ? undefined : [...assignStudentIds],
+        }),
+      });
+      if (!res.ok) {
+        alert((await res.json()).error || "배정 실패");
+        return;
+      }
+      const cls = classes.find((c) => c.id === assignClassId);
+      alert(`'${cls?.name ?? "반"}'에 '${assignTarget.title}' 문제지를 배정했습니다.`);
+      setAssignTarget(null);
+    } catch {
+      alert("배정 중 오류가 발생했습니다.");
+    } finally {
+      setAssigning(false);
+    }
   }
 
   async function remove(ws: WorksheetRow) {
@@ -398,7 +470,7 @@ export default function WorksheetsPage() {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
-                    onClick={() => assign(ws)}
+                    onClick={() => openAssign(ws)}
                     className="text-sm px-3 py-1.5 bg-[#245B3E] text-white rounded-lg"
                   >
                     반 배정
@@ -415,6 +487,118 @@ export default function WorksheetsPage() {
           </ul>
         )}
       </div>
+
+      {/* 반 배정(과제 할당) 모달 — 반 + 개인 복수 선택 */}
+      {assignTarget && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+          onClick={() => !assigning && setAssignTarget(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[85vh] overflow-y-auto p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>
+              <h3 className="text-lg font-bold text-gray-800">반 배정 (과제 할당)</h3>
+              <p className="text-sm text-gray-500 mt-1 truncate">
+                문제지: <span className="font-medium">{assignTarget.title}</span>
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">배정할 반</label>
+              <select
+                value={assignClassId}
+                onChange={(e) => {
+                  setAssignClassId(e.target.value);
+                  loadClassStudents(e.target.value);
+                }}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              >
+                {classes.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.center.name} · {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-sm text-gray-600">
+                  대상 학생 ({assignStudentIds.size}/{assignStudents.length})
+                </label>
+                {assignStudents.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setAssignStudentIds((prev) =>
+                        prev.size === assignStudents.length
+                          ? new Set()
+                          : new Set(assignStudents.map((s) => s.id))
+                      )
+                    }
+                    className="text-xs text-[#245B3E] hover:underline"
+                  >
+                    전체 선택/해제
+                  </button>
+                )}
+              </div>
+              {studentsLoading ? (
+                <p className="text-xs text-gray-400 py-2">불러오는 중...</p>
+              ) : assignStudents.length === 0 ? (
+                <p className="text-xs text-gray-400 py-2">이 반에 학생이 없습니다.</p>
+              ) : (
+                <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg p-2 space-y-1">
+                  {assignStudents.map((s) => (
+                    <label
+                      key={s.id}
+                      className="flex items-center gap-2 px-1.5 py-1 rounded hover:bg-gray-50 cursor-pointer text-sm"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={assignStudentIds.has(s.id)}
+                        onChange={() => toggleAssignStudent(s.id)}
+                      />
+                      <span className="text-gray-700">{s.name}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+              <p className="text-[11px] text-gray-400 mt-1">
+                전원 선택 시 반 전체(이후 가입 학생도 자동 포함), 일부만 선택하면 그 학생만 배정됩니다.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">마감일 (선택)</label>
+              <input
+                type="datetime-local"
+                value={assignDue}
+                onChange={(e) => setAssignDue(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={() => setAssignTarget(null)}
+                disabled={assigning}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm"
+              >
+                취소
+              </button>
+              <button
+                onClick={submitAssign}
+                disabled={assigning || classes.length === 0}
+                className="px-4 py-2 bg-[#245B3E] text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              >
+                {assigning ? "배정 중..." : "배정하기"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
