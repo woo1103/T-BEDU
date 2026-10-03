@@ -46,13 +46,26 @@ export async function GET(request: NextRequest) {
   });
   const assignmentRows = assignments.map((a) => {
     const submitted = new Set(a.submissions.map((s) => s.studentId));
-    const missing = students.filter((s) => !submitted.has(s.id));
+    // 지정 학생 과제면 대상자만, 아니면 반 전체
+    let target = students;
+    if (a.studentIds) {
+      try {
+        const ids = JSON.parse(a.studentIds) as string[];
+        if (Array.isArray(ids) && ids.length > 0) {
+          const set = new Set(ids);
+          target = students.filter((s) => set.has(s.id));
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+    const missing = target.filter((s) => !submitted.has(s.id));
     return {
       id: a.id,
       title: a.title,
       dueAt: a.dueAt,
-      submittedCount: submitted.size,
-      total: students.length,
+      submittedCount: target.length - missing.length,
+      total: target.length,
       missing,
     };
   });

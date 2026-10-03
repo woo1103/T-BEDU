@@ -34,6 +34,45 @@ export default function ExamsPage() {
   const [assignClassId, setAssignClassId] = useState("");
   const [assignDue, setAssignDue] = useState("");
   const [assigning, setAssigning] = useState(false);
+  // 개인(복수) 선택
+  const [assignStudents, setAssignStudents] = useState<{ id: string; name: string }[]>([]);
+  const [assignStudentIds, setAssignStudentIds] = useState<Set<string>>(new Set());
+  const [studentsLoading, setStudentsLoading] = useState(false);
+
+  // 반 선택 시 그 반 학생을 불러와 전원 체크
+  async function loadClassStudents(classId: string) {
+    if (!classId) {
+      setAssignStudents([]);
+      setAssignStudentIds(new Set());
+      return;
+    }
+    setStudentsLoading(true);
+    try {
+      const d = await (await fetch(`/api/classes/${classId}`)).json();
+      const list = (d.class?.enrollments || []).map(
+        (e: { student: { id: string; name: string } }) => ({
+          id: e.student.id,
+          name: e.student.name,
+        })
+      );
+      setAssignStudents(list);
+      setAssignStudentIds(new Set(list.map((s: { id: string }) => s.id)));
+    } catch {
+      setAssignStudents([]);
+      setAssignStudentIds(new Set());
+    } finally {
+      setStudentsLoading(false);
+    }
+  }
+
+  function toggleAssignStudent(id: string) {
+    setAssignStudentIds((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+  }
 
   useEffect(() => {
     fetch("/api/exams")
@@ -56,8 +95,10 @@ export default function ExamsPage() {
 
   function openAssign(exam: ExamRow) {
     setAssignTarget(exam);
-    setAssignClassId(classes[0]?.id ?? "");
+    const first = classes[0]?.id ?? "";
+    setAssignClassId(first);
     setAssignDue("");
+    loadClassStudents(first);
   }
 
   async function submitAssign() {
@@ -65,8 +106,15 @@ export default function ExamsPage() {
       alert("배정할 반을 선택하세요.");
       return;
     }
+    if (assignStudents.length > 0 && assignStudentIds.size === 0) {
+      alert("대상 학생을 1명 이상 선택하세요.");
+      return;
+    }
     setAssigning(true);
     try {
+      // 전원 선택이면 반 전체(studentIds 생략), 일부면 지정 학생만
+      const allSelected =
+        assignStudents.length > 0 && assignStudentIds.size === assignStudents.length;
       const res = await fetch("/api/assignments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -74,6 +122,7 @@ export default function ExamsPage() {
           classId: assignClassId,
           examId: assignTarget.id,
           dueAt: assignDue ? new Date(assignDue).toISOString() : undefined,
+          studentIds: allSelected ? undefined : [...assignStudentIds],
         }),
       });
       if (!res.ok) {
@@ -188,7 +237,10 @@ export default function ExamsPage() {
                   <label className="block text-sm text-gray-600 mb-1">배정할 반</label>
                   <select
                     value={assignClassId}
-                    onChange={(e) => setAssignClassId(e.target.value)}
+                    onChange={(e) => {
+                      setAssignClassId(e.target.value);
+                      loadClassStudents(e.target.value);
+                    }}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
                   >
                     {classes.map((c) => (
@@ -198,6 +250,55 @@ export default function ExamsPage() {
                     ))}
                   </select>
                 </div>
+
+                {/* 대상 학생(개인 복수 선택) */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-sm text-gray-600">
+                      대상 학생 ({assignStudentIds.size}/{assignStudents.length})
+                    </label>
+                    {assignStudents.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setAssignStudentIds((prev) =>
+                            prev.size === assignStudents.length
+                              ? new Set()
+                              : new Set(assignStudents.map((s) => s.id))
+                          )
+                        }
+                        className="text-xs text-[#245B3E] hover:underline"
+                      >
+                        전체 선택/해제
+                      </button>
+                    )}
+                  </div>
+                  {studentsLoading ? (
+                    <p className="text-xs text-gray-400 py-2">불러오는 중...</p>
+                  ) : assignStudents.length === 0 ? (
+                    <p className="text-xs text-gray-400 py-2">이 반에 학생이 없습니다.</p>
+                  ) : (
+                    <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg p-2 space-y-1">
+                      {assignStudents.map((s) => (
+                        <label
+                          key={s.id}
+                          className="flex items-center gap-2 px-1.5 py-1 rounded hover:bg-gray-50 cursor-pointer text-sm"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={assignStudentIds.has(s.id)}
+                            onChange={() => toggleAssignStudent(s.id)}
+                          />
+                          <span className="text-gray-700">{s.name}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                  <p className="text-[11px] text-gray-400 mt-1">
+                    전원 선택 시 반 전체(이후 가입 학생도 자동 포함), 일부만 선택하면 그 학생만 배정됩니다.
+                  </p>
+                </div>
+
                 <div>
                   <label className="block text-sm text-gray-600 mb-1">
                     마감일 (선택)

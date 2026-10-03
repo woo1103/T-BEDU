@@ -35,7 +35,18 @@ export async function GET(request: NextRequest) {
     orderBy: { assignedAt: "desc" },
   });
 
-  const result = assignments.map((a) => ({
+  // 지정 학생 과제는 본인이 대상일 때만 노출 (studentIds 없으면 반 전체)
+  const visible = assignments.filter((a) => {
+    if (!a.studentIds) return true;
+    try {
+      const ids = JSON.parse(a.studentIds) as string[];
+      return !Array.isArray(ids) || ids.length === 0 || ids.includes(student.studentId);
+    } catch {
+      return true;
+    }
+  });
+
+  const result = visible.map((a) => ({
     id: a.id,
     title: a.title,
     dueAt: a.dueAt,

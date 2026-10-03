@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireStaff, canAccessClass, isAdmin } from "@/lib/api-auth";
-import { notifyClassStudents } from "@/lib/notify";
+import { notifyClassStudents, notifyStudentIds } from "@/lib/notify";
 
 export async function GET(request: NextRequest) {
   const staff = await requireStaff();
@@ -69,6 +69,16 @@ export async function POST(request: NextRequest) {
 
   const title = body.title?.trim() || defaultTitle;
 
+  // 대상 학생: studentIds가 있으면 지정 학생만, 없으면 반 전체
+  const targetIds: string[] = Array.isArray(body.studentIds)
+    ? body.studentIds.filter((x: unknown) => typeof x === "string")
+    : [];
+  // 반 전체 인원 수와 같으면 "반 전체"로 저장(향후 가입 학생 자동 포함)
+  const activeCount = await prisma.enrollment.count({
+    where: { classId: body.classId, status: "active" },
+  });
+  const useSubset = targetIds.length > 0 && targetIds.length < activeCount;
+
   const assessment = await prisma.assessment.create({
     data: { ...assessmentData, title },
   });
@@ -77,16 +87,26 @@ export async function POST(request: NextRequest) {
       classId: body.classId,
       assessmentId: assessment.id,
       title,
+      studentIds: useSubset ? JSON.stringify(targetIds) : null,
       dueAt: body.dueAt ? new Date(body.dueAt) : null,
     },
     include: { assessment: true, class: { select: { id: true, name: true } } },
   });
 
-  await notifyClassStudents(body.classId, {
-    type: "new_assignment",
-    title: "새 과제가 배정되었습니다",
-    body: title,
-  });
+  // 알림: 지정 학생만 or 반 전체
+  if (useSubset) {
+    await notifyStudentIds(targetIds, {
+      type: "new_assignment",
+      title: "새 과제가 배정되었습니다",
+      body: title,
+    });
+  } else {
+    await notifyClassStudents(body.classId, {
+      type: "new_assignment",
+      title: "새 과제가 배정되었습니다",
+      body: title,
+    });
+  }
 
   return NextResponse.json({ assignment }, { status: 201 });
 }

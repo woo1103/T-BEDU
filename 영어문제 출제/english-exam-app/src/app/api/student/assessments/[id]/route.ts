@@ -42,6 +42,17 @@ export async function GET(
   if (!enrolled) {
     return NextResponse.json({ error: "이 과제에 접근할 수 없습니다" }, { status: 403 });
   }
+  // 지정 학생 과제면 대상자만 접근
+  if (assignment.studentIds) {
+    try {
+      const ids = JSON.parse(assignment.studentIds) as string[];
+      if (Array.isArray(ids) && ids.length > 0 && !ids.includes(student.studentId)) {
+        return NextResponse.json({ error: "배정 대상이 아닙니다" }, { status: 403 });
+      }
+    } catch {
+      /* ignore */
+    }
+  }
 
   const type = assignment.assessment.type;
   const base = {

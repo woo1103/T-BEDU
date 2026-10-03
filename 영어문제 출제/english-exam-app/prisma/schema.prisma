@@ -320,6 +320,7 @@ model Assignment {
   classId      String
   assessmentId String
   title        String
+  studentIds   String?   // JSON 배열(StudentProfile.id). null/빈값=반 전체, 값 있으면 지정 학생만
   assignedAt   DateTime  @default(now())
   dueAt        DateTime?
   active       Boolean   @default(true)
