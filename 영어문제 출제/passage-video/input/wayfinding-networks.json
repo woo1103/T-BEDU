@@ -1,0 +1,120 @@
+{
+  "slug": "wayfinding-networks",
+  "title": "길을 찾는 능력이 친구를 만들었다",
+  "subtitle": "친구는 곧 생존의 자산이었어요",
+  "source": "올림포스 영어독해 기본 2 · Unit 12 긴 어구 빈칸 추론",
+  "kind": "academic",
+  "characters": {
+    "haeun": {
+      "name": "하은",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B7",
+      "hair": "braids",
+      "hairColor": "#2F241E",
+      "outfit": "tshirt",
+      "outfitColor": "#4E9E8C",
+      "accentColor": "#33443E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "go": {
+      "name": "고 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#DDB48A",
+      "hair": "short",
+      "hairColor": "#332B24",
+      "outfit": "labcoat",
+      "outfitColor": "#A8906A",
+      "accentColor": "#3E3629",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "길을 찾는 능력이 친구를 만들었다",
+      "subtitle": "인류학 · 길찾기와 사회 네트워크",
+      "narration": "이번 지문은 인류가 어떻게 성공할 수 있었는지를 다루고 있어요.",
+      "cast": [
+        { "who": "haeun", "expression": "happy", "pose": "raise" },
+        { "who": "go", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "하은이는 인류가 다른 인간종과 어떻게 갈렸는지 궁금했어요.",
+      "question": "길을 잘 찾는 게 그렇게 큰 차이를 만들 수 있나?",
+      "thought": true,
+      "narrationOut": "35만 년 전에서 15만 년 전 사이에 생긴 차이였어요.",
+      "cast": [{ "who": "haeun", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "탐험의 욕구와 길찾기 정신",
+      "meaning": "호모 사피엔스가 발전시킨 이 두 가지가 우리를 다른 인간종과 갈라놓았어요.",
+      "icon": "🧭",
+      "narration": "그리고 이것이 우리의 미래에 큰 영향을 미쳤어요.",
+      "cast": [{ "who": "go", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "길찾기가 만든 연결",
+      "steps": [
+        { "label": "멀리 나아감", "icon": "🧭" },
+        { "label": "다른 무리를 만남", "icon": "👥" },
+        { "label": "정보를 나눔", "icon": "💬" },
+        { "label": "관계망이 넓어짐", "icon": "🕸️" }
+      ],
+      "narration": "길을 찾아 나가는 능력이 광범위한 사회적 관계망을 만들게 해 주었어요."
+    },
+    {
+      "type": "compare",
+      "heading": "선사 시대의 하루",
+      "left": {
+        "label": "홀로 지낼 때",
+        "icon": "🏕️",
+        "points": ["소규모 가족끼리만", "식량과 은신처를 찾는 데 하루", "소식을 들을 곳이 없다"]
+      },
+      "right": {
+        "label": "이어져 있을 때",
+        "icon": "🤝",
+        "points": ["자원이 어디 있는지 안다", "포식자의 움직임을 듣는다", "도움을 청할 곳이 있다"]
+      },
+      "narration": "정보를 나눌 수 있다는 것이 진화적으로 강점이 되었어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "하은이는 그 강점이 실제로 어떻게 작동했는지 물었어요.",
+      "lines": [
+        { "who": "haeun", "text": "정보를 나누는 게 생존이랑 직접 연결되나요?" },
+        { "who": "go", "text": "식량이 떨어지면 어디로 갈지 알았고, 사냥에 도움이 필요하면 누구를 부를지 알았죠." },
+        { "who": "haeun", "text": "그러니까 친구가 곧 자산이었던 거네요." }
+      ],
+      "narrationOut": "친구는 말 그대로 생존의 자산이었어요.",
+      "cast": [
+        { "who": "haeun", "expression": "surprised", "pose": "shrug" },
+        { "who": "go", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Our ability to navigate was essential to our success as a species, because it allowed us to cultivate extensive social networks.",
+      "translation": "길을 찾아 나가는 우리의 능력은 종으로서의 성공에 필수적이었는데, 그것이 광범위한 사회적 관계망을 가꿀 수 있게 해 주었기 때문입니다.",
+      "highlight": ["navigate", "essential", "social", "networks"],
+      "narration": "인류학에서 최근 가장 흥미로운 생각 중 하나예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "호모 사피엔스는 탐험과 길찾기 정신을 길렀다",
+        "그 덕분에 넓은 관계망을 만들 수 있었다",
+        "정보를 나눌 친구가 곧 생존의 자산이었다"
+      ],
+      "narration": "길을 찾는 능력이 결국 사람을 잇는 능력이 되었어요.",
+      "cast": [{ "who": "haeun", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

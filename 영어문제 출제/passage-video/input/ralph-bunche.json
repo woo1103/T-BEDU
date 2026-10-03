@@ -1,0 +1,118 @@
+{
+  "slug": "ralph-bunche",
+  "title": "최초의 노벨 평화상",
+  "subtitle": "가난한 집에서 시작해 평화 조약까지",
+  "source": "올림포스 영어독해 기본 2 · Unit 07 내용 불일치",
+  "kind": "story",
+  "characters": {
+    "bunche": {
+      "name": "번치",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#B07B52",
+      "hair": "short",
+      "hairColor": "#1F1A16",
+      "outfit": "suit",
+      "outfitColor": "#3E5E8A",
+      "accentColor": "#2A3442",
+      "accessory": "glasses",
+      "build": "normal"
+    },
+    "nari": {
+      "name": "나리",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B7",
+      "hair": "bob",
+      "hairColor": "#33251F",
+      "outfit": "uniform",
+      "outfitColor": "#C4567A",
+      "accentColor": "#3B3138",
+      "accessory": "none",
+      "build": "slim"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "최초의 노벨 평화상",
+      "subtitle": "인물 · 랠프 J. 번치의 생애",
+      "narration": "이번 지문은 한 사람의 생애를 차례대로 소개하는 글이에요.",
+      "cast": [
+        { "who": "bunche", "expression": "neutral", "pose": "present" },
+        { "who": "nari", "expression": "happy", "pose": "raise" }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "room",
+      "caption": "1904년, 가난한 집에서 태어나다",
+      "narration": "랠프 J. 번치는 1904년 8월 7일 가난한 가정에서 태어났어요.",
+      "narrationOut": "부모님이 세상을 떠난 뒤 할머니가 가족을 로스앤젤레스로 옮겼어요.",
+      "cast": [{ "who": "bunche", "expression": "sad", "pose": "idle" }]
+    },
+    {
+      "type": "story",
+      "setting": "classroom",
+      "caption": "반에서 유일한 아프리카계 미국인",
+      "narration": "번치는 반에서 혼자였지만 최고 성적을 받았어요.",
+      "speech": {
+        "who": "bunche",
+        "text": "여기서 멈출 수는 없어. 더 멀리 가 보고 싶어.",
+        "thought": true
+      },
+      "narrationOut": "우등으로 고등학교를 졸업하고 UCLA에 어렵지 않게 입학했어요.",
+      "cast": [{ "who": "bunche", "expression": "neutral", "pose": "idle" }]
+    },
+    {
+      "type": "flow",
+      "heading": "꿈이 막혔다가 열리기까지",
+      "steps": [
+        { "label": "우등 졸업", "icon": "🎓" },
+        { "label": "학비가 부족", "icon": "💸" },
+        { "label": "여성 모임의 모금", "icon": "🤝" },
+        { "label": "로스쿨 진학", "icon": "⚖️" }
+      ],
+      "narration": "하버드 로스쿨의 꿈을 막은 것은 성적이 아니라 돈이었어요."
+    },
+    {
+      "type": "story",
+      "setting": "street",
+      "caption": "1948년, 아랍과 이스라엘 사이에서",
+      "narration": "제2차 세계 대전 중 번치는 국무부의 요청을 받아 일했고 국제 연합 설립을 도왔어요.",
+      "narrationOut": "그의 첫 중요한 협상은 1948년 전쟁 중에 찾아왔어요.",
+      "cast": [{ "who": "bunche", "expression": "neutral", "pose": "present" }]
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "나리는 그 협상이 어떻게 끝났는지 궁금했어요.",
+      "lines": [
+        { "who": "nari", "text": "그 전쟁은 결국 어떻게 마무리됐나요?" },
+        { "who": "bunche", "text": "오랜 협상 끝에 마침내 평화 조약이 체결되었어요." },
+        { "who": "nari", "text": "그래서 전 세계가 안도했다는 말이 나온 거군요." }
+      ],
+      "narrationOut": "1950년 번치는 노벨 평화상을 받았어요.",
+      "cast": [
+        { "who": "nari", "expression": "surprised", "pose": "shrug" },
+        { "who": "bunche", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Ralph Bunche was the first African American to win this honor.",
+      "translation": "랠프 번치는 아프리카계 미국인으로서 이 영예를 안은 최초의 인물이었습니다.",
+      "highlight": ["first", "African", "American", "honor"],
+      "narration": "지문이 마지막에 밝히는 사실이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "생애를 세 줄로",
+      "points": [
+        "가난한 집에서 태어나 우등으로 졸업했다",
+        "지역 여성 모임의 도움으로 학업을 이었다",
+        "1950년 최초의 아프리카계 노벨 평화상 수상자가 됐다"
+      ],
+      "narration": "국제 연합 설립을 돕고 평화 조약을 이끌어 낸 사람이에요.",
+      "cast": [{ "who": "nari", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

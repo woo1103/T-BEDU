@@ -1,0 +1,80 @@
+{
+  "s0-narration": {
+    "file": "audio/taffy-party/s0-narration.wav",
+    "seconds": 4.48,
+    "hash": "9a0e921c3a10",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/taffy-party/s1-narration.wav",
+    "seconds": 4.52,
+    "hash": "18b7a789a090",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/taffy-party/s1-narrationOut.wav",
+    "seconds": 4,
+    "hash": "efb725faf762",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-narration": {
+    "file": "audio/taffy-party/s2-narration.wav",
+    "seconds": 4.92,
+    "hash": "ce59183e6c8b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-narrationOut": {
+    "file": "audio/taffy-party/s2-narrationOut.wav",
+    "seconds": 3.48,
+    "hash": "f251b23665bf",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-speech": {
+    "file": "audio/taffy-party/s2-speech.wav",
+    "seconds": 4.36,
+    "hash": "71a7eb9982f5",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s3-narration": {
+    "file": "audio/taffy-party/s3-narration.wav",
+    "seconds": 4.48,
+    "hash": "e1bc8dbb6708",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narrationOut": {
+    "file": "audio/taffy-party/s3-narrationOut.wav",
+    "seconds": 4.36,
+    "hash": "4f0905437364",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/taffy-party/s4-narration.wav",
+    "seconds": 4.56,
+    "hash": "fe7320770c8e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/taffy-party/s5-narration.wav",
+    "seconds": 5.6,
+    "hash": "54a49b3310bf",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/taffy-party/s5-narrationOut.wav",
+    "seconds": 4.04,
+    "hash": "9de5ed2d9855",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/taffy-party/s6-narration.wav",
+    "seconds": 3.2,
+    "hash": "05288e66c9cc",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/taffy-party/s7-narration.wav",
+    "seconds": 3.16,
+    "hash": "f7316c34f2db",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

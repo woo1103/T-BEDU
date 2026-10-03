@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/regret-persistence/s0-narration.wav",
+    "seconds": 4.84,
+    "hash": "aba9184a8bd8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/regret-persistence/s1-narration.wav",
+    "seconds": 4.4,
+    "hash": "5d051555bf04",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/regret-persistence/s1-narrationOut.wav",
+    "seconds": 4.56,
+    "hash": "3d7346fc5ec5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/regret-persistence/s1-question.wav",
+    "seconds": 3.44,
+    "hash": "54461ccbb15f",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/regret-persistence/s2-narration.wav",
+    "seconds": 5.76,
+    "hash": "67c3e9587ef4",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/regret-persistence/s3-narration.wav",
+    "seconds": 4.24,
+    "hash": "e65ba0c22160",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/regret-persistence/s4-narration.wav",
+    "seconds": 5.36,
+    "hash": "58184d314361",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/regret-persistence/s5-narration.wav",
+    "seconds": 3.72,
+    "hash": "69461202db6b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/regret-persistence/s5-narrationOut.wav",
+    "seconds": 3.44,
+    "hash": "becc41179f3d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/regret-persistence/s5-line0.wav",
+    "seconds": 4.28,
+    "hash": "c4f25115c573",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/regret-persistence/s5-line1.wav",
+    "seconds": 4.28,
+    "hash": "f2ccb683222d",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/regret-persistence/s5-line2.wav",
+    "seconds": 3.56,
+    "hash": "ea115a93f93e",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/regret-persistence/s6-narration.wav",
+    "seconds": 2.64,
+    "hash": "bb24cf1b451a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/regret-persistence/s7-narration.wav",
+    "seconds": 3.6,
+    "hash": "f449dbd76f42",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

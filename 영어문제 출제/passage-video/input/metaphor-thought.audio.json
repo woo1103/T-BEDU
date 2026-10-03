@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/metaphor-thought/s0-narration.wav",
+    "seconds": 4.24,
+    "hash": "bddffaaa937d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/metaphor-thought/s1-narration.wav",
+    "seconds": 3.68,
+    "hash": "90006e6bdb9a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/metaphor-thought/s1-narrationOut.wav",
+    "seconds": 4,
+    "hash": "2a2f8a360675",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/metaphor-thought/s1-question.wav",
+    "seconds": 3.8,
+    "hash": "5ea7acdabdad",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/metaphor-thought/s2-narration.wav",
+    "seconds": 4.2,
+    "hash": "7d956277cc49",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/metaphor-thought/s3-narration.wav",
+    "seconds": 4.24,
+    "hash": "c62d764e5cd3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/metaphor-thought/s4-narration.wav",
+    "seconds": 3.68,
+    "hash": "f30ce380d68b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/metaphor-thought/s4-narrationOut.wav",
+    "seconds": 4.64,
+    "hash": "640f7dcb696e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-line0": {
+    "file": "audio/metaphor-thought/s4-line0.wav",
+    "seconds": 3.04,
+    "hash": "367a04dea13a",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s4-line1": {
+    "file": "audio/metaphor-thought/s4-line1.wav",
+    "seconds": 4.44,
+    "hash": "095fd91723b1",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s4-line2": {
+    "file": "audio/metaphor-thought/s4-line2.wav",
+    "seconds": 2.52,
+    "hash": "dea81d168150",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-narration": {
+    "file": "audio/metaphor-thought/s5-narration.wav",
+    "seconds": 4.6,
+    "hash": "b8fb7b130970",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/metaphor-thought/s6-narration.wav",
+    "seconds": 2.64,
+    "hash": "10658e049a95",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/metaphor-thought/s7-narration.wav",
+    "seconds": 3.48,
+    "hash": "1af97169234f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "slug": "regret-persistence",
+  "title": "후회가 더 오래 붙잡게 한다",
+  "subtitle": "기분은 나빠졌지만 성과는 올라갔어요",
+  "source": "올림포스 영어독해 기본 2 · Unit 11 짧은 어구 빈칸 추론",
+  "kind": "academic",
+  "characters": {
+    "huin": {
+      "name": "희원",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "long",
+      "hairColor": "#372820",
+      "outfit": "hoodie",
+      "outfitColor": "#7A5CC4",
+      "accentColor": "#373048",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "markman": {
+      "name": "마크먼",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C4A2",
+      "hair": "short",
+      "hairColor": "#4A423A",
+      "outfit": "labcoat",
+      "outfitColor": "#8AA8B5",
+      "accentColor": "#3A464C",
+      "accessory": "roundGlasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "후회가 더 오래 붙잡게 한다",
+      "subtitle": "심리 실험 · 후회와 끈기",
+      "narration": "이번 지문은 후회가 사람에게 어떤 영향을 주는지 알아본 실험이에요.",
+      "cast": [
+        { "who": "huin", "expression": "sad", "pose": "raise" },
+        { "who": "markman", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "희원이는 시험을 망치고 나서 자꾸 지난 일을 곱씹었어요.",
+      "question": "후회해 봐야 기분만 나빠지는 거 아닐까?",
+      "thought": true,
+      "narrationOut": "실험은 바로 그 후회감을 일부러 불러일으키는 것으로 시작했어요.",
+      "cast": [{ "who": "huin", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "'만약 ~했다면' 비교",
+      "meaning": "실제 성과를 더 잘했을 수도 있는 방식과 견주어 보게 하는 거예요. 후회감을 불러일으켜요.",
+      "icon": "🔁",
+      "narration": "참가자들은 철자 바꾸기 과제 열 개를 받고 절반만 찾았다는 말을 들었어요.",
+      "cast": [{ "who": "markman", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "두 집단이 받은 지시",
+      "left": {
+        "label": "'만약 ~했다면' 집단",
+        "icon": "😞",
+        "points": ["더 잘했을 방식과 비교", "기분이 더 나빠졌다", "후회감이 가득했다"]
+      },
+      "right": {
+        "label": "'적어도' 집단",
+        "icon": "🙂",
+        "points": ["더 나빴을 상황과 비교", "기분은 덜 나빴다", "위안을 얻었다"]
+      },
+      "narration": "후회를 떠올린 쪽이 그 자리에서는 분명히 더 기분이 나빴어요."
+    },
+    {
+      "type": "flow",
+      "heading": "다음 라운드에서 벌어진 일",
+      "steps": [
+        { "label": "후회를 떠올림", "icon": "😞" },
+        { "label": "기분은 나빠짐", "icon": "☁️" },
+        { "label": "더 오래 매달림", "icon": "⏱️" },
+        { "label": "더 많이 풀어냄", "icon": "🏆" }
+      ],
+      "narration": "그런데 다음 라운드에서는 그 집단이 가장 오래 과제를 붙잡고 있었어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "희원이는 기분이 나빴는데 왜 더 잘했는지 물었어요.",
+      "lines": [
+        { "who": "huin", "text": "기분이 더 나빠졌는데 어떻게 성과는 더 좋아졌어요?" },
+        { "who": "markman", "text": "후회가 끈기를 깊게 만들거든요. 더 오래 붙잡게 되는 거예요." },
+        { "who": "huin", "text": "오래 매달리니까 결국 더 많이 풀게 된 거네요." }
+      ],
+      "narrationOut": "끈기가 깊어지면 성과는 거의 언제나 올라가요.",
+      "cast": [
+        { "who": "huin", "expression": "surprised", "pose": "shrug" },
+        { "who": "markman", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "This is one of the central findings on regret: it can deepen persistence, which almost always elevates performance.",
+      "translation": "이것이 후회에 관한 핵심 연구 결과 중 하나입니다. 후회는 끈기를 깊게 만들 수 있고, 그것은 거의 항상 성과를 높입니다.",
+      "highlight": ["regret", "deepen", "persistence", "performance"],
+      "narration": "지문이 마지막에 내리는 정리예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "후회를 떠올린 집단은 기분이 더 나빠졌다",
+        "그런데 다음 라운드에서 더 오래 매달렸다",
+        "후회는 끈기를 깊게 해 성과를 높인다"
+      ],
+      "narration": "기분과 성과가 같은 방향으로 가지 않는다는 이야기예요.",
+      "cast": [{ "who": "huin", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

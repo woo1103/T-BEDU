@@ -1,0 +1,120 @@
+{
+  "slug": "anger-and-aggression",
+  "title": "분노와 공격은 같은 말이 아니다",
+  "subtitle": "표현하는 정도는 배운 것이에요",
+  "source": "올림포스 영어독해 기본 2 · Unit 15 문장 삽입",
+  "kind": "academic",
+  "characters": {
+    "sihyun": {
+      "name": "시현",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D4B9",
+      "hair": "bob",
+      "hairColor": "#38281F",
+      "outfit": "hoodie",
+      "outfitColor": "#C4564E",
+      "accentColor": "#3B3330",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "shim": {
+      "name": "심 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C4A2",
+      "hair": "short",
+      "hairColor": "#5F574F",
+      "outfit": "suit",
+      "outfitColor": "#5A6E8A",
+      "accentColor": "#303A46",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "분노와 공격은 같은 말이 아니다",
+      "subtitle": "심리 · 감정과 행동",
+      "narration": "이번 지문은 분노와 공격성의 관계를 다루고 있어요.",
+      "cast": [
+        { "who": "sihyun", "expression": "sad", "pose": "raise" },
+        { "who": "shim", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "시현이는 화가 나면 꼭 공격적으로 변하는 것은 아니라는 말을 들었어요.",
+      "question": "화나는 거랑 공격적인 거랑 다른 거였나?",
+      "thought": true,
+      "narrationOut": "분노는 공격성과 분명히 관련이 있지만, 둘이 같은 것은 아니에요.",
+      "cast": [{ "who": "sihyun", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "compare",
+      "heading": "둘은 따로 일어날 수 있다",
+      "left": {
+        "label": "화내지 않고 공격",
+        "icon": "🥊",
+        "points": ["감정 없이도 가능하다", "계산된 행동일 수 있다", "분노가 필요하지 않다"]
+      },
+      "right": {
+        "label": "공격 없이 화냄",
+        "icon": "😤",
+        "points": ["속으로만 치밀 수 있다", "행동으로 가지 않는다", "똑같이 가능한 일이다"]
+      },
+      "narration": "그럼에도 둘은 서로 연결되어 있고 생물학적 기반을 지녀요."
+    },
+    {
+      "type": "concept",
+      "term": "사회적으로 구성된다",
+      "meaning": "분노는 생물학적 기반을 지니지만, 그것을 얼마나 드러내는지는 사회가 정해 준다는 뜻이에요.",
+      "icon": "🧩",
+      "narration": "분노는 언제나 훨씬 커진 에너지의 폭발을 낳아요.",
+      "cast": [{ "who": "shim", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "표현의 정도가 정해지는 길",
+      "steps": [
+        { "label": "기질의 차이", "icon": "🌱" },
+        { "label": "문화가 끼어듦", "icon": "🌏" },
+        { "label": "표현을 배운다", "icon": "📚" },
+        { "label": "정도가 갈린다", "icon": "📊" }
+      ],
+      "narration": "기질적으로 화를 더 잘 내는 사람도 있지만, 표현의 정도는 사회가 정해요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "시현이는 그 차이가 실제로 어디에 나타나는지 물었어요.",
+      "lines": [
+        { "who": "sihyun", "text": "사회가 정한다는 게 눈에 보이는 예가 있나요?" },
+        { "who": "shim", "text": "남자아이들이 여자아이들보다 화를 더 터놓고 표현하도록 권장돼요." },
+        { "who": "sihyun", "text": "분노 관리 수업을 듣는 비율도 다르다고 하셨죠." }
+      ],
+      "narrationOut": "여성보다 훨씬 많은 비율의 남성이 분노 관리 과정을 듣게 돼요.",
+      "cast": [
+        { "who": "sihyun", "expression": "surprised", "pose": "shrug" },
+        { "who": "shim", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "These are learned differences, not differences of biology.",
+      "translation": "이것은 생물학의 차이가 아니라 학습된 차이입니다.",
+      "highlight": ["learned", "not", "biology"],
+      "narration": "지문이 마지막에 못 박는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "분노와 공격성은 연결돼 있지만 같지 않다",
+        "분노는 생물학적 기반을 지닌다",
+        "표현하는 정도는 사회가 가르친 것이다"
+      ],
+      "narration": "타고난 차이가 아니라 배운 차이라는 이야기예요.",
+      "cast": [{ "who": "sihyun", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

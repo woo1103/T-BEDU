@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/wayfinding-networks/s0-narration.wav",
+    "seconds": 4.52,
+    "hash": "67001c384bf9",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/wayfinding-networks/s1-narration.wav",
+    "seconds": 5.04,
+    "hash": "04c804637515",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/wayfinding-networks/s1-narrationOut.wav",
+    "seconds": 4.44,
+    "hash": "92b535bb0989",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/wayfinding-networks/s1-question.wav",
+    "seconds": 3.68,
+    "hash": "be73dfc6c55f",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/wayfinding-networks/s2-narration.wav",
+    "seconds": 4,
+    "hash": "86dbbc70e0a6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/wayfinding-networks/s3-narration.wav",
+    "seconds": 4.64,
+    "hash": "a50c8e3b224f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/wayfinding-networks/s4-narration.wav",
+    "seconds": 4.32,
+    "hash": "2804c939d7fb",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/wayfinding-networks/s5-narration.wav",
+    "seconds": 4.24,
+    "hash": "c9a0d0a6d438",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/wayfinding-networks/s5-narrationOut.wav",
+    "seconds": 2.84,
+    "hash": "2ccac8d21fdd",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/wayfinding-networks/s5-line0.wav",
+    "seconds": 3.52,
+    "hash": "910f59966220",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/wayfinding-networks/s5-line1.wav",
+    "seconds": 5.52,
+    "hash": "27a434454331",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/wayfinding-networks/s5-line2.wav",
+    "seconds": 3.2,
+    "hash": "392fb68694e1",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/wayfinding-networks/s6-narration.wav",
+    "seconds": 3.32,
+    "hash": "1bc582fa12a8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/wayfinding-networks/s7-narration.wav",
+    "seconds": 4.52,
+    "hash": "74ad01f3f69f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "slug": "irresistible-art-class",
+  "title": "천장이 없는 교실",
+  "subtitle": "놀라움이 배움을 끌어당겨요",
+  "source": "올림포스 영어독해 기본 2 · Unit 08 어법 정확성",
+  "kind": "academic",
+  "characters": {
+    "garam": {
+      "name": "가람",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B8",
+      "hair": "braids",
+      "hairColor": "#33251F",
+      "outfit": "tshirt",
+      "outfitColor": "#E08A3C",
+      "accentColor": "#3C362E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "yoo": {
+      "name": "유 선생",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C5A3",
+      "hair": "short",
+      "hairColor": "#453D35",
+      "outfit": "apron",
+      "outfitColor": "#5C7FA8",
+      "accentColor": "#334150",
+      "accessory": "glasses",
+      "prop": "pen",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "천장이 없는 교실",
+      "subtitle": "교육 · 미술과 디자인 수업",
+      "narration": "이번 지문은 미술 수업을 어떻게 설계해야 하는지 다루고 있어요.",
+      "cast": [
+        { "who": "garam", "expression": "happy", "pose": "raise" },
+        { "who": "yoo", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "가람이는 미술 시간이 왜 어떤 날은 설레고 어떤 날은 지루한지 궁금했어요.",
+      "question": "같은 미술 수업인데 왜 이렇게 다르게 느껴질까?",
+      "thought": true,
+      "narrationOut": "지문은 그 차이를 만드는 것이 놀라움이라고 말해요.",
+      "cast": [{ "who": "garam", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "놀라움을 불러일으키기",
+      "meaning": "교사는 놀라움을 일으키는 기회를 주어야 해요. 그 놀라움이 발견과 배움을 끌어당겨요.",
+      "icon": "✨",
+      "narration": "미술과 디자인을 매우 매력적으로 만들려면 여기에 전념해야 해요.",
+      "cast": [{ "who": "yoo", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "어떤 수업인가",
+      "left": {
+        "label": "목표에 얽매인 수업",
+        "icon": "📏",
+        "points": ["정해진 틀을 엄격히 따른다", "도달할 지점이 고정돼 있다", "그 이상은 다루지 않는다"]
+      },
+      "right": {
+        "label": "천장이 없는 교실",
+        "icon": "🌈",
+        "points": ["한계를 두지 않는다", "살아 있고 역동적이다", "그때그때 바뀔 수 있다"]
+      },
+      "narration": "창의적인 사고가 작동할 때는 한계가 없는 교실이 필요해요."
+    },
+    {
+      "type": "flow",
+      "heading": "교사가 해야 할 일",
+      "steps": [
+        { "label": "무엇이 끌리는지", "icon": "🤔" },
+        { "label": "기억해 둔다", "icon": "📝" },
+        { "label": "수업을 설계", "icon": "🎨" },
+        { "label": "공간과 자료까지", "icon": "🏫" }
+      ],
+      "narration": "배움을 매력적으로 만드는 것이 무엇인지 기억하고 그에 맞게 설계해야 해요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "가람이는 교실이 어떻게 달라질 수 있는지 물었어요.",
+      "lines": [
+        { "who": "garam", "text": "교실이 바뀔 수 있다는 게 어떤 뜻이에요?" },
+        { "who": "yoo", "text": "그 순간의 주제나 아이들 상상력을 사로잡은 관심사에 따라 바뀌는 거예요." },
+        { "who": "garam", "text": "그래서 살아 있다고 표현한 거군요." }
+      ],
+      "narrationOut": "어린아이들의 교실은 살아 있고 역동적이며 변할 수 있어야 해요.",
+      "cast": [
+        { "who": "garam", "expression": "confused", "pose": "shrug" },
+        { "who": "yoo", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "It is essential to provide classrooms that have no ceiling when creative minds are operating and finding out.",
+      "translation": "창의적인 사고가 작동하며 알아 가고 있을 때, 천장이 없는 교실을 제공하는 것이 필수적입니다.",
+      "highlight": ["essential", "no", "ceiling", "creative"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "놀라움이 발견과 배움을 끌어당긴다",
+        "목표에 얽매인 틀을 따르는 수업이 아니다",
+        "교실은 살아 있고 변할 수 있어야 한다"
+      ],
+      "narration": "무엇이 배움을 매력적으로 만드는지부터 기억해야 해요.",
+      "cast": [{ "who": "garam", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

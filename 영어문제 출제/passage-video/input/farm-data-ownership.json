@@ -1,0 +1,121 @@
+{
+  "slug": "farm-data-ownership",
+  "title": "자료는 누구의 것일까",
+  "subtitle": "소유권이라는 말이 생각보다 복잡해요",
+  "source": "올림포스 영어독해 기본 2 · Unit 14 글의 순서 배열",
+  "kind": "academic",
+  "characters": {
+    "sae": {
+      "name": "새봄",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B6",
+      "hair": "ponytail",
+      "hairColor": "#31241E",
+      "outfit": "uniform",
+      "outfitColor": "#5E9E6A",
+      "accentColor": "#33443A",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "beop": {
+      "name": "법 변호사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C5A3",
+      "hair": "short",
+      "hairColor": "#453D35",
+      "outfit": "suit",
+      "outfitColor": "#4A5E8A",
+      "accentColor": "#2C3442",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "자료는 누구의 것일까",
+      "subtitle": "법 · 데이터 소유권",
+      "narration": "이번 지문은 농장에서 모인 자료의 주인이 누구인지를 다루고 있어요.",
+      "cast": [
+        { "who": "sae", "expression": "confused", "pose": "raise" },
+        { "who": "beop", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "새봄이는 농장 자료가 농부의 것이라는 문구를 계약서에서 봤어요.",
+      "question": "계약서에 적혀 있으면 당연히 농부 것 아닌가?",
+      "thought": true,
+      "narrationOut": "그런데 '소유권'은 법적인 주장이고, 법이 그렇게 다루고 있지는 않아요.",
+      "cast": [{ "who": "sae", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "비경합적인 성질",
+      "meaning": "자료는 복사하거나 옮겨도 그대로예요. 그래서 같은 자료가 여러 곳에 있고 여러 사람의 것일 수 있어요.",
+      "icon": "📑",
+      "narration": "소유될 수 있는 다른 재화와 비교되는 자료만의 독특한 성질이에요.",
+      "cast": [{ "who": "beop", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "두 종류의 자료",
+      "left": {
+        "label": "구조화된 자료 모음",
+        "icon": "🗂️",
+        "points": ["정리되어 수집된 형태", "지적 재화로 볼 수 있다", "저작권이 적용된다"]
+      },
+      "right": {
+        "label": "미가공 자료",
+        "icon": "🧩",
+        "points": ["흩어진 개별 조각", "아직 이해되기 전", "사실에 가깝다"]
+      },
+      "narration": "미가공 자료는 사실과 비슷해서 저작권도 소유권도 적용되지 않아요."
+    },
+    {
+      "type": "flow",
+      "heading": "왜 간단하지 않은가",
+      "steps": [
+        { "label": "계약서엔 적힌다", "icon": "📄" },
+        { "label": "법은 다루지 않는다", "icon": "⚖️" },
+        { "label": "복사해도 그대로", "icon": "📋" },
+        { "label": "주인이 여럿이 된다", "icon": "👥" }
+      ],
+      "narration": "자료 모음에 대한 저작권을 빼면 법률이 소유권을 다루지 않아요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "새봄이는 왜 자료만 다르게 취급되는지 물었어요.",
+      "lines": [
+        { "who": "sae", "text": "물건은 하나뿐인데 자료는 왜 다른 건가요?" },
+        { "who": "beop", "text": "자료는 복사해도 원래 것이 줄지 않아요. 동시에 여러 곳에 있을 수 있죠." },
+        { "who": "sae", "text": "그러니까 '내 것'이라고 딱 잘라 말하기 어려운 거네요." }
+      ],
+      "narrationOut": "그래서 소유권이라는 말이 자료에는 잘 들어맞지 않아요.",
+      "cast": [
+        { "who": "sae", "expression": "surprised", "pose": "shrug" },
+        { "who": "beop", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "In legal terms, it is non-rivalrous: the same data can be in different places and be owned by different people.",
+      "translation": "법적 측면에서 자료는 비경합적입니다. 동일한 자료가 서로 다른 장소에 있을 수 있고 서로 다른 사람에게 소유될 수 있습니다.",
+      "highlight": ["non-rivalrous", "same", "different"],
+      "narration": "지문에서 이 성질이 모든 복잡함의 출발점이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "농장 자료가 농부의 것이라고들 말한다",
+        "그러나 법은 자료 소유권을 다루지 않는다",
+        "복사해도 그대로라 여럿의 것일 수 있다"
+      ],
+      "narration": "미가공 자료는 사실에 가까워 소유권이 붙지 않아요.",
+      "cast": [{ "who": "sae", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

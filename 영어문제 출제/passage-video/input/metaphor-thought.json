@@ -1,0 +1,121 @@
+{
+  "slug": "metaphor-thought",
+  "title": "선거가 우리 앞에 있다고?",
+  "subtitle": "은유는 수사가 아니라 생각의 방식이에요",
+  "source": "올림포스 영어독해 기본 2 · Unit 10 단어 빈칸 추론",
+  "kind": "academic",
+  "characters": {
+    "mina": {
+      "name": "미나",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B8",
+      "hair": "bob",
+      "hairColor": "#36271F",
+      "outfit": "uniform",
+      "outfitColor": "#5C6BC4",
+      "accentColor": "#343A52",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "eon": {
+      "name": "언 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E7C5A3",
+      "hair": "short",
+      "hairColor": "#6B635B",
+      "outfit": "suit",
+      "outfitColor": "#8A6A4A",
+      "accentColor": "#3C342C",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "선거가 우리 앞에 있다고?",
+      "subtitle": "언어 · 은유와 사고",
+      "narration": "이번 지문은 우리가 매일 쓰는 말 속의 은유를 다루고 있어요.",
+      "cast": [
+        { "who": "mina", "expression": "confused", "pose": "raise" },
+        { "who": "eon", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "미나는 '선거가 우리 앞에 있다'는 문장을 곱씹어 봤어요.",
+      "question": "선거가 앞에 있다니, 그게 어떻게 가능한 말이지?",
+      "thought": true,
+      "narrationOut": "문자 그대로 보면 이런 표현은 전혀 말이 되지 않아요.",
+      "cast": [{ "who": "mina", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "은유",
+      "meaning": "뜻이 문자 그대로가 아니라 빗대어 작동하는 표현이에요. 일상 언어에 수십만 개가 있어요.",
+      "icon": "🪞",
+      "narration": "'긴 겨울이 이제 우리 뒤에 있다' 같은 표현도 마찬가지예요.",
+      "cast": [{ "who": "eon", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "은유를 보는 두 가지 시선",
+      "left": {
+        "label": "흔한 생각",
+        "icon": "🖋️",
+        "points": ["시인의 특별한 도구", "꾸미기 위한 수사", "일상과는 거리가 멀다"]
+      },
+      "right": {
+        "label": "지문의 주장",
+        "icon": "🧠",
+        "points": ["평범한 사고의 기제", "무의식적으로 작동한다", "거의 모든 말에 스며 있다"]
+      },
+      "narration": "은유는 단지 수사적 표현이나 예술가의 도구만이 아니에요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "미나는 그런 표현이 정말 그렇게 많은지 물었어요.",
+      "lines": [
+        { "who": "mina", "text": "그런 표현이 생각보다 많다는 게 실감이 안 나요." },
+        { "who": "eon", "text": "'차가운 사람', '강한 의견', '침체된 시장' 전부 그런 표현이에요." },
+        { "who": "mina", "text": "말하면서 은유인 줄도 몰랐던 거네요." }
+      ],
+      "narrationOut": "보통은 무의식적으로, 힘들이지 않고 작동하기 때문이에요.",
+      "cast": [
+        { "who": "mina", "expression": "surprised", "pose": "shrug" },
+        { "who": "eon", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "flow",
+      "heading": "은유가 하는 일",
+      "steps": [
+        { "label": "말에 스며든다", "icon": "💬" },
+        { "label": "눈치채지 못한다", "icon": "🌫️" },
+        { "label": "생각을 움직인다", "icon": "🧠" },
+        { "label": "상상이 열린다", "icon": "✨" }
+      ],
+      "narration": "일상 언어는 물론 기술적인 언어의 거의 모든 면에 스며들어 있어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "Metaphor is not just a figure of speech. It is an ordinary mechanism of thought.",
+      "translation": "은유는 단지 수사적 표현이 아닙니다. 그것은 평범한 사고의 기제입니다.",
+      "highlight": ["not", "just", "ordinary", "thought"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "문자 그대로는 말이 안 되는 표현을 매일 쓴다",
+        "은유는 수사가 아니라 평범한 사고의 기제다",
+        "무의식적으로 작동하며 상상을 가능하게 한다"
+      ],
+      "narration": "우리가 생각하는 방식 자체가 은유로 되어 있어요.",
+      "cast": [{ "who": "mina", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

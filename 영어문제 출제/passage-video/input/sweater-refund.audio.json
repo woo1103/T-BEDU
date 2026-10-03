@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/sweater-refund/s0-narration.wav",
+    "seconds": 4.36,
+    "hash": "da0f247d380f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/sweater-refund/s1-narration.wav",
+    "seconds": 4.36,
+    "hash": "0183d4848dfd",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/sweater-refund/s1-narrationOut.wav",
+    "seconds": 3.84,
+    "hash": "13e4ce08aa88",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/sweater-refund/s1-question.wav",
+    "seconds": 4.64,
+    "hash": "6d2277a33a90",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/sweater-refund/s2-narration.wav",
+    "seconds": 4.76,
+    "hash": "c7e24d82c265",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/sweater-refund/s3-narration.wav",
+    "seconds": 5.32,
+    "hash": "c2ca271e858d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/sweater-refund/s4-narration.wav",
+    "seconds": 4.84,
+    "hash": "61ea9200e826",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/sweater-refund/s5-narration.wav",
+    "seconds": 4,
+    "hash": "d62322ff89ff",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/sweater-refund/s5-narrationOut.wav",
+    "seconds": 3.84,
+    "hash": "fdcc1b7c814f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/sweater-refund/s5-line0.wav",
+    "seconds": 4.68,
+    "hash": "1f747947b456",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/sweater-refund/s5-line1.wav",
+    "seconds": 4.36,
+    "hash": "562dd7a2ad71",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/sweater-refund/s5-line2.wav",
+    "seconds": 3,
+    "hash": "2fd583cc2629",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/sweater-refund/s6-narration.wav",
+    "seconds": 2.56,
+    "hash": "bbc41c519792",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/sweater-refund/s7-narration.wav",
+    "seconds": 4.6,
+    "hash": "03009f0de49e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

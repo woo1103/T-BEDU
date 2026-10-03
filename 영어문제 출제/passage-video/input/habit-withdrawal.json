@@ -1,0 +1,120 @@
+{
+  "slug": "habit-withdrawal",
+  "title": "비스킷을 끊지 못하는 이유",
+  "subtitle": "힘든 건 습관이 없어서가 아니라 바뀌어서예요",
+  "source": "올림포스 영어독해 기본 2 · Unit 09 어휘 적절성",
+  "kind": "academic",
+  "characters": {
+    "bomi": {
+      "name": "보미",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B7",
+      "hair": "ponytail",
+      "hairColor": "#31241E",
+      "outfit": "hoodie",
+      "outfitColor": "#C4567A",
+      "accentColor": "#3B3138",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "ju": {
+      "name": "주 상담사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#403830",
+      "outfit": "suit",
+      "outfitColor": "#4E8A7A",
+      "accentColor": "#2E3E38",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "비스킷을 끊지 못하는 이유",
+      "subtitle": "심리 · 습관과 금단 현상",
+      "narration": "이번 지문은 습관을 바꾸기가 왜 그렇게 어려운지 다루고 있어요.",
+      "cast": [
+        { "who": "bomi", "expression": "sad", "pose": "raise" },
+        { "who": "ju", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "보미는 오후 간식을 끊어 보려다 하루 만에 다시 손을 뻗었어요.",
+      "question": "안 먹으면 왜 이렇게 불안하고 안절부절못할까?",
+      "thought": true,
+      "narrationOut": "습관은 일상의 일부라서, 하지 않으면 불안하고 스트레스를 받아요.",
+      "cast": [{ "who": "bomi", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "악순환",
+      "meaning": "불쾌한 느낌은 습관을 계속하면 사라져요. 그래서 습관이 그 문제의 해결책이 되어 버려요.",
+      "icon": "🔄",
+      "narration": "바꾸려다 생긴 문제를 바로 그 습관이 풀어 주는 셈이에요.",
+      "cast": [{ "who": "ju", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "악순환이 돌아가는 길",
+      "steps": [
+        { "label": "습관을 멈춤", "icon": "✋" },
+        { "label": "불안이 올라옴", "icon": "😖" },
+        { "label": "다시 손을 뻗음", "icon": "🍪" },
+        { "label": "습관이 이어짐", "icon": "🔄" }
+      ],
+      "narration": "몇 개의 비스킷이면 그 불편함이 전부 괜찮아져 버려요."
+    },
+    {
+      "type": "compare",
+      "heading": "무엇이 우리를 힘들게 할까",
+      "left": {
+        "label": "흔한 오해",
+        "icon": "❓",
+        "points": ["그 행동이 없어서 힘들다", "비스킷이 없어서 괴롭다", "참을성이 부족한 탓이다"]
+      },
+      "right": {
+        "label": "지문이 짚는 것",
+        "icon": "💡",
+        "points": ["바뀌었기 때문에 힘들다", "느낌은 금단 현상일 뿐", "굴복하면 더 나빠진다"]
+      },
+      "narration": "스트레스를 주는 건 행동의 부재가 아니라 습관의 변화예요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "보미는 그러면 어디서부터 바꿔야 하는지 물었어요.",
+      "lines": [
+        { "who": "bomi", "text": "그럼 이 불안한 느낌은 그냥 참아야 하는 건가요?" },
+        { "who": "ju", "text": "그 느낌이 금단 현상일 뿐이라는 걸 알아차리는 게 먼저예요." },
+        { "who": "bomi", "text": "굴복해서 없애려 하면 오히려 길어진다는 거네요." }
+      ],
+      "narrationOut": "그 사실을 깨닫기 시작하면 습관 자체를 버리기 시작할 수 있어요.",
+      "cast": [
+        { "who": "bomi", "expression": "confused", "pose": "shrug" },
+        { "who": "ju", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "It's the change in the habit which makes us feel stressed, not the absence of the actual behaviour.",
+      "translation": "우리에게 스트레스를 느끼게 하는 것은 실제 행동의 부재가 아니라 습관의 변화입니다.",
+      "highlight": ["change", "habit", "absence"],
+      "narration": "지문에서 이 문장이 핵심이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "습관을 멈추면 불안과 스트레스가 올라온다",
+        "그 느낌을 없애려 다시 습관으로 돌아간다",
+        "힘든 건 행동의 부재가 아니라 변화 때문이다"
+      ],
+      "narration": "금단 현상임을 알아차리는 데서 습관 끊기가 시작돼요.",
+      "cast": [{ "who": "bomi", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

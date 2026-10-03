@@ -1,0 +1,121 @@
+{
+  "slug": "sport-and-media",
+  "title": "스포츠와 미디어는 서로를 먹여 살린다",
+  "subtitle": "둘은 각자의 이익으로 맞물려 있어요",
+  "source": "올림포스 영어독해 기본 2 · Unit 13 무관한 문장 찾기",
+  "kind": "academic",
+  "characters": {
+    "jun": {
+      "name": "준서",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D3B8",
+      "hair": "spiky",
+      "hairColor": "#2E241E",
+      "outfit": "tshirt",
+      "outfitColor": "#4E7FC4",
+      "accentColor": "#333B4E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "bang": {
+      "name": "방 기자",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#3A322B",
+      "outfit": "suit",
+      "outfitColor": "#8A5A4A",
+      "accentColor": "#3B302A",
+      "accessory": "glasses",
+      "prop": "phone",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "스포츠와 미디어는 서로를 먹여 살린다",
+      "subtitle": "산업 · 상호 보완 관계",
+      "narration": "이번 지문은 스포츠와 미디어가 맺어 온 관계를 다루고 있어요.",
+      "cast": [
+        { "who": "jun", "expression": "happy", "pose": "raise" },
+        { "who": "bang", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "준서는 경기 중계권이 왜 그렇게 비싼지 궁금했어요.",
+      "question": "중계권 하나가 그렇게 큰돈이 될 일인가?",
+      "thought": true,
+      "narrationOut": "두 분야는 오랜 세월에 걸쳐 서로의 이익이 맞물린 관계를 만들어 왔어요.",
+      "cast": [{ "who": "jun", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "상호 보완 관계",
+      "meaning": "서로가 가진 것이 상대에게 꼭 필요해서, 이익이 맞물려 돌아가는 관계예요.",
+      "icon": "🔗",
+      "narration": "양쪽 산업이 이 성질에서 이득을 얻고 있어요.",
+      "cast": [{ "who": "bang", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "서로에게 주는 것",
+      "left": {
+        "label": "스포츠가 주는 것",
+        "icon": "⚽",
+        "points": ["가치 있는 콘텐츠", "모여드는 시청자", "생중계라는 결정적 재료"]
+      },
+      "right": {
+        "label": "미디어가 주는 것",
+        "icon": "📺",
+        "points": ["수익을 가져다준다", "홍보 도구가 된다", "넓은 노출을 만든다"]
+      },
+      "narration": "독점 생중계권 판매는 스포츠 단체와 구단의 중요한 수익원이에요."
+    },
+    {
+      "type": "flow",
+      "heading": "노출이 돈이 되기까지",
+      "steps": [
+        { "label": "TV로 널리 중계", "icon": "📺" },
+        { "label": "리그가 노출됨", "icon": "📣" },
+        { "label": "협찬이 들어옴", "icon": "🤝" },
+        { "label": "새 후원자 유입", "icon": "💰" }
+      ],
+      "narration": "노출은 협찬과 새 후원자라는 형태로 리그와 구단에 이익을 돌려줘요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "준서는 미디어 쪽은 무엇을 얻는지 물었어요.",
+      "lines": [
+        { "who": "jun", "text": "미디어는 큰돈을 내고 뭘 얻는 거예요?" },
+        { "who": "bang", "text": "생중계 스포츠는 시청자를 끌 매력적인 편성을 만드는 데 결정적이거든요." },
+        { "who": "jun", "text": "그래서 서로 없으면 아쉬운 사이가 된 거군요." }
+      ],
+      "narrationOut": "스포츠는 콘텐츠를, 미디어는 수익과 홍보를 주고받아요.",
+      "cast": [
+        { "who": "jun", "expression": "confused", "pose": "shrug" },
+        { "who": "bang", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "While sport provides valuable content and audiences for media operators, the media is a revenue source and promotional tool for sport.",
+      "translation": "스포츠가 미디어 운영자에게 가치 있는 콘텐츠와 시청자를 제공하는 한편, 미디어는 스포츠에 수익원이자 홍보 도구가 됩니다.",
+      "highlight": ["content", "audiences", "revenue", "promotional"],
+      "narration": "지문에서 이 문장이 관계의 핵심을 말해 줘요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "두 분야는 이익이 맞물린 관계를 만들어 왔다",
+        "스포츠는 콘텐츠와 시청자를 제공한다",
+        "미디어는 수익원이자 홍보 도구가 된다"
+      ],
+      "narration": "노출이 협찬과 후원으로 이어지며 서로를 키워요.",
+      "cast": [{ "who": "jun", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

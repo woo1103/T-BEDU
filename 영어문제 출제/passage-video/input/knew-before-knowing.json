@@ -1,0 +1,120 @@
+{
+  "slug": "knew-before-knowing",
+  "title": "알기 전에 이미 알고 있었다",
+  "subtitle": "몸이 먼저 경고를 보내고 있었어요",
+  "source": "올림포스 영어독해 기본 2 · Unit 04 함축적 의미",
+  "kind": "academic",
+  "characters": {
+    "ian": {
+      "name": "이안",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "curly",
+      "hairColor": "#352620",
+      "outfit": "tshirt",
+      "outfitColor": "#C4794E",
+      "accentColor": "#3B342E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "bechara": {
+      "name": "베카라",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#3A322B",
+      "outfit": "labcoat",
+      "outfitColor": "#7FA3B8",
+      "accentColor": "#3A454E",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "알기 전에 이미 알고 있었다",
+      "subtitle": "심리 실험 · 무의식의 경고",
+      "narration": "이번 지문은 의식보다 먼저 알아채는 마음에 대한 실험이에요.",
+      "cast": [
+        { "who": "ian", "expression": "surprised", "pose": "raise" },
+        { "who": "bechara", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "이안은 참가자들이 받은 카드 게임 설명을 들었어요.",
+      "question": "그냥 카드를 뒤집어서 돈을 많이 따면 되는 거네?",
+      "thought": true,
+      "narrationOut": "참가자들은 2,000달러의 게임용 돈과 네 벌의 카드를 받았어요.",
+      "cast": [{ "who": "ian", "expression": "happy", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "무작위가 아니었던 카드",
+      "meaning": "카드는 무작위가 아니었어요. 일부 더미는 다른 것보다 훨씬 이익이 컸어요.",
+      "icon": "🃏",
+      "narration": "참가자들은 그 사실을 모른 채 카드를 뒤집기 시작했어요.",
+      "cast": [{ "who": "bechara", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "bars",
+      "heading": "언제부터 알아챘을까",
+      "unit": "번째",
+      "bars": [
+        { "label": "몸이 경고를 보낸 시점", "value": 10 },
+        { "label": "머리로 직감한 시점", "value": 50 }
+      ],
+      "narration": "의식적인 직감은 약 50번째였지만, 감정은 열 번 만에 경고하고 있었어요."
+    },
+    {
+      "type": "compare",
+      "heading": "두 마음이 알아챈 시점",
+      "left": {
+        "label": "의식적인 마음",
+        "icon": "🧠",
+        "points": ["약 50번 뒤집은 뒤", "말로 설명할 수 있었다", "직감이라고 보고했다"]
+      },
+      "right": {
+        "label": "무의식적인 마음",
+        "icon": "💓",
+        "points": ["단 열 번 만에", "피부 전도도로 드러났다", "불안으로 경고했다"]
+      },
+      "narration": "불안과 초조를 드러내는 피부 전기 전도도가 그 증거였어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "이안은 그 경고가 어떤 모습으로 나타났는지 물었어요.",
+      "lines": [
+        { "who": "ian", "text": "몸이 경고했다는 걸 어떻게 알 수 있었어요?" },
+        { "who": "bechara", "text": "피부의 전기 전도도를 재 보니 나쁜 카드 앞에서 반응이 올라왔어요." },
+        { "who": "ian", "text": "본인은 모르는데 몸은 이미 알고 있었던 거네요." }
+      ],
+      "narrationOut": "무의식은 의식보다 훨씬 빨리 상황을 파악하고 있었어요.",
+      "cast": [
+        { "who": "ian", "expression": "surprised", "pose": "shrug" },
+        { "who": "bechara", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "They knew before they knew.",
+      "translation": "그들은 자신이 알기 전에 이미 알고 있었습니다.",
+      "highlight": ["knew", "before"],
+      "narration": "지문이 마지막에 남기는 한마디예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "일부 카드 더미가 훨씬 유리하게 설계돼 있었다",
+        "머리로 직감한 것은 약 50번째였다",
+        "몸은 열 번 만에 좋지 않은 느낌으로 경고했다"
+      ],
+      "narration": "무의식이 의식보다 먼저 답을 찾아내고 있었어요.",
+      "cast": [{ "who": "ian", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

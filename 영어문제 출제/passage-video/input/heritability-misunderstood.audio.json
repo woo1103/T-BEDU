@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/heritability-misunderstood/s0-narration.wav",
+    "seconds": 4.8,
+    "hash": "deb05447405b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/heritability-misunderstood/s1-narration.wav",
+    "seconds": 4.16,
+    "hash": "df5e3e506d68",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/heritability-misunderstood/s1-narrationOut.wav",
+    "seconds": 3.84,
+    "hash": "852ed3731290",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/heritability-misunderstood/s1-question.wav",
+    "seconds": 3.2,
+    "hash": "8bdd8139edf4",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/heritability-misunderstood/s2-narration.wav",
+    "seconds": 3.96,
+    "hash": "ba48e2336c22",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/heritability-misunderstood/s3-narration.wav",
+    "seconds": 4.16,
+    "hash": "1705241056ed",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/heritability-misunderstood/s4-narration.wav",
+    "seconds": 3.88,
+    "hash": "68766fcc520b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/heritability-misunderstood/s4-narrationOut.wav",
+    "seconds": 4.36,
+    "hash": "da1472fb955a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-line0": {
+    "file": "audio/heritability-misunderstood/s4-line0.wav",
+    "seconds": 3.36,
+    "hash": "0bdc75988d8f",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s4-line1": {
+    "file": "audio/heritability-misunderstood/s4-line1.wav",
+    "seconds": 5,
+    "hash": "0222d0b3f6f8",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s4-line2": {
+    "file": "audio/heritability-misunderstood/s4-line2.wav",
+    "seconds": 3.2,
+    "hash": "e1711322453c",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-narration": {
+    "file": "audio/heritability-misunderstood/s5-narration.wav",
+    "seconds": 4.68,
+    "hash": "51890365bd8a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/heritability-misunderstood/s6-narration.wav",
+    "seconds": 3.48,
+    "hash": "3229da1e86bd",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/heritability-misunderstood/s7-narration.wav",
+    "seconds": 3.28,
+    "hash": "474c74de87ba",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}
