@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { EXAM_TYPE_MAP, getQuestionTypes, DIFFICULTY_MAP } from "@/lib/question-types";
 import { isMarkerMappedType } from "@/lib/question-validate";
+import { isMarkerOnlyChoices } from "@/lib/passage-parser";
 import { VARIATIONS } from "@/lib/variations";
 import type { Choice, ExamType, Difficulty, PassageMode } from "@/types";
 
@@ -340,10 +341,11 @@ export default function NewQuestionPage() {
     }
 
     return questions.map((q, idx) => {
-      // 서술형/선지없음/마커대응(어법·순서·삽입) 유형은 선지 재배치 금지
+      // 서술형/선지없음/마커대응(어법·순서·삽입·지칭·무관)·마커전용 선지는 재배치 금지
       if (
         isWritingType(q.questionType) ||
         isMarkerMappedType(q.questionType) ||
+        isMarkerOnlyChoices(q.choices) ||
         q.choices.length === 0
       )
         return q;

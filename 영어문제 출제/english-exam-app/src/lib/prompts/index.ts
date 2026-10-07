@@ -1,5 +1,6 @@
 import { getSuneungPrompt, getSuneungDifficulty } from "./suneung";
 import { getNaesinPrompt } from "./naesin";
+import { getGrammarPrompt } from "./grammar";
 import { buildVariationBlock } from "../variations";
 
 export function getSystemPrompt(
@@ -22,6 +23,12 @@ export function getSystemPrompt(
       break;
     case "naesin":
       basePrompt = getNaesinPrompt(questionType, difficulty);
+      break;
+    case "grammar":
+      basePrompt = getGrammarPrompt(questionType);
+      if (basePrompt) {
+        basePrompt += "\n" + getSuneungDifficulty(difficulty);
+      }
       break;
     case "toeic":
       return null;

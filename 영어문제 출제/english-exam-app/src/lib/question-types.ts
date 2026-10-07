@@ -48,6 +48,7 @@ export const NAESIN_TYPES: QuestionTypeInfo[] = [
   { code: "naesin_topic", number: 8, name: "주제/요지/제목", nameEn: "Topic/Gist/Title", category: "독해", defaultPoints: 2 },
   { code: "naesin_content", number: 9, name: "내용 일치/불일치", nameEn: "Content Match", category: "독해", defaultPoints: 2 },
   { code: "naesin_refer", number: 10, name: "지칭 추론", nameEn: "Reference", category: "독해", defaultPoints: 2 },
+  { code: "naesin_irrelevant", number: 18, name: "무관한 문장", nameEn: "Irrelevant Sentence", category: "글의 구조", defaultPoints: 2 },
   { code: "naesin_summary", number: 11, name: "요약문 완성", nameEn: "Summary Completion", category: "독해", defaultPoints: 3 },
   { code: "naesin_writing", number: 12, name: "서술형", nameEn: "Written Response", category: "서술형", defaultPoints: 5 },
   { code: "naesin_writing_summary", number: 13, name: "서술형(요약)", nameEn: "Written (Summary)", category: "서술형", defaultPoints: 5 },
@@ -65,9 +66,16 @@ export const TOEIC_TYPES: QuestionTypeInfo[] = [
   { code: "toeic_part7_double", number: 7, name: "Part 7 (이중 지문)", nameEn: "Double Passage", category: "독해", defaultPoints: 1 },
 ];
 
+// 어법(단원/테마별) 전용 — 주제/키워드에 문법 단원·테마를 적어 어법만 집중 출제
+export const GRAMMAR_THEME_TYPES: QuestionTypeInfo[] = [
+  { code: "grammar_theme", number: 1, name: "어법(테마별·어색한 것)", nameEn: "Grammar by Theme (Find Error)", category: "어법", defaultPoints: 2 },
+  { code: "grammar_theme_box", number: 2, name: "어법(테마별·네모형)", nameEn: "Grammar by Theme (Box)", category: "어법", defaultPoints: 2 },
+];
+
 export const EXAM_TYPE_MAP = {
   suneung: { name: "수능/모의고사", types: SUNEUNG_TYPES },
   naesin: { name: "내신", types: NAESIN_TYPES },
+  grammar: { name: "어법 (단원/테마별)", types: GRAMMAR_THEME_TYPES },
   toeic: { name: "TOEIC", types: TOEIC_TYPES },
   toefl: { name: "TOEFL", types: [] as QuestionTypeInfo[] },
   custom: { name: "기타", types: [] as QuestionTypeInfo[] },

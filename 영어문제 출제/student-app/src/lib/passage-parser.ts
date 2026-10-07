@@ -55,6 +55,7 @@ const GRAMMAR_VOCAB_TYPES = [
   "naesin_grammar",
   "naesin_grammar_correct",
   "naesin_vocab",
+  "grammar_theme",
 ];
 // 요약문 코드
 const SUMMARY_TYPES = ["40_summary", "naesin_summary"];

@@ -1,28 +1,40 @@
-// 문항 구조 검증: 어법/어휘·순서배열·문장삽입처럼 "지문 마커 ↔ 선지"가
-// 대응하는 유형에서 마커 수·선지 수·정답 범위가 어긋난 "깨진 문제"를 잡아낸다.
+// 문항 구조 검증: 선지 라벨이 지문 마커/위치와 대응하는 유형에서
+// 마커 수·선지 수·정답 범위가 어긋난 "깨진 문제"를 잡아낸다.
 // - 생성 시: 깨진 결과를 폐기/재생성하는 가드
 // - 정리 시: 기존 DB의 깨진 문제를 감지해 삭제
 
-export const GRAMMAR_VOCAB_TYPES = [
+// 어법/어휘 — ①~⑤ 밑줄 마커형 (어색한 것 찾기, 어휘 부적절)
+export const GRAMMAR_CIRCLE_TYPES = [
   "29_grammar",
   "30_vocabulary",
-  "naesin_grammar",
   "naesin_grammar_correct",
   "naesin_vocab",
+  "grammar_theme",
 ];
+// 어법 — (A)(B)(C) 네모형 (각 네모에서 맞는 표현 고르기)
+export const GRAMMAR_BOX_TYPES = ["naesin_grammar", "grammar_theme_box"];
 export const ORDER_TYPES = ["36_order", "37_order2", "43_long_order", "naesin_order"];
 export const INSERTION_TYPES = ["38_insertion", "39_insertion2", "naesin_insertion"];
+export const REFER_TYPES = ["naesin_refer"]; // (a)~(e) 지칭
+export const IRRELEVANT_TYPES = ["35_irrelevant", "naesin_irrelevant"]; // ①~⑤ 무관문장
 
-// 선지 라벨이 지문 마커(①~⑤)와 대응하는 유형(선지 재배치 금지 대상)
+// 하위 호환: 과거 이름 유지(원문자 어법·어휘)
+export const GRAMMAR_VOCAB_TYPES = GRAMMAR_CIRCLE_TYPES;
+
+// 선지 라벨이 지문 마커/위치와 대응하는 유형(선지 재배치 금지 대상)
 export function isMarkerMappedType(questionType: string): boolean {
   return (
-    GRAMMAR_VOCAB_TYPES.includes(questionType) ||
+    GRAMMAR_CIRCLE_TYPES.includes(questionType) ||
+    GRAMMAR_BOX_TYPES.includes(questionType) ||
     ORDER_TYPES.includes(questionType) ||
-    INSERTION_TYPES.includes(questionType)
+    INSERTION_TYPES.includes(questionType) ||
+    REFER_TYPES.includes(questionType) ||
+    IRRELEVANT_TYPES.includes(questionType)
   );
 }
 
 const CIRCLE = ["①", "②", "③", "④", "⑤"];
+const LETTERS = ["(a)", "(b)", "(c)", "(d)", "(e)"];
 
 export interface ValChoice {
   label?: string;
@@ -46,25 +58,35 @@ export function validateQuestionStructure(
   const p = passage || "";
   const correct = correctFrom(choices, answer);
 
-  if (GRAMMAR_VOCAB_TYPES.includes(questionType)) {
+  if (GRAMMAR_CIRCLE_TYPES.includes(questionType) || IRRELEVANT_TYPES.includes(questionType)) {
     if (choices.length !== 5)
       return { ok: false, reason: `선지 ${choices.length}개(5개 필요)` };
     for (const m of CIRCLE) {
-      if (!p.includes(m))
-        return { ok: false, reason: `지문에 ${m} 밑줄 마커 없음` };
+      if (!p.includes(m)) return { ok: false, reason: `지문에 ${m} 마커 없음` };
     }
-    if (correct && !CIRCLE.includes(correct))
-      return { ok: false, reason: `정답 라벨(${correct}) 비정상` };
-    if (correct && !p.includes(correct))
-      return { ok: false, reason: `정답(${correct})이 지문에 밑줄로 없음` };
+    if (GRAMMAR_CIRCLE_TYPES.includes(questionType)) {
+      if (correct && !CIRCLE.includes(correct))
+        return { ok: false, reason: `정답 라벨(${correct}) 비정상` };
+      if (correct && !p.includes(correct))
+        return { ok: false, reason: `정답(${correct})이 지문에 밑줄로 없음` };
+    }
     return { ok: true };
   }
 
-  if (ORDER_TYPES.includes(questionType)) {
+  if (REFER_TYPES.includes(questionType)) {
+    if (choices.length !== 5)
+      return { ok: false, reason: `선지 ${choices.length}개(5개 필요)` };
+    for (const m of LETTERS) {
+      if (!p.includes(m)) return { ok: false, reason: `지문에 ${m} 지칭 마커 없음` };
+    }
+    return { ok: true };
+  }
+
+  if (GRAMMAR_BOX_TYPES.includes(questionType) || ORDER_TYPES.includes(questionType)) {
     if (choices.length !== 5)
       return { ok: false, reason: `선지 ${choices.length}개(5개 필요)` };
     if (!(p.includes("(A)") && p.includes("(B)") && p.includes("(C)")))
-      return { ok: false, reason: "(A)(B)(C) 단락 누락" };
+      return { ok: false, reason: "(A)(B)(C) 표시 누락" };
     return { ok: true };
   }
 
@@ -72,7 +94,6 @@ export function validateQuestionStructure(
     if (choices.length !== 5)
       return { ok: false, reason: `선지 ${choices.length}개(5개 필요)` };
     const markerCount = CIRCLE.filter((m) => p.includes(m)).length;
-    // 본문 삽입 위치 마커는 최소 4개(⑤는 렌더러가 보강 가능)
     if (markerCount < 4)
       return { ok: false, reason: `삽입 위치 마커 ${markerCount}개(4~5 필요)` };
     return { ok: true };
