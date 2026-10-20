@@ -384,6 +384,29 @@ model PushSubscription {
 
 // ─── 영상 (P6) : 영어·수학 공통 ───
 
+// 수학 문제 은행: 업로드한 문제를 비전으로 수집해 DB화 (출처/기출 포함).
+model MathProblem {
+  id           String   @id @default(cuid())
+  source       String?  // 출처 (예: "2024 9월 모평 30번", "쎈 수1 123번")
+  sourceType   String?  // "기출" | "교재" | "자작"
+  grade        String?  // 고1~고3 등
+  unit         String?  // 단원/테마
+  difficulty   String?  // 하|중|상|킬러
+  number       Int?     // 원본 내 문항 번호
+  problemLatex String   // 문제 본문(LaTeX/텍스트)
+  answer       String?  // 정답
+  answerLatex  String?
+  solution     String?  // 풀이/해설
+  imageUrl     String?  // 원본 이미지(R2 key, 그래프·도형 보존)
+  templateCode String?  // 쌍둥이 템플릿(SymPy, P3)
+  hasTemplate  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([grade])
+  @@index([unit])
+}
+
 model Video {
   id          String   @id @default(cuid())
   subject     String   @default("english") // "english" | "math" | "etc"

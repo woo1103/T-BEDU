@@ -163,3 +163,69 @@ ${expectedCount ? `- 정답지에는 총 ${expectedCount}문항이 있습니다.
   );
   return { items };
 }
+
+// 수학 문제 이미지/PDF를 읽어 개별 문항으로 분리하고 LaTeX·정답·메타를 추출한다.
+export interface ExtractedMathProblem {
+  number?: number;
+  problemLatex: string;
+  answer?: string;
+  answerLatex?: string;
+  solution?: string;
+  unit?: string;
+  difficulty?: string;
+}
+
+export async function extractMathProblems(input: {
+  base64: string;
+  mediaType: string;
+  hint?: { source?: string; grade?: string };
+}): Promise<{ problems: ExtractedMathProblem[] }> {
+  const { base64, mediaType, hint } = input;
+  const isPdf = mediaType === "application/pdf";
+  const mediaBlock = isPdf
+    ? {
+        type: "document" as const,
+        source: { type: "base64" as const, media_type: "application/pdf" as const, data: base64 },
+      }
+    : {
+        type: "image" as const,
+        source: {
+          type: "base64" as const,
+          media_type: mediaType as "image/png" | "image/jpeg" | "image/webp" | "image/gif",
+          data: base64,
+        },
+      };
+
+  const instruction = `이 이미지는 한국 고등학교 수학 문제(들)입니다. 각 문항을 분리해 추출하세요.
+- 수식은 모두 LaTeX로 표기하되, 인라인은 $...$, 블록은 $$...$$ 로 감싼다.
+- 그래프·도형이 있으면 problemLatex 안에 "[그림: 설명]" 형태로 간단히 설명을 남긴다(이미지는 별도 보존됨).
+- 각 문항의 정답이 보이면 answer(그리고 가능하면 answerLatex)에 넣고, 풀이가 보이면 solution에 넣는다(없으면 생략).
+- 단원(unit)과 난이도(difficulty: 하|중|상|킬러)를 추정해 넣는다(모르면 생략).
+${hint?.grade ? `- 학년 힌트: ${hint.grade}` : ""}
+${hint?.source ? `- 출처 힌트: ${hint.source}` : ""}
+반드시 아래 JSON만 출력(다른 텍스트 금지):
+{"problems":[{"number":1,"problemLatex":"...","answer":"...","answerLatex":"...","solution":"...","unit":"...","difficulty":"중"}]}`;
+
+  const message = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 8192,
+    messages: [{ role: "user", content: [mediaBlock, { type: "text", text: instruction }] }],
+  });
+  const text = message.content[0].type === "text" ? message.content[0].text : "";
+  const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error("문제 인식 결과를 파싱할 수 없습니다.");
+  const parsed = JSON.parse(m[1] || m[0]);
+  const raw = Array.isArray(parsed.problems) ? parsed.problems : [];
+  const problems: ExtractedMathProblem[] = raw
+    .filter((p: { problemLatex?: string }) => (p.problemLatex ?? "").trim())
+    .map((p: ExtractedMathProblem, i: number) => ({
+      number: typeof p.number === "number" ? p.number : i + 1,
+      problemLatex: String(p.problemLatex ?? "").trim(),
+      answer: p.answer ? String(p.answer).trim() : undefined,
+      answerLatex: p.answerLatex ? String(p.answerLatex).trim() : undefined,
+      solution: p.solution ? String(p.solution).trim() : undefined,
+      unit: p.unit ? String(p.unit).trim() : undefined,
+      difficulty: p.difficulty ? String(p.difficulty).trim() : undefined,
+    }));
+  return { problems };
+}
