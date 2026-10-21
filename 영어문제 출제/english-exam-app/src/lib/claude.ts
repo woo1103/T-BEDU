@@ -11,6 +11,7 @@ export async function generateQuestion(
   passage: string;
   question: string;
   choices: { text: string; isCorrect: boolean }[];
+  answer: string;
   explanation: string;
   points: number;
 }> {
@@ -37,8 +38,57 @@ export async function generateQuestion(
     passage: parsed.passage || "",
     question: parsed.question || "",
     choices: parsed.choices || [],
+    answer: typeof parsed.answer === "string" ? parsed.answer : String(parsed.answer ?? ""),
     explanation: parsed.explanation || "",
     points: parsed.points || 2,
+  };
+}
+
+// 생성된 객관식 문항을 정답을 모르는 상태에서 독립적으로 풀어 본다.
+// 출제 의도와 다른 답이 나오거나, 맞는 선지가 없거나 여럿이면 문항 결함으로 본다.
+export async function solveQuestion(input: {
+  passage: string;
+  question: string;
+  choices: string[];
+}): Promise<{ answerIndex: number; valid: "one" | "none" | "multiple"; reason: string }> {
+  const labels = ["①", "②", "③", "④", "⑤"];
+  const choiceLines = input.choices
+    .map((c, i) => `${labels[i] ?? `(${i + 1})`} ${c}`)
+    .join("\n");
+
+  const system = `당신은 한국 고등학교 영어 시험 문항을 검토하는 꼼꼼한 검수자입니다.
+주어진 문항을 직접 풀고, 정답이 될 수 있는 선지를 모두 따져 보세요.
+- 정답이 정확히 1개면 valid="one", answer에 그 번호(1~5)
+- 어떤 선지도 정답이 될 수 없으면 valid="none", answer=0
+- 정답이 될 수 있는 선지가 2개 이상이면 valid="multiple", answer에 가장 적절한 번호
+반드시 아래 JSON만 출력하세요.
+{"answer": <0~5 정수>, "valid": "one"|"none"|"multiple", "reason": "<한국어 1~2문장 근거>"}`;
+
+  const user = `[지문]
+${input.passage || "(지문 없음)"}
+
+[발문]
+${input.question}
+
+[선지]
+${choiceLines}`;
+
+  const message = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 1024,
+    system,
+    messages: [{ role: "user", content: user }],
+  });
+  const text = message.content[0].type === "text" ? message.content[0].text : "";
+  const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error("검수 응답을 파싱할 수 없습니다.");
+  const parsed = JSON.parse(m[1] || m[0]);
+  const n = Number(parsed.answer);
+  const valid = parsed.valid === "none" || parsed.valid === "multiple" ? parsed.valid : "one";
+  return {
+    answerIndex: Number.isInteger(n) && n >= 1 && n <= input.choices.length ? n - 1 : -1,
+    valid,
+    reason: typeof parsed.reason === "string" ? parsed.reason : "",
   };
 }
 

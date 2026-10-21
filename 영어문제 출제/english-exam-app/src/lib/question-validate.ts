@@ -102,6 +102,42 @@ export function validateQuestionStructure(
   return { ok: true }; // 그 외 유형은 검증 대상 아님
 }
 
+// ── 정답 표시 검증 (객관식 전 유형) ──
+
+// "③" / "3" / "(3)" / "3번" / "정답: ③" → 0-based 선지 인덱스. 해석 불가면 -1
+export function answerToIndex(answer: string | undefined | null, count = 5): number {
+  const a = (answer ?? "").trim();
+  if (!a) return -1;
+  const circ = CIRCLE.findIndex((m) => a.includes(m));
+  if (circ >= 0) return circ < count ? circ : -1;
+  const digits = a.match(/\d+/g);
+  if (digits && digits.length === 1) {
+    const n = parseInt(digits[0], 10);
+    if (n >= 1 && n <= count) return n - 1;
+  }
+  return -1;
+}
+
+// 정답 표시(isCorrect)가 없거나 여러 개일 때, answer 필드로 하나를 확정한다.
+// 확정할 수 없으면 원본을 그대로 돌려준다(검증 단계에서 걸러짐).
+export function reconcileCorrect<T extends ValChoice>(choices: T[], answer?: string | null): T[] {
+  if (choices.length === 0) return choices;
+  const flagged = choices.filter((c) => c.isCorrect).length;
+  if (flagged === 1) return choices;
+  const idx = answerToIndex(answer, choices.length);
+  if (idx < 0) return choices;
+  return choices.map((c, i) => ({ ...c, isCorrect: i === idx }));
+}
+
+// 객관식이면 선지가 있고 정답이 정확히 1개여야 한다.
+export function validateSingleAnswer(choices: ValChoice[]): { ok: boolean; reason?: string } {
+  if (choices.length < 2) return { ok: false, reason: `선지 ${choices.length}개` };
+  const n = choices.filter((c) => c.isCorrect).length;
+  if (n === 0) return { ok: false, reason: "정답 표시 없음" };
+  if (n > 1) return { ok: false, reason: `정답 ${n}개` };
+  return { ok: true };
+}
+
 // DB의 Question 행(choices는 JSON 문자열)에 대한 검증
 export function validateStoredQuestion(q: {
   questionType: string;

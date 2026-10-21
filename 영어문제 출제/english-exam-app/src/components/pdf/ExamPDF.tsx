@@ -1,5 +1,6 @@
 "use client";
 
+import type { ComponentProps } from "react";
 import {
   Document,
   Page,
@@ -17,11 +18,14 @@ import {
   normalizeUnderlineTags,
   splitInlineUnderline,
   normalizeMarkerChoices,
+  isMarkerOnlyChoices,
   type OrderParsed,
   type InsertionParsed,
   type GrammarParsed,
   type SummaryParsed,
+  type ParsedPassage,
 } from "@/lib/passage-parser";
+import { BLANK_TOKEN, countLines, packColumns, textWidth } from "@/lib/pdf-layout";
 
 // 한글 폰트 등록 — 로컬 Noto Sans KR 전체 TTF (한글·라틴·CJK 원문자 등 전 글리프 포함)
 // 이전 버전은 fontsource의 korean 서브셋만 로드되어 "1." 이나 "①" 같은 글자가 깨졌음.
@@ -39,10 +43,21 @@ Font.register({
   ],
 });
 
+// 줄 끝에서 단어를 쪼개며 "-"를 넣는 기본 하이픈 처리를 끈다(단어 단위로만 줄바꿈).
+Font.registerHyphenationCallback((word) => [word]);
+
+// react-pdf는 스타일이 바뀌는 지점(예: "③"+밑줄 단어, 빈칸+마침표)을 하이픈 줄바꿈 후보로 본다.
+// 페널티를 무한대(10000)로 두면 그 지점에서 끊지 않는다. (런타임 지원 prop이나 타입 정의엔 없음)
+const NO_HYPHEN_BREAK = { hyphenationPenalty: 10000 } as object;
+function PText(props: ComponentProps<typeof Text>) {
+  return <Text {...NO_HYPHEN_BREAK} {...props} />;
+}
+
 const BRAND_CYAN = "#4FC3F7";
 const BRAND_DARK_CYAN = "#29B6F6";
 const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
-const LONG_ITEM_CHARS = 900;
+// 빈칸: 원본 밑줄 개수와 무관하게 이 길이로 통일(9.5pt 기준 약 30mm)
+const BLANK_TEXT = "_".repeat(16);
 
 interface Choice {
   label: string;
@@ -59,7 +74,7 @@ interface ExamQuestion {
   questionType: string;
 }
 
-// __...__ 와 <u>...</u> 를 실제 밑줄 Text로 렌더링
+// __...__ 와 <u>...</u> 를 실제 밑줄 Text로, 빈칸(___)은 고정 폭 빈칸으로 렌더링
 function PassageInline({
   text,
   style,
@@ -67,20 +82,27 @@ function PassageInline({
   text: string;
   style?: ReturnType<typeof StyleSheet.create>[string];
 }) {
-  const normalized = normalizeUnderlineTags(text);
-  const segments = splitInlineUnderline(normalized);
+  // 빈칸은 앞뒤 일반 텍스트와 한 문자열로 합친다(빈칸과 뒤 구두점이 한 단어로 붙어 다니도록).
+  const runs: { text: string; underline: boolean }[] = [];
+  for (const seg of splitInlineUnderline(normalizeUnderlineTags(text))) {
+    const piece = seg.blank ? BLANK_TEXT : seg.text;
+    const underline = !seg.blank && seg.underline;
+    const last = runs[runs.length - 1];
+    if (last && !last.underline && !underline) last.text += piece;
+    else runs.push({ text: piece, underline });
+  }
   return (
-    <Text style={style}>
-      {segments.map((seg, i) =>
-        seg.underline ? (
-          <Text key={i} style={{ textDecoration: "underline" }}>
-            {seg.text}
-          </Text>
+    <PText style={style}>
+      {runs.map((r, i) =>
+        r.underline ? (
+          <PText key={i} style={{ textDecoration: "underline" }}>
+            {r.text}
+          </PText>
         ) : (
-          seg.text
+          r.text
         )
       )}
-    </Text>
+    </PText>
   );
 }
 
@@ -475,10 +497,10 @@ function CoverPage() {
         </Svg>
       </View>
       <View style={styles.coverTitleInCircle}>
-        <Text style={styles.coverTitleText}>Daily Gift</Text>
+        <PText style={styles.coverTitleText}>Daily Gift</PText>
       </View>
       <View style={styles.coverBrand}>
-        <Text style={styles.coverBrandText}>T&BEDU</Text>
+        <PText style={styles.coverBrandText}>T&BEDU</PText>
       </View>
     </Page>
   );
@@ -495,21 +517,14 @@ function parseChoices(choicesJson: string): Choice[] {
   }
 }
 
-function itemCharLength(item: ExamItemData): number {
-  const passageLen = item.question.passage?.length || 0;
-  const choices = parseChoices(item.question.choices);
-  const choicesLen = choices.reduce((s, c) => s + (c.text?.length || 0), 0);
-  return passageLen + choicesLen + (item.question.question?.length || 0);
-}
-
 // ── 문제 헤더 (번호 + 배점 + 발문) ──
 function QuestionHeaderRow({ item }: { item: ExamItemData }) {
   const pts = item.customPoints || item.question.points;
   return (
     <View style={styles.questionHeader}>
-      <Text style={styles.questionNumber}>{item.orderNum}.</Text>
-      {pts >= 3 && <Text style={styles.questionPoints}>{pts}점</Text>}
-      <Text style={styles.questionText}>{item.question.question}</Text>
+      <PText style={styles.questionNumber}>{item.orderNum}.</PText>
+      {pts >= 3 && <PText style={styles.questionPoints}>{pts}점</PText>}
+      <PText style={styles.questionText}>{item.question.question}</PText>
     </View>
   );
 }
@@ -525,20 +540,38 @@ function ChoicesBlock({
   header?: string;
 }) {
   const choices = parseChoices(item.question.choices);
+  // 선지가 ①~⑤ 마커뿐이면(어법·어휘 등) "① ①"처럼 겹치지 않게 번호만 한 줄로
+  if (isMarkerOnlyChoices(choices)) {
+    return (
+      <View style={styles.choicesBlock}>
+        {header && <PText style={styles.splitChoicesHeader}>{header}</PText>}
+        <View style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 4 }}>
+          {choices.map((choice, i) => (
+            <PText
+              key={i}
+              style={showAnswers && choice.isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}
+            >
+              {CIRCLE_LABELS[i] || `${i + 1}.`}
+            </PText>
+          ))}
+        </View>
+      </View>
+    );
+  }
   return (
     <View style={styles.choicesBlock}>
-      {header && <Text style={styles.splitChoicesHeader}>{header}</Text>}
+      {header && <PText style={styles.splitChoicesHeader}>{header}</PText>}
       {choices.map((choice, i) => {
         const isCorrect = showAnswers && choice.isCorrect;
         const label = CIRCLE_LABELS[i] || `${i + 1}.`;
         return (
           <View key={i} style={styles.choiceRow}>
-            <Text style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
+            <PText style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
               {label}
-            </Text>
-            <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
+            </PText>
+            <PText style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
               {choice.text}
-            </Text>
+            </PText>
           </View>
         );
       })}
@@ -562,15 +595,15 @@ function OrderQuestionPDF({
       <QuestionHeaderRow item={item} />
       {/* 주어진 글 박스 */}
       <View style={styles.givenBox}>
-        <Text style={styles.passageText}>{parsed.givenParagraph}</Text>
+        <PText style={styles.passageText}>{parsed.givenParagraph}</PText>
       </View>
       {/* (A)(B)(C) 세그먼트 */}
       {parsed.segments.map((seg, i) => (
         <View key={i} style={styles.segmentBlock}>
-          <Text style={styles.passageText}>
-            <Text style={styles.segmentLabel}>{seg.label} </Text>
+          <PText style={styles.passageText}>
+            <PText style={styles.segmentLabel}>{seg.label} </PText>
             {seg.text}
-          </Text>
+          </PText>
         </View>
       ))}
       {/* 선지 */}
@@ -580,12 +613,12 @@ function OrderQuestionPDF({
           const label = CIRCLE_LABELS[i] || `${i + 1}.`;
           return (
             <View key={i} style={styles.choiceRow}>
-              <Text style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
+              <PText style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
                 {label}
-              </Text>
-              <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
+              </PText>
+              <PText style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
                 {choice.text}
-              </Text>
+              </PText>
             </View>
           );
         })}
@@ -611,23 +644,23 @@ function InsertionQuestionPDF({
       <QuestionHeaderRow item={item} />
       {/* 주어진 문장 박스 */}
       <View style={styles.givenBox}>
-        <Text style={styles.passageText}>{parsed.givenSentence}</Text>
+        <PText style={styles.passageText}>{parsed.givenSentence}</PText>
       </View>
       {/* 본문 (인라인 마커) */}
       <View style={styles.passageBox}>
-        <Text style={styles.passageText}>
+        <PText style={styles.passageText}>
           {parsed.bodyParts.map((part, i) =>
             part.marker ? (
-              <Text key={i} style={{ fontWeight: 700 }}>
+              <PText key={i} style={{ fontWeight: 700 }}>
                 {" "}
                 {part.marker}
                 {" "}
-              </Text>
+              </PText>
             ) : (
-              <Text key={i}>{part.text}</Text>
+              <PText key={i}>{part.text}</PText>
             )
           )}
-        </Text>
+        </PText>
       </View>
       {/* 선지: 문장삽입은 항상 ①~⑤ 순서 고정 (한 줄 배치) */}
       <View style={[styles.choicesBlock, { flexDirection: "row", justifyContent: "space-around", paddingTop: 4 }]}>
@@ -635,12 +668,12 @@ function InsertionQuestionPDF({
           const choice = choices[i];
           const isCorrect = showAnswers && choice?.isCorrect;
           return (
-            <Text
+            <PText
               key={i}
               style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}
             >
               {label}
-            </Text>
+            </PText>
           );
         })}
       </View>
@@ -658,43 +691,26 @@ function GrammarVocabQuestionPDF({
   parsed: GrammarParsed;
   showAnswers: boolean;
 }) {
-  const choices = parseChoices(item.question.choices);
-
   return (
     <View wrap={false}>
       <QuestionHeaderRow item={item} />
       {/* 지문 (밑줄+마커 포함) */}
       <View style={styles.passageBox}>
-        <Text style={styles.passageText}>
+        <PText style={styles.passageText}>
           {parsed.parts.map((part, i) =>
             part.underlined ? (
-              <Text key={i}>
-                <Text style={styles.markerText}>{part.marker || ""}</Text>
-                <Text style={styles.underlinedText}>{part.underlined}</Text>
-              </Text>
+              <PText key={i}>
+                <PText style={styles.markerText}>{part.marker || ""}</PText>
+                <PText style={styles.underlinedText}>{part.underlined}</PText>
+              </PText>
             ) : (
-              <Text key={i}>{part.text}</Text>
+              <PText key={i}>{part.text}</PText>
             )
           )}
-        </Text>
+        </PText>
       </View>
       {/* 선지 */}
-      <View style={styles.choicesBlock}>
-        {choices.map((choice, i) => {
-          const isCorrect = showAnswers && choice.isCorrect;
-          const label = CIRCLE_LABELS[i] || `${i + 1}.`;
-          return (
-            <View key={i} style={styles.choiceRow}>
-              <Text style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
-                {label}
-              </Text>
-              <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
-                {choice.text}
-              </Text>
-            </View>
-          );
-        })}
-      </View>
+      <ChoicesBlock item={item} showAnswers={showAnswers} />
     </View>
   );
 }
@@ -729,30 +745,30 @@ function SummaryQuestionPDF({
       <QuestionHeaderRow item={item} />
       {/* 본문 박스 */}
       <View style={styles.passageBox}>
-        <Text style={styles.passageText}>{parsed.mainPassage}</Text>
+        <PassageInline text={parsed.mainPassage} style={styles.passageText} />
       </View>
       {/* 화살표 */}
-      <Text style={styles.summaryArrow}>▼</Text>
+      <PText style={styles.summaryArrow}>▼</PText>
       {/* 요약문 박스 */}
       <View style={styles.passageBox}>
-        <Text style={styles.passageText}>{parsed.summaryText}</Text>
+        <PassageInline text={parsed.summaryText} style={styles.passageText} />
       </View>
       {/* (A)/(B) 선지 표 */}
       <View style={styles.summaryChoiceTable}>
         {/* (A) 열 */}
         <View style={styles.summaryChoiceColumn}>
-          <Text style={styles.summaryChoiceHeader}>(A)</Text>
+          <PText style={styles.summaryChoiceHeader}>(A)</PText>
           {parsedChoices.map((c, i) => {
             const isCorrect = showAnswers && c.isCorrect;
             const label = CIRCLE_LABELS[i] || `${i + 1}.`;
             return (
               <View key={i} style={styles.summaryChoiceRow}>
-                <Text style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
+                <PText style={isCorrect ? styles.choiceLabelCorrect : styles.choiceLabel}>
                   {label}
-                </Text>
-                <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
+                </PText>
+                <PText style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
                   {c.a}
-                </Text>
+                </PText>
               </View>
             );
           })}
@@ -760,24 +776,24 @@ function SummaryQuestionPDF({
         {/* 구분점 열 */}
         <View style={{ justifyContent: "center", paddingTop: 16 }}>
           {parsedChoices.map((_, i) => (
-            <Text
+            <PText
               key={i}
               style={{ fontSize: 8, color: "#999999", marginBottom: 3, textAlign: "center" }}
             >
               ……
-            </Text>
+            </PText>
           ))}
         </View>
         {/* (B) 열 */}
         <View style={styles.summaryChoiceColumn}>
-          <Text style={styles.summaryChoiceHeader}>(B)</Text>
+          <PText style={styles.summaryChoiceHeader}>(B)</PText>
           {parsedChoices.map((c, i) => {
             const isCorrect = showAnswers && c.isCorrect;
             return (
               <View key={i} style={styles.summaryChoiceRow}>
-                <Text style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
+                <PText style={isCorrect ? styles.choiceTextCorrect : styles.choiceText}>
                   {c.b}
-                </Text>
+                </PText>
               </View>
             );
           })}
@@ -808,7 +824,7 @@ function WritingQuestionPDF({
       {/* 답안 작성란 (학생용) — 서술형에는 선지 없음 */}
       {mode === "student" && (
         <View style={styles.writingAnswerArea}>
-          <Text style={styles.writingAnswerLabel}>답안 작성란</Text>
+          <PText style={styles.writingAnswerLabel}>답안 작성란</PText>
         </View>
       )}
     </View>
@@ -875,14 +891,14 @@ function QuestionHead({ item }: { item: ExamItemData }) {
       {parsed.type === "order" && (
         <>
           <View style={styles.givenBox}>
-            <Text style={styles.passageText}>{parsed.givenParagraph}</Text>
+            <PText style={styles.passageText}>{parsed.givenParagraph}</PText>
           </View>
           {parsed.segments.map((seg, i) => (
             <View key={i} style={styles.segmentBlock}>
-              <Text style={styles.passageText}>
-                <Text style={styles.segmentLabel}>{seg.label} </Text>
+              <PText style={styles.passageText}>
+                <PText style={styles.segmentLabel}>{seg.label} </PText>
                 {seg.text}
-              </Text>
+              </PText>
             </View>
           ))}
         </>
@@ -891,49 +907,49 @@ function QuestionHead({ item }: { item: ExamItemData }) {
       {parsed.type === "insertion" && (
         <>
           <View style={styles.givenBox}>
-            <Text style={styles.passageText}>{parsed.givenSentence}</Text>
+            <PText style={styles.passageText}>{parsed.givenSentence}</PText>
           </View>
           <View style={styles.passageBox}>
-            <Text style={styles.passageText}>
+            <PText style={styles.passageText}>
               {parsed.bodyParts.map((part, i) =>
                 part.marker ? (
-                  <Text key={i} style={{ fontWeight: 700 }}>
+                  <PText key={i} style={{ fontWeight: 700 }}>
                     {" "}{part.marker}{" "}
-                  </Text>
+                  </PText>
                 ) : (
-                  <Text key={i}>{part.text}</Text>
+                  <PText key={i}>{part.text}</PText>
                 )
               )}
-            </Text>
+            </PText>
           </View>
         </>
       )}
 
       {parsed.type === "grammar" && (
         <View style={styles.passageBox}>
-          <Text style={styles.passageText}>
+          <PText style={styles.passageText}>
             {parsed.parts.map((part, i) =>
               part.underlined ? (
-                <Text key={i}>
-                  <Text style={styles.markerText}>{part.marker || ""}</Text>
-                  <Text style={styles.underlinedText}>{part.underlined}</Text>
-                </Text>
+                <PText key={i}>
+                  <PText style={styles.markerText}>{part.marker || ""}</PText>
+                  <PText style={styles.underlinedText}>{part.underlined}</PText>
+                </PText>
               ) : (
-                <Text key={i}>{part.text}</Text>
+                <PText key={i}>{part.text}</PText>
               )
             )}
-          </Text>
+          </PText>
         </View>
       )}
 
       {parsed.type === "summary" && (
         <>
           <View style={styles.passageBox}>
-            <Text style={styles.passageText}>{parsed.mainPassage}</Text>
+            <PassageInline text={parsed.mainPassage} style={styles.passageText} />
           </View>
-          <Text style={styles.summaryArrow}>▼</Text>
+          <PText style={styles.summaryArrow}>▼</PText>
           <View style={styles.passageBox}>
-            <Text style={styles.passageText}>{parsed.summaryText}</Text>
+            <PassageInline text={parsed.summaryText} style={styles.passageText} />
           </View>
         </>
       )}
@@ -950,36 +966,142 @@ function QuestionHead({ item }: { item: ExamItemData }) {
   );
 }
 
-// 페이지 레이아웃
-type PageLayout =
-  | { mode: "pair"; left: ExamItemData; right: ExamItemData | null }
-  | { mode: "split"; item: ExamItemData };
+// ── 문항 높이 추정 (단 패킹용) ──
+// 아래 수치는 styles의 fontSize·lineHeight·padding·margin과 1:1로 대응한다. 스타일을 바꾸면 함께 바꿀 것.
+const PAGE_W = 595.28;
+const PAGE_H = 841.89;
+const COLUMNS_PER_PAGE = 2;
+const DIVIDER_W = 1 + 4 * 2; // columnDivider width + marginHorizontal
+const COLUMN_INNER_W =
+  (PAGE_W - 18 * 2 - DIVIDER_W * (COLUMNS_PER_PAGE - 1)) / COLUMNS_PER_PAGE - 10 * 2;
+// 페이지 - 헤더바(8) - 헤더행(6*2+36+1) - columnsContainer paddingTop(14) - contentPage paddingBottom(20)
+// 추정 오차 대비 여유 12pt
+const COLUMN_HEIGHT = PAGE_H - 8 - 49 - 14 - 20 - 12;
+const ITEM_GAP = 18;
+const PASSAGE_FS = 9.5;
+const PASSAGE_LH = PASSAGE_FS * 1.6;
+const CHOICE_LH = PASSAGE_FS * 1.5;
+const NATURAL_LH = 1.45; // lineHeight 미지정 Text(NotoSansKR ascent-descent)
+const BLANK_W = textWidth(BLANK_TEXT, PASSAGE_FS);
 
-function layoutPages(items: ExamItemData[]): PageLayout[] {
-  const pages: PageLayout[] = [];
-  let i = 0;
-  while (i < items.length) {
-    const a = items[i];
-    // 서술형은 선지가 없으므로 split 레이아웃을 쓰지 않음
-    const aIsWriting = isWritingType(a.question.questionType);
-    if (!aIsWriting && itemCharLength(a) > LONG_ITEM_CHARS) {
-      pages.push({ mode: "split", item: a });
-      i += 1;
-      continue;
-    }
-    const b = items[i + 1];
-    if (b && itemCharLength(b) <= LONG_ITEM_CHARS) {
-      pages.push({ mode: "pair", left: a, right: b });
-      i += 2;
-    } else {
-      pages.push({ mode: "pair", left: a, right: null });
-      i += 1;
-    }
-  }
-  return pages;
+// 측정용 텍스트: 밑줄 표기 제거, 빈칸은 BLANK_TOKEN으로
+function measureText(text: string): string {
+  return splitInlineUnderline(normalizeUnderlineTags(text ?? ""))
+    .map((s) => (s.blank ? BLANK_TOKEN : s.text))
+    .join("");
 }
 
-// 내지 페이지
+function passageLines(text: string, width: number): number {
+  return countLines(measureText(text), PASSAGE_FS, width, { blankWidth: BLANK_W });
+}
+
+// passageBox(테두리 1) / givenBox(테두리 1.5): padding 10, marginBottom 10
+function boxHeight(text: string, width: number, border = 1): number {
+  return 20 + border * 2 + passageLines(text, width - 20 - border * 2) * PASSAGE_LH + 10;
+}
+
+function headerHeight(item: ExamItemData, width: number): number {
+  const pts = item.customPoints || item.question.points;
+  const numW = textWidth(`${item.orderNum}.`, 12, true) + 6;
+  const ptsW = pts >= 3 ? textWidth(`${pts}점`, 8) + 8 + 6 : 0;
+  const lines = countLines(item.question.question ?? "", 10, width - numW - ptsW, { bold: true });
+  return Math.max(lines * 15, 12 * NATURAL_LH) + 6;
+}
+
+function choicesHeight(item: ExamItemData, width: number, header?: string): number {
+  const choices = parseChoices(item.question.choices);
+  let h = 2 + (header ? 9 * NATURAL_LH + 6 : 0);
+  if (isMarkerOnlyChoices(choices)) return h + 4 + PASSAGE_FS * NATURAL_LH; // 번호 한 줄
+  for (const c of choices) {
+    const lines = countLines(c.text ?? "", PASSAGE_FS, width - 4 - 18);
+    h += Math.max(lines * CHOICE_LH, PASSAGE_FS * NATURAL_LH) + 5;
+  }
+  return h;
+}
+
+// 지문(헤더 포함, 선지 제외) 높이 — QuestionHead / 유형별 렌더러의 지문 부분과 대응
+function headHeight(item: ExamItemData, parsed: ParsedPassage, width: number): number {
+  let h = headerHeight(item, width);
+  switch (parsed.type) {
+    case "order":
+      h += boxHeight(parsed.givenParagraph, width, 1.5);
+      for (const seg of parsed.segments) {
+        h += passageLines(`${seg.label} ${seg.text}`, width - 4) * PASSAGE_LH + 6;
+      }
+      break;
+    case "insertion":
+      h += boxHeight(parsed.givenSentence, width, 1.5);
+      h += boxHeight(
+        parsed.bodyParts.map((p) => (p.marker ? ` ${p.marker} ` : p.text)).join(""),
+        width
+      );
+      break;
+    case "grammar":
+      h += boxHeight(
+        parsed.parts.map((p) => (p.underlined ? `${p.marker ?? ""}${p.underlined}` : p.text)).join(""),
+        width
+      );
+      break;
+    case "summary":
+      h += boxHeight(parsed.mainPassage, width) + (14 * NATURAL_LH + 8) + boxHeight(parsed.summaryText, width);
+      break;
+    case "writing":
+      if (item.question.passage) h += boxHeight(parsed.passage, width);
+      break;
+    default:
+      if (item.question.passage) h += boxHeight(parsed.text, width);
+  }
+  return h;
+}
+
+// 요약문 (A)/(B) 표 높이
+function summaryTableHeight(item: ExamItemData, width: number): number {
+  const colW = (width - 4 - 24) / 2 - 8 - 18;
+  let h = 8 + 9 * NATURAL_LH + 4;
+  for (const c of parseChoices(item.question.choices)) {
+    const m = (c.text ?? "").match(/\(A\)\s*(\S+)\s*[…·\-—]+\s*\(B\)\s*(\S+)/);
+    const a = m ? m[1] : c.text ?? "";
+    const b = m ? m[2] : "";
+    const lines = Math.max(countLines(a, PASSAGE_FS, colW), countLines(b, PASSAGE_FS, colW));
+    h += lines * CHOICE_LH + 3;
+  }
+  return h;
+}
+
+// 문항 전체(단 하나에 그대로 그릴 때) 높이
+function itemHeight(item: ExamItemData, mode: "student" | "teacher", width = COLUMN_INNER_W): number {
+  const parsed = parsePassage(item.question.passage, item.question.questionType);
+  const head = headHeight(item, parsed, width);
+  switch (parsed.type) {
+    case "insertion":
+      return head + 4 + PASSAGE_FS * NATURAL_LH;
+    case "summary":
+      return head + summaryTableHeight(item, width);
+    case "writing":
+      return head + (mode === "student" ? 60 + 10 : 0);
+    default:
+      return head + choicesHeight(item, width);
+  }
+}
+
+// 페이지 헤더(브랜드 바 + 제목 행)
+function PageHeader({ title }: { title: string }) {
+  return (
+    <>
+      <View style={styles.headerBar} />
+      <View style={styles.headerRow}>
+        <View style={styles.headerLogo}>
+          <PText style={styles.headerLogoText}>T&B</PText>
+        </View>
+        <PText style={styles.headerTitle}>Daily Gift</PText>
+        <PText style={styles.headerSub}>{title}</PText>
+      </View>
+    </>
+  );
+}
+
+// 내지 페이지: 문항을 단에 순서대로 채운다(한 단에 들어가면 그 단에 배치).
+// 한 단을 넘는 긴 문항만 한 페이지를 쓰며, 지문은 왼쪽 단·선지는 오른쪽 단으로 나눈다.
 function ContentPages({
   title,
   items,
@@ -991,52 +1113,90 @@ function ContentPages({
   showAnswers: boolean;
   mode: "student" | "teacher";
 }) {
-  const pages = layoutPages(items);
+  const pages = packColumns(items, (it) => itemHeight(it, mode), {
+    columnsPerPage: COLUMNS_PER_PAGE,
+    columnHeight: COLUMN_HEIGHT,
+    gap: ITEM_GAP,
+  });
 
   return (
     <>
-      {pages.map((pg, pageIdx) => (
-        <Page key={pageIdx} size="A4" style={styles.contentPage}>
-          <View style={styles.headerBar} />
-          <View style={styles.headerRow}>
-            <View style={styles.headerLogo}>
-              <Text style={styles.headerLogoText}>T&B</Text>
-            </View>
-            <Text style={styles.headerTitle}>Daily Gift</Text>
-            <Text style={styles.headerSub}>{title}</Text>
-          </View>
+      {pages.map((pg, pageIdx) => {
+        if (pg.kind === "columns") {
+          return (
+            <Page key={pageIdx} size="A4" style={styles.contentPage}>
+              <PageHeader title={title} />
+              <View style={styles.columnsContainer}>
+                {Array.from({ length: COLUMNS_PER_PAGE }).flatMap((_, ci) => {
+                  const colItems = pg.columns[ci] ?? [];
+                  const column = (
+                    <View key={`c${ci}`} style={styles.column}>
+                      {colItems.map((it, k) => (
+                        <View
+                          key={it.orderNum}
+                          style={{ marginBottom: k < colItems.length - 1 ? ITEM_GAP : 0 }}
+                        >
+                          <QuestionItem item={it} showAnswers={showAnswers} mode={mode} />
+                        </View>
+                      ))}
+                    </View>
+                  );
+                  return ci === 0
+                    ? [column]
+                    : [<View key={`d${ci}`} style={styles.columnDivider} />, column];
+                })}
+              </View>
+            </Page>
+          );
+        }
 
-          <View style={styles.columnsContainer}>
-            {pg.mode === "pair" ? (
-              <>
+        // 한 단을 넘는 문항
+        const item = pg.item;
+        const parsed = parsePassage(item.question.passage, item.question.questionType);
+        const hasChoices =
+          parsed.type !== "writing" && parseChoices(item.question.choices).length > 0;
+        const splitFits =
+          hasChoices &&
+          headHeight(item, parsed, COLUMN_INNER_W) <= COLUMN_HEIGHT &&
+          choicesHeight(item, COLUMN_INNER_W, "선지") <= COLUMN_HEIGHT;
+
+        if (splitFits) {
+          return (
+            <Page key={pageIdx} size="A4" style={styles.contentPage}>
+              <PageHeader title={title} />
+              <View style={styles.columnsContainer}>
                 <View style={styles.column}>
-                  <QuestionItem item={pg.left} showAnswers={showAnswers} mode={mode} />
-                </View>
-                <View style={styles.columnDivider} />
-                <View style={styles.column}>
-                  {pg.right && (
-                    <QuestionItem item={pg.right} showAnswers={showAnswers} mode={mode} />
-                  )}
-                </View>
-              </>
-            ) : (
-              <>
-                <View style={styles.column}>
-                  <QuestionHead item={pg.item} />
+                  <QuestionHead item={item} />
                 </View>
                 <View style={styles.columnDivider} />
                 <View style={styles.column}>
                   <ChoicesBlock
-                    item={pg.item}
+                    item={item}
                     showAnswers={showAnswers}
-                    header={`${pg.item.orderNum}번 선지`}
+                    header={`${item.orderNum}번 선지`}
                   />
                 </View>
-              </>
-            )}
-          </View>
-        </Page>
-      ))}
+              </View>
+            </Page>
+          );
+        }
+
+        // 지문만으로 한 단을 넘는 아주 긴 문항: 페이지 전체 폭으로 이어서 출력(여러 페이지 가능)
+        return (
+          <Page key={pageIdx} size="A4" style={styles.contentPage}>
+            <PageHeader title={title} />
+            <View style={{ paddingHorizontal: 28, paddingTop: 14 }}>
+              <QuestionHead item={item} />
+              {hasChoices && <ChoicesBlock item={item} showAnswers={showAnswers} />}
+              {parsed.type === "writing" && mode === "student" && (
+                <View style={styles.writingAnswerArea}>
+                  <PText style={styles.writingAnswerLabel}>답안 작성란</PText>
+                </View>
+              )}
+            </View>
+          </Page>
+        );
+      })}
     </>
   );
 }
@@ -1076,24 +1236,24 @@ function AnswerPage({
       <View style={styles.headerBar} />
       <View style={styles.headerRow}>
         <View style={styles.headerLogo}>
-          <Text style={styles.headerLogoText}>T&B</Text>
+          <PText style={styles.headerLogoText}>T&B</PText>
         </View>
-        <Text style={styles.headerTitle}>Daily Gift</Text>
-        <Text style={styles.headerSub}>
+        <PText style={styles.headerTitle}>Daily Gift</PText>
+        <PText style={styles.headerSub}>
           {mode === "teacher" ? "해설지" : "정답표"}
-        </Text>
+        </PText>
       </View>
 
       {/* 객관식 정답 그리드 */}
       <View style={styles.answerSection}>
-        <Text style={styles.answerTitle}>정답</Text>
+        <PText style={styles.answerTitle}>정답</PText>
         <View style={styles.answerGrid}>
           {objectiveItems.map((item) => (
             <View key={item.orderNum} style={styles.answerCell}>
-              <Text style={styles.answerNum}>{item.orderNum}</Text>
-              <Text style={styles.answerVal}>
+              <PText style={styles.answerNum}>{item.orderNum}</PText>
+              <PText style={styles.answerVal}>
                 {getCorrectLabel(item.question.choices)}
-              </Text>
+              </PText>
             </View>
           ))}
         </View>
@@ -1102,16 +1262,16 @@ function AnswerPage({
       {/* 해설지: 서술형 채점기준/모범답안 */}
       {mode === "teacher" && writingItems.length > 0 && (
         <View style={styles.writingAnswerSection}>
-          <Text style={styles.answerTitle}>서술형 채점 기준</Text>
+          <PText style={styles.answerTitle}>서술형 채점 기준</PText>
           {writingItems.map((item) => {
             const choices = parseChoices(item.question.choices);
             return (
               <View key={item.orderNum} style={{ marginBottom: 10 }}>
-                <Text style={styles.writingAnswerTitle}>
+                <PText style={styles.writingAnswerTitle}>
                   {item.orderNum}번 ({item.customPoints || item.question.points}점)
-                </Text>
+                </PText>
                 {choices.map((choice, i) => (
-                  <Text
+                  <PText
                     key={i}
                     style={
                       choice.isCorrect
@@ -1120,7 +1280,7 @@ function AnswerPage({
                     }
                   >
                     {choice.text}
-                  </Text>
+                  </PText>
                 ))}
               </View>
             );

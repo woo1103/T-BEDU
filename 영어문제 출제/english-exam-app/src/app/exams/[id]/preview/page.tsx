@@ -89,7 +89,7 @@ function OrderRenderer({
                 : "text-gray-700"
             }`}
           >
-            {choice.label} {choice.text}
+            {choice.label} {choice.text !== choice.label && choice.text}
             {showAnswers && choice.isCorrect && " ◀ 정답"}
           </p>
         ))}
@@ -146,7 +146,7 @@ function InsertionRenderer({
                   : "text-gray-700"
               }`}
             >
-              {choice.label} {choice.text}
+              {choice.label} {choice.text !== choice.label && choice.text}
               {showAnswers && choice.isCorrect && " ◀"}
             </p>
           ))}
@@ -197,7 +197,7 @@ function GrammarRenderer({
                 : "text-gray-700"
             }`}
           >
-            {choice.label} {choice.text}
+            {choice.label} {choice.text !== choice.label && choice.text}
             {showAnswers && choice.isCorrect && " ◀ 정답"}
           </p>
         ))}
@@ -235,7 +235,7 @@ function SummaryRenderer({
       {/* 본문 박스 */}
       <div className="border border-gray-300 rounded-lg p-4 mb-2 bg-gray-50 print:bg-white">
         <p className="text-sm leading-relaxed whitespace-pre-wrap">
-          {parsed.mainPassage}
+          <PassageText text={parsed.mainPassage} />
         </p>
       </div>
 
@@ -245,7 +245,7 @@ function SummaryRenderer({
       {/* 요약문 박스 */}
       <div className="border border-gray-300 rounded-lg p-4 mb-3 bg-gray-50 print:bg-white">
         <p className="text-sm leading-relaxed whitespace-pre-wrap">
-          {parsed.summaryText}
+          <PassageText text={parsed.summaryText} />
         </p>
       </div>
 
@@ -365,7 +365,7 @@ function DefaultRenderer({
                 : "text-gray-700"
             }`}
           >
-            {choice.label} {choice.text}
+            {choice.label} {choice.text !== choice.label && choice.text}
             {showAnswers && choice.isCorrect && " ◀ 정답"}
           </p>
         ))}

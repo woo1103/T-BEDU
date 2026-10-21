@@ -62,9 +62,29 @@ export default function QuestionsPage() {
         alert("검사 실패");
         return;
       }
-      const { count, broken } = await res.json();
+      const { count, broken, answerless } = await res.json();
+
+      // 정답 표시 누락/중복: answer 기준으로 복구 (삭제 없음)
+      if (answerless?.count > 0) {
+        const unfixable = answerless.count - answerless.fixable;
+        if (answerless.fixable > 0) {
+          const fix = confirm(
+            `정답 표시가 없거나 여러 개인 문항 ${answerless.count}개를 발견했습니다.\n` +
+              `그중 ${answerless.fixable}개는 저장된 정답 번호로 복구할 수 있습니다. 복구할까요?` +
+              (unfixable > 0 ? `\n(${unfixable}개는 정답 번호도 없어 직접 수정이 필요합니다)` : "")
+          );
+          if (fix) {
+            const r = await fetch("/api/questions/cleanup", { method: "PATCH" }).then((x) => x.json());
+            alert(`${r.repaired}개 복구 완료.` + (r.unfixable > 0 ? ` ${r.unfixable}개는 직접 수정 필요.` : ""));
+          }
+        } else {
+          alert(`정답 표시가 없는 문항 ${answerless.count}개는 정답 번호가 없어 직접 수정이 필요합니다.`);
+        }
+      }
+
       if (count === 0) {
         alert("구조 오류 문항이 없습니다. 👍");
+        await fetchQuestions();
         return;
       }
       const inExams = (broken as { inExams: number }[]).filter((b) => b.inExams > 0).length;

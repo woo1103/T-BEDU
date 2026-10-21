@@ -1,4 +1,23 @@
-import { parsePassage } from "../lib/passage-parser";
+import { parsePassage, splitInlineUnderline } from "../lib/passage-parser";
+
+// __밑줄__ 과 빈칸(___)을 인라인으로 렌더. 빈칸은 원본 길이와 무관하게 넉넉한 고정 폭.
+function InlineText({ text }: { text: string }) {
+  return (
+    <>
+      {splitInlineUnderline(text).map((seg, i) =>
+        seg.blank ? (
+          <span key={i} aria-label="빈칸" className="inline-block w-[7em] border-b border-current align-baseline mx-0.5">
+            &nbsp;
+          </span>
+        ) : seg.underline ? (
+          <u key={i}>{seg.text}</u>
+        ) : (
+          <span key={i}>{seg.text}</span>
+        )
+      )}
+    </>
+  );
+}
 
 // 학생앱에서 지문을 시험지와 동일하게 렌더(어법 밑줄·삽입 마커·순서 단락 등).
 // 선지는 Solve의 버튼으로 별도 렌더하므로 여기서는 "지문 본문"만 그린다.
@@ -82,12 +101,12 @@ export default function PassageView({
       <div className="mb-3 space-y-2">
         <div className="bg-gray-50 rounded-lg p-3">
           <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-800">
-            {parsed.mainPassage}
+            <InlineText text={parsed.mainPassage} />
           </p>
         </div>
         <div className="border border-gray-300 rounded-lg p-3 bg-white">
           <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-800">
-            {parsed.summaryText}
+            <InlineText text={parsed.summaryText} />
           </p>
         </div>
       </div>
@@ -99,7 +118,7 @@ export default function PassageView({
   return (
     <div className="bg-gray-50 rounded-lg p-3 mb-3">
       <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-800">
-        {text}
+        <InlineText text={text} />
       </p>
     </div>
   );

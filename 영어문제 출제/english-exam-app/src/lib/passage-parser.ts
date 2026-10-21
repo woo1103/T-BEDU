@@ -130,28 +130,35 @@ export function parsePassage(
   return { type: "default", text: normalized };
 }
 
-// <u>text</u> 또는 <U>text</U> 를 __text__ 로 변환
+// <u>text</u> 또는 <U>text</U> 를 __text__ 로 변환.
+// 빈 <u></u> 는 지운다. 빈칸 "_____"(밑줄 3개 이상)은 그대로 두어 splitInlineUnderline이 빈칸으로 인식한다.
 export function normalizeUnderlineTags(passage: string): string {
-  return passage.replace(/<\/?u>/gi, "__").replace(/____/g, "");
+  return passage.replace(/<u>\s*<\/u>/gi, "").replace(/<\/?u>/gi, "__");
 }
 
-// __text__ 마커를 분할하여 underline 여부와 함께 반환
+// __text__ 마커와 빈칸(밑줄 3개 이상)을 분할하여 반환
 export interface InlineSegment {
   text: string;
   underline: boolean;
+  blank?: boolean;
 }
 
 export function splitInlineUnderline(text: string): InlineSegment[] {
   if (!text) return [];
   const result: InlineSegment[] = [];
-  const regex = /__([\s\S]+?)__/g;
+  // 1) 밑줄 3개 이상 = 빈칸  2) __text__ = 밑줄 친 텍스트
+  const regex = /(_{3,})|__([\s\S]+?)__/g;
   let lastIdx = 0;
   let match: RegExpExecArray | null;
   while ((match = regex.exec(text)) !== null) {
     if (match.index > lastIdx) {
       result.push({ text: text.substring(lastIdx, match.index), underline: false });
     }
-    result.push({ text: match[1], underline: true });
+    if (match[1]) {
+      result.push({ text: "", underline: false, blank: true });
+    } else {
+      result.push({ text: match[2], underline: true });
+    }
     lastIdx = match.index + match[0].length;
   }
   if (lastIdx < text.length) {

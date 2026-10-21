@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateQuestion } from "@/lib/claude";
+import { generateQuestion, solveQuestion } from "@/lib/claude";
 import { getSystemPrompt } from "@/lib/prompts";
 import { getQuestionTypeInfo } from "@/lib/question-types";
 import { prisma } from "@/lib/db";
-import { isMarkerMappedType, validateQuestionStructure } from "@/lib/question-validate";
+import {
+  isMarkerMappedType,
+  reconcileCorrect,
+  validateQuestionStructure,
+  validateSingleAnswer,
+} from "@/lib/question-validate";
+import { isWritingType, normalizeMarkerChoices } from "@/lib/passage-parser";
 
 async function getActiveDirectives(examType: string, questionType: string): Promise<string> {
   const list = await prisma.promptDirective.findMany({
@@ -69,39 +75,78 @@ export async function POST(request: NextRequest) {
     }
 
     const CIRCLE = ["①", "②", "③", "④", "⑤"];
-    const toValChoices = (
-      choices: { text: string; isCorrect: boolean }[]
-    ) => choices.map((c, i) => ({ label: CIRCLE[i] ?? "", isCorrect: c.isCorrect }));
+    const writing = isWritingType(questionType);
 
-    // 마커 대응 유형(어법/순서/삽입)은 구조 검증 → 깨지면 1회 재생성 → 그래도 깨지면 400
-    let result = await generateQuestion(systemPrompt, userPrompt);
-    if (isMarkerMappedType(questionType)) {
-      let check = validateQuestionStructure(
-        questionType,
-        result.passage,
-        toValChoices(result.choices)
-      );
-      if (!check.ok) {
-        result = await generateQuestion(
-          systemPrompt +
-            "\n\n[재생성 지시] 직전 생성물이 구조 검증에 실패했다. 반드시 지문에 ①~⑤ 마커 5곳(또는 순서=(A)(B)(C), 삽입=①~⑤)을 정확히 넣고, 선지 5개와 정답이 지문 마커와 1:1로 대응하게 하라.",
-          userPrompt
-        );
-        check = validateQuestionStructure(
-          questionType,
-          result.passage,
-          toValChoices(result.choices)
-        );
+    // 선지에 라벨을 붙여 마커-only 선지(①~⑤)를 ①→⑤ 순으로 정렬한 뒤 {text,isCorrect}로 되돌린다.
+    // (검수·저장·미리보기가 모두 같은 순서를 보도록)
+    const normalizeChoices = (choices: { text: string; isCorrect: boolean }[]) =>
+      normalizeMarkerChoices(
+        choices.map((c, i) => ({ label: CIRCLE[i] ?? "", text: c.text ?? "", isCorrect: !!c.isCorrect }))
+      ).map((c) => ({ text: c.text, isCorrect: c.isCorrect }));
+
+    // 생성 → (1) 마커 구조 (2) 정답 1개 (3) 독립 풀이 검수. 실패하면 사유를 붙여 재생성(최대 3회).
+    const MAX_ATTEMPTS = 3;
+    let feedback = "";
+    let lastReason = "";
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      const result = await generateQuestion(systemPrompt + feedback, userPrompt);
+
+      if (writing) return NextResponse.json(result);
+
+      result.choices = normalizeChoices(reconcileCorrect(result.choices, result.answer));
+      const valChoices = result.choices.map((c, i) => ({ label: CIRCLE[i] ?? "", isCorrect: c.isCorrect }));
+
+      if (isMarkerMappedType(questionType)) {
+        const check = validateQuestionStructure(questionType, result.passage, valChoices);
+        if (!check.ok) {
+          lastReason = `구조 오류: ${check.reason}`;
+          feedback =
+            "\n\n[재생성 지시] 직전 생성물이 구조 검증에 실패했다(" + check.reason + "). 반드시 지문에 ①~⑤ 마커 5곳(또는 순서=(A)(B)(C), 삽입=①~⑤)을 정확히 넣고, 선지 5개와 정답이 지문 마커와 1:1로 대응하게 하라.";
+          continue;
+        }
       }
-      if (!check.ok) {
-        return NextResponse.json(
-          { error: `문항 구조 검증 실패(${check.reason}). 다시 시도해주세요.` },
-          { status: 422 }
-        );
+
+      const single = validateSingleAnswer(valChoices);
+      if (!single.ok) {
+        lastReason = `정답 오류: ${single.reason}`;
+        feedback =
+          "\n\n[재생성 지시] 직전 생성물의 정답 표시가 잘못됐다(" + single.reason + "). choices 중 정확히 1개만 \"isCorrect\": true 로 하고, answer에도 같은 번호를 적어라.";
+        continue;
       }
+
+      const intended = result.choices.findIndex((c) => c.isCorrect);
+      try {
+        const solved = await solveQuestion({
+          passage: result.passage,
+          question: result.question,
+          choices: result.choices.map((c) => c.text),
+        });
+        if (solved.valid !== "one" || solved.answerIndex !== intended) {
+          const what =
+            solved.valid === "none"
+              ? "어느 선지도 정답이 될 수 없음"
+              : solved.valid === "multiple"
+              ? "정답이 될 수 있는 선지가 2개 이상"
+              : `검수자는 ${CIRCLE[solved.answerIndex] ?? "?"}를 정답으로 판단(출제 정답 ${CIRCLE[intended]})`;
+          lastReason = `검수 불일치: ${what}`;
+          feedback =
+            "\n\n[재생성 지시] 직전 문항을 독립적으로 풀어 본 결과 " + what + ". 근거: " + solved.reason +
+            "\n정답이 지문 근거로 명확히 하나로만 정해지고, 오답 선지는 분명히 틀리도록 새로 출제하라.";
+          continue;
+        }
+      } catch (e) {
+        // 검수 호출 자체가 실패하면(네트워크·파싱) 생성 결과를 막지 않는다 — (1)(2) 검증은 통과한 상태
+        console.error("문항 검수 실패(생성 결과는 사용):", e);
+      }
+
+      result.answer = CIRCLE[intended] ?? result.answer;
+      return NextResponse.json(result);
     }
 
-    return NextResponse.json(result);
+    return NextResponse.json(
+      { error: `문항 검증 ${MAX_ATTEMPTS}회 실패(${lastReason}). 다시 시도해주세요.` },
+      { status: 422 }
+    );
   } catch (err) {
     console.error("AI 생성 오류:", err);
     return NextResponse.json(
