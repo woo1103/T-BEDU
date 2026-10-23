@@ -405,6 +405,9 @@ model MathProblem {
   imageUrl     String?  // 원본 이미지(R2 key, 그래프·도형 보존)
   templateCode String?  // 쌍둥이 템플릿(SymPy, P3)
   hasTemplate  Boolean  @default(false)
+  sourcePage    Int?    // 원본 PDF 쪽 번호
+  cropImageId   String? // 문제 영역을 잘라낸 이미지(MathImage) — 인식 확인용
+  figureImageId String? // 그림·그래프·표만 잘라낸 이미지(MathImage) — 학습지 인쇄용
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -483,6 +486,7 @@ model WorksheetItem {
   answer       String // 정답키 (예: "③" 또는 "42")
   points       Int    @default(1)
   choicesCount Int?   // 객관식이면 선지 수(예: 5=①~⑤), 주관식이면 null
+  mathProblemId String? // 문제은행에서 골라 만든 학습지면 원본 MathProblem
 
   worksheet    Worksheet          @relation(fields: [worksheetId], references: [id], onDelete: Cascade)
   itemTags     WorksheetItemTag[]
@@ -563,4 +567,14 @@ model TeacherComment {
   student      StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@index([studentId])
+}
+
+// 수학 문제 그림(잘라낸 이미지)을 DB에 직접 저장 — 외부 저장소 없이 앱이 바로 제공
+model MathImage {
+  id        String   @id @default(cuid())
+  mime      String
+  data      Bytes
+  width     Int?
+  height    Int?
+  createdAt DateTime @default(now())
 }

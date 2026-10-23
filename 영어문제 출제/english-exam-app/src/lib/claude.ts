@@ -223,6 +223,19 @@ export interface ExtractedMathProblem {
   solution?: string;
   unit?: string;
   difficulty?: string;
+  // 쪽 이미지 안 위치(0~1 비율, [x0, y0, x1, y1]) — 브라우저가 이 영역을 잘라 저장
+  box?: [number, number, number, number];
+  figureBox?: [number, number, number, number];
+}
+
+// 모델이 준 0~1000 좌표를 0~1 비율로. 형식이 틀리면 버린다.
+export function parseBox(v: unknown): [number, number, number, number] | undefined {
+  if (!Array.isArray(v) || v.length !== 4 || !v.every((n) => typeof n === "number" && Number.isFinite(n))) {
+    return undefined;
+  }
+  const [x0, y0, x1, y1] = (v as number[]).map((n) => Math.min(1000, Math.max(0, n)) / 1000);
+  if (x1 - x0 < 0.02 || y1 - y0 < 0.01) return undefined;
+  return [x0, y0, x1, y1];
 }
 
 export async function extractMathProblems(input: {
@@ -246,15 +259,21 @@ export async function extractMathProblems(input: {
         },
       };
 
-  const instruction = `이 이미지는 한국 고등학교 수학 문제(들)입니다. 각 문항을 분리해 추출하세요.
-- 수식은 모두 LaTeX로 표기하되, 인라인은 $...$, 블록은 $$...$$ 로 감싼다.
-- 그래프·도형이 있으면 problemLatex 안에 "[그림: 설명]" 형태로 간단히 설명을 남긴다(이미지는 별도 보존됨).
-- 각 문항의 정답이 보이면 answer(그리고 가능하면 answerLatex)에 넣고, 풀이가 보이면 solution에 넣는다(없으면 생략).
+  const instruction = `이 이미지는 한국 고등학교 수학 문제지의 한 쪽입니다. 각 문항을 분리해 추출하세요.
+- 수식은 모두 LaTeX로 표기하되, 인라인은 $...$, 블록은 $$...$$ 로 감싼다. 객관식 선지(①~⑤)도 problemLatex에 포함한다.
+- 그래프·도형·표가 있으면 problemLatex 안에 "[그림]" 한 줄만 남긴다(그림은 이미지로 따로 잘라 보존됨).
+- 정답은 적지 않는다(answer 생략). 풀이가 인쇄돼 있으면 solution에 넣는다(없으면 생략).
 - 단원(unit)과 난이도(difficulty: 하|중|상|킬러)를 추정해 넣는다(모르면 생략).
+- 위치: 이미지 왼쪽 위를 (0,0), 오른쪽 아래를 (1000,1000)으로 보고
+  · box: 문항 번호부터 마지막 선지·조건까지 문항 전체를 감싸는 사각형 [x0,y0,x1,y1] (정수)
+  · figureBox: 그림·그래프·도형·표가 있을 때 그것만 감싸는 사각형 [x0,y0,x1,y1] (없으면 생략)
+  · 2단 편집이면 각 문항은 자기 단 안에만 있다. 이웃 문항이 겹치지 않게 잡는다.
+- 쪽 맨 위에 이전 쪽에서 이어진 문항의 일부만 있으면 그 부분은 제외한다.
+- 정답표·해설만 있는 쪽이면 {"problems":[]} 를 출력한다.
 ${hint?.grade ? `- 학년 힌트: ${hint.grade}` : ""}
 ${hint?.source ? `- 출처 힌트: ${hint.source}` : ""}
 반드시 아래 JSON만 출력(다른 텍스트 금지):
-{"problems":[{"number":1,"problemLatex":"...","answer":"...","answerLatex":"...","solution":"...","unit":"...","difficulty":"중"}]}`;
+{"problems":[{"number":1,"problemLatex":"...","solution":"...","unit":"...","difficulty":"중","box":[60,120,480,430],"figureBox":[120,260,420,400]}]}`;
 
   const message = await client.messages.create({
     model: "claude-sonnet-4-6",
@@ -268,14 +287,18 @@ ${hint?.source ? `- 출처 힌트: ${hint.source}` : ""}
   const raw = Array.isArray(parsed.problems) ? parsed.problems : [];
   const problems: ExtractedMathProblem[] = raw
     .filter((p: { problemLatex?: string }) => (p.problemLatex ?? "").trim())
-    .map((p: ExtractedMathProblem, i: number) => ({
+    .map((p: ExtractedMathProblem & { box?: unknown; figureBox?: unknown }, i: number) => ({
       number: typeof p.number === "number" ? p.number : i + 1,
       problemLatex: String(p.problemLatex ?? "").trim(),
-      answer: p.answer ? String(p.answer).trim() : undefined,
-      answerLatex: p.answerLatex ? String(p.answerLatex).trim() : undefined,
+      // 정답은 이미지 인식에서 받지 않는다: 시험해 보니 인쇄되지 않은 정답을 스스로 풀어 채우고 틀리기도 함
+      // → 채점용 정답은 학습지를 만들 때 선생님이 확인·입력
+      answer: undefined,
+      answerLatex: undefined,
       solution: p.solution ? String(p.solution).trim() : undefined,
       unit: p.unit ? String(p.unit).trim() : undefined,
       difficulty: p.difficulty ? String(p.difficulty).trim() : undefined,
+      box: parseBox(p.box),
+      figureBox: parseBox(p.figureBox),
     }));
   return { problems };
 }

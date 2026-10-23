@@ -30,6 +30,12 @@ export async function DELETE(
   const staff = await requireStaff();
   if (!staff) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
   const { id } = await params;
-  await prisma.mathProblem.delete({ where: { id } });
+  const removed = await prisma.mathProblem.delete({
+    where: { id },
+    select: { cropImageId: true, figureImageId: true },
+  });
+  // 이 문제의 잘라낸 그림도 함께 삭제
+  const imageIds = [removed.cropImageId, removed.figureImageId].filter((x): x is string => !!x);
+  if (imageIds.length > 0) await prisma.mathImage.deleteMany({ where: { id: { in: imageIds } } });
   return NextResponse.json({ success: true });
 }

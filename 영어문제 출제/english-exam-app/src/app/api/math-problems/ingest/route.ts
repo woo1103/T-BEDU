@@ -5,8 +5,9 @@ import { extractMathProblems } from "@/lib/claude";
 
 const ALLOWED = ["image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"];
 
-// 수학 문제 이미지/PDF 업로드 → 비전으로 문항 분리·LaTeX 추출 → MathProblem DB 저장.
-// body: { base64, mediaType, source?, sourceType?, grade?, imageKey? }
+// 수학 문제지 한 쪽(이미지) 또는 PDF → 비전으로 문항 분리·LaTeX·위치 추출 → MathProblem DB 저장.
+// body: { base64, mediaType, source?, sourceType?, grade?, imageKey?, page? }
+// 응답의 각 문항에 box/figureBox(쪽 안 위치 0~1)를 실어 보내면, 브라우저가 그 영역을 잘라 이미지로 저장한다.
 export async function POST(request: NextRequest) {
   const staff = await requireStaff();
   if (!staff) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
@@ -36,6 +37,8 @@ export async function POST(request: NextRequest) {
     );
   }
   if (extracted.problems.length === 0) {
+    // 쪽 단위 업로드에선 정답표·빈 쪽 등 문항 없는 쪽이 정상적으로 나온다
+    if (Number.isInteger(body.page)) return NextResponse.json({ count: 0, problems: [] });
     return NextResponse.json({ error: "문제를 인식하지 못했습니다. 더 선명한 이미지로 시도하세요." }, { status: 422 });
   }
 
@@ -43,6 +46,7 @@ export async function POST(request: NextRequest) {
   const sourceType = body.sourceType?.trim() || (source ? "기출" : null);
   const grade = body.grade?.trim() || null;
   const imageUrl = body.imageKey?.trim() || null;
+  const sourcePage = Number.isInteger(body.page) && body.page > 0 ? body.page : null;
 
   const created = await prisma.$transaction(
     extracted.problems.map((p) =>
@@ -59,10 +63,17 @@ export async function POST(request: NextRequest) {
           answerLatex: p.answerLatex || null,
           solution: p.solution || null,
           imageUrl,
+          sourcePage,
         },
       })
     )
   );
 
-  return NextResponse.json({ count: created.length, problems: created }, { status: 201 });
+  // 저장 순서 = 추출 순서 → 같은 위치의 box/figureBox를 붙여 돌려준다(위치는 저장하지 않음)
+  const problems = created.map((p, i) => ({
+    ...p,
+    box: extracted.problems[i]?.box ?? null,
+    figureBox: extracted.problems[i]?.figureBox ?? null,
+  }));
+  return NextResponse.json({ count: created.length, problems }, { status: 201 });
 }
