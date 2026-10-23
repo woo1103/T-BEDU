@@ -78,15 +78,13 @@ if (Number(ahead.out.trim()) > 0) {
 console.log("  푸시됨");
 
 // ③④ 점검
-let n = 3;
 for (const key of selected) {
   const app = APPS[key];
   for (const [label, cmd] of app.checks) {
-    step(`${n}/6`, `${app.name} ${label}`);
+    step(`${label === "테스트" ? 4 : 3}/6`, `${app.name} ${label}`);
     if (!run(cmd, app.dir).ok) fail(`${app.name} ${label} 실패`);
   }
 }
-n = 5;
 
 // ⑤ 배포, ⑥ 접속 확인
 for (const key of selected) {
