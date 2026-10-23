@@ -36,6 +36,7 @@ interface GeneratedQuestion {
   questionType: string;
   questionTypeName: string;
   passageId?: string;
+  verifySig?: string; // 생성 API 검수 통과 서명(저장 시 내용이 같으면 검수 통과로 기록)
 }
 
 function isWritingType(questionType: string): boolean {
@@ -190,6 +191,7 @@ export default function NewQuestionPage() {
               ),
               answer: data.answer || "",
               explanation: data.explanation || "",
+              verifySig: data.verifySig,
               points: data.points || 2,
               questionType: typeSelection.code,
               questionTypeName: typeSelection.name,
@@ -444,6 +446,7 @@ export default function NewQuestionPage() {
               ),
               answer: data.answer || "",
               explanation: data.explanation || "",
+              verifySig: data.verifySig,
               points: data.points || 2,
               questionType: typeSelection.code,
               questionTypeName: typeSelection.name,
@@ -495,6 +498,7 @@ export default function NewQuestionPage() {
         aiGenerated: true,
         source: "AI 생성 (Claude)",
         passageId: q.passageId,
+        verifySig: q.verifySig,
       }),
     });
     if (!res.ok) return null;

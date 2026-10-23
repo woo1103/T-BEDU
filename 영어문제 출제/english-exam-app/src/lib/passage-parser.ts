@@ -60,7 +60,7 @@ const GRAMMAR_VOCAB_TYPES = [
 // 요약문 코드
 const SUMMARY_TYPES = ["40_summary", "naesin_summary"];
 // 서술형 코드
-const WRITING_TYPES = [
+export const WRITING_TYPES = [
   "naesin_writing",
   "naesin_writing_summary",
   "naesin_writing_grammar",

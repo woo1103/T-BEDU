@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { isVerifiedSignature } from "@/lib/verify";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -44,6 +45,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
+  // 생성 API에서 검수를 통과한 내용이 그대로 저장될 때만 '검수 통과'로 기록
+  const verified =
+    Array.isArray(body.choices) &&
+    isVerifiedSignature({ passage: body.passage, question: body.question, choices: body.choices }, body.verifySig);
 
   const question = await prisma.question.create({
     data: {
@@ -61,6 +66,7 @@ export async function POST(request: NextRequest) {
       source: body.source || null,
       aiGenerated: body.aiGenerated || false,
       passageId: body.passageId || null,
+      ...(verified ? { verifyStatus: "ok", verifiedAt: new Date() } : {}),
     },
   });
 

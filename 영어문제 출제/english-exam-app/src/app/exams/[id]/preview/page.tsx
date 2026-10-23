@@ -15,6 +15,7 @@ import {
   type SummaryParsed,
 } from "@/lib/passage-parser";
 import { PassageText } from "@/components/PassageText";
+import AnswerBalance from "@/components/exams/AnswerBalance";
 
 const PDFDownloadButton = dynamic(
   () => import("@/components/pdf/PDFDownloadButton"),
@@ -495,6 +496,7 @@ export default function ExamPreviewPage({
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [showAnswers, setShowAnswers] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0); // 정답 섞기 후 다시 불러오기
 
   useEffect(() => {
     fetch(`/api/exams/${id}`)
@@ -518,7 +520,7 @@ export default function ExamPreviewPage({
         setExam(null);
       })
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, reloadKey]);
 
   function handlePrint() {
     window.print();
@@ -585,6 +587,8 @@ export default function ExamPreviewPage({
           </button>
         </div>
       </div>
+
+      <AnswerBalance examId={id} onChanged={() => setReloadKey((k) => k + 1)} />
 
       {/* 시험지 본문 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 max-w-3xl mx-auto print:shadow-none print:border-none print:p-0 print:max-w-none">

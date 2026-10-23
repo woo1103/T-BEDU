@@ -28,6 +28,7 @@ interface AiGenerated {
   questionType: string;
   questionTypeName: string;
   include: boolean;
+  verifySig?: string; // 생성 API 검수 통과 서명
 }
 
 interface QuestionRow {
@@ -168,6 +169,7 @@ export default function NewExamPage() {
           difficulty: "medium",
           aiGenerated: true,
           source: "AI 생성 (Claude)",
+          verifySig: data.verifySig,
         }),
       });
       if (save.ok) {
@@ -293,6 +295,7 @@ export default function NewExamPage() {
             ),
             answer: data.answer || "",
             explanation: data.explanation || "",
+            verifySig: data.verifySig,
             points: data.points || 2,
             questionType: t.code,
             questionTypeName: t.name,
@@ -337,6 +340,7 @@ export default function NewExamPage() {
             difficulty: aiDifficulty,
             aiGenerated: true,
             source: "AI 생성 (Claude)",
+            verifySig: q.verifySig,
           }),
         });
         if (res.ok) {

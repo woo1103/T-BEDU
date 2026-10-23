@@ -25,6 +25,11 @@ model Question {
   source      String?  // 출처
   aiGenerated Boolean  @default(false)
 
+  // 독립 풀이 검수(AI가 정답을 모른 채 풀어 보고 출제 정답과 비교)
+  verifyStatus String?   // "ok" | "suspect" | "error" — null이면 미검수
+  verifyNote   String?   // 의심·오류 사유
+  verifiedAt   DateTime?
+
   passageId   String?  // 원본 지문(Passage) 연결 — 지문 기반 출제일 때
   passageRef  Passage? @relation(fields: [passageId], references: [id], onDelete: SetNull)
 

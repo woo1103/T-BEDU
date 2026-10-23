@@ -22,9 +22,22 @@ export async function PUT(
   const { id } = await params;
   const body = await request.json();
 
+  // 지문·발문·선지·정답이 바뀌면 이전 검수 결과는 무효 → 미검수로
+  const before = await prisma.question.findUnique({
+    where: { id },
+    select: { passage: true, question: true, choices: true, answer: true },
+  });
+  const contentChanged =
+    !before ||
+    before.passage !== body.passage ||
+    before.question !== body.question ||
+    before.choices !== JSON.stringify(body.choices) ||
+    before.answer !== body.answer;
+
   const question = await prisma.question.update({
     where: { id },
     data: {
+      ...(contentChanged ? { verifyStatus: null, verifyNote: null, verifiedAt: null } : {}),
       examType: body.examType,
       questionType: body.questionType,
       number: body.number || null,

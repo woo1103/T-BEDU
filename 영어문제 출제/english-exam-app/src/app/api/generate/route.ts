@@ -10,6 +10,7 @@ import {
   validateSingleAnswer,
 } from "@/lib/question-validate";
 import { isWritingType, normalizeMarkerChoices } from "@/lib/passage-parser";
+import { judgeSolve, signVerified } from "@/lib/verify";
 
 async function getActiveDirectives(examType: string, questionType: string): Promise<string> {
   const list = await prisma.promptDirective.findMany({
@@ -115,32 +116,30 @@ export async function POST(request: NextRequest) {
       }
 
       const intended = result.choices.findIndex((c) => c.isCorrect);
+      let verified = false;
       try {
         const solved = await solveQuestion({
           passage: result.passage,
           question: result.question,
           choices: result.choices.map((c) => c.text),
         });
-        if (solved.valid !== "one" || solved.answerIndex !== intended) {
-          const what =
-            solved.valid === "none"
-              ? "어느 선지도 정답이 될 수 없음"
-              : solved.valid === "multiple"
-              ? "정답이 될 수 있는 선지가 2개 이상"
-              : `검수자는 ${CIRCLE[solved.answerIndex] ?? "?"}를 정답으로 판단(출제 정답 ${CIRCLE[intended]})`;
-          lastReason = `검수 불일치: ${what}`;
+        const verdict = judgeSolve(intended, solved);
+        if (!verdict.ok) {
+          lastReason = `검수 불일치: ${verdict.note}`;
           feedback =
-            "\n\n[재생성 지시] 직전 문항을 독립적으로 풀어 본 결과 " + what + ". 근거: " + solved.reason +
+            "\n\n[재생성 지시] 직전 문항을 독립적으로 풀어 본 결과 " + verdict.note +
             "\n정답이 지문 근거로 명확히 하나로만 정해지고, 오답 선지는 분명히 틀리도록 새로 출제하라.";
           continue;
         }
+        verified = true;
       } catch (e) {
-        // 검수 호출 자체가 실패하면(네트워크·파싱) 생성 결과를 막지 않는다 — (1)(2) 검증은 통과한 상태
+        // 검수 호출 자체가 실패하면(네트워크·파싱) 생성 결과를 막지 않는다 — (1)(2) 검증은 통과한 상태(미검수로 저장됨)
         console.error("문항 검수 실패(생성 결과는 사용):", e);
       }
 
       result.answer = CIRCLE[intended] ?? result.answer;
-      return NextResponse.json(result);
+      // 검수 통과한 내용 그대로 저장되면 '검수 통과'로 기록되도록 서명을 붙인다
+      return NextResponse.json(verified ? { ...result, verifySig: signVerified(result) } : result);
     }
 
     return NextResponse.json(

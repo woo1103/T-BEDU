@@ -4,6 +4,15 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { EXAM_TYPE_MAP, DIFFICULTY_MAP, getQuestionTypeInfo } from "@/lib/question-types";
 import type { ExamType, Difficulty } from "@/types";
+import VerifyPanel from "@/components/questions/VerifyPanel";
+import QuestionQuickEdit from "@/components/questions/QuestionQuickEdit";
+
+// 검수 상태 배지
+const VERIFY_BADGE: Record<string, { label: string; cls: string }> = {
+  ok: { label: "✓ 통과", cls: "bg-emerald-50 text-emerald-700" },
+  suspect: { label: "⚠ 의심", cls: "bg-amber-100 text-amber-800" },
+  error: { label: "검수 실패", cls: "bg-red-50 text-red-600" },
+};
 
 interface ExamUsage {
   id: string;
@@ -25,6 +34,8 @@ interface QuestionRow {
   points: number;
   aiGenerated: boolean;
   createdAt: string;
+  verifyStatus?: string | null;
+  verifyNote?: string | null;
   examItems?: ExamUsage[];
   passageRef?: {
     id: string;
@@ -48,6 +59,8 @@ export default function QuestionsPage() {
   const [filterGrade, setFilterGrade] = useState("");
   const [filterTextbook, setFilterTextbook] = useState("");
   const [cleaning, setCleaning] = useState(false);
+  const [filterVerify, setFilterVerify] = useState(""); // "" | ok | suspect | unverified | error
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchQuestions();
@@ -142,6 +155,8 @@ export default function QuestionsPage() {
     let arr = questions.slice();
     if (filterGrade) arr = arr.filter((q) => q.passageRef?.grade === filterGrade);
     if (filterTextbook) arr = arr.filter((q) => q.passageRef?.textbook === filterTextbook);
+    if (filterVerify === "unverified") arr = arr.filter((q) => !q.verifyStatus);
+    else if (filterVerify) arr = arr.filter((q) => q.verifyStatus === filterVerify);
     arr.sort((a, b) => {
       if (sortKey === "date_desc") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       if (sortKey === "date_asc") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
@@ -165,6 +180,8 @@ export default function QuestionsPage() {
           {cleaning ? "검사 중..." : "🧹 구조 오류 문항 검사/정리"}
         </button>
       </div>
+
+      <VerifyPanel onProgress={fetchQuestions} onShowSuspect={() => setFilterVerify("suspect")} />
 
       {/* 필터 바 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
@@ -270,6 +287,21 @@ export default function QuestionsPage() {
               ))}
             </select>
           </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1" htmlFor="filter-verify">검수</label>
+            <select
+              id="filter-verify"
+              value={filterVerify}
+              onChange={(e) => setFilterVerify(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            >
+              <option value="">전체</option>
+              <option value="suspect">⚠ 의심만</option>
+              <option value="unverified">미검수</option>
+              <option value="ok">통과</option>
+              <option value="error">검수 실패</option>
+            </select>
+          </div>
           <span className="text-xs text-gray-400 ml-auto">
             {visibleQuestions.length} / {questions.length}개 표시
           </span>
@@ -295,6 +327,7 @@ export default function QuestionsPage() {
             <thead>
               <tr className="border-b border-gray-100">
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">유형</th>
+                <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">검수</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">발문</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">난이도</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">배점</th>
@@ -315,6 +348,19 @@ export default function QuestionsPage() {
                       <span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded">
                         {typeInfo ? `${typeInfo.number}번 ${typeInfo.name}` : q.questionType}
                       </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      {q.verifyStatus && VERIFY_BADGE[q.verifyStatus] ? (
+                        <button
+                          onClick={() => setEditingId(q.id)}
+                          title={q.verifyNote || "눌러서 바로 고치기"}
+                          className={`text-xs px-2 py-1 rounded whitespace-nowrap ${VERIFY_BADGE[q.verifyStatus].cls}`}
+                        >
+                          {VERIFY_BADGE[q.verifyStatus].label}
+                        </button>
+                      ) : (
+                        <span className="text-xs text-gray-300">미검수</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <Link
@@ -368,7 +414,13 @@ export default function QuestionsPage() {
                     <td className="px-4 py-3 text-xs text-gray-400">
                       {new Date(q.createdAt).toLocaleDateString("ko-KR")}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 whitespace-nowrap space-x-3">
+                      <button
+                        onClick={() => setEditingId(q.id)}
+                        className="text-xs text-emerald-700 hover:text-emerald-900"
+                      >
+                        고치기
+                      </button>
                       <button
                         onClick={() => handleDelete(q.id)}
                         className="text-xs text-red-500 hover:text-red-700"
@@ -383,6 +435,10 @@ export default function QuestionsPage() {
           </table>
         )}
       </div>
+
+      {editingId && (
+        <QuestionQuickEdit id={editingId} onClose={() => setEditingId(null)} onSaved={fetchQuestions} />
+      )}
 
       {historyOf && (
         <div
