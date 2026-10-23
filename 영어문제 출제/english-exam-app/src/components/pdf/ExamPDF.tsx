@@ -29,15 +29,17 @@ import { BLANK_TOKEN, countLines, packColumns, textWidth } from "@/lib/pdf-layou
 
 // 한글 폰트 등록 — 로컬 Noto Sans KR 전체 TTF (한글·라틴·CJK 원문자 등 전 글리프 포함)
 // 이전 버전은 fontsource의 korean 서브셋만 로드되어 "1." 이나 "①" 같은 글자가 깨졌음.
+// 브라우저에선 /fonts URL, 테스트(Node)에선 디스크 경로
+const FONT_BASE = typeof window === "undefined" ? `${process.cwd()}/public/fonts` : "/fonts";
 Font.register({
   family: "NotoSansKR",
   fonts: [
     {
-      src: "/fonts/NotoSansKR-Regular.ttf",
+      src: `${FONT_BASE}/NotoSansKR-Regular.ttf`,
       fontWeight: 400,
     },
     {
-      src: "/fonts/NotoSansKR-Bold.ttf",
+      src: `${FONT_BASE}/NotoSansKR-Bold.ttf`,
       fontWeight: 700,
     },
   ],
@@ -106,7 +108,7 @@ function PassageInline({
   );
 }
 
-interface ExamItemData {
+export interface ExamItemData {
   orderNum: number;
   customPoints: number | null;
   question: ExamQuestion;
@@ -1084,6 +1086,15 @@ function itemHeight(item: ExamItemData, mode: "student" | "teacher", width = COL
   }
 }
 
+// 내지 페이지 배치 계획(렌더링과 테스트가 같은 계산을 쓴다)
+export function planExamPages(items: ExamItemData[], mode: "student" | "teacher") {
+  return packColumns(items, (it) => itemHeight(it, mode), {
+    columnsPerPage: COLUMNS_PER_PAGE,
+    columnHeight: COLUMN_HEIGHT,
+    gap: ITEM_GAP,
+  });
+}
+
 // 페이지 헤더(브랜드 바 + 제목 행)
 function PageHeader({ title }: { title: string }) {
   return (
@@ -1113,11 +1124,7 @@ function ContentPages({
   showAnswers: boolean;
   mode: "student" | "teacher";
 }) {
-  const pages = packColumns(items, (it) => itemHeight(it, mode), {
-    columnsPerPage: COLUMNS_PER_PAGE,
-    columnHeight: COLUMN_HEIGHT,
-    gap: ITEM_GAP,
-  });
+  const pages = planExamPages(items, mode);
 
   return (
     <>

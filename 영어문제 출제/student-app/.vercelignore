@@ -1,0 +1,9 @@
+# Vercel CLI 배포 시 올리지 않을 파일 (비밀값·로컬 DB·테스트)
+.env*
+*.db
+*.db-journal
+node_modules
+.next
+.vercel
+tests
+coverage

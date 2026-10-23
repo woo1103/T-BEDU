@@ -19,11 +19,13 @@ import {
 } from "@/lib/passage-parser";
 import { BLANK_TOKEN, SERIF_METRICS, countLines, packColumns, textWidth } from "@/lib/pdf-layout";
 
+// 브라우저에선 /fonts URL, 테스트(Node)에선 디스크 경로
+const FONT_BASE = typeof window === "undefined" ? `${process.cwd()}/public/fonts` : "/fonts";
 Font.register({
   family: "NotoSerifKR",
   fonts: [
-    { src: "/fonts/NotoSerifKR-Regular.otf", fontWeight: 400 },
-    { src: "/fonts/NotoSerifKR-Bold.otf", fontWeight: 700 },
+    { src: `${FONT_BASE}/NotoSerifKR-Regular.otf`, fontWeight: 400 },
+    { src: `${FONT_BASE}/NotoSerifKR-Bold.otf`, fontWeight: 700 },
   ],
 });
 Font.registerHyphenationCallback((word) => [word]);
@@ -64,6 +66,8 @@ export interface MockExamPDFProps {
   options: MockExamOptions;
   mode?: "student" | "teacher";
   showAnswers?: boolean;
+  // 검사용: true면 단 페이지도 넘칠 때 쪽을 늘려(잘라내지 않고) 넘침이 쪽 수로 드러나게 한다
+  revealOverflow?: boolean;
 }
 
 // ── 치수 (높이 계산과 스타일이 공유) ──
@@ -561,6 +565,17 @@ function buildBlocks(items: MockExamItem[], offset: number, includeListening: bo
   return blocks;
 }
 
+// 쪽 배치 계획(렌더링과 테스트가 같은 계산을 쓴다)
+export function planMockPages(items: MockExamItem[], options: MockExamOptions) {
+  const offset = options.includeListening ? 17 : 0;
+  // 긴 지문일수록 추정 오차(양쪽 정렬·굵은 정답 표시 등)가 커서 고정 여유만으론 부족 → 비례 여유 3%
+  return packColumns(buildBlocks(items, offset, options.includeListening), (b) => b.height * 1.03, {
+    columnsPerPage: 2,
+    columnHeight: colHeightFor,
+    gap: ITEM_GAP,
+  });
+}
+
 // ── 머리·쪽수 ──
 function FirstHeader({ o }: { o: MockExamOptions }) {
   return (
@@ -623,15 +638,16 @@ function correctLabel(json: string): string {
   return idx >= 0 ? CIRCLE[idx] ?? String(idx + 1) : "?";
 }
 
-export default function MockExamPDF({ items, options, mode = "student", showAnswers = false }: MockExamPDFProps) {
+export default function MockExamPDF({
+  items,
+  options,
+  mode = "student",
+  showAnswers = false,
+  revealOverflow = false,
+}: MockExamPDFProps) {
   const offset = options.includeListening ? 17 : 0;
   const highlight = mode === "teacher" || showAnswers;
-  const blocks = buildBlocks(items, offset, options.includeListening);
-  const pages = packColumns(blocks, (b) => b.height, {
-    columnsPerPage: 2,
-    columnHeight: colHeightFor,
-    gap: ITEM_GAP,
-  });
+  const pages = planMockPages(items, options);
   const total = pages.length;
 
   const column = (list: Block[]) => (
@@ -650,7 +666,7 @@ export default function MockExamPDF({ items, options, mode = "student", showAnsw
         const pageNo = i + 1;
         return (
           // 단 페이지는 추정 오차가 있어도 다음 쪽으로 넘어가지 않게(빈 쪽 방지) wrap 끔
-          <Page key={i} size="A4" style={s.page} wrap={pg.kind !== "columns"}>
+          <Page key={i} size="A4" style={s.page} wrap={revealOverflow || pg.kind !== "columns"}>
             {i === 0 ? <FirstHeader o={options} /> : <PageHeader o={options} pageNo={pageNo} />}
             {pg.kind === "columns" ? (
               <View style={s.columns}>

@@ -91,7 +91,8 @@ export default function QuestionsPage() {
       const ok = confirm(
         `구조가 깨진 문항 ${count}개를 발견했습니다` +
           (inExams > 0 ? ` (그중 ${inExams}개는 시험지에 배치됨 → 배치도 함께 제거)` : "") +
-          `.\n삭제할까요? (되돌릴 수 없음)`
+          `.\n삭제할까요? (되돌릴 수 없음)` +
+          `\n\n먼저 관리자 메뉴 > 데이터 백업에서 백업을 받아 두면 안전합니다.`
       );
       if (!ok) return;
       const del = await fetch("/api/questions/cleanup", {

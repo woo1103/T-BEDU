@@ -25,6 +25,7 @@ const navItems = [
 const adminItems = [
   { href: "/admin/prompts", label: "AI 지시문", icon: "🧠" },
   { href: "/admin/users", label: "계정 관리", icon: "👤" },
+  { href: "/admin/backup", label: "데이터 백업", icon: "💾" },
 ];
 
 export default function Sidebar() {
