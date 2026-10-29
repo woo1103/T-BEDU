@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getStudentFromRequest } from "@/lib/student-auth";
 import { normalizeMarkerChoices } from "@/lib/passage-parser";
+import { stripFigurePlaceholder } from "@/lib/math-worksheet";
 
 // 학생이 풀 문항을 내려준다 (정답 제거). [id] = assignmentId
 // 영어(exam): 문항 텍스트+선지. 수학(worksheet): 문제지 파일 + 문항 메타(정답키 제외).
@@ -62,12 +63,40 @@ export async function GET(
 
   if (type === "worksheet") {
     const ws = assignment.assessment.worksheet;
-    const items = (ws?.items ?? []).map((it) => ({
-      itemId: it.id,
-      number: it.number,
-      points: it.points,
-      choicesCount: it.choicesCount,
-    }));
+    // 문제은행으로 만든 학습지: 문제 본문(LaTeX)과 그림을 함께 보낸다(파일이 없으므로).
+    // 학생 앱은 헤더 토큰으로 인증해 <img>로 보호된 그림을 직접 못 받으므로 그림은 data URL로 싣는다.
+    const problemIds = (ws?.items ?? []).map((it) => it.mathProblemId).filter((x): x is string => !!x);
+    const problems = problemIds.length
+      ? await prisma.mathProblem.findMany({
+          where: { id: { in: problemIds } },
+          select: { id: true, problemLatex: true, figureImageId: true },
+        })
+      : [];
+    const figureIds = problems.map((p) => p.figureImageId).filter((x): x is string => !!x);
+    const images = figureIds.length
+      ? await prisma.mathImage.findMany({ where: { id: { in: figureIds } }, select: { id: true, mime: true, data: true } })
+      : [];
+    const MAX_FIGURE_BYTES = 3_000_000; // 응답 크기 제한(약 4.5MB) 안쪽으로
+    let used = 0;
+    const figureUrl = new Map<string, string>();
+    for (const img of images) {
+      if (used + img.data.length > MAX_FIGURE_BYTES) break;
+      used += img.data.length;
+      figureUrl.set(img.id, `data:${img.mime};base64,${Buffer.from(img.data).toString("base64")}`);
+    }
+    const byId = new Map(problems.map((p) => [p.id, p]));
+    const items = (ws?.items ?? []).map((it) => {
+      const p = it.mathProblemId ? byId.get(it.mathProblemId) : undefined;
+      const figure = p?.figureImageId ? figureUrl.get(p.figureImageId) ?? null : null;
+      return {
+        itemId: it.id,
+        number: it.number,
+        points: it.points,
+        choicesCount: it.choicesCount,
+        problemLatex: p ? (p.figureImageId ? stripFigurePlaceholder(p.problemLatex) : p.problemLatex) : null,
+        figure,
+      };
+    });
     return NextResponse.json({
       ...base,
       fileUrl: ws?.fileUrl ?? null,

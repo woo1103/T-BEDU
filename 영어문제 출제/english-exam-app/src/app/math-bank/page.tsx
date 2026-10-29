@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import MathText from "@/components/MathText";
 import FigureCropper from "@/components/math/FigureCropper";
+import MathProblemEditor from "@/components/math/MathProblemEditor";
 import { cropToJpeg, openPages, pageToJpeg } from "@/lib/page-images";
 import { answerFromStoredValue, detectChoicesCount, normalizeAnswer } from "@/lib/math-worksheet";
 
@@ -68,6 +69,7 @@ export default function MathBankPage() {
   const [showOriginal, setShowOriginal] = useState<Record<string, boolean>>({});
   const [makingSheet, setMakingSheet] = useState(false);
   const [cropping, setCropping] = useState<MathProblem | null>(null);
+  const [editing, setEditing] = useState<MathProblem | null>(null);
 
   useEffect(() => {
     setSelected(loadSelection());
@@ -340,6 +342,9 @@ export default function MathBankPage() {
                       </span>
                     )}
                     <span className="ml-auto flex gap-3">
+                      <button onClick={() => setEditing(p)} className="text-emerald-700 hover:text-emerald-900">
+                        고치기
+                      </button>
                       {p.cropImageId && (
                         <button
                           onClick={() => setShowOriginal((s) => ({ ...s, [p.id]: !s[p.id] }))}
@@ -410,6 +415,10 @@ export default function MathBankPage() {
             </button>
           </div>
         </div>
+      )}
+
+      {editing && (
+        <MathProblemEditor problem={editing} units={facets.units} onClose={() => setEditing(null)} onSaved={load} />
       )}
 
       {cropping?.cropImageId && (

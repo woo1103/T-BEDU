@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PassageView from "../components/PassageView";
+import MathText from "../components/MathText";
 import {
   getAssessment,
   submitAnswers,
@@ -172,7 +173,48 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
           <div className="bg-white rounded-2xl p-6 text-center text-gray-400 text-sm shadow-sm">
             불러오는 중...
           </div>
-        ) : result ? null : type === "worksheet" ? (
+        ) : result ? null : type === "worksheet" && wsItems.some((it) => it.problemLatex) ? (
+          // 문제은행으로 만든 학습지: 문제마다 카드(본문·그림·답)
+          wsItems.map((it) => (
+            <div key={it.itemId} className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
+              <div className="flex items-start gap-2">
+                <span className="w-6 h-6 rounded-full bg-[#245B3E] text-white text-xs font-bold flex items-center justify-center shrink-0">
+                  {it.number}
+                </span>
+                <div className="text-sm text-gray-800 leading-relaxed min-w-0 flex-1">
+                  {it.problemLatex ? <MathText text={it.problemLatex} /> : <span className="text-gray-400">(문제 본문 없음)</span>}
+                </div>
+              </div>
+              {it.figure && <img src={it.figure} alt={`${it.number}번 그림`} className="max-w-full mx-auto rounded-lg" />}
+              {it.choicesCount ? (
+                <div className="flex gap-2 flex-wrap justify-center">
+                  {CIRCLE.slice(0, it.choicesCount).map((label) => {
+                    const on = selected[it.itemId] === label;
+                    return (
+                      <button
+                        key={label}
+                        onClick={() => setSelected((p) => ({ ...p, [it.itemId]: label }))}
+                        className={`w-10 h-10 rounded-full text-base font-bold ${
+                          on ? "bg-[#245B3E] text-white" : "bg-gray-100 text-gray-500"
+                        }`}
+                        aria-label={`${it.number}번 ${label}`}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <input
+                  value={selected[it.itemId] ?? ""}
+                  onChange={(e) => setSelected((p) => ({ ...p, [it.itemId]: e.target.value }))}
+                  placeholder="정답 입력(주관식)"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                />
+              )}
+            </div>
+          ))
+        ) : type === "worksheet" ? (
           <>
             {/* 문제지 파일 */}
             {fileUrl ? (

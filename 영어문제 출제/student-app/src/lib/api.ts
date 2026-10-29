@@ -138,6 +138,8 @@ export interface WorksheetSolveItem {
   number: number;
   points: number;
   choicesCount: number | null; // 객관식이면 선지 수, 주관식이면 null
+  problemLatex?: string | null; // 문제은행으로 만든 학습지면 문제 본문(수식 $...$)
+  figure?: string | null; // 그림(data URL)
 }
 
 export interface AssessmentResponse {
