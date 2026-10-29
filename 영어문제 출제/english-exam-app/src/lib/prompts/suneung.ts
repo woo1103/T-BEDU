@@ -334,6 +334,14 @@ choices는 5개의 (A)-(B) 쌍으로 구성:
 - 지문의 표면적 키워드와 관련 있지만 요약문 맥락에 부적절한 단어 활용`,
 };
 
+// 같은 갈래의 두 번째·세 번째 번호는 앞 번호 지시문을 그대로 쓴다(33·34번 빈칸, 37번 순서, 39번 삽입)
+const SAME_KIND: Record<string, string> = {
+  "33_blank_sent2": "32_blank_sent",
+  "34_blank_sent3": "32_blank_sent",
+  "37_order2": "36_order",
+  "39_insertion2": "38_insertion",
+};
+
 export function getSuneungPrompt(questionType: string): string | null {
-  return SUNEUNG_PROMPTS[questionType] || null;
+  return SUNEUNG_PROMPTS[questionType] || SUNEUNG_PROMPTS[SAME_KIND[questionType]] || null;
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { EXAM_TYPE_MAP, getQuestionTypes, DIFFICULTY_MAP } from "@/lib/question-types";
+import { EXAM_TYPE_MAP, getQuestionTypes, DIFFICULTY_MAP, canGenerateWithAi } from "@/lib/question-types";
 import { isMarkerMappedType } from "@/lib/question-validate";
 import { isMarkerOnlyChoices } from "@/lib/passage-parser";
 import { VARIATIONS } from "@/lib/variations";
@@ -383,6 +383,43 @@ export default function NewQuestionPage() {
   const passageMultiplier = selectedPassageCount > 0 ? selectedPassageCount : 1;
 
   // AI 복수 생성
+  // 서버에 맡기기: 창을 닫아도 서버가 한 문항씩 만들어 문제 은행에 바로 저장한다
+  const [queueing, setQueueing] = useState(false);
+  async function handleBackground() {
+    if (selectedTypes.length === 0) {
+      alert("최소 1개 이상의 문제 유형을 선택해주세요.");
+      return;
+    }
+    const saved = getSelectedPassages();
+    const sources: { passageId?: string; sourceText?: string }[] =
+      saved.length > 0
+        ? saved.map((p) => ({ passageId: p.id }))
+        : passageInputMode === "direct" && sourcePassage.trim()
+        ? [{ sourceText: sourcePassage }]
+        : [{}];
+    setQueueing(true);
+    try {
+      const res = await fetch("/api/gen-jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          examType,
+          difficulty,
+          topic,
+          passageMode,
+          variations: selectedVariations,
+          items: sources.flatMap((src) => selectedTypes.map((t) => ({ questionType: t.code, count: t.count, ...src }))),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "작업을 만들지 못했어요.");
+      router.push(`/gen-jobs?id=${data.id}`);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "작업을 만들지 못했어요.");
+      setQueueing(false);
+    }
+  }
+
   async function handleGenerate() {
     if (selectedTypes.length === 0) {
       alert("최소 1개 이상의 문제 유형을 선택해주세요.");
@@ -972,7 +1009,9 @@ export default function NewQuestionPage() {
                         <button
                           key={qt.code}
                           onClick={() => toggleType(qt.code, qt.name)}
-                          className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                          disabled={!canGenerateWithAi(examType, qt.code)}
+                          title={canGenerateWithAi(examType, qt.code) ? undefined : "아직 AI로 만들 수 없는 유형이에요"}
+                          className={`px-3 py-1.5 rounded-lg text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                             isSelected
                               ? "bg-purple-600 text-white"
                               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -1094,6 +1133,14 @@ export default function NewQuestionPage() {
               {generating
                 ? `생성 중... (${generatedQuestions.length}/${totalToGenerate})`
                 : `${totalToGenerate}개 문제 AI 생성하기`}
+            </button>
+            <button
+              onClick={handleBackground}
+              disabled={generating || queueing || selectedTypes.length === 0}
+              className="ml-2 px-5 py-3 border border-purple-300 text-purple-700 rounded-lg font-medium hover:bg-purple-50 disabled:opacity-50 transition-colors"
+              title="창을 닫아도 서버가 이어서 만들고, 다 만든 문제는 문제 은행에 바로 저장돼요"
+            >
+              {queueing ? "맡기는 중..." : "서버에 맡기기 (창 닫아도 계속)"}
             </button>
           </div>
 

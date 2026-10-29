@@ -578,3 +578,52 @@ model MathImage {
   height    Int?
   createdAt DateTime @default(now())
 }
+
+// AI 호출 기록(비용 확인용) — 토큰 수만 저장하고 금액은 화면에서 단가로 계산
+model AiUsage {
+  id               String   @id @default(cuid())
+  kind             String // generate | verify | grade | answerKey | mathExtract
+  model            String
+  inputTokens      Int
+  outputTokens     Int
+  cacheWriteTokens Int      @default(0)
+  cacheReadTokens  Int      @default(0)
+  createdAt        DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+// 서버 백그라운드 문항 생성 작업(창을 닫아도 서버가 한 문항씩 이어서 만든다)
+model GenJob {
+  id          String   @id @default(cuid())
+  createdById String
+  title       String // 화면 표시용: "수능 빈칸(문장) 외 3유형 12문항"
+  examType    String
+  settings    String // JSON: {difficulty, topic, passageMode, variations}
+  status      String   @default("running") // running | done | cancelled
+  heartbeatAt DateTime @default(now()) // 마지막으로 처리한 시각(멈춘 작업 다시 깨우기)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  items GenJobItem[]
+
+  @@index([createdById, createdAt])
+}
+
+model GenJobItem {
+  id           String    @id @default(cuid())
+  jobId        String
+  order        Int
+  questionType String
+  passageId    String? // 지문에서 출제하면 저장된 지문
+  sourceText   String? // 직접 붙여 넣은 지문
+  status       String    @default("pending") // pending | running | done | failed
+  attempts     Int       @default(0)
+  error        String?
+  questionId   String? // 만들어 저장한 문항
+  startedAt    DateTime?
+
+  job GenJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId, status])
+}

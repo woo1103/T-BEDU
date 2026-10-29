@@ -9,6 +9,7 @@ const navItems = [
   { href: "/passages", label: "지문 관리", icon: "📖" },
   { href: "/questions", label: "문제 은행", icon: "📝" },
   { href: "/questions/new", label: "문제 만들기", icon: "✨" },
+  { href: "/gen-jobs", label: "생성 작업", icon: "⏳" },
   { href: "/exams", label: "시험지 관리", icon: "📄" },
   { href: "/exams/new", label: "시험지 구성", icon: "📋" },
   { href: "/textbooks", label: "교재 관리", icon: "📚" },
@@ -25,6 +26,7 @@ const navItems = [
 const adminItems = [
   { href: "/admin/prompts", label: "AI 지시문", icon: "🧠" },
   { href: "/admin/users", label: "계정 관리", icon: "👤" },
+  { href: "/admin/ai-usage", label: "AI 사용량", icon: "💰" },
   { href: "/admin/backup", label: "데이터 백업", icon: "💾" },
 ];
 

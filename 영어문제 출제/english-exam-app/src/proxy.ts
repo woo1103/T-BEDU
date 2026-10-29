@@ -12,6 +12,7 @@ const PUBLIC_PATHS = [
   "/api/auth/student",
   "/api/student",
   "/api/cron", // Vercel Cron 호출 (CRON_SECRET로 각 핸들러가 자체 보호)
+  "/api/gen-job-run", // 백그라운드 생성 다음 단계(작업 열쇠 또는 로그인을 핸들러가 확인)
 ];
 
 function getSecret(): Uint8Array {

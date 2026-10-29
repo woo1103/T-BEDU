@@ -26,6 +26,12 @@ export default function ExamDetailPage({
         >
           편집 (문제 추가/제거)
         </Link>
+        <Link
+          href={`/exams/${id}/omr`}
+          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300"
+        >
+          OMR 답안지 인쇄
+        </Link>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Assignment {
   id: string;
@@ -111,6 +112,12 @@ export default function AssignmentsPage() {
                     <span className="text-xs text-gray-400">
                       제출 {a._count.submissions}건
                     </span>
+                    <Link
+                      href={`/assignments/${a.id}/paper`}
+                      className="text-xs text-emerald-700 hover:underline"
+                    >
+                      종이 답 입력 · 채점 결과
+                    </Link>
                     <button
                       onClick={() => patch(a.id, { active: !a.active })}
                       className="text-xs text-blue-600 hover:underline"

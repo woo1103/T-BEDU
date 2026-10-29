@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { EXAM_TYPE_MAP, getQuestionTypeInfo, getQuestionTypes, DIFFICULTY_MAP } from "@/lib/question-types";
+import { EXAM_TYPE_MAP, getQuestionTypeInfo, getQuestionTypes, DIFFICULTY_MAP, canGenerateWithAi } from "@/lib/question-types";
+import { pickFromBank, SUNEUNG_PRESETS, type ComposePreset } from "@/lib/auto-compose";
 import { VARIATIONS } from "@/lib/variations";
 import type { ExamType, Choice, Difficulty } from "@/types";
 
@@ -46,6 +47,8 @@ interface QuestionRow {
   aiGenerated: boolean;
   passageId: string | null;
   createdAt?: string;
+  verifyStatus?: string | null;
+  examItems?: unknown[];
   passageRef: {
     id: string;
     textbook: string;
@@ -109,6 +112,7 @@ export default function NewExamPage() {
   const [gyTypes, setGyTypes] = useState<AiTypeSel[]>([]);
   const [gyRunning, setGyRunning] = useState(false);
   const [gyLog, setGyLog] = useState("");
+  const [gyAllowNoGrade, setGyAllowNoGrade] = useState(true);
   const GY_GRADES = ["중1", "중2", "중3", "고1", "고2", "고3"];
 
   function toggleGyType(code: string, name: string) {
@@ -118,68 +122,20 @@ export default function NewExamPage() {
       return [...prev, { code, name, count: 1 }];
     });
   }
+  function applyPreset(preset: ComposePreset) {
+    setGyTypes(
+      preset.types.map((t) => ({
+        code: t.code,
+        name: `${getQuestionTypeInfo(examType, t.code)?.number ?? ""}번 ${getQuestionTypeInfo(examType, t.code)?.name ?? t.code}`,
+        count: t.count,
+      }))
+    );
+    setGyLog("");
+  }
   function updateGyCount(code: string, count: number) {
     setGyTypes((prev) =>
       prev.map((t) => (t.code === code ? { ...t, count: Math.max(1, count) } : t))
     );
-  }
-
-  // AI로 1문항 생성 후 은행 저장 → {id, question, answer} 반환
-  async function generateAndSaveOne(
-    code: string,
-    priorQuestions?: { question: string; answer?: string }[]
-  ): Promise<{ id: string; question: string; answer: string } | null> {
-    try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          examType,
-          questionType: code,
-          difficulty: "medium",
-          priorQuestions:
-            priorQuestions && priorQuestions.length > 0 ? priorQuestions : undefined,
-        }),
-      });
-      if (!res.ok) return null;
-      const data = await res.json();
-      const writing = isWritingType(code);
-      const ci = (data.choices || []).map(
-        (c: { text: string; isCorrect: boolean }, i: number) => ({
-          label: CIRCLE_LABELS[i] ?? `(${i + 1})`,
-          text: c.text,
-          isCorrect: c.isCorrect,
-        })
-      );
-      const ans = writing
-        ? data.answer
-        : ci.find((c: { isCorrect: boolean }) => c.isCorrect)?.label || "";
-      const save = await fetch("/api/questions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          examType,
-          questionType: code,
-          points: data.points || 2,
-          passage: data.passage,
-          question: data.question,
-          choices: writing ? [] : ci,
-          answer: ans,
-          explanation: data.explanation,
-          difficulty: "medium",
-          aiGenerated: true,
-          source: "AI 생성 (Claude)",
-          verifySig: data.verifySig,
-        }),
-      });
-      if (save.ok) {
-        const id = (await save.json()).id as string;
-        return { id, question: data.question || "", answer: ans };
-      }
-    } catch {
-      /* skip */
-    }
-    return null;
   }
 
   // 학년+유형별: 은행에서 우선 채우고, 모자라면 AI로 부족분 생성
@@ -188,52 +144,90 @@ export default function NewExamPage() {
       alert("유형을 1개 이상 선택하세요.");
       return;
     }
+    // 먼저 계획을 세워 AI로 만들 문항 수를 알려 준다(시간·비용이 드는 일이므로)
+    const alreadySelected = new Set(selectedItems.map((i) => i.questionId));
+    const plan = gyTypes.map((t) => {
+      const take = pickFromBank(availableQuestions, t.code, t.count, {
+        grade: gyGrade,
+        allowNoGrade: gyAllowNoGrade,
+        exclude: alreadySelected,
+      });
+      take.forEach((q) => alreadySelected.add(q.id));
+      const shortfall = t.count - take.length;
+      const ai = canGenerateWithAi(examType, t.code);
+      return { t, take, generate: ai ? shortfall : 0, missing: ai ? 0 : shortfall };
+    });
+    const toGenerate = plan.reduce((n, p) => n + p.generate, 0);
+    const missingNames = plan.filter((p) => p.missing > 0).map((p) => p.t.name);
+    if (toGenerate > 0) {
+      const fromBank = plan.reduce((n, p) => n + p.take.length, 0);
+      const ok = confirm(
+        `은행에서 ${fromBank}문항을 넣고, 모자란 ${toGenerate}문항은 AI로 새로 만듭니다.
+` +
+          (missingNames.length > 0
+            ? `(${missingNames.join(", ")}: AI로 만들 수 없고 은행에도 없어 비워 둡니다)
+`
+            : "") +
+          `1문항에 30초~1분쯤 걸려요. 서버가 만들어서, 창을 닫아도 문제 은행에 저장돼요. 진행할까요?`
+      );
+      if (!ok) return;
+    }
+
     setGyRunning(true);
     setGyLog("");
     let picked = 0;
-    let generated = 0;
-    const newIds: string[] = [];
-    const alreadySelected = new Set(selectedItems.map((i) => i.questionId));
-
-    for (const t of gyTypes) {
-      const matches = availableQuestions.filter(
-        (q) =>
-          q.questionType === t.code &&
-          q.passageRef?.grade === gyGrade &&
-          !alreadySelected.has(q.id) &&
-          !newIds.includes(q.id)
-      );
-      const take = matches.slice(0, t.count);
+    for (const { take } of plan) {
       if (take.length > 0) {
         addQuestions(take);
-        take.forEach((q) => alreadySelected.add(q.id));
         picked += take.length;
-      }
-      const shortfall = t.count - take.length;
-      // 번호마다 소재·구성이 달라지도록 직전 생성 문항을 단서로 누적
-      const siblings: { question: string; answer?: string }[] = [];
-      for (let i = 0; i < shortfall; i++) {
-        setGyLog(`${t.name} 생성 중... (${i + 1}/${shortfall})`);
-        const r = await generateAndSaveOne(t.code, siblings.length > 0 ? siblings : undefined);
-        if (r) {
-          newIds.push(r.id);
-          siblings.push({ question: r.question, answer: r.answer || undefined });
-          generated++;
-        }
       }
     }
 
-    if (newIds.length > 0) {
+    // 모자란 문항은 서버에 맡긴다: 이 탭을 닫아도 서버가 만들어 문제 은행에 저장한다
+    let generated = 0;
+    let failed = 0;
+    if (toGenerate > 0) {
       try {
-        const fresh = (await (await fetch("/api/questions")).json()) as QuestionRow[];
-        setAvailableQuestions(fresh);
-        addQuestions(fresh.filter((q) => newIds.includes(q.id)));
-      } catch {
-        /* ignore */
+        const res = await fetch("/api/gen-jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            examType,
+            difficulty: "medium",
+            title: `${title || "시험지"} 자동 구성 ${toGenerate}문항`,
+            items: plan.filter((p) => p.generate > 0).map((p) => ({ questionType: p.t.code, count: p.generate })),
+          }),
+        });
+        const job = await res.json();
+        if (!res.ok) throw new Error(job.error || "생성 작업을 만들지 못했어요.");
+        // 끝날 때까지 진행 상황을 보여 준다
+        for (;;) {
+          await new Promise((r) => setTimeout(r, 4000));
+          const d = await (await fetch(`/api/gen-jobs/${job.id}`)).json();
+          generated = d.done ?? 0;
+          failed = d.failed ?? 0;
+          setGyLog(`AI로 만드는 중... ${generated + failed}/${d.total} (이 창을 닫아도 '생성 작업'에서 이어져요)`);
+          if (d.status !== "running") {
+            const newIds = (d.items as { questionId: string | null }[]).map((i) => i.questionId).filter(Boolean);
+            if (newIds.length > 0) {
+              const fresh = (await (await fetch("/api/questions")).json()) as QuestionRow[];
+              setAvailableQuestions(fresh);
+              addQuestions(fresh.filter((q) => newIds.includes(q.id)));
+            }
+            break;
+          }
+        }
+      } catch (e) {
+        alert(e instanceof Error ? e.message : "생성 작업을 만들지 못했어요.");
       }
     }
+
     setGyRunning(false);
-    setGyLog(`완료: 은행 ${picked}문항 + 생성 ${generated}문항 추가`);
+    const notes = [
+      failed > 0 ? `생성 실패 ${failed}문항('생성 작업'에서 다시 시도)` : "",
+      missingNames.length > 0 ? `은행에 없어 비운 유형: ${missingNames.join(", ")}` : "",
+    ].filter(Boolean);
+    setGyLog(`완료: 은행 ${picked}문항 + 새로 만든 ${generated}문항 추가${notes.length ? " · " + notes.join(" · ") : ""}`);
   }
 
   const aiQuestionTypes = getQuestionTypes(examType);
@@ -697,10 +691,29 @@ export default function NewExamPage() {
                   </option>
                 ))}
               </select>
-              <span className="text-xs text-gray-400">
-                (은행은 지문에 연결된 학년 기준)
-              </span>
+              <label className="flex items-center gap-1.5 text-xs text-gray-500 ml-2">
+                <input type="checkbox" checked={gyAllowNoGrade} onChange={(e) => setGyAllowNoGrade(e.target.checked)} />
+                학년 정보가 없는 은행 문제도 쓰기(AI로 만든 문제 등)
+              </label>
             </div>
+
+            {examType === "suneung" && (
+              <div>
+                <p className="text-xs text-gray-400 font-medium mb-1">한 번에 고르기</p>
+                <div className="flex flex-wrap gap-2">
+                  {SUNEUNG_PRESETS.map((p) => (
+                    <button
+                      key={p.key}
+                      onClick={() => applyPreset(p)}
+                      className="px-3 py-2 rounded-lg border border-blue-200 bg-white text-left hover:bg-blue-50"
+                    >
+                      <span className="block text-sm font-medium text-blue-800">{p.label}</span>
+                      <span className="block text-xs text-gray-500">{p.desc}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* 유형 선택 */}
             {(() => {
@@ -718,7 +731,8 @@ export default function NewExamPage() {
                       return (
                         <button
                           key={qt.code}
-                          onClick={() => toggleGyType(qt.code, qt.name)}
+                          onClick={() => toggleGyType(qt.code, `${qt.number}번 ${qt.name}`)}
+                          title={canGenerateWithAi(examType, qt.code) ? undefined : "AI 출제 미지원 — 은행에 있는 문제로만 채워요"}
                           className={`px-2.5 py-1 rounded-lg text-xs ${
                             sel
                               ? "bg-blue-600 text-white"
@@ -726,6 +740,7 @@ export default function NewExamPage() {
                           }`}
                         >
                           {qt.number}번 {qt.name}
+                          {!canGenerateWithAi(examType, qt.code) && <span className="ml-1 opacity-70">(은행만)</span>}
                         </button>
                       );
                     })}
@@ -1260,7 +1275,9 @@ export default function NewExamPage() {
                           <button
                             key={qt.code}
                             onClick={() => toggleAiType(qt.code, qt.name)}
-                            className={`px-2.5 py-1 rounded-lg text-xs transition-colors ${
+                            disabled={!canGenerateWithAi(examType, qt.code)}
+                            title={canGenerateWithAi(examType, qt.code) ? undefined : "아직 AI로 만들 수 없는 유형이에요"}
+                            className={`px-2.5 py-1 rounded-lg text-xs transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                               isSel
                                 ? "bg-purple-600 text-white"
                                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"

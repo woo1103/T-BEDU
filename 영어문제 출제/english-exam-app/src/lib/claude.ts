@@ -1,8 +1,29 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { prisma } from "@/lib/db";
+import type { AiKind } from "@/lib/ai-cost";
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
+
+// 호출마다 토큰 수를 남긴다(관리자 'AI 사용량' 화면). 기록 실패가 본 작업을 막지 않게 한다.
+async function logUsage(kind: AiKind, message: Anthropic.Message) {
+  try {
+    const u = message.usage;
+    await prisma.aiUsage.create({
+      data: {
+        kind,
+        model: message.model,
+        inputTokens: u.input_tokens,
+        outputTokens: u.output_tokens,
+        cacheWriteTokens: u.cache_creation_input_tokens ?? 0,
+        cacheReadTokens: u.cache_read_input_tokens ?? 0,
+      },
+    });
+  } catch (e) {
+    console.error("AI 사용량 기록 실패:", e);
+  }
+}
 
 export async function generateQuestion(
   systemPrompt: string,
@@ -21,6 +42,7 @@ export async function generateQuestion(
     system: systemPrompt,
     messages: [{ role: "user", content: userPrompt }],
   });
+  await logUsage("generate", message);
 
   const text =
     message.content[0].type === "text" ? message.content[0].text : "";
@@ -79,6 +101,7 @@ ${choiceLines}`;
     system,
     messages: [{ role: "user", content: user }],
   });
+  await logUsage("verify", message);
   const text = message.content[0].type === "text" ? message.content[0].text : "";
   const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
   if (!m) throw new Error("검수 응답을 파싱할 수 없습니다.");
@@ -132,6 +155,7 @@ ${studentAnswer || "(빈 답안)"}
     system,
     messages: [{ role: "user", content: user }],
   });
+  await logUsage("grade", message);
 
   const text =
     message.content[0].type === "text" ? message.content[0].text : "";
@@ -197,6 +221,7 @@ ${expectedCount ? `- 정답지에는 총 ${expectedCount}문항이 있습니다.
       { role: "user", content: [mediaBlock, { type: "text", text: instruction }] },
     ],
   });
+  await logUsage("answerKey", message);
 
   const text =
     message.content[0].type === "text" ? message.content[0].text : "";
@@ -280,6 +305,7 @@ ${hint?.source ? `- 출처 힌트: ${hint.source}` : ""}
     max_tokens: 8192,
     messages: [{ role: "user", content: [mediaBlock, { type: "text", text: instruction }] }],
   });
+  await logUsage("mathExtract", message);
   const text = message.content[0].type === "text" ? message.content[0].text : "";
   const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
   if (!m) throw new Error("문제 인식 결과를 파싱할 수 없습니다.");

@@ -579,6 +579,13 @@ export default function ExamPreviewPage({
             편집
           </Link>
           <PDFDownloadButton exam={exam} showAnswers={showAnswers} />
+          <Link
+            href={`/exams/${id}/omr`}
+            target="_blank"
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300"
+          >
+            OMR 답안지
+          </Link>
           <button
             onClick={handlePrint}
             className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300"

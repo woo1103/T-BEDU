@@ -72,6 +72,20 @@ export const GRAMMAR_THEME_TYPES: QuestionTypeInfo[] = [
   { code: "grammar_theme_box", number: 2, name: "어법(테마별·네모형)", nameEn: "Grammar by Theme (Box)", category: "어법", defaultPoints: 2 },
 ];
 
+// AI 출제 지시문이 아직 없는 유형 — 문제 은행에 있는 문제로만 채운다(그림·도표·장문 세트)
+export const NO_AI_TYPES = new Set([
+  "25_chart",
+  "26_content_person",
+  "27_notice",
+  "28_notice2",
+  "41_long_title",
+  "43_long_order",
+]);
+
+export function canGenerateWithAi(examType: string, code: string): boolean {
+  return examType !== "toeic" && examType !== "toefl" && !NO_AI_TYPES.has(code);
+}
+
 export const EXAM_TYPE_MAP = {
   suneung: { name: "수능/모의고사", types: SUNEUNG_TYPES },
   naesin: { name: "내신", types: NAESIN_TYPES },
