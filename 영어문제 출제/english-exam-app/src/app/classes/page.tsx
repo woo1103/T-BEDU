@@ -338,7 +338,7 @@ export default function ClassesPage() {
             {visibleClasses.map((c) => (
               <li key={c.id} className="p-4">
                 <div className="flex items-center justify-between gap-4 flex-wrap">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-x-3 gap-y-1 flex-wrap">
                     <span className="px-2 py-1 text-xs rounded bg-slate-100 text-slate-600">
                       {c.center?.name}
                     </span>
@@ -404,6 +404,7 @@ export default function ClassesPage() {
                     ) : students.length === 0 ? (
                       <p className="text-xs text-gray-400">등록된 학생이 없습니다.</p>
                     ) : (
+                      <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
                           <tr className="text-left text-gray-400 text-xs">
@@ -445,6 +446,7 @@ export default function ClassesPage() {
                           ))}
                         </tbody>
                       </table>
+                      </div>
                     )}
                   </div>
                 )}

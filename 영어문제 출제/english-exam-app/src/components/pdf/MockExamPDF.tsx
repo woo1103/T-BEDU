@@ -50,6 +50,7 @@ export interface MockExamItem {
     answer: string;
     points: number;
     questionType: string;
+    explanation?: string | null;
   };
 }
 
@@ -203,6 +204,11 @@ const s = StyleSheet.create({
   answerCell: { width: 56, flexDirection: "row", borderWidth: 0.6, borderColor: "#777777", margin: 2 },
   answerNum: { width: 24, fontSize: 9, textAlign: "center", backgroundColor: "#EEEEEE", paddingVertical: 3 },
   answerVal: { flex: 1, fontSize: 10, textAlign: "center", paddingVertical: 2, color: RED, fontWeight: 700 },
+  // 해설
+  explainTitle: { fontSize: 13, fontWeight: 700, textAlign: "center", marginTop: 18, marginBottom: 10 },
+  explainItem: { marginBottom: 8 },
+  explainHead: { fontSize: 10, fontWeight: 700, marginBottom: 2 },
+  explainText: { fontSize: 9.5, lineHeight: 1.55, textAlign: "justify" },
 });
 
 // ── 텍스트 유틸 ──
@@ -697,6 +703,23 @@ export default function MockExamPDF({
                 </View>
               ))}
           </View>
+          {/* 문제를 만들 때 함께 만든 해설(번호순) */}
+          {items.some((it) => (it.question.explanation ?? "").trim()) && (
+            <>
+              <T style={s.explainTitle}>해설</T>
+              {items
+                .filter((it) => (it.question.explanation ?? "").trim())
+                .map((it) => (
+                  <View key={it.orderNum} style={s.explainItem} wrap={false}>
+                    <T style={s.explainHead}>
+                      {it.orderNum + offset}번
+                      {isWritingType(it.question.questionType) ? "" : `  정답 ${correctLabel(it.question.choices)}`}
+                    </T>
+                    <T style={s.explainText}>{(it.question.explanation ?? "").trim()}</T>
+                  </View>
+                ))}
+            </>
+          )}
         </Page>
       )}
     </Document>

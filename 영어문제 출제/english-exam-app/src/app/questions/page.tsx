@@ -323,6 +323,7 @@ export default function QuestionsPage() {
             </Link>
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-100">
@@ -433,6 +434,7 @@ export default function QuestionsPage() {
               })}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

@@ -45,3 +45,31 @@ describe("모의고사 양식 — 넘침 없음", () => {
     expect(countPdfPages(buf)).toBe(planned + 1);
   });
 });
+
+describe("해설지에 해설", () => {
+  const LONG = "지문의 마지막 문장에서 필자는 협력의 중요성을 강조한다. ".repeat(6);
+  const withExplain = (seed: number, n: number, max?: number) =>
+    makeItems(seed, n, max).map((it) => ({ ...it, question: { ...it.question, explanation: LONG } }));
+
+  it("Daily Gift: 해설지는 해설만큼 쪽이 늘고, 학생용은 그대로", async () => {
+    const items = withExplain(42, 30);
+    const planned = planExamPages(items, "teacher").length;
+    const teacher = countPdfPages(await renderToBuffer(<ExamPDF title="t" items={items} mode="teacher" />));
+    const student = countPdfPages(await renderToBuffer(<ExamPDF title="t" items={items} mode="student" />));
+    expect(teacher).toBeGreaterThan(planned + 2);
+    expect(student).toBe(planExamPages(items, "student").length + 2);
+  });
+
+  it("모의고사: 해설지 끝에 해설 쪽이 붙고 문제 쪽은 그대로", async () => {
+    const items = withExplain(7, 28, 10);
+    const planned = planMockPages(items, MOCK_OPTIONS).length;
+    const teacher = countPdfPages(
+      await renderToBuffer(<MockExamPDF items={items} options={MOCK_OPTIONS} mode="teacher" revealOverflow />)
+    );
+    const student = countPdfPages(
+      await renderToBuffer(<MockExamPDF items={items} options={MOCK_OPTIONS} mode="student" revealOverflow />)
+    );
+    expect(teacher).toBeGreaterThan(planned + 1);
+    expect(student).toBe(planned);
+  });
+});

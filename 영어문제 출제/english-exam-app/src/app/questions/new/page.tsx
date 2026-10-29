@@ -688,7 +688,7 @@ export default function NewQuestionPage() {
       {/* 시험 유형 + 난이도 (공통) */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
         <h3 className="font-semibold text-gray-800">기본 설정</h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm text-gray-600 mb-1">시험 유형</label>
             <select
@@ -1348,7 +1348,7 @@ export default function NewQuestionPage() {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
             <h3 className="font-semibold text-gray-800">문제 내용</h3>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm text-gray-600 mb-1">
                   문제 유형

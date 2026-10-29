@@ -496,7 +496,7 @@ export default function ExamEditPage({
       {/* 시험지 정보 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
         <h3 className="font-semibold text-gray-800">시험지 정보</h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm text-gray-600 mb-1">시험지 제목</label>
             <input
@@ -568,7 +568,7 @@ export default function ExamEditPage({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 문제 은행 */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center gap-2 mb-3">

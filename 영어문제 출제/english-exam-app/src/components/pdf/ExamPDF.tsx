@@ -74,6 +74,7 @@ interface ExamQuestion {
   answer: string;
   points: number;
   questionType: string;
+  explanation?: string | null;
 }
 
 // __...__ 와 <u>...</u> 를 실제 밑줄 Text로, 빈칸(___)은 고정 폭 빈칸으로 렌더링
@@ -467,6 +468,24 @@ const styles = StyleSheet.create({
   },
 
   // 서술형 해설지 항목
+  explainSection: {
+    marginTop: 16,
+    paddingHorizontal: 20,
+  },
+  explainItem: {
+    marginBottom: 8,
+  },
+  explainHead: {
+    fontSize: 9,
+    fontWeight: 700,
+    color: "#333333",
+    marginBottom: 2,
+  },
+  explainText: {
+    fontSize: 8.5,
+    color: "#444444",
+    lineHeight: 1.55,
+  },
   writingAnswerSection: {
     marginTop: 12,
     paddingHorizontal: 20,
@@ -1294,7 +1313,29 @@ function AnswerPage({
           })}
         </View>
       )}
+
+      {/* 해설지: 문제를 만들 때 함께 만든 해설(번호순) */}
+      {mode === "teacher" && <ExplanationList items={items} />}
     </Page>
+  );
+}
+
+function ExplanationList({ items }: { items: ExamItemData[] }) {
+  const withText = items.filter((it) => (it.question.explanation ?? "").trim());
+  if (withText.length === 0) return null;
+  return (
+    <View style={styles.explainSection}>
+      <PText style={styles.answerTitle}>해설</PText>
+      {withText.map((it) => (
+        // 한 문항 해설이 쪽 경계에서 갈라지지 않게(아주 길면 react-pdf가 알아서 나눔)
+        <View key={it.orderNum} style={styles.explainItem} wrap={false}>
+          <PText style={styles.explainHead}>
+            {it.orderNum}번{isWritingType(it.question.questionType) ? "" : `  정답 ${getCorrectLabel(it.question.choices)}`}
+          </PText>
+          <PText style={styles.explainText}>{(it.question.explanation ?? "").trim()}</PText>
+        </View>
+      ))}
+    </View>
   );
 }
 

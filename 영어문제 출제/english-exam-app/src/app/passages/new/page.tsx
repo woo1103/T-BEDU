@@ -40,7 +40,7 @@ export default function NewPassagePage() {
       <h2 className="text-2xl font-bold text-gray-800">지문 등록</h2>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm text-gray-600 mb-1">학년</label>
             <select

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/layout/Sidebar";
@@ -18,17 +18,18 @@ export const metadata: Metadata = {
   title: "Bench Mark",
   description: "T&BEDU 교사용 학습·출제 관리 (Bench Mark)",
   manifest: "/manifest.json",
-  themeColor: "#245B3E",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Bench Mark",
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-  },
+};
+
+// 휴대폰에서 글씨가 작으면 손가락으로 키울 수 있게 확대를 막지 않는다
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#245B3E",
 };
 
 export default function RootLayout({
@@ -96,9 +97,9 @@ export default function RootLayout({
           }}
         />
         <Sidebar />
-        <div className="flex-1 flex flex-col min-h-screen bg-gray-50">
+        <div className="flex-1 flex flex-col min-h-screen min-w-0 bg-gray-50">
           <Header />
-          <main className="flex-1 p-8">{children}</main>
+          <main className="flex-1 min-w-0 p-4 md:p-8">{children}</main>
         </div>
       </body>
     </html>

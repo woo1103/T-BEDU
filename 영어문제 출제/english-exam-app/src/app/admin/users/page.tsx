@@ -136,7 +136,7 @@ export default function AdminUsersPage() {
           onSubmit={handleCreate}
           className="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3"
         >
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="block text-xs text-gray-500 mb-1">아이디</label>
               <input
@@ -182,6 +182,7 @@ export default function AdminUsersPage() {
       )}
 
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
@@ -197,7 +198,7 @@ export default function AdminUsersPage() {
                 {editId === u.id ? (
                   <td colSpan={4} className="px-4 py-3">
                     <form onSubmit={handleEdit} className="space-y-3">
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div>
                           <label className="block text-xs text-gray-500 mb-1">아이디</label>
                           <input
@@ -295,6 +296,7 @@ export default function AdminUsersPage() {
             ))}
           </tbody>
         </table>
+        </div>
         {users.length === 0 && (
           <p className="text-center text-gray-400 py-8">등록된 계정이 없습니다.</p>
         )}

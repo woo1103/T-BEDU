@@ -157,7 +157,7 @@ export default function QuestionDetailPage({
 
         {editing ? (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <select
                 value={examType}
                 onChange={(e) => setExamType(e.target.value as ExamType)}

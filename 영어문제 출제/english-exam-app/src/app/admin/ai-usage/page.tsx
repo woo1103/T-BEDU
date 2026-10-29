@@ -62,6 +62,7 @@ export default function AiUsagePage() {
             {data.thisMonth.byKind.length === 0 ? (
               <p className="text-sm text-gray-400">이번 달에는 아직 AI를 쓰지 않았어요.</p>
             ) : (
+              <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-gray-500 border-b border-gray-100">
@@ -82,6 +83,7 @@ export default function AiUsagePage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             )}
           </div>
 

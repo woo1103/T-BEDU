@@ -47,11 +47,20 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200 px-8 py-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500">
+    <header className="bg-white border-b border-gray-200 px-4 md:px-8 py-3 md:py-4 sticky top-0 z-30 md:static">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 min-w-0">
+          <button
+            onClick={() => window.dispatchEvent(new Event("nav:open"))}
+            className="md:hidden -ml-1 p-2 rounded-lg text-gray-700 hover:bg-gray-100 text-xl leading-none"
+            aria-label="메뉴 열기"
+          >
+            ☰
+          </button>
+          <h2 className="text-lg md:text-2xl font-bold text-gray-800 truncate">{title}</h2>
+        </div>
+        <div className="flex items-center gap-2 md:gap-4 shrink-0">
+          <span className="hidden md:inline text-sm text-gray-500">
             {new Date().toLocaleDateString("ko-KR", {
               year: "numeric",
               month: "long",
@@ -60,7 +69,7 @@ export default function Header() {
           </span>
           {me && (
             <>
-              <span className="text-sm text-gray-700">
+              <span className="hidden sm:inline text-sm text-gray-700">
                 <span className="font-medium">{me.username}</span>
                 <span className="text-xs text-gray-400 ml-1">
                   ({me.role === "admin" ? "관리자" : "담당자"})
