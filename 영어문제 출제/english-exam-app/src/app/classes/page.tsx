@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ReportDownload from "@/components/reports/ReportDownload";
 
 interface Center {
   id: string;
@@ -399,6 +400,12 @@ export default function ClassesPage() {
 
                 {openId === c.id && (
                   <div className="mt-3 bg-gray-50 rounded-lg p-3">
+                    {c._count.enrollments > 0 && (
+                      <div className="flex items-center gap-2 flex-wrap mb-3 pb-3 border-b border-gray-200">
+                        <span className="text-xs font-medium text-gray-600">학부모 월간 리포트(반 전체)</span>
+                        <ReportDownload classId={c.id} fileLabel={c.name} compact />
+                      </div>
+                    )}
                     {studentsLoading ? (
                       <p className="text-xs text-gray-400">불러오는 중...</p>
                     ) : students.length === 0 ? (

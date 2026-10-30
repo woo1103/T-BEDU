@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
+import ReportDownload from "@/components/reports/ReportDownload";
 
 interface AreaStat {
   name: string;
@@ -216,6 +217,10 @@ export default function StudentDetailPage({
           {student.center && ` · ${student.center}`}
           {student.classes.length > 0 && ` · ${student.classes.join(", ")}`}
         </p>
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <p className="text-xs font-medium text-gray-600 mb-2">학부모 월간 리포트</p>
+          <ReportDownload studentId={id} fileLabel={student.name} />
+        </div>
       </div>
 
       {/* 성취도 */}

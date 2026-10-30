@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getStudentFromRequest } from "@/lib/student-auth";
 import { correctLabel } from "@/lib/grading";
+import { isWritingType } from "@/lib/passage-parser";
 
 // 학생 오답노트 목록 (기본: 미완료만, ?all=1 이면 전체)
 export async function GET(request: NextRequest) {
@@ -30,6 +31,7 @@ export async function GET(request: NextRequest) {
       choices: true,
       answer: true,
       explanation: true,
+      questionType: true,
     },
   });
   const qMap = new Map(questions.map((q) => [q.id, q]));
@@ -52,6 +54,8 @@ export async function GET(request: NextRequest) {
       resolved: n.resolved,
       createdAt: n.createdAt,
       selected: n.answer.selected,
+      // 객관식 문항만 '비슷한 문제 풀기' 가능
+      canPractice: !!q && n.answer.refType === "question" && !isWritingType(q.questionType),
       question: q
         ? {
             question: q.question,
@@ -59,6 +63,7 @@ export async function GET(request: NextRequest) {
             choices,
             correct: correctLabel(q),
             explanation: q.explanation,
+            questionType: q.questionType,
           }
         : null,
     };

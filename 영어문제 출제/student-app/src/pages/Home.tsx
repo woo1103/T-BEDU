@@ -4,11 +4,14 @@ import {
   getAchievement,
   getTrend,
   getNotifications,
+  getVideos,
+  getWrongNotes,
   type Student,
   type AssignmentRow,
   type AreaStat,
   type TrendPoint,
 } from "../lib/api";
+import { buildToday, type TodayItem } from "../lib/today";
 
 interface Props {
   student: Student;
@@ -51,6 +54,8 @@ export default function Home({
   const [ach, setAch] = useState<Achievement | null>(null);
   const [trend, setTrend] = useState<TrendPoint[]>([]);
   const [unread, setUnread] = useState(0);
+  const [today, setToday] = useState<TodayItem[] | null>(null);
+  const [showAllToday, setShowAllToday] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -73,6 +78,12 @@ export default function Home({
         setAch(ac);
         setTrend(tr.points);
         setUnread(nt.unread);
+        // 오늘 할 일: 영상·오답은 실패해도 과제만으로 보여 준다
+        const [vd, wn] = await Promise.all([
+          getVideos().catch(() => ({ videos: [] })),
+          getWrongNotes().catch(() => ({ notes: [] })),
+        ]);
+        setToday(buildToday(a.assignments, vd.videos, wn.notes.filter((n) => n.question).length));
       } catch {
         /* ignore */
       } finally {
@@ -119,6 +130,48 @@ export default function Home({
             </span>
           </div>
         </div>
+
+        {enrolled && today && (
+          <div className="bg-white rounded-2xl p-5 shadow-sm">
+            <div className="flex items-baseline justify-between">
+              <h3 className="font-semibold text-gray-800">오늘 할 일</h3>
+              {today.length > 0 && <span className="text-xs text-gray-400">{today.length}개</span>}
+            </div>
+            {today.length === 0 ? (
+              <p className="text-sm text-gray-500 mt-2">오늘 할 일을 모두 마쳤어요. 잘했어요!</p>
+            ) : (
+              <ul className="mt-3 space-y-2">
+                {(showAllToday ? today : today.slice(0, 5)).map((t) => {
+                  const due = t.kind === "assignment" ? dueBadge(t.due) : null;
+                  const icon = t.kind === "assignment" ? "📝" : t.kind === "video" ? "🎬" : "🔁";
+                  const action = () =>
+                    t.kind === "assignment" ? onSolve(t.id, t.title, false) : t.kind === "video" ? onVideos() : onWrongNotes();
+                  return (
+                    <li key={t.kind + t.id}>
+                      <button
+                        onClick={action}
+                        className="w-full flex items-center gap-3 rounded-xl border border-gray-100 px-3 py-2.5 text-left active:bg-gray-50"
+                      >
+                        <span className="text-lg">{icon}</span>
+                        <span className="flex-1 min-w-0">
+                          <span className="block text-sm font-medium text-gray-800 truncate">{t.title}</span>
+                          <span className="block text-xs text-gray-400 truncate">{t.sub}</span>
+                        </span>
+                        {due && <span className={`text-[11px] px-1.5 py-0.5 rounded-full shrink-0 ${due.cls}`}>{due.label}</span>}
+                        <span className="text-gray-300">›</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+            {today.length > 5 && (
+              <button onClick={() => setShowAllToday((v) => !v)} className="mt-2 text-xs text-[#245B3E] underline">
+                {showAllToday ? "접기" : `${today.length - 5}개 더 보기`}
+              </button>
+            )}
+          </div>
+        )}
 
         {!enrolled && (
           <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-sm text-amber-800">

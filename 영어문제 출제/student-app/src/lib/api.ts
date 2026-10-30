@@ -218,13 +218,36 @@ export interface WrongNote {
   resolved: boolean;
   createdAt: string;
   selected: string;
+  canPractice?: boolean;
   question: {
     question: string;
     passage: string;
     choices: { label: string; text: string }[];
     correct: string | null;
     explanation: string | null;
+    questionType?: string;
   } | null;
+}
+
+export interface PracticeQuestion {
+  attemptId: string;
+  generated: boolean;
+  passage: string;
+  question: string;
+  questionType: string;
+  choices: { label: string; text: string }[];
+}
+
+// 오답과 비슷한 문제 받기(은행에 없으면 AI로 만드느라 30초~1분 걸릴 수 있음)
+export function getPractice(wrongNoteId: string): Promise<PracticeQuestion | { none: true; reason: string }> {
+  return authPost("/api/student/practice", { wrongNoteId });
+}
+
+export function answerPractice(
+  attemptId: string,
+  selected: string
+): Promise<{ correct: boolean; correctLabel: string; explanation: string | null; resolved: boolean }> {
+  return authPost("/api/student/practice/answer", { attemptId, selected });
 }
 
 export function getWrongNotes(all = false): Promise<{ notes: WrongNote[] }> {

@@ -631,3 +631,19 @@ model GenJobItem {
 
   @@index([jobId, status])
 }
+
+// 오답노트 "비슷한 문제 다시 풀기" 기록(맞히면 그 오답은 복습 완료). generated=AI로 새로 만든 문제(하루 한도 계산)
+model PracticeAttempt {
+  id          String    @id @default(cuid())
+  studentId   String    // StudentProfile.id
+  wrongNoteId String
+  questionId  String
+  generated   Boolean   @default(false)
+  selected    String?   // 아직 안 풀었으면 null
+  isCorrect   Boolean?
+  createdAt   DateTime  @default(now())
+  answeredAt  DateTime?
+
+  @@index([studentId, createdAt])
+  @@index([wrongNoteId])
+}

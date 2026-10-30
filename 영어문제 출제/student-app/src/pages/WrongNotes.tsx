@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getWrongNotes, updateWrongNote, type WrongNote } from "../lib/api";
+import PracticePanel from "../components/PracticePanel";
+import PassageView from "../components/PassageView";
 
 export default function WrongNotes({ onDone }: { onDone: () => void }) {
   const [notes, setNotes] = useState<WrongNote[]>([]);
@@ -63,10 +65,8 @@ export default function WrongNotes({ onDone }: { onDone: () => void }) {
                     {n.question.question}
                   </p>
                   {n.question.passage && (
-                    <div className="bg-gray-50 rounded-lg p-3 my-2">
-                      <p className="text-xs leading-relaxed whitespace-pre-wrap text-gray-600">
-                        {n.question.passage}
-                      </p>
+                    <div className="my-2">
+                      <PassageView passage={n.question.passage} questionType={n.question.questionType ?? ""} />
                     </div>
                   )}
                   <div className="space-y-1 mt-2">
@@ -103,6 +103,7 @@ export default function WrongNotes({ onDone }: { onDone: () => void }) {
               ) : (
                 <p className="text-sm text-gray-400">문항 정보를 불러올 수 없습니다.</p>
               )}
+              {n.canPractice && !n.resolved && <PracticePanel wrongNoteId={n.id} onResolved={() => load(showAll)} />}
 
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
                 <span
