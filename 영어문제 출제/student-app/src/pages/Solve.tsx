@@ -26,6 +26,8 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Record<string, string>>({});
+  // 장문 세트에서 지문을 다시 펼쳐 본 문항
+  const [reopened, setReopened] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<GradeResult | null>(null);
   const [err, setErr] = useState("");
@@ -274,7 +276,12 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
             </div>
           </>
         ) : (
-          examItems.map((it) => (
+          examItems.map((it, idx) => {
+            // 장문 세트: 앞 문항과 같은 세트면 지문을 다시 싣지 않는다
+            const prev = examItems[idx - 1];
+            const sameSet = !!it.setId && prev?.setId === it.setId;
+            const setStart = sameSet ? examItems.findIndex((x) => x.setId === it.setId) : -1;
+            return (
             <div key={it.questionId} className="bg-white rounded-2xl p-4 shadow-sm">
               <div className="flex items-center gap-2 mb-2">
                 <span className="w-6 h-6 rounded-full bg-[#245B3E] text-white text-xs font-bold flex items-center justify-center">
@@ -282,8 +289,15 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
                 </span>
                 <p className="text-sm font-medium text-gray-800">{it.question}</p>
               </div>
-              {it.passage && (
-                <PassageView passage={it.passage} questionType={it.questionType} />
+              {it.passage && sameSet && !reopened[it.questionId] ? (
+                <button
+                  onClick={() => setReopened((r) => ({ ...r, [it.questionId]: true }))}
+                  className="mb-3 text-xs text-[#245B3E] underline"
+                >
+                  지문은 {examItems[setStart]?.orderNum}번과 같아요 · 지문 다시 보기
+                </button>
+              ) : (
+                it.passage && <PassageView passage={it.passage} questionType={it.questionType} />
               )}
               {it.choices.length === 0 ? (
                 <div>
@@ -336,7 +350,8 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
               </div>
               )}
             </div>
-          ))
+            );
+          })
         )}
       </main>
 

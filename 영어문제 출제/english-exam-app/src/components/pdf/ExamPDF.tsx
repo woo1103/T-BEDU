@@ -24,8 +24,11 @@ import {
   type GrammarParsed,
   type SummaryParsed,
   type ParsedPassage,
+  splitChart,
 } from "@/lib/passage-parser";
 import { BLANK_TOKEN, countLines, packColumns, textWidth } from "@/lib/pdf-layout";
+import { groupSetRuns, SET_HEAD, splitSetPassage } from "@/lib/question-sets";
+import ChartPDF, { chartPdfHeight } from "@/components/pdf/ChartPDF";
 
 // 한글 폰트 등록 — 로컬 Noto Sans KR 전체 TTF (한글·라틴·CJK 원문자 등 전 글리프 포함)
 // 이전 버전은 fontsource의 korean 서브셋만 로드되어 "1." 이나 "①" 같은 글자가 깨졌음.
@@ -75,6 +78,7 @@ interface ExamQuestion {
   points: number;
   questionType: string;
   explanation?: string | null;
+  setId?: string | null;
 }
 
 // __...__ 와 <u>...</u> 를 실제 밑줄 Text로, 빈칸(___)은 고정 폭 빈칸으로 렌더링
@@ -113,6 +117,31 @@ export interface ExamItemData {
   orderNum: number;
   customPoints: number | null;
   question: ExamQuestion;
+  // 장문 세트 머리(지문만 담은 가짜 문항): "[41~42] 다음 글을 읽고, 물음에 답하시오."
+  setHead?: string;
+  // 세트 지문의 둘째 문단부터(머리 없이 지문만)
+  passageOnly?: boolean;
+}
+
+// 장문 세트는 지문을 머리 한 번에만 싣고, 세트 문항은 발문·선지만 남긴다
+function expandSets(items: ExamItemData[]): ExamItemData[] {
+  return groupSetRuns(items).flatMap((run) => {
+    if (!run.set) return run.items;
+    const first = run.items[0];
+    const last = run.items[run.items.length - 1];
+    // 문단마다 따로 두어 단에 차례로 흘려 넣는다
+    const paras = splitSetPassage(first.question.passage);
+    const pseudo = (passage: string, k: number): ExamItemData => ({
+      ...first,
+      setHead: k === 0 ? `[${first.orderNum}~${last.orderNum}] ${SET_HEAD}` : undefined,
+      passageOnly: k > 0,
+      question: { ...first.question, passage, question: "", choices: "[]", questionType: "__set_passage" },
+    });
+    return [
+      ...paras.map(pseudo),
+      ...run.items.map((it) => ({ ...it, question: { ...it.question, passage: "" } })),
+    ];
+  });
 }
 
 export interface ExamPDFProps {
@@ -541,6 +570,14 @@ function parseChoices(choicesJson: string): Choice[] {
 // ── 문제 헤더 (번호 + 배점 + 발문) ──
 function QuestionHeaderRow({ item }: { item: ExamItemData }) {
   const pts = item.customPoints || item.question.points;
+  if (item.passageOnly) return null;
+  if (item.setHead) {
+    return (
+      <View style={styles.questionHeader}>
+        <PText style={styles.questionText}>{item.setHead}</PText>
+      </View>
+    );
+  }
   return (
     <View style={styles.questionHeader}>
       <PText style={styles.questionNumber}>{item.orderNum}.</PText>
@@ -860,12 +897,14 @@ function DefaultQuestionPDF({
   item: ExamItemData;
   showAnswers: boolean;
 }) {
+  const { chart, text } = splitChart(item.question.passage);
   return (
     <View wrap={false}>
       <QuestionHeaderRow item={item} />
-      {item.question.passage && (
+      {chart && <ChartPDF chart={chart} width={COLUMN_INNER_W} fontFamily="NotoSansKR" />}
+      {text && (
         <View style={styles.passageBox}>
-          <PassageInline text={item.question.passage} style={styles.passageText} />
+          <PassageInline text={text} style={styles.passageText} />
         </View>
       )}
       <ChoicesBlock item={item} showAnswers={showAnswers} />
@@ -975,10 +1014,13 @@ function QuestionHead({ item }: { item: ExamItemData }) {
         </>
       )}
 
+      {parsed.type === "default" && splitChart(parsed.text).chart && (
+        <ChartPDF chart={splitChart(parsed.text).chart!} width={COLUMN_INNER_W} fontFamily="NotoSansKR" />
+      )}
       {(parsed.type === "default" || parsed.type === "writing") && item.question.passage && (
         <View style={styles.passageBox}>
           <PassageInline
-            text={parsed.type === "default" ? parsed.text : item.question.passage}
+            text={parsed.type === "default" ? splitChart(parsed.text).text : item.question.passage}
             style={styles.passageText}
           />
         </View>
@@ -1022,6 +1064,8 @@ function boxHeight(text: string, width: number, border = 1): number {
 }
 
 function headerHeight(item: ExamItemData, width: number): number {
+  if (item.passageOnly) return 0;
+  if (item.setHead) return Math.max(countLines(item.setHead, 10, width, { bold: true }) * 15, 12 * NATURAL_LH) + 6;
   const pts = item.customPoints || item.question.points;
   const numW = textWidth(`${item.orderNum}.`, 12, true) + 6;
   const ptsW = pts >= 3 ? textWidth(`${pts}점`, 8) + 8 + 6 : 0;
@@ -1069,8 +1113,11 @@ function headHeight(item: ExamItemData, parsed: ParsedPassage, width: number): n
     case "writing":
       if (item.question.passage) h += boxHeight(parsed.passage, width);
       break;
-    default:
-      if (item.question.passage) h += boxHeight(parsed.text, width);
+    default: {
+      const { chart, text } = splitChart(parsed.text);
+      h += chartPdfHeight(chart, width);
+      if (text) h += boxHeight(text, width);
+    }
   }
   return h;
 }
@@ -1107,7 +1154,7 @@ function itemHeight(item: ExamItemData, mode: "student" | "teacher", width = COL
 
 // 내지 페이지 배치 계획(렌더링과 테스트가 같은 계산을 쓴다)
 export function planExamPages(items: ExamItemData[], mode: "student" | "teacher") {
-  return packColumns(items, (it) => itemHeight(it, mode), {
+  return packColumns(expandSets(items), (it) => itemHeight(it, mode), {
     columnsPerPage: COLUMNS_PER_PAGE,
     columnHeight: COLUMN_HEIGHT,
     gap: ITEM_GAP,
@@ -1159,7 +1206,7 @@ function ContentPages({
                     <View key={`c${ci}`} style={styles.column}>
                       {colItems.map((it, k) => (
                         <View
-                          key={it.orderNum}
+                          key={`${it.orderNum}${it.setHead ? "h" : it.passageOnly ? `p${k}` : ""}`}
                           style={{ marginBottom: k < colItems.length - 1 ? ITEM_GAP : 0 }}
                         >
                           <QuestionItem item={it} showAnswers={showAnswers} mode={mode} />

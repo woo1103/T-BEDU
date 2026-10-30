@@ -4,6 +4,7 @@ import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { EXAM_TYPE_MAP, getQuestionTypeInfo } from "@/lib/question-types";
+import { withSetMembers } from "@/lib/question-sets";
 import type { ExamType, Choice } from "@/types";
 
 interface QuestionRow {
@@ -21,6 +22,7 @@ interface QuestionRow {
   aiGenerated: boolean;
   passageId: string | null;
   createdAt?: string;
+  setId?: string | null;
   passageRef: {
     id: string;
     textbook: string;
@@ -141,17 +143,15 @@ export default function ExamEditPage({
   }
 
   function addQuestion(q: QuestionRow) {
-    if (selectedItems.find((i) => i.questionId === q.id)) return;
-    setSelectedItems((prev) => [
-      ...prev,
-      { questionId: q.id, question: q, orderNum: prev.length + 1 },
-    ]);
+    addQuestions([q]);
   }
 
+  // 장문 세트 문항은 세트 전체가 번호 순으로 함께 들어간다
   function addQuestions(qs: QuestionRow[]) {
+    const expanded = withSetMembers(qs, [...availableQuestions, ...qs]);
     setSelectedItems((prev) => {
       const existing = new Set(prev.map((i) => i.questionId));
-      const toAdd = qs.filter((q) => !existing.has(q.id));
+      const toAdd = expanded.filter((q) => !existing.has(q.id));
       const merged = [
         ...prev,
         ...toAdd.map((q) => ({ questionId: q.id, question: q, orderNum: 0 })),
@@ -220,9 +220,13 @@ export default function ExamEditPage({
   }
 
   function removeQuestion(qid: string) {
-    setSelectedItems((prev) =>
-      prev.filter((i) => i.questionId !== qid).map((it, i) => ({ ...it, orderNum: i + 1 }))
-    );
+    setSelectedItems((prev) => {
+      // 장문 세트는 함께 뺀다
+      const setId = prev.find((i) => i.questionId === qid)?.question.setId;
+      return prev
+        .filter((i) => i.questionId !== qid && !(setId && i.question.setId === setId))
+        .map((it, i) => ({ ...it, orderNum: i + 1 }));
+    });
   }
 
   function moveItem(index: number, dir: "up" | "down") {

@@ -30,6 +30,9 @@ model Question {
   verifyNote   String?   // 의심·오류 사유
   verifiedAt   DateTime?
 
+  // 장문 세트(41~42, 43~45번): 함께 만든 문항끼리 같은 값. 시험지에 지문 한 번 + 연속 번호로 넣는다
+  setId       String?
+
   passageId   String?  // 원본 지문(Passage) 연결 — 지문 기반 출제일 때
   passageRef  Passage? @relation(fields: [passageId], references: [id], onDelete: SetNull)
 
@@ -40,6 +43,7 @@ model Question {
   questionTags QuestionTag[]
 
   @@index([passageId])
+  @@index([setId])
 }
 
 model Exam {

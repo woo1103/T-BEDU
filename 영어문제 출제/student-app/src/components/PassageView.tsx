@@ -1,4 +1,5 @@
-import { parsePassage, splitInlineUnderline } from "../lib/passage-parser";
+import { parsePassage, splitInlineUnderline, splitChart } from "../lib/passage-parser";
+import ChartView from "./ChartView";
 
 // __밑줄__ 과 빈칸(___)을 인라인으로 렌더. 빈칸은 원본 길이와 무관하게 넉넉한 고정 폭.
 function InlineText({ text }: { text: string }) {
@@ -113,13 +114,19 @@ export default function PassageView({
     );
   }
 
-  // writing / default: 인라인 밑줄(__..__)만 처리
-  const text = parsed.type === "writing" ? parsed.passage : parsed.type === "default" ? parsed.text : passage;
+  // writing / default: 인라인 밑줄(__..__)만 처리. 25번 도표는 그래프를 지문 위에
+  const raw = parsed.type === "writing" ? parsed.passage : parsed.type === "default" ? parsed.text : passage;
+  const { chart, text } = splitChart(raw);
   return (
-    <div className="bg-gray-50 rounded-lg p-3 mb-3">
-      <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-800">
-        <InlineText text={text} />
-      </p>
-    </div>
+    <>
+      {chart && <ChartView chart={chart} />}
+      {text && (
+        <div className="bg-gray-50 rounded-lg p-3 mb-3">
+          <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-800">
+            <InlineText text={text} />
+          </p>
+        </div>
+      )}
+    </>
   );
 }

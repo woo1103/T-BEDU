@@ -66,6 +66,47 @@ export async function generateQuestion(
   };
 }
 
+// 장문 세트(지문 하나 + 문항 여러 개) 생성
+export async function generateQuestionSet(
+  systemPrompt: string,
+  userPrompt: string
+): Promise<{
+  passage: string;
+  questions: {
+    type: string;
+    question: string;
+    choices: { text: string; isCorrect: boolean }[];
+    answer: string;
+    explanation: string;
+    points: number;
+  }[];
+}> {
+  const message = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 8192,
+    system: systemPrompt,
+    messages: [{ role: "user", content: userPrompt }],
+  });
+  await logUsage("generate", message);
+
+  const text = message.content[0].type === "text" ? message.content[0].text : "";
+  const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error("AI 응답에서 장문 세트를 파싱할 수 없습니다.");
+  const parsed = JSON.parse(m[1] || m[0]);
+  const questions = Array.isArray(parsed.questions) ? parsed.questions : [];
+  return {
+    passage: typeof parsed.passage === "string" ? parsed.passage : "",
+    questions: questions.map((q: Record<string, unknown>) => ({
+      type: typeof q.type === "string" ? q.type : "",
+      question: typeof q.question === "string" ? q.question : "",
+      choices: Array.isArray(q.choices) ? (q.choices as { text: string; isCorrect: boolean }[]) : [],
+      answer: typeof q.answer === "string" ? q.answer : String(q.answer ?? ""),
+      explanation: typeof q.explanation === "string" ? q.explanation : "",
+      points: typeof q.points === "number" ? q.points : 2,
+    })),
+  };
+}
+
 // 생성된 객관식 문항을 정답을 모르는 상태에서 독립적으로 풀어 본다.
 // 출제 의도와 다른 답이 나오거나, 맞는 선지가 없거나 여럿이면 문항 결함으로 본다.
 export async function solveQuestion(input: {
@@ -97,7 +138,7 @@ ${choiceLines}`;
 
   const message = await client.messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 1024,
+    max_tokens: 2048, // 장문(43~45번) 지칭처럼 따져 볼 게 많으면 답이 길어져 JSON이 잘리지 않게
     system,
     messages: [{ role: "user", content: user }],
   });

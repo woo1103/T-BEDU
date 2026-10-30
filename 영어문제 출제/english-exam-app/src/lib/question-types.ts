@@ -32,8 +32,8 @@ export const SUNEUNG_TYPES: QuestionTypeInfo[] = [
   { code: "38_insertion", number: 38, name: "문장 삽입", nameEn: "Sentence Insertion", category: "글의 구조", defaultPoints: 3 },
   { code: "39_insertion2", number: 39, name: "문장 삽입", nameEn: "Sentence Insertion 2", category: "글의 구조", defaultPoints: 2 },
   { code: "40_summary", number: 40, name: "요약문 완성", nameEn: "Summary Completion", category: "글의 구조", defaultPoints: 2 },
-  { code: "41_long_title", number: "41-42", name: "장문(제목+어휘)", nameEn: "Long Passage (Title+Vocab)", category: "장문", defaultPoints: 2 },
-  { code: "43_long_order", number: "43-45", name: "장문(순서+지칭+내용)", nameEn: "Long Passage (Order+Ref+Content)", category: "장문", defaultPoints: 2 },
+  { code: "41_long_title", number: "41-42", name: "장문 세트(제목+낱말)", nameEn: "Long Passage (Title+Vocab)", category: "장문", defaultPoints: 2 },
+  { code: "43_long_order", number: "43-45", name: "장문 세트(순서+지칭+내용)", nameEn: "Long Passage (Order+Ref+Content)", category: "장문", defaultPoints: 2 },
 ];
 
 // 내신 문제 유형
@@ -72,18 +72,31 @@ export const GRAMMAR_THEME_TYPES: QuestionTypeInfo[] = [
   { code: "grammar_theme_box", number: 2, name: "어법(테마별·네모형)", nameEn: "Grammar by Theme (Box)", category: "어법", defaultPoints: 2 },
 ];
 
-// AI 출제 지시문이 아직 없는 유형 — 문제 은행에 있는 문제로만 채운다(그림·도표·장문 세트)
-export const NO_AI_TYPES = new Set([
-  "25_chart",
-  "26_content_person",
-  "27_notice",
-  "28_notice2",
-  "41_long_title",
-  "43_long_order",
-]);
+// 장문 세트: 지문 하나에 여러 문항(41~42번, 43~45번). 세트 머리 유형으로 한 번에 만들고,
+// 함께 만든 문항은 Question.setId로 묶여 시험지에 지문 한 번 + 연속 번호로 들어간다.
+export const SET_MEMBER_TYPES: QuestionTypeInfo[] = [
+  { code: "42_long_vocab", number: 42, name: "장문 낱말 쓰임", nameEn: "Long Passage (Vocab)", category: "장문", defaultPoints: 3 },
+  { code: "44_long_refer", number: 44, name: "장문 지칭", nameEn: "Long Passage (Reference)", category: "장문", defaultPoints: 2 },
+  { code: "45_long_content", number: 45, name: "장문 내용 불일치", nameEn: "Long Passage (Content)", category: "장문", defaultPoints: 2 },
+];
 
+// 세트 머리 → 세트를 이루는 문항 유형(번호 순)
+export const SET_DEFS: Record<string, string[]> = {
+  "41_long_title": ["41_long_title", "42_long_vocab"],
+  "43_long_order": ["43_long_order", "44_long_refer", "45_long_content"],
+};
+
+export function isSetLeadType(code: string): boolean {
+  return code in SET_DEFS;
+}
+
+export function isSetMemberType(code: string): boolean {
+  return SET_MEMBER_TYPES.some((t) => t.code === code);
+}
+
+// 장문 세트의 뒤 문항(42·44·45번)은 혼자 만들 수 없다(세트 머리로 함께 만들어짐)
 export function canGenerateWithAi(examType: string, code: string): boolean {
-  return examType !== "toeic" && examType !== "toefl" && !NO_AI_TYPES.has(code);
+  return examType !== "toeic" && examType !== "toefl" && !isSetMemberType(code);
 }
 
 export const EXAM_TYPE_MAP = {
@@ -101,7 +114,10 @@ export function getQuestionTypes(examType: string): QuestionTypeInfo[] {
 
 export function getQuestionTypeInfo(examType: string, questionType: string): QuestionTypeInfo | undefined {
   const types = getQuestionTypes(examType);
-  return types.find((t) => t.code === questionType);
+  return (
+    types.find((t) => t.code === questionType) ??
+    (examType === "suneung" ? SET_MEMBER_TYPES.find((t) => t.code === questionType) : undefined)
+  );
 }
 
 export const DIFFICULTY_MAP = {

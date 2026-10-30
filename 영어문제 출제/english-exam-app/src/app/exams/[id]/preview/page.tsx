@@ -13,8 +13,11 @@ import {
   type InsertionParsed,
   type GrammarParsed,
   type SummaryParsed,
+  splitChart,
 } from "@/lib/passage-parser";
 import { PassageText } from "@/components/PassageText";
+import ChartView from "@/components/ChartView";
+import { groupSetRuns, SET_HEAD } from "@/lib/question-sets";
 import AnswerBalance from "@/components/exams/AnswerBalance";
 
 const PDFDownloadButton = dynamic(
@@ -30,6 +33,7 @@ interface ExamQuestion {
   answer: string;
   points: number;
   questionType: string;
+  setId?: string | null;
 }
 
 interface ExamItemWithQuestion {
@@ -347,12 +351,14 @@ function DefaultRenderer({
   choices: Choice[];
   showAnswers: boolean;
 }) {
+  const { chart, text } = splitChart(passage);
   return (
     <>
-      {passage && (
+      {chart && <ChartView chart={chart} />}
+      {text && (
         <div className="border border-gray-300 rounded-lg p-4 mb-3 bg-gray-50 print:bg-white">
           <p className="text-sm leading-relaxed whitespace-pre-wrap font-mono">
-            <PassageText text={passage} />
+            <PassageText text={text} />
           </p>
         </div>
       )}
@@ -627,11 +633,30 @@ export default function ExamPreviewPage({
 
         {/* 문항들 */}
         <div className="space-y-8">
-          {exam.items.map((item) => (
-            <QuestionErrorBoundary key={item.id} orderNum={item.orderNum}>
-              <QuestionRenderer item={item} showAnswers={showAnswers} />
-            </QuestionErrorBoundary>
-          ))}
+          {groupSetRuns(exam.items).map((run) =>
+            run.set ? (
+              // 장문 세트: 지문 한 번 + 문항들
+              <div key={run.items[0].id} className="space-y-6 border-b border-gray-200 pb-6">
+                <p className="font-bold text-gray-800">
+                  [{run.items[0].orderNum}~{run.items[run.items.length - 1].orderNum}] {SET_HEAD}
+                </p>
+                <div className="border border-gray-300 rounded-lg p-4 bg-gray-50 print:bg-white">
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap font-mono">
+                    <PassageText text={run.items[0].question.passage} />
+                  </p>
+                </div>
+                {run.items.map((item) => (
+                  <QuestionErrorBoundary key={item.id} orderNum={item.orderNum}>
+                    <QuestionRenderer item={{ ...item, question: { ...item.question, passage: "" } }} showAnswers={showAnswers} />
+                  </QuestionErrorBoundary>
+                ))}
+              </div>
+            ) : (
+              <QuestionErrorBoundary key={run.items[0].id} orderNum={run.items[0].orderNum}>
+                <QuestionRenderer item={run.items[0]} showAnswers={showAnswers} />
+              </QuestionErrorBoundary>
+            )
+          )}
         </div>
       </div>
     </div>

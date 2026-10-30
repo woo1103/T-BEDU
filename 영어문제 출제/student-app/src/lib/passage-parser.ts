@@ -44,8 +44,8 @@ export type ParsedPassage =
   | SummaryParsed
   | WritingParsed;
 
-// 순서배열 코드
-const ORDER_TYPES = ["36_order", "37_order2", "43_long_order", "naesin_order"];
+// 순서배열 코드(43번 장문은 (A)~(D) 문단을 그대로 보여 주므로 제외)
+const ORDER_TYPES = ["36_order", "37_order2", "naesin_order"];
 // 문장삽입 코드
 const INSERTION_TYPES = ["38_insertion", "39_insertion2", "naesin_insertion"];
 // 어법/어휘 코드
@@ -60,7 +60,7 @@ const GRAMMAR_VOCAB_TYPES = [
 // 요약문 코드
 const SUMMARY_TYPES = ["40_summary", "naesin_summary"];
 // 서술형 코드
-const WRITING_TYPES = [
+export const WRITING_TYPES = [
   "naesin_writing",
   "naesin_writing_summary",
   "naesin_writing_grammar",
@@ -391,4 +391,56 @@ export function isWritingType(questionType: string): boolean {
 // questionType이 요약문인지 판별
 export function isSummaryType(questionType: string): boolean {
   return SUMMARY_TYPES.includes(questionType);
+}
+
+// ── 도표(25번) ──
+// 지문 맨 앞의 <chart>{JSON}</chart>를 그래프 데이터로 떼어 낸다. 나머지는 보통 지문.
+export interface ChartSpec {
+  title: string;
+  unit?: string;
+  type: "bar" | "line";
+  categories: string[];
+  series: { name: string; values: number[] }[];
+}
+
+const CHART_RE = /<chart>([\s\S]*?)<\/chart>\s*/i;
+
+export function chartProblem(c: unknown): string | null {
+  if (!c || typeof c !== "object") return "도표 데이터 없음";
+  const x = c as Partial<ChartSpec>;
+  if (typeof x.title !== "string" || !x.title.trim()) return "도표 제목 없음";
+  if (x.type !== "bar" && x.type !== "line") return "도표 종류(bar|line) 오류";
+  if (!Array.isArray(x.categories) || x.categories.length < 3 || x.categories.length > 8) return "가로축 항목 3~8개 필요";
+  if (!Array.isArray(x.series) || x.series.length < 1 || x.series.length > 3) return "계열 1~3개 필요";
+  for (const s of x.series) {
+    if (!s || typeof s.name !== "string") return "계열 이름 없음";
+    if (!Array.isArray(s.values) || s.values.length !== x.categories.length) return "계열 값 개수가 항목 수와 다름";
+    if (!s.values.every((v) => typeof v === "number" && Number.isFinite(v) && v >= 0)) return "값은 0 이상 숫자여야 함";
+  }
+  return null;
+}
+
+export function splitChart(passage: string): { chart: ChartSpec | null; text: string } {
+  const m = (passage ?? "").match(CHART_RE);
+  if (!m) return { chart: null, text: passage ?? "" };
+  let chart: ChartSpec | null = null;
+  try {
+    const parsed = JSON.parse(m[1]);
+    if (!chartProblem(parsed)) chart = parsed as ChartSpec;
+  } catch {
+    /* 깨진 데이터는 그래프 없이 */
+  }
+  return { chart, text: (passage ?? "").replace(CHART_RE, "") };
+}
+
+// 그래프 축 눈금: 최댓값을 덮는 깔끔한 간격(1·2·5×10^n)
+export function chartTicks(max: number, count = 5): number[] {
+  if (!(max > 0)) return [0, 1];
+  const raw = max / count;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 2, 2.5, 5, 10].map((k) => k * mag).find((v) => v >= raw) ?? 10 * mag;
+  const ticks: number[] = [];
+  for (let v = 0; v <= max + step * 0.001; v += step) ticks.push(Math.round(v * 1000) / 1000);
+  if (ticks[ticks.length - 1] < max) ticks.push(Math.round((ticks[ticks.length - 1] + step) * 1000) / 1000);
+  return ticks;
 }

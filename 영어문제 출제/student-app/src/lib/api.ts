@@ -131,6 +131,7 @@ export interface AssessmentItem {
   passage: string;
   question: string;
   choices: { label: string; text: string }[];
+  setId?: string | null;
 }
 
 export interface WorksheetSolveItem {

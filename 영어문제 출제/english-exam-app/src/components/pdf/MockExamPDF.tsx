@@ -16,8 +16,11 @@ import {
   splitInlineUnderline,
   normalizeMarkerChoices,
   isMarkerOnlyChoices,
+  splitChart,
 } from "@/lib/passage-parser";
 import { BLANK_TOKEN, SERIF_METRICS, countLines, packColumns, textWidth } from "@/lib/pdf-layout";
+import { groupSetRuns, SET_HEAD, splitSetPassage } from "@/lib/question-sets";
+import ChartPDF, { chartPdfHeight } from "@/components/pdf/ChartPDF";
 
 // 브라우저에선 /fonts URL, 테스트(Node)에선 디스크 경로
 const FONT_BASE = typeof window === "undefined" ? `${process.cwd()}/public/fonts` : "/fonts";
@@ -51,6 +54,7 @@ export interface MockExamItem {
     points: number;
     questionType: string;
     explanation?: string | null;
+    setId?: string | null;
   };
 }
 
@@ -169,6 +173,8 @@ const s = StyleSheet.create({
     marginBottom: 6,
   },
   boxText: { fontSize: P_FS, lineHeight: 1.55, textAlign: "justify", textIndent: P_INDENT },
+  // 안내문(27·28번): 줄마다 그대로, 들여쓰기·양쪽 정렬 없이
+  announceText: { fontSize: P_FS, lineHeight: 1.55 },
   segRow: { flexDirection: "row", paddingLeft: INSET, marginBottom: 3 },
   segLabel: { width: 22, fontSize: P_FS, lineHeight: 1.55 },
   segText: { flex: 1, fontSize: P_FS, lineHeight: 1.55, textAlign: "justify" },
@@ -367,6 +373,8 @@ function footnotesHeight(notes: string[]): number {
   return notes.length === 0 ? 0 : notes.length * FN_LH + 4;
 }
 
+const NOTICE_TYPES = ["27_notice", "28_notice2"];
+
 function questionBlock(
   item: MockExamItem,
   displayNo: number,
@@ -453,9 +461,28 @@ function questionBlock(
       if (parsed.passage) h += passageHeight(parsed.passage);
       content = parsed.passage ? <Inline text={parsed.passage} style={s.passage} /> : null;
       break;
-    default:
-      if (parsed.text) h += passageHeight(parsed.text);
-      content = parsed.text ? <Inline text={parsed.text} style={s.passage} /> : null;
+    default: {
+      if (NOTICE_TYPES.includes(q.questionType) && parsed.text) {
+        h += BOX_PAD_Y * 2 + BOX_BORDER * 2 + serifLines(parsed.text, P_FS, BOX_TEXT_W) * P_LH + 6;
+        content = (
+          <View style={s.box}>
+            <Inline text={parsed.text} style={s.announceText} />
+          </View>
+        );
+        break;
+      }
+      // 25번 도표: 그래프를 지문 위에
+      const { chart, text } = splitChart(parsed.text);
+      h += chartPdfHeight(chart, PASSAGE_W);
+      if (text) h += passageHeight(text);
+      content =
+        chart || text ? (
+          <>
+            {chart && <ChartPDF chart={chart} width={PASSAGE_W} fontFamily="NotoSerifKR" />}
+            {text ? <Inline text={text} style={s.passage} /> : null}
+          </>
+        ) : null;
+    }
   }
   h += footnotesHeight(notes);
 
@@ -537,13 +564,64 @@ const LISTENING_START =
 const LISTENING_END = "이제 듣기 문제가 끝났습니다. 18번부터는 문제지의 지시에 따라 답을 하시기 바랍니다.";
 const CHECK_NOTICE = "* 확인 사항\n답안지의 해당란에 필요한 내용을 정확히 기입(표기)했는지 확인하시오.";
 
-// 연속 문항의 발문이 같으면 [n~m] 묶음 머리로 한 번만 쓴다
+// 장문 세트 지문 한 문단: 첫 문단엔 "[41~42] 다음 글을 읽고, 물음에 답하시오." 머리
+function setPassageBlock(key: string, head: string | null, passage: string): Block {
+  const { body, notes } = splitFootnotes(passage);
+  const h =
+    (head ? serifLines(head, 10.5, COL_W, { bold: true }) * 10.5 * 1.45 + 6 : 0) +
+    passageHeight(body) +
+    footnotesHeight(notes);
+  return {
+    key,
+    height: h,
+    render: () => (
+      <View>
+        {head && <T style={s.groupHead}>{head}</T>}
+        <Inline text={body} style={s.passage} />
+        {notes.map((n, i) => (
+          <T key={i} style={s.footnote}>
+            {n}
+          </T>
+        ))}
+      </View>
+    ),
+  };
+}
+
+// 장문 세트는 지문 머리 + 문항들, 나머지는 연속 문항의 발문이 같으면 [n~m] 묶음 머리로 한 번만 쓴다
 function buildBlocks(items: MockExamItem[], offset: number, includeListening: boolean): Block[] {
   const blocks: Block[] = [];
   if (includeListening) {
     blocks.push(noticeBlock("ls", LISTENING_START));
     blocks.push(noticeBlock("le", LISTENING_END));
   }
+  let singles: MockExamItem[] = [];
+  const flush = () => {
+    stemGroupBlocks(singles, offset, blocks);
+    singles = [];
+  };
+  for (const run of groupSetRuns(items)) {
+    if (!run.set) {
+      singles.push(...run.items);
+      continue;
+    }
+    flush();
+    const first = run.items[0].orderNum + offset;
+    const last = run.items[run.items.length - 1].orderNum + offset;
+    // 문단마다 블록 하나 → 단에 차례로 흘려 넣는다(43~45번 (A)~(D)처럼)
+    splitSetPassage(run.items[0].question.passage).forEach((para, k) => {
+      blocks.push(setPassageBlock(`set${first}-${k}`, k === 0 ? `[${first}~${last}] ${SET_HEAD}` : null, para));
+    });
+    for (const it of run.items) {
+      blocks.push(questionBlock({ ...it, question: { ...it.question, passage: "" } }, it.orderNum + offset, {}));
+    }
+  }
+  flush();
+  blocks.push(noticeBlock("check", CHECK_NOTICE));
+  return blocks;
+}
+
+function stemGroupBlocks(items: MockExamItem[], offset: number, blocks: Block[]) {
   let i = 0;
   while (i < items.length) {
     const stem = (items[i].question.question ?? "").trim();
@@ -567,8 +645,6 @@ function buildBlocks(items: MockExamItem[], offset: number, includeListening: bo
     }
     i = j;
   }
-  blocks.push(noticeBlock("check", CHECK_NOTICE));
-  return blocks;
 }
 
 // 쪽 배치 계획(렌더링과 테스트가 같은 계산을 쓴다)

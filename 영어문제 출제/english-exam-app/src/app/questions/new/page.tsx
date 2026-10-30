@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { EXAM_TYPE_MAP, getQuestionTypes, DIFFICULTY_MAP, canGenerateWithAi } from "@/lib/question-types";
+import { EXAM_TYPE_MAP, getQuestionTypes, DIFFICULTY_MAP, canGenerateWithAi, isSetLeadType } from "@/lib/question-types";
 import { isMarkerMappedType } from "@/lib/question-validate";
 import { isMarkerOnlyChoices } from "@/lib/passage-parser";
 import { VARIATIONS } from "@/lib/variations";
@@ -423,6 +423,12 @@ export default function NewQuestionPage() {
   async function handleGenerate() {
     if (selectedTypes.length === 0) {
       alert("최소 1개 이상의 문제 유형을 선택해주세요.");
+      return;
+    }
+    // 장문 세트는 한 번에 여러 문항이 만들어져 미리보기·편집 흐름에 맞지 않는다 → 서버 작업으로
+    const sets = selectedTypes.filter((t) => isSetLeadType(t.code));
+    if (sets.length > 0) {
+      alert(`${sets.map((t) => t.name).join(", ")}은(는) '서버에 맡기기'로 만들어 주세요. 다 만든 세트는 문제 은행에 바로 저장돼요.`);
       return;
     }
     setGenerating(true);

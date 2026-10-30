@@ -1,10 +1,11 @@
 // 서버 백그라운드 문항 생성 작업.
 // 한 번 실행(run)에 문항 하나를 만들고, 남은 게 있으면 자기 자신을 다시 불러 이어 간다.
 // 사슬이 끊겨도(배포·오류) 작업 화면을 열면 멈춘 작업을 다시 깨운다.
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import { prisma } from "@/lib/db";
-import { generateVerifiedQuestion } from "@/lib/generate-core";
+import { generateVerifiedQuestion, generateVerifiedSet, type GeneratedQuestion } from "@/lib/generate-core";
 import { isWritingType } from "@/lib/passage-parser";
+import { isSetLeadType } from "@/lib/question-types";
 
 const CIRCLE = ["①", "②", "③", "④", "⑤"];
 // 한 문항 처리는 길어도 몇 분 — 이보다 오래 소식이 없으면 멈춘 것으로 본다
@@ -110,29 +111,33 @@ export async function runJobStep(jobId: string): Promise<number> {
     answer: p.answer || undefined,
   }));
 
-  try {
-    const out = await generateVerifiedQuestion({
-      examType: job.examType,
-      questionType: item.questionType,
-      difficulty: settings.difficulty,
-      topic: settings.topic,
-      sourcePassage,
-      passageMode: sourcePassage ? settings.passageMode : undefined,
-      priorQuestions: priorHints.length ? priorHints : undefined,
-      variations: settings.variations?.length ? settings.variations : undefined,
-    });
-    if (!out.ok) throw new Error(out.error);
+  const params = {
+    examType: job.examType,
+    questionType: item.questionType,
+    difficulty: settings.difficulty,
+    topic: settings.topic,
+    sourcePassage,
+    passageMode: sourcePassage ? settings.passageMode : undefined,
+    priorQuestions: priorHints.length ? priorHints : undefined,
+    variations: settings.variations?.length ? settings.variations : undefined,
+  };
 
-    const r = out.result;
-    const writing = isWritingType(item.questionType);
+  // 만든 문항 하나를 문제 은행에 저장
+  const save = (
+    questionType: string,
+    r: GeneratedQuestion,
+    verified: boolean,
+    setId: string | null
+  ) => {
+    const writing = isWritingType(questionType);
     const choices = writing
       ? []
       : r.choices.map((c, i) => ({ label: CIRCLE[i] ?? `(${i + 1})`, text: c.text, isCorrect: c.isCorrect }));
     const answer = writing ? r.answer : choices.find((c) => c.isCorrect)?.label ?? r.answer;
-    const q = await prisma.question.create({
+    return prisma.question.create({
       data: {
         examType: job.examType,
-        questionType: item.questionType,
+        questionType,
         points: r.points || 2,
         passage: r.passage,
         question: r.question,
@@ -143,12 +148,31 @@ export async function runJobStep(jobId: string): Promise<number> {
         aiGenerated: true,
         source: "AI 생성 (Claude)",
         passageId: item.passageId,
-        ...(out.verified ? { verifyStatus: "ok", verifiedAt: new Date() } : {}),
+        setId,
+        ...(verified ? { verifyStatus: "ok", verifiedAt: new Date() } : {}),
       },
     });
+  };
+
+  try {
+    let leadId: string;
+    if (isSetLeadType(item.questionType)) {
+      // 장문 세트: 문항 여러 개를 같은 setId로 저장, 작업 항목엔 첫 문항을 남긴다
+      const out = await generateVerifiedSet(params);
+      if (!out.ok) throw new Error(out.error);
+      const setId = randomUUID();
+      const saved = await prisma.$transaction(
+        out.members.map((m) => save(m.questionType, m.result, m.verified, setId))
+      );
+      leadId = saved[0].id;
+    } else {
+      const out = await generateVerifiedQuestion(params);
+      if (!out.ok) throw new Error(out.error);
+      leadId = (await save(item.questionType, out.result, out.verified, null)).id;
+    }
     await prisma.genJobItem.update({
       where: { id: item.id },
-      data: { status: "done", questionId: q.id, error: null },
+      data: { status: "done", questionId: leadId, error: null },
     });
   } catch (e) {
     const message = e instanceof Error ? e.message : "생성 실패";

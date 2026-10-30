@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { EXAM_TYPE_MAP, getQuestionTypeInfo, getQuestionTypes, DIFFICULTY_MAP, canGenerateWithAi } from "@/lib/question-types";
+import { EXAM_TYPE_MAP, getQuestionTypeInfo, getQuestionTypes, DIFFICULTY_MAP, canGenerateWithAi, SET_DEFS, isSetLeadType } from "@/lib/question-types";
 import { pickFromBank, SUNEUNG_PRESETS, type ComposePreset } from "@/lib/auto-compose";
+import { withSetMembers } from "@/lib/question-sets";
 import { VARIATIONS } from "@/lib/variations";
 import type { ExamType, Choice, Difficulty } from "@/types";
 
@@ -49,6 +50,7 @@ interface QuestionRow {
   createdAt?: string;
   verifyStatus?: string | null;
   examItems?: unknown[];
+  setId?: string | null;
   passageRef: {
     id: string;
     textbook: string;
@@ -160,9 +162,12 @@ export default function NewExamPage() {
     const toGenerate = plan.reduce((n, p) => n + p.generate, 0);
     const missingNames = plan.filter((p) => p.missing > 0).map((p) => p.t.name);
     if (toGenerate > 0) {
-      const fromBank = plan.reduce((n, p) => n + p.take.length, 0);
+      // 장문 세트는 한 세트가 2~3문항
+      const size = (code: string) => SET_DEFS[code]?.length ?? 1;
+      const fromBank = plan.reduce((n, p) => n + p.take.length * size(p.t.code), 0);
+      const newCount = plan.reduce((n, p) => n + p.generate * size(p.t.code), 0);
       const ok = confirm(
-        `은행에서 ${fromBank}문항을 넣고, 모자란 ${toGenerate}문항은 AI로 새로 만듭니다.
+        `은행에서 ${fromBank}문항을 넣고, 모자란 ${newCount}문항은 AI로 새로 만듭니다.
 ` +
           (missingNames.length > 0
             ? `(${missingNames.join(", ")}: AI로 만들 수 없고 은행에도 없어 비워 둡니다)
@@ -212,7 +217,7 @@ export default function NewExamPage() {
             if (newIds.length > 0) {
               const fresh = (await (await fetch("/api/questions")).json()) as QuestionRow[];
               setAvailableQuestions(fresh);
-              addQuestions(fresh.filter((q) => newIds.includes(q.id)));
+              addQuestions(fresh.filter((q) => newIds.includes(q.id)), fresh);
             }
             break;
           }
@@ -476,21 +481,15 @@ export default function NewExamPage() {
   }, []);
 
   function addQuestion(q: QuestionRow) {
-    if (selectedItems.find((item) => item.questionId === q.id)) return;
-    setSelectedItems((prev) => [
-      ...prev,
-      {
-        questionId: q.id,
-        question: q,
-        orderNum: prev.length + 1,
-      },
-    ]);
+    addQuestions([q]);
   }
 
-  function addQuestions(qs: QuestionRow[]) {
+  // 장문 세트 문항은 세트 전체가 번호 순으로 함께 들어간다
+  function addQuestions(qs: QuestionRow[], bank: QuestionRow[] = availableQuestions) {
+    const expanded = withSetMembers(qs, [...bank, ...qs]);
     setSelectedItems((prev) => {
       const existing = new Set(prev.map((i) => i.questionId));
-      const toAdd = qs.filter((q) => !existing.has(q.id));
+      const toAdd = expanded.filter((q) => !existing.has(q.id));
       const merged = [
         ...prev,
         ...toAdd.map((q) => ({
@@ -521,11 +520,13 @@ export default function NewExamPage() {
   }
 
   function removeQuestion(questionId: string) {
-    setSelectedItems((prev) =>
-      prev
-        .filter((item) => item.questionId !== questionId)
-        .map((item, i) => ({ ...item, orderNum: i + 1 }))
-    );
+    setSelectedItems((prev) => {
+      // 장문 세트는 함께 뺀다
+      const setId = prev.find((item) => item.questionId === questionId)?.question.setId;
+      return prev
+        .filter((item) => item.questionId !== questionId && !(setId && item.question.setId === setId))
+        .map((item, i) => ({ ...item, orderNum: i + 1 }));
+    });
   }
 
   function moveItem(index: number, direction: "up" | "down") {
@@ -1275,8 +1276,14 @@ export default function NewExamPage() {
                           <button
                             key={qt.code}
                             onClick={() => toggleAiType(qt.code, qt.name)}
-                            disabled={!canGenerateWithAi(examType, qt.code)}
-                            title={canGenerateWithAi(examType, qt.code) ? undefined : "아직 AI로 만들 수 없는 유형이에요"}
+                            disabled={!canGenerateWithAi(examType, qt.code) || isSetLeadType(qt.code)}
+                            title={
+                              isSetLeadType(qt.code)
+                                ? "장문 세트는 위의 '학년별·유형별 자동 구성'으로 넣어 주세요"
+                                : canGenerateWithAi(examType, qt.code)
+                                ? undefined
+                                : "아직 AI로 만들 수 없는 유형이에요"
+                            }
                             className={`px-2.5 py-1 rounded-lg text-xs transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                               isSel
                                 ? "bg-purple-600 text-white"

@@ -54,6 +54,12 @@ const suneungRange = (from: number, to: number) =>
 
 export const SUNEUNG_PRESETS: ComposePreset[] = [
   {
+    key: "full",
+    label: "수능형 18~45번",
+    desc: "장문 세트 포함 28문항",
+    types: [...suneungRange(18, 40), { code: "41_long_title", count: 1 }, { code: "43_long_order", count: 1 }],
+  },
+  {
     key: "reading-all",
     label: "수능형 독해 18~40번",
     desc: "번호 순서대로 23문항",

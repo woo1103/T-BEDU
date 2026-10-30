@@ -1,3 +1,5 @@
+import { chartProblem, splitChart } from "@/lib/passage-parser";
+
 // 문항 구조 검증: 선지 라벨이 지문 마커/위치와 대응하는 유형에서
 // 마커 수·선지 수·정답 범위가 어긋난 "깨진 문제"를 잡아낸다.
 // - 생성 시: 깨진 결과를 폐기/재생성하는 가드
@@ -13,10 +15,12 @@ export const GRAMMAR_CIRCLE_TYPES = [
 ];
 // 어법 — (A)(B)(C) 네모형 (각 네모에서 맞는 표현 고르기)
 export const GRAMMAR_BOX_TYPES = ["naesin_grammar", "grammar_theme_box"];
-export const ORDER_TYPES = ["36_order", "37_order2", "43_long_order", "naesin_order"];
+export const ORDER_TYPES = ["36_order", "37_order2", "43_long_order", "naesin_order"]; // 43번 장문도 (A)(B)(C) 표시 검사
 export const INSERTION_TYPES = ["38_insertion", "39_insertion2", "naesin_insertion"];
-export const REFER_TYPES = ["naesin_refer"]; // (a)~(e) 지칭
+// (a)~(e) 표시형: 지칭(내신·44번 장문), 문맥상 낱말 쓰임(42번 장문)
+export const REFER_TYPES = ["naesin_refer", "42_long_vocab", "44_long_refer"];
 export const IRRELEVANT_TYPES = ["35_irrelevant", "naesin_irrelevant"]; // ①~⑤ 무관문장
+export const CHART_TYPES = ["25_chart"]; // 도표 데이터 + ①~⑤ 문장
 
 // 하위 호환: 과거 이름 유지(원문자 어법·어휘)
 export const GRAMMAR_VOCAB_TYPES = GRAMMAR_CIRCLE_TYPES;
@@ -29,7 +33,8 @@ export function isMarkerMappedType(questionType: string): boolean {
     ORDER_TYPES.includes(questionType) ||
     INSERTION_TYPES.includes(questionType) ||
     REFER_TYPES.includes(questionType) ||
-    IRRELEVANT_TYPES.includes(questionType)
+    IRRELEVANT_TYPES.includes(questionType) ||
+    CHART_TYPES.includes(questionType)
   );
 }
 
@@ -69,6 +74,27 @@ export function validateQuestionStructure(
         return { ok: false, reason: `정답 라벨(${correct}) 비정상` };
       if (correct && !p.includes(correct))
         return { ok: false, reason: `정답(${correct})이 지문에 밑줄로 없음` };
+    }
+    return { ok: true };
+  }
+
+  if (CHART_TYPES.includes(questionType)) {
+    const { chart, text } = splitChart(p);
+    if (!chart) {
+      const raw = p.match(/<chart>([\s\S]*?)<\/chart>/i);
+      let why = "도표 데이터(<chart>…</chart>) 없음";
+      if (raw) {
+        try {
+          why = chartProblem(JSON.parse(raw[1])) ?? why;
+        } catch {
+          why = "도표 데이터 JSON 형식 오류";
+        }
+      }
+      return { ok: false, reason: why };
+    }
+    if (choices.length !== 5) return { ok: false, reason: `선지 ${choices.length}개(5개 필요)` };
+    for (const m of CIRCLE) {
+      if (!text.includes(m)) return { ok: false, reason: `지문에 ${m} 문장 없음` };
     }
     return { ok: true };
   }

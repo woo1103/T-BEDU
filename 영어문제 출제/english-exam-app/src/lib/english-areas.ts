@@ -55,6 +55,9 @@ const TYPE_TO_AREA: Record<string, EnglishArea> = {
   naesin_insertion: "글의 구조",
   "41_long_title": "글의 구조",
   "43_long_order": "글의 구조",
+  "42_long_vocab": "어휘",
+  "44_long_refer": "세부 정보",
+  "45_long_content": "세부 정보",
 };
 
 export function areaForQuestionType(questionType: string): EnglishArea | null {

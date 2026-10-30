@@ -132,6 +132,7 @@ export async function GET(
       passage: item.question.passage,
       question: item.question.question,
       choices,
+      setId: item.question.setId, // 장문 세트: 앞 문항과 같으면 지문을 한 번만 보여 준다
     };
   });
 
