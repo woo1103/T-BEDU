@@ -1,0 +1,146 @@
+{
+  "s0-narration": {
+    "file": "audio/calm-boy-on-plane/s0-narration.wav",
+    "seconds": 4.52,
+    "hash": "e531eb72ec42",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/calm-boy-on-plane/s1-narration.wav",
+    "seconds": 5.48,
+    "hash": "8a8d3783f9b4",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/calm-boy-on-plane/s1-narrationOut.wav",
+    "seconds": 5.36,
+    "hash": "b327614cbc7b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-narration": {
+    "file": "audio/calm-boy-on-plane/s2-narration.wav",
+    "seconds": 6.04,
+    "hash": "6794ba6e8a85",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-narrationOut": {
+    "file": "audio/calm-boy-on-plane/s2-narrationOut.wav",
+    "seconds": 4.76,
+    "hash": "33207cc60960",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/calm-boy-on-plane/s3-narration.wav",
+    "seconds": 5.8,
+    "hash": "ff7fd1b5dd0e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narrationOut": {
+    "file": "audio/calm-boy-on-plane/s3-narrationOut.wav",
+    "seconds": 4,
+    "hash": "5ce2034a8611",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/calm-boy-on-plane/s4-narration.wav",
+    "seconds": 4.12,
+    "hash": "c104a16d33dd",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/calm-boy-on-plane/s4-narrationOut.wav",
+    "seconds": 5.08,
+    "hash": "96063559369e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/calm-boy-on-plane/s5-narration.wav",
+    "seconds": 4.64,
+    "hash": "271e64b06834",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/calm-boy-on-plane/s5-narrationOut.wav",
+    "seconds": 4.84,
+    "hash": "1c77cc7f12f6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/calm-boy-on-plane/s6-narration.wav",
+    "seconds": 4.96,
+    "hash": "c3d588019dba",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narrationOut": {
+    "file": "audio/calm-boy-on-plane/s6-narrationOut.wav",
+    "seconds": 3.76,
+    "hash": "85957da32ae8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/calm-boy-on-plane/s7-narration.wav",
+    "seconds": 3.24,
+    "hash": "538a0bc1f689",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narrationOut": {
+    "file": "audio/calm-boy-on-plane/s7-narrationOut.wav",
+    "seconds": 3.2,
+    "hash": "537bc64d816e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-speech": {
+    "file": "audio/calm-boy-on-plane/s7-speech.wav",
+    "seconds": 2.52,
+    "hash": "e4db0d11e402",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s8-narration": {
+    "file": "audio/calm-boy-on-plane/s8-narration.wav",
+    "seconds": 3.6,
+    "hash": "74453213b708",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-narrationOut": {
+    "file": "audio/calm-boy-on-plane/s8-narrationOut.wav",
+    "seconds": 3.4,
+    "hash": "a3b6fd053ed0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-speech": {
+    "file": "audio/calm-boy-on-plane/s8-speech.wav",
+    "seconds": 8.167333333333334,
+    "hash": "f42ef1f59b7f",
+    "voice": "ko-KR-Chirp3-HD-Puck"
+  },
+  "s9-narration": {
+    "file": "audio/calm-boy-on-plane/s9-narration.wav",
+    "seconds": 4.72,
+    "hash": "3bbf32b5b41e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s9-narrationOut": {
+    "file": "audio/calm-boy-on-plane/s9-narrationOut.wav",
+    "seconds": 5.92,
+    "hash": "f3b2b72e1546",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s10-narration": {
+    "file": "audio/calm-boy-on-plane/s10-narration.wav",
+    "seconds": 4.28,
+    "hash": "bd22ee9ddd95",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s11-narration": {
+    "file": "audio/calm-boy-on-plane/s11-narration.wav",
+    "seconds": 3.2,
+    "hash": "0f916fa9feea",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s12-narration": {
+    "file": "audio/calm-boy-on-plane/s12-narration.wav",
+    "seconds": 4.24,
+    "hash": "c3b574c15f17",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

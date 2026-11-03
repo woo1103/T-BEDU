@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/age-and-emotions/s0-narration.wav",
+    "seconds": 5.28,
+    "hash": "a9a49a6b5280",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/age-and-emotions/s1-narration.wav",
+    "seconds": 5.68,
+    "hash": "adb90c7a6f5d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/age-and-emotions/s1-narrationOut.wav",
+    "seconds": 4.12,
+    "hash": "dcb0fec4d952",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/age-and-emotions/s1-question.wav",
+    "seconds": 2.36,
+    "hash": "a891cc24a9c0",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/age-and-emotions/s2-narration.wav",
+    "seconds": 4.24,
+    "hash": "f9a772a0521d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/age-and-emotions/s3-narration.wav",
+    "seconds": 7.16,
+    "hash": "c8a91113ce0d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/age-and-emotions/s4-narration.wav",
+    "seconds": 4.72,
+    "hash": "66a3900df9cc",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/age-and-emotions/s5-narration.wav",
+    "seconds": 4.36,
+    "hash": "d30e2652da9d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/age-and-emotions/s5-narrationOut.wav",
+    "seconds": 5.8,
+    "hash": "d582f0ba40e9",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/age-and-emotions/s5-line0.wav",
+    "seconds": 4.36,
+    "hash": "256aebc3d1c1",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/age-and-emotions/s5-line1.wav",
+    "seconds": 6.2,
+    "hash": "af3f5cff0152",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/age-and-emotions/s5-line2.wav",
+    "seconds": 4.44,
+    "hash": "cf6b5f5f1a40",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/age-and-emotions/s6-narration.wav",
+    "seconds": 3.68,
+    "hash": "a4d8d013827d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/age-and-emotions/s7-narration.wav",
+    "seconds": 4.72,
+    "hash": "28cdd6cd5625",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

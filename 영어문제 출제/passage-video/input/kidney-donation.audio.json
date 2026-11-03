@@ -1,0 +1,158 @@
+{
+  "s0-narration": {
+    "file": "audio/kidney-donation/s0-narration.wav",
+    "seconds": 4.48,
+    "hash": "ad1fd82065e1",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/kidney-donation/s1-narration.wav",
+    "seconds": 4.52,
+    "hash": "80a794c4f781",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/kidney-donation/s1-narrationOut.wav",
+    "seconds": 4.52,
+    "hash": "08a6f6a3d49e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-narration": {
+    "file": "audio/kidney-donation/s2-narration.wav",
+    "seconds": 4.56,
+    "hash": "b1667e2a2dde",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-narrationOut": {
+    "file": "audio/kidney-donation/s2-narrationOut.wav",
+    "seconds": 4.52,
+    "hash": "96a17b60b3a7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-speech": {
+    "file": "audio/kidney-donation/s2-speech.wav",
+    "seconds": 3.6893333333333334,
+    "hash": "295a7fb22b8f",
+    "voice": "ko-KR-Chirp3-HD-Leda"
+  },
+  "s3-narration": {
+    "file": "audio/kidney-donation/s3-narration.wav",
+    "seconds": 6.04,
+    "hash": "0544286b281d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narrationOut": {
+    "file": "audio/kidney-donation/s3-narrationOut.wav",
+    "seconds": 3.2,
+    "hash": "5783397c1778",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-speech": {
+    "file": "audio/kidney-donation/s3-speech.wav",
+    "seconds": 4.12,
+    "hash": "8971bba217ae",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s4-narration": {
+    "file": "audio/kidney-donation/s4-narration.wav",
+    "seconds": 5.04,
+    "hash": "c429f5a44a31",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/kidney-donation/s4-narrationOut.wav",
+    "seconds": 4.12,
+    "hash": "b346b3bfa68d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-speech": {
+    "file": "audio/kidney-donation/s4-speech.wav",
+    "seconds": 4.2,
+    "hash": "d9e35573717d",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-narration": {
+    "file": "audio/kidney-donation/s5-narration.wav",
+    "seconds": 5.96,
+    "hash": "00c824a34aff",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/kidney-donation/s5-narrationOut.wav",
+    "seconds": 4.52,
+    "hash": "edb6837d15d8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/kidney-donation/s6-narration.wav",
+    "seconds": 3.92,
+    "hash": "1a6fe412475e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narrationOut": {
+    "file": "audio/kidney-donation/s6-narrationOut.wav",
+    "seconds": 2.88,
+    "hash": "67f837cabcf1",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-speech": {
+    "file": "audio/kidney-donation/s6-speech.wav",
+    "seconds": 7.517333333333333,
+    "hash": "e98445a67c28",
+    "voice": "ko-KR-Chirp3-HD-Leda"
+  },
+  "s7-narration": {
+    "file": "audio/kidney-donation/s7-narration.wav",
+    "seconds": 4.08,
+    "hash": "1d6cd8714599",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narrationOut": {
+    "file": "audio/kidney-donation/s7-narrationOut.wav",
+    "seconds": 3.88,
+    "hash": "638e5bcd415c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-speech": {
+    "file": "audio/kidney-donation/s7-speech.wav",
+    "seconds": 6.8,
+    "hash": "d51b13d61f5f",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s8-narration": {
+    "file": "audio/kidney-donation/s8-narration.wav",
+    "seconds": 6.08,
+    "hash": "3b5d82f92c4b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s9-narration": {
+    "file": "audio/kidney-donation/s9-narration.wav",
+    "seconds": 3.68,
+    "hash": "ff64514bfe02",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s9-narrationOut": {
+    "file": "audio/kidney-donation/s9-narrationOut.wav",
+    "seconds": 4,
+    "hash": "058d35a509c8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s9-speech": {
+    "file": "audio/kidney-donation/s9-speech.wav",
+    "seconds": 5.32,
+    "hash": "1f1f74190104",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s10-narration": {
+    "file": "audio/kidney-donation/s10-narration.wav",
+    "seconds": 3.68,
+    "hash": "7956ff4db254",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s11-narration": {
+    "file": "audio/kidney-donation/s11-narration.wav",
+    "seconds": 3.8,
+    "hash": "7384ecae53a4",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

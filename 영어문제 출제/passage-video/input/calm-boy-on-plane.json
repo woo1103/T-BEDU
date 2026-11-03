@@ -1,0 +1,260 @@
+{
+  "slug": "calm-boy-on-plane",
+  "title": "폭풍 속에서 책을 읽던 소년",
+  "subtitle": "아빠를 믿는 마음이 옮겨 왔어요",
+  "source": "올림포스 영어독해 기본 1 · Unit 18 장문 II Practice 04~06",
+  "kind": "story",
+  "characters": {
+    "spector": {
+      "name": "스펙터 씨",
+      "voice": {
+        "name": "ko-KR-Chirp3-HD-Charon"
+      },
+      "skin": "#E8CCAE",
+      "hair": "short",
+      "hairColor": "#4A4038",
+      "outfit": "suit",
+      "outfitColor": "#4A5E8A",
+      "accentColor": "#2C3442",
+      "accessory": "none",
+      "build": "normal"
+    },
+    "boy": {
+      "name": "소년",
+      "voice": {
+        "name": "ko-KR-Chirp3-HD-Puck",
+        "rate": 1.05
+      },
+      "skin": "#F6D4B9",
+      "hair": "spiky",
+      "hairColor": "#2E241E",
+      "outfit": "tshirt",
+      "outfitColor": "#5E9E86",
+      "accentColor": "#33443E",
+      "accessory": "none",
+      "prop": "book",
+      "build": "slim"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "폭풍 속에서 책을 읽던 소년",
+      "subtitle": "이야기 · 난기류 속의 비행기",
+      "narration": "이번 지문은 홍콩에서 뉴욕으로 가던 비행기 안의 이야기예요.",
+      "cast": [
+        {
+          "who": "spector",
+          "expression": "neutral",
+          "pose": "idle"
+        },
+        {
+          "who": "boy",
+          "expression": "happy",
+          "pose": "present"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "사업 회의를 마치고 집으로",
+      "narration": "Spector 씨는 홍콩에서 사업 회의를 마치고 집으로 돌아가는 중이었어요.",
+      "narrationOut": "장거리 비행에 피곤했지만, 집에 간다는 생각과 좋은 회의 결과로 들떠 있었어요.",
+      "cast": [
+        {
+          "who": "spector",
+          "expression": "happy",
+          "pose": "idle"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "비행의 절반쯤, 객실을 채운 안내 방송",
+      "sfx": "딩—",
+      "narration": "승무원의 안내 방송이 객실을 채웠고, 난기류가 예상되니 앉아 있으라는 내용이었어요.",
+      "narrationOut": "목소리는 차분하고 평온했지만 Spector 씨는 불안해지기 시작했어요.",
+      "cast": [
+        {
+          "who": "spector",
+          "expression": "confused",
+          "pose": "idle"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "night",
+      "caption": "곧 만난 격렬한 폭풍우",
+      "sfx": "우르릉",
+      "narration": "비행기는 곧 천둥이 울리고 어두운 하늘에 번개가 번쩍이는 폭풍우를 만났어요.",
+      "narrationOut": "그 모습이 그를 몹시 긴장하게 만들었어요.",
+      "cast": [
+        {
+          "who": "spector",
+          "expression": "surprised",
+          "pose": "shrug"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "night",
+      "caption": "울음소리와 떨어지는 물건들",
+      "sfx": "덜컹!",
+      "narration": "몇몇 어린아이들이 울기 시작했고, 물건들이 떨어지고 있었어요.",
+      "narrationOut": "이 혼돈의 한가운데에서 Spector 씨는 극심한 공포에 사로잡혔어요.",
+      "cast": [
+        {
+          "who": "spector",
+          "expression": "sad",
+          "pose": "shrug"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "night",
+      "caption": "그런데 옆자리 소년은",
+      "narration": "불안과 힘겹게 싸우던 그는 옆에 앉은 소년을 발견했어요.",
+      "narrationOut": "소년은 폭풍의 영향을 받지 않고 침착하게 책을 읽고 있었어요.",
+      "cast": [
+        {
+          "who": "spector",
+          "expression": "surprised",
+          "pose": "idle"
+        },
+        {
+          "who": "boy",
+          "expression": "neutral",
+          "pose": "idle",
+          "flip": true
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "night",
+      "caption": "소년이 짜증 섞인 소리를 낸 이유",
+      "narration": "소년은 가끔 짜증 섞인 소리를 냈는데, 난기류가 무서워서가 아니었어요.",
+      "narrationOut": "객실이 흔들려 책을 읽기가 어려워졌기 때문이었어요.",
+      "cast": [
+        {
+          "who": "boy",
+          "expression": "confused",
+          "pose": "idle"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "night",
+      "caption": "매우 놀라서 건넨 질문",
+      "narration": "Spector 씨는 놀라서 소년에게 물었어요.",
+      "speech": {
+        "who": "spector",
+        "text": "얘야, 어떻게 그렇게 침착할 수 있니?"
+      },
+      "narrationOut": "소년은 미소를 띠며 책에서 눈을 들었어요.",
+      "cast": [
+        {
+          "who": "spector",
+          "expression": "surprised",
+          "pose": "point"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "night",
+      "caption": "자신감이 넘치던 목소리",
+      "narration": "소년의 대답에는 조금의 흔들림도 없었어요.",
+      "speech": {
+        "who": "boy",
+        "text": "겁내지 마세요, 아저씨. 조종사가 우리 아빠예요. 저는 아빠가 저를 무사히 집에 데려다줄 거라는 걸 알아요."
+      },
+      "narrationOut": "아버지에 대한 소년의 흔들리지 않는 신뢰였어요.",
+      "cast": [
+        {
+          "who": "boy",
+          "expression": "happy",
+          "pose": "present"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "옮겨 온 평온함",
+      "narration": "그 신뢰는 혼란스러운 상황에서도 소년에게 평온함을 주고 있었어요.",
+      "narrationOut": "소년의 자신감은 전염되어 Spector 씨에게도 내면의 평화를 가져다주었어요.",
+      "cast": [
+        {
+          "who": "spector",
+          "expression": "happy",
+          "pose": "idle"
+        },
+        {
+          "who": "boy",
+          "expression": "happy",
+          "pose": "present",
+          "flip": true
+        }
+      ]
+    },
+    {
+      "type": "flow",
+      "heading": "공포가 사라진 순서",
+      "steps": [
+        {
+          "label": "난기류와 폭풍",
+          "icon": "⛈️"
+        },
+        {
+          "label": "극심한 공포",
+          "icon": "😨"
+        },
+        {
+          "label": "소년의 한마디",
+          "icon": "💬"
+        },
+        {
+          "label": "내면의 평화",
+          "icon": "🕊️"
+        }
+      ],
+      "narration": "그는 자신의 극심한 공포가 사라지는 것을 느낄 수 있었어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "The pilot is my dad, and I know he is taking me home safe and sound.",
+      "translation": "조종사가 우리 아빠예요, 그리고 저는 아빠가 저를 무사히 집에 데려다줄 거라는 걸 알아요.",
+      "highlight": [
+        "pilot",
+        "know",
+        "safe",
+        "sound"
+      ],
+      "narration": "이 이야기 전체를 뒤집는 한 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "이야기의 흐름",
+      "points": [
+        "난기류와 폭풍 속에서 공포에 사로잡혔다",
+        "옆자리 소년은 침착하게 책을 읽고 있었다",
+        "조종사가 아빠라는 신뢰가 평온함을 옮겨 주었다"
+      ],
+      "narration": "누군가를 믿는 마음이 옆 사람에게까지 전해진 이야기예요.",
+      "cast": [
+        {
+          "who": "boy",
+          "expression": "excited",
+          "pose": "cheer"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "slug": "identity-and-information",
+  "title": "나쁜 말을 일부러 찾는 이유",
+  "subtitle": "정체성과 맞는 정보를 찾기 때문이에요",
+  "source": "올림포스 영어독해 기본 1 · Unit 16 요약문 완성 Practice 02",
+  "kind": "academic",
+  "characters": {
+    "yunho": {
+      "name": "윤호",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F3CFB3",
+      "hair": "spiky",
+      "hairColor": "#2E241E",
+      "outfit": "hoodie",
+      "outfitColor": "#C98A4B",
+      "accentColor": "#3E3228",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "min": {
+      "name": "민 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E4C09E",
+      "hair": "short",
+      "hairColor": "#4A423A",
+      "outfit": "labcoat",
+      "outfitColor": "#9FAFBA",
+      "accentColor": "#3A444E",
+      "accessory": "roundGlasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "나쁜 말을 일부러 찾는 이유",
+      "subtitle": "심리 · 정체성과 정보 추구",
+      "narration": "이번 지문은 정체성이 정보를 찾는 방식을 어떻게 바꾸는지를 다루고 있어요.",
+      "cast": [
+        { "who": "yunho", "expression": "confused", "pose": "raise" },
+        { "who": "min", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "윤호는 사람들이 자기한테 불리한 말을 굳이 찾아 읽는 걸 보고 이상하다고 느꼈어요.",
+      "question": "좋은 말만 듣고 싶은 게 당연한 거 아닌가?",
+      "thought": true,
+      "narrationOut": "정체성이 우리가 정보를 찾는 방식을 바꾼다는 발견은 흥미로운 의문을 던져요.",
+      "cast": [{ "who": "yunho", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "compare",
+      "heading": "서로 반대로 보이는 두 가지 사실",
+      "left": {
+        "label": "좋게 보이려 한다",
+        "icon": "✨",
+        "points": ["많은 상황에서 그렇다", "증거가 풍부하다", "감정적으로 자연스럽다"]
+      },
+      "right": {
+        "label": "나쁜 정보도 찾는다",
+        "icon": "🔎",
+        "points": ["연구자들이 발견했다", "부정적 정체성을 뒷받침할 때", "스스로 찾아 나선다"]
+      },
+      "narration": "어떻게 한 사람이 좋게 보이고 싶으면서 동시에 나쁘게 보이고 싶을 수 있을까요?"
+    },
+    {
+      "type": "concept",
+      "term": "정체성과 일치하는 정보",
+      "meaning": "자신을 긍정적으로 생각하든 부정적으로 생각하든, 사람들은 자기 정체성과 들어맞는 정보를 얻으려 애쓴다는 설명이에요.",
+      "icon": "🪞",
+      "narration": "일부 연구자들이 내놓은 대답이 바로 이것이었어요.",
+      "cast": [{ "who": "min", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "부정적인 정보까지 찾게 되는 길",
+      "steps": [
+        { "label": "정체성이 자리 잡는다", "icon": "🧩" },
+        { "label": "그에 맞는 정보를 찾는다", "icon": "🔍" },
+        { "label": "사실처럼 느껴진다", "icon": "✔️" },
+        { "label": "부정적이어도 받아들인다", "icon": "📥" }
+      ],
+      "narration": "사람들은 자신에게 부정적일지라도 사실로 보이는 정보를 찾아요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "윤호는 그렇다면 칭찬은 왜 늘 기분이 좋은지 물었어요.",
+      "lines": [
+        { "who": "yunho", "text": "그럼 칭찬은 왜 언제 들어도 기분이 좋은 거예요?" },
+        { "who": "min", "text": "긍정적인 정보는 정체성과 일치하든 아니든 사람을 기분 좋게 만들거든요." },
+        { "who": "yunho", "text": "사실인지 여부랑은 상관없이 말이군요." }
+      ],
+      "narrationOut": "감정적으로는 누구나 가능한 한 좋게 보이고 싶어 해요.",
+      "cast": [
+        { "who": "yunho", "expression": "surprised", "pose": "shrug" },
+        { "who": "min", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "People seek information that seems to them to be true, even if that information is negative about themselves.",
+      "translation": "사람들은 정보가 자신에 대해 부정적일지라도, 그들에게 사실로 보이는 정보를 찾습니다.",
+      "highlight": ["seek", "true", "negative"],
+      "narration": "지문의 답이 이 한 문장에 담겨 있어요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "사람들은 좋게 보이려 하면서 나쁜 정보도 찾는다",
+        "자기 정체성과 일치하는 정보를 얻으려 하기 때문이다",
+        "긍정적인 정보는 일치하든 아니든 기분을 좋게 한다"
+      ],
+      "narration": "정보를 고르는 기준이 정체성이라는 이야기예요.",
+      "cast": [{ "who": "yunho", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

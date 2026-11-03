@@ -1,0 +1,140 @@
+{
+  "slug": "color-and-illumination",
+  "title": "파란 램프 아래의 토마토",
+  "subtitle": "색과 조명은 떼어 놓을 수 없어요",
+  "source": "올림포스 영어독해 기본 1 · Unit 17 장문 I Practice 01~02",
+  "kind": "academic",
+  "characters": {
+    "harin": {
+      "name": "하린",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D4B9",
+      "hair": "braids",
+      "hairColor": "#33251F",
+      "outfit": "tshirt",
+      "outfitColor": "#C4564E",
+      "accentColor": "#3B3330",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "chae": {
+      "name": "채 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#56504A",
+      "outfit": "labcoat",
+      "outfitColor": "#8FA8B5",
+      "accentColor": "#3B4650",
+      "accessory": "glasses",
+      "prop": "flask",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "파란 램프 아래의 토마토",
+      "subtitle": "지각 · 색과 조명의 문제",
+      "narration": "이번 지문은 우리가 색을 왜, 그리고 어떻게 보는지를 다루고 있어요.",
+      "cast": [
+        { "who": "harin", "expression": "confused", "pose": "raise" },
+        { "who": "chae", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "하린이는 파란 조명 아래에서 토마토가 검게 보이는 것을 보고 멈칫했어요.",
+      "question": "검게 보이면 상한 건가?",
+      "thought": true,
+      "narrationOut": "우리는 어느 정도는 음식이 먹기에 좋은지 알아보려고 색 지각을 진화시켰을 거예요.",
+      "cast": [{ "who": "harin", "expression": "surprised", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "반사율",
+      "meaning": "물체가 빛의 어떤 부분을 되돌려 보내는 성질이에요. 잘 익은 토마토의 붉은색, 썩은 토마토의 갈색이 바로 이 성질이에요.",
+      "icon": "🍅",
+      "narration": "중요한 것은 토마토가 태양에 비춰진다는 사실이 아니라 이 반사하는 특성이에요.",
+      "cast": [{ "who": "chae", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "같은 토마토, 다른 조명",
+      "left": {
+        "label": "햇빛 아래",
+        "icon": "☀️",
+        "points": ["빛의 특정한 부분을 반사한다", "붉게 보인다", "먹을 수 있어 보인다"]
+      },
+      "right": {
+        "label": "파란 램프 아래",
+        "icon": "🔵",
+        "points": ["푸른 빛을 흡수한다", "검게 보인다", "입맛이 떨어진다"]
+      },
+      "narration": "파란 램프 아래의 붉은 토마토도 똑같이 먹을 수 있는데 말이에요."
+    },
+    {
+      "type": "flow",
+      "heading": "왜 검게 보일까",
+      "steps": [
+        { "label": "붉은 토마토", "icon": "🍅" },
+        { "label": "푸른 빛을 흡수", "icon": "🔵" },
+        { "label": "반사하지 않음", "icon": "🚫" },
+        { "label": "검게 보임", "icon": "⬛" }
+      ],
+      "narration": "공교롭게도 붉은 토마토는 푸른 빛을 흡수하고 반사하지 않거든요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "하린이는 그렇다면 색을 정확히 아는 방법이 있는지 물었어요.",
+      "lines": [
+        { "who": "harin", "text": "그럼 조명을 빼고 진짜 색만 볼 수는 없나요?" },
+        { "who": "chae", "text": "그게 색 지각의 근본적인 문제예요. 한 영역의 반사율과 조명된 상태는 구별할 수가 없어요." },
+        { "who": "harin", "text": "색만 따로 떼어 볼 수 없다는 뜻이군요." }
+      ],
+      "narrationOut": "색과 조명이 섞여 버린다는 이 애매함이 지문의 핵심이에요.",
+      "cast": [
+        { "who": "harin", "expression": "thinking", "pose": "shrug" },
+        { "who": "chae", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "concept",
+      "term": "명암 역위형 보호색",
+      "meaning": "많은 동물이 배보다 등을 더 어둡게 해서, 빛과 그림자가 체형을 드러내는 효과를 상쇄하는 위장이에요.",
+      "icon": "🦌",
+      "narration": "거꾸로 매달려 지내는 일부 애벌레는 반대로 배가 더 어두워요.",
+      "cast": [{ "who": "chae", "expression": "neutral", "pose": "present" }]
+    },
+    {
+      "type": "flow",
+      "heading": "위장이 완성되는 순서",
+      "steps": [
+        { "label": "등이 더 어둡다", "icon": "🎨" },
+        { "label": "빛과 그림자를 상쇄", "icon": "🌗" },
+        { "label": "체형이 드러나지 않음", "icon": "🫥" },
+        { "label": "멀리서 덜 보인다", "icon": "🔭" }
+      ],
+      "narration": "이 흔적은 개에게서도 볼 수 있어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "It is impossible to separate a region's reflectance (color) from its illumination.",
+      "translation": "한 영역의 반사율(색상)과 그것의 조명된 상태를 구별하는 것은 불가능합니다.",
+      "highlight": ["impossible", "separate", "reflectance", "illumination"],
+      "narration": "색 지각의 근본적인 문제를 그대로 적어 둔 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "색을 보는 것은 물체의 반사율을 보는 일이다",
+        "그런데 반사율과 조명은 떼어 낼 수 없다",
+        "동물들은 그 애매함을 위장에 이용한다"
+      ],
+      "narration": "색과 조명의 애매함이 문제이자 동시에 무기가 되는 셈이에요.",
+      "cast": [{ "who": "harin", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

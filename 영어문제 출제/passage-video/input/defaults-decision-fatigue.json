@@ -1,0 +1,129 @@
+{
+  "slug": "defaults-decision-fatigue",
+  "title": "선택하지 않기로 선택하는 이유",
+  "subtitle": "고르는 일에도 비용이 들어요",
+  "source": "올림포스 영어독해 기본 1 · Unit 17 장문 I Practice 03~04",
+  "kind": "academic",
+  "characters": {
+    "doyun": {
+      "name": "도윤",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F3CFB3",
+      "hair": "short",
+      "hairColor": "#2C221C",
+      "outfit": "hoodie",
+      "outfitColor": "#4E7FC4",
+      "accentColor": "#333B4E",
+      "accessory": "none",
+      "prop": "phone",
+      "build": "slim"
+    },
+    "seol": {
+      "name": "설 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C4A2",
+      "hair": "short",
+      "hairColor": "#625A52",
+      "outfit": "suit",
+      "outfitColor": "#5A6E8A",
+      "accentColor": "#303A46",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "선택하지 않기로 선택하는 이유",
+      "subtitle": "행동경제 · 초기 설정과 결정 피로",
+      "narration": "이번 지문은 우리가 왜 미리 정해진 설정을 그냥 두는지를 다루고 있어요.",
+      "cast": [
+        { "who": "doyun", "expression": "thinking", "pose": "raise" },
+        { "who": "seol", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "도윤이는 휴대전화를 새로 사면서 설정을 그대로 둔 자신이 게으른 건지 생각했어요.",
+      "question": "하나하나 내가 고르는 게 더 좋은 거 아닌가?",
+      "thought": true,
+      "narrationOut": "대부분의 소비자는 요금제의 모든 특징을 직접 골라야 한다면 그다지 좋아하지 않을 거예요.",
+      "cast": [{ "who": "doyun", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "초기 설정",
+      "meaning": "따로 고르지 않아도 적용되는 기본값이에요. 사람들에게 많은 시간을 절약해 주고, 대부분은 합리적이고 적절해요.",
+      "icon": "⚙️",
+      "narration": "관련 정보를 모으고 결정하는 데 필요한 시간을 쓰고 싶어 하는 소비자는 거의 없어요.",
+      "cast": [{ "who": "seol", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "두 가지 방식의 값",
+      "left": {
+        "label": "초기 설정 규칙",
+        "icon": "⚙️",
+        "points": ["시간을 절약해 준다", "대개 합리적이고 적절하다", "결정 비용이 낮다"]
+      },
+      "right": {
+        "label": "적극적인 선택",
+        "icon": "🖐️",
+        "points": ["결정의 비용을 올린다", "때로는 상당히 올린다", "결정 피로를 키운다"]
+      },
+      "narration": "적극적인 선택은 초기 설정 규칙과 비교하면 결정의 비용을 때로는 상당히 증가시켜요."
+    },
+    {
+      "type": "flow",
+      "heading": "결정 피로가 생기는 길",
+      "steps": [
+        { "label": "전부 직접 고른다", "icon": "🖐️" },
+        { "label": "결정 비용이 커진다", "icon": "💸" },
+        { "label": "결정 피로가 쌓인다", "icon": "😵" },
+        { "label": "중요한 일을 놓친다", "icon": "⚠️" }
+      ],
+      "narration": "결정 피로는 가족, 직장, 건강처럼 삶에 가장 중요한 문제에 집중하기 어렵게 만들 수 있어요."
+    },
+    {
+      "type": "concept",
+      "term": "한정된 정신적 능력",
+      "meaning": "사람이 쓸 수 있는 주의력에는 한계가 있어서, 관심 없는 질문에 주의를 기울이라고 강요하면 다른 일에 쓸 자원이 그쪽으로 빠져나가요.",
+      "icon": "🧠",
+      "narration": "그래서 관심 없는 질문에 답하게 만드는 것은 결코 가벼운 일이 아니에요.",
+      "cast": [{ "who": "seol", "expression": "neutral", "pose": "present" }]
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "도윤이는 정신적 자원이 줄어들면 실제로 어떤 일이 생기는지 물었어요.",
+      "lines": [
+        { "who": "doyun", "text": "주의력이 부족해지면 머리가 안 돌아가기도 하나요?" },
+        { "who": "seol", "text": "가난한 상태로 생계를 어떻게 꾸릴지 끊임없이 생각하는 것은 지능 지수에 상당한 부정적 영향을 줘요." },
+        { "who": "doyun", "text": "전날 밤 잠을 못 잔 것과 비슷하다고 하셨죠." }
+      ],
+      "narrationOut": "그 영향은 전날 밤에 잠을 전혀 자지 못한 것과 거의 맞먹는다고 해요.",
+      "cast": [
+        { "who": "doyun", "expression": "surprised", "pose": "shrug" },
+        { "who": "seol", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "It is in part because of cognitive scarcity that people choose not to choose.",
+      "translation": "사람들이 선택하지 않기로 선택하는 것은 부분적으로 인지적 결핍 때문입니다.",
+      "highlight": ["cognitive", "scarcity", "not", "choose"],
+      "narration": "지문이 결론으로 내놓는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "초기 설정은 시간을 아껴 주고 대개 적절하다",
+        "적극적인 선택은 결정 비용과 결정 피로를 키운다",
+        "정신적 자원이 부족해서 선택하지 않기를 택한다"
+      ],
+      "narration": "그래서 적극적인 선택이 오히려 심각한 부담이 될 수 있어요.",
+      "cast": [{ "who": "doyun", "expression": "happy", "pose": "cheer" }]
+    }
+  ]
+}

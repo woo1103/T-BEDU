@@ -1,0 +1,120 @@
+{
+  "slug": "age-and-emotions",
+  "title": "나이마다 어울리는 감정이 있다",
+  "subtitle": "같은 울음도 나이에 따라 다르게 읽혀요",
+  "source": "올림포스 영어독해 기본 1 · Unit 16 요약문 완성 Practice 01",
+  "kind": "academic",
+  "characters": {
+    "daeun": {
+      "name": "다은",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "bob",
+      "hairColor": "#33251F",
+      "outfit": "uniform",
+      "outfitColor": "#5C7FC4",
+      "accentColor": "#333B4E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "yeon": {
+      "name": "연 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "suit",
+      "outfitColor": "#6A6E8A",
+      "accentColor": "#333646",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "나이마다 어울리는 감정이 있다",
+      "subtitle": "심리 · 연령과 감정의 전형",
+      "narration": "이번 지문은 나이에 따라 감정이 어떻게 다르게 받아들여지는지를 다루고 있어요.",
+      "cast": [
+        { "who": "daeun", "expression": "thinking", "pose": "raise" },
+        { "who": "yeon", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "다은이는 동생이 우는 것과 자기가 우는 것이 왜 다르게 보이는지 궁금했어요.",
+      "question": "울면 안 되는 나이가 따로 있는 건가?",
+      "thought": true,
+      "narrationOut": "연령에 따라 감정의 차이는 실제로 존재한다고 해요.",
+      "cast": [{ "who": "daeun", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "이상적인 감정의 전형",
+      "meaning": "특정한 연령에 어떤 감정은 합당하다고 여기는 틀이에요. 규범적인 집단행동의 도움으로 실현되고 확고해져요.",
+      "icon": "🧭",
+      "narration": "같은 감정이라도 몇 살이냐에 따라 합당한지가 갈려요.",
+      "cast": [{ "who": "yeon", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "같은 울음, 다른 평가",
+      "left": {
+        "label": "어린 시절의 울음",
+        "icon": "😢",
+        "points": ["비난은 받는다", "그래도 용서받는다", "아이의 감정적 특성과 일치한다"]
+      },
+      "right": {
+        "label": "청소년기의 울음",
+        "icon": "🙍",
+        "points": ["유치한 행동으로 여겨진다", "그 나이의 전형에서 벗어난다", "같은 행동인데 평가가 다르다"]
+      },
+      "narration": "큰소리와 무례함, 감정의 폭발은 자기 통제의 상실과 관련이 있어서 흔히 아이들 사이에서 표출돼요."
+    },
+    {
+      "type": "flow",
+      "heading": "자라면서 생기는 감정",
+      "steps": [
+        { "label": "지적으로 성숙한다", "icon": "📚" },
+        { "label": "자기 통제가 커진다", "icon": "🧘" },
+        { "label": "사회적 민감성이 는다", "icon": "👥" },
+        { "label": "우울함·슬픔이 생긴다", "icon": "🌧️" }
+      ],
+      "narration": "개인이 성숙할수록 우울함이나 슬픔 같은 감정을 점차 형성하게 돼요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "다은이는 어른만 느낄 수 있는 감정이 정말 있는지 물었어요.",
+      "lines": [
+        { "who": "daeun", "text": "그럼 어른이 되어야만 느낄 수 있는 감정도 있는 건가요?" },
+        { "who": "yeon", "text": "일부 감정은 특정 연령에서만 경험될 수 있어요. 성실함이나 지혜 같은 덕목도 마찬가지죠." },
+        { "who": "daeun", "text": "그래서 그런 덕목은 어른에게 기대하는 거군요." }
+      ],
+      "narrationOut": "성실함과 지혜 같은 덕목은 성인기 같은 특정한 삶의 단계와 관련지어져요.",
+      "cast": [
+        { "who": "daeun", "expression": "surprised", "pose": "shrug" },
+        { "who": "yeon", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Some emotions can only be experienced at a certain age, and virtues such as integrity and wisdom are associated with certain stages of life.",
+      "translation": "일부 감정은 특정 연령에서만 경험될 수 있으며, 성실함과 지혜 같은 덕목은 삶의 특정 단계와 관련 있습니다.",
+      "highlight": ["only", "certain", "age", "virtues"],
+      "narration": "지문 전체를 한 문장으로 모아 주는 부분이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "나이마다 합당하다고 여겨지는 감정의 전형이 있다",
+        "같은 울음도 어린 시절과 청소년기에 다르게 읽힌다",
+        "성숙할수록 우울함 같은 감정과 덕목이 형성된다"
+      ],
+      "narration": "감정은 나이와 함께 달라지고, 그 평가도 함께 달라져요.",
+      "cast": [{ "who": "daeun", "expression": "happy", "pose": "cheer" }]
+    }
+  ]
+}
