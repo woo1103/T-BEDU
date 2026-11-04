@@ -62,20 +62,25 @@ node scripts/render.mjs <slug>   # MP4
 
 확정된 것:
 - 나레이터 `ko-KR-Chirp3-HD-Achernar` (사용자가 후보를 듣고 선택). `input/brand.json` 에 고정
-- 인물 기본 조합: 여성/학생 `Chirp3-HD-Zephyr`, 남성/전문가 `Chirp3-HD-Charon`
 - 배경음악 `public/bgm-calm-piano.mp3` (볼륨 0.07). `bgm-ambient.mp3` 로 교체 가능
 
-**남은 일 — 배역별 목소리 확정.** 지금은 14편 전부 위 두 목소리만 쓰고 있어 단조롭다.
-특히 어린아이 배역(13강 P3 '하늘')이 성인 여성 목소리로 나간다.
-후보 샘플은 만들어 두었고(`node scripts/voice-sample.mjs male` / `female`) 사용자가 고르면 된다.
-아래 표는 **귀로 확인하지 않은 잠정 후보**다. 확정 전에는 임의로 쓰지 마라.
+**배역별 목소리 — 사용자가 샘플을 듣고 고른 확정본이다.** 임의로 바꾸지 마라.
 
-| 배역 | 잠정 후보 | 속도 |
+| 배역 | 목소리 | 속도 |
 |---|---|---|
-| 남학생 | Puck / Fenrir / Achird | 1.05 |
-| 삼촌·중년 남성 | Algenib / Umbriel / Sadaltager | 1.0 |
-| 할아버지 | Enceladus / Schedar / Rasalgethi | 0.85 |
-| 이모·중년 여성 | Kore / Autonoe / Sulafat | 1.0 |
-| 할머니 | Gacrux / Vindemiatrix / Despina | 0.85 |
+| 여학생·젊은 여성 | `ko-KR-Chirp3-HD-Zephyr` | 1.0 |
+| 남성·전문가 | `ko-KR-Chirp3-HD-Charon` | 0.95 |
+| 남학생 | `ko-KR-Chirp3-HD-Fenrir` | 1.05 |
+| 여자아이 | `ko-KR-Chirp3-HD-Erinome` | 1.08 |
+| 삼촌·중년 남성 | `ko-KR-Chirp3-HD-Algenib` | 1.0 |
+| 이모·중년 여성 | `ko-KR-Chirp3-HD-Kore` | 1.0 |
+| 할아버지 | `ko-KR-Chirp3-HD-Enceladus` | 0.85 |
+| 할머니 | `ko-KR-Chirp3-HD-Vindemiatrix` | 0.85 |
+
+같은 영상에 젊은 여성이 둘 나와서 Zephyr 하나로는 모자랄 때만 `ko-KR-Chirp3-HD-Leda` 를 두 번째
+젊은 여성 목소리로 쓴다. 그 외에는 표를 벗어나지 않는다.
+
+표에 없는 배역이 필요하면 `node scripts/voice-sample.mjs male` / `female` 로 후보를 만들어
+사용자에게 들려주고 고르게 한다. 추측해서 쓰지 마라.
 
 Chirp3-HD 는 `speakingRate` 는 받지만 `pitch` 는 거부한다. 나이 표현은 속도로만 조절한다.

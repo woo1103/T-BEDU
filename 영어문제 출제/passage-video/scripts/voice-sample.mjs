@@ -60,6 +60,12 @@ const SETS = {
   female: {
     text: null,
     candidates: [
+      { label: "여자아이 1번", name: "ko-KR-Chirp3-HD-Laomedeia", rate: 1.08,
+        text: "엄마, 저거 봐요! 새들이 왜 저렇게 줄 맞춰서 날아가요?" },
+      { label: "여자아이 2번", name: "ko-KR-Chirp3-HD-Erinome", rate: 1.08,
+        text: "엄마, 저거 봐요! 새들이 왜 저렇게 줄 맞춰서 날아가요?" },
+      { label: "여자아이 3번", name: "ko-KR-Chirp3-HD-Pulcherrima", rate: 1.08,
+        text: "엄마, 저거 봐요! 새들이 왜 저렇게 줄 맞춰서 날아가요?" },
       { label: "이모 1번", name: "ko-KR-Chirp3-HD-Kore", rate: 1,
         text: "얘, 그러다 감기 걸린다. 이거라도 좀 걸치고 나가렴." },
       { label: "이모 2번", name: "ko-KR-Chirp3-HD-Autonoe", rate: 1,

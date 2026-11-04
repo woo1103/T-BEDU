@@ -47,14 +47,24 @@ description: 영어 지문을 만화 캐릭터 애니메이션 MP4로 시각화�
 
 **확정된 조합 — 기본으로 이걸 쓴다.**
 
-| 배역 | 목소리 | 비고 |
-|---|---|---|
-| 여성·학생 | `ko-KR-Chirp3-HD-Zephyr` | 사용자가 듣고 확정 |
-| 남성·전문가 | `ko-KR-Chirp3-HD-Charon` | 사용자가 듣고 확정 |
+아래 여덟 배역은 **사용자가 샘플을 직접 듣고 고른 것**이다. 그대로 쓰고, 임의로 바꾸지 마라.
 
-**아직 확정되지 않은 배역**(남학생·아이·노년·중년 등)이 필요하면 임의로 고르지 말고,
-`node scripts/voice-sample.mjs male` / `female` 로 후보를 만들어 사용자에게 들려주고 고르게 한다.
-확정 전까지는 위 두 목소리로 간다.
+| 배역 | 목소리 | `rate` |
+|---|---|---|
+| 여학생·젊은 여성 | `ko-KR-Chirp3-HD-Zephyr` | 1.0 |
+| 남성·전문가 | `ko-KR-Chirp3-HD-Charon` | 0.95 |
+| 남학생 | `ko-KR-Chirp3-HD-Fenrir` | 1.05 |
+| 여자아이 | `ko-KR-Chirp3-HD-Erinome` | 1.08 |
+| 삼촌·중년 남성 | `ko-KR-Chirp3-HD-Algenib` | 1.0 |
+| 이모·중년 여성 | `ko-KR-Chirp3-HD-Kore` | 1.0 |
+| 할아버지 | `ko-KR-Chirp3-HD-Enceladus` | 0.85 |
+| 할머니 | `ko-KR-Chirp3-HD-Vindemiatrix` | 0.85 |
+
+같은 영상에 젊은 여성이 둘 나와서 Zephyr 하나로는 모자랄 때만 `ko-KR-Chirp3-HD-Leda` 를
+두 번째 젊은 여성 목소리로 쓴다. 그 외에는 표를 벗어나지 않는다.
+
+표에 없는 배역이 필요하면 임의로 고르지 말고 `node scripts/voice-sample.mjs male` / `female` 로
+후보를 만들어 사용자에게 들려주고 고르게 한다.
 
 - **Chirp3-HD 는 `pitch` 를 지원하지 않는다.** 보내면 400 에러가 난다. 나이·성격은 `rate` 로만 조절한다
   (아이·밝은 인물 1.05, 기본 1.0, 노년 0.85).
