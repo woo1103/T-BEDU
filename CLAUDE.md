@@ -83,4 +83,8 @@ node scripts/render.mjs <slug>   # MP4
 표에 없는 배역이 필요하면 `node scripts/voice-sample.mjs male` / `female` 로 후보를 만들어
 사용자에게 들려주고 고르게 한다. 추측해서 쓰지 마라.
 
+**확정 이전에 만든 영상 4편은 표와 다르지만 그대로 둔다.** 사용자가 "굳이 바꾸지 말고 다음 것부터
+반영하자"고 했다. 다시 렌더하지 마라 — `child-tantrum` 하늘(Zephyr), `calm-boy-on-plane` 소년(Puck),
+`maggie-song` 더우드(Puck), `kidney-donation` 티나(Leda).
+
 Chirp3-HD 는 `speakingRate` 는 받지만 `pitch` 는 거부한다. 나이 표현은 속도로만 조절한다.
