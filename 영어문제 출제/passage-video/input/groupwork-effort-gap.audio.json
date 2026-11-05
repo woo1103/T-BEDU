@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/groupwork-effort-gap/s0-narration.wav",
+    "seconds": 4.08,
+    "hash": "82e6501f1e0d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/groupwork-effort-gap/s1-narration.wav",
+    "seconds": 4.24,
+    "hash": "b89f30bb4f0d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/groupwork-effort-gap/s1-narrationOut.wav",
+    "seconds": 4.8,
+    "hash": "3f8db7ad238d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/groupwork-effort-gap/s1-question.wav",
+    "seconds": 3.24,
+    "hash": "97d7fa60e7fd",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/groupwork-effort-gap/s2-narration.wav",
+    "seconds": 5.64,
+    "hash": "f9395d96cb37",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/groupwork-effort-gap/s3-narration.wav",
+    "seconds": 5.88,
+    "hash": "b7cf91f6bc0d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/groupwork-effort-gap/s4-narration.wav",
+    "seconds": 5.32,
+    "hash": "67e0492da92b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/groupwork-effort-gap/s5-narration.wav",
+    "seconds": 3.8,
+    "hash": "5c322fb8fd46",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/groupwork-effort-gap/s5-narrationOut.wav",
+    "seconds": 4.48,
+    "hash": "9e5bc259ac39",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/groupwork-effort-gap/s5-line0.wav",
+    "seconds": 3.24,
+    "hash": "c2c11fef4a05",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/groupwork-effort-gap/s5-line1.wav",
+    "seconds": 6.953333333333333,
+    "hash": "090b644cbab7",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/groupwork-effort-gap/s5-line2.wav",
+    "seconds": 3.04,
+    "hash": "d48b40bec9d9",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/groupwork-effort-gap/s6-narration.wav",
+    "seconds": 3.52,
+    "hash": "357020feed22",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/groupwork-effort-gap/s7-narration.wav",
+    "seconds": 3.4,
+    "hash": "f370140a7529",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

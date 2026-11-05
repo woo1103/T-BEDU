@@ -901,7 +901,10 @@ const BarsScene: React.FC<SceneProps<Extract<Scene, { type: "bars" }>>> = ({
   const { fps } = useVideoConfig();
   const max = Math.max(...scene.bars.map((b) => b.value), 1);
   const hasCast = Boolean(scene.cast?.length);
-  const trackW = hasCast ? 1000 : 1300;
+  // note 를 쓰면 막대 오른쪽에 글자가 붙으므로 트랙을 줄여 자리를 비워 둔다.
+  // 줄이지 않으면 note 가 화면 밖으로 잘려 나간다.
+  const hasNote = scene.bars.some((b) => Boolean(b.note));
+  const trackW = hasCast ? (hasNote ? 760 : 1000) : hasNote ? 1000 : 1300;
 
   // 막대가 적으면 두껍게 그리고 무대 가운데로 올린다.
   // 그대로 두면 2개짜리 그래프에서 화면 아래가 텅 빈다.
@@ -945,6 +948,11 @@ const BarsScene: React.FC<SceneProps<Extract<Scene, { type: "bars" }>>> = ({
             easing: (t) => 1 - (1 - t) ** 3,
           });
           const color = [theme.blue, theme.coral, theme.green, theme.purple, theme.amber][i % 5];
+          const valueText = `${b.value}${scene.unit ?? ""}`;
+          // 막대가 짧으면 값이 막대 안에서 잘린다. 그럴 때는 막대 바깥에 적는다.
+          const fillW = (b.value / max) * trackW;
+          const inside = fillW >= valueText.length * 20 + 32;
+          const showValue = grow > 0.85;
           return (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 22 }}>
               <div
@@ -988,17 +996,33 @@ const BarsScene: React.FC<SceneProps<Extract<Scene, { type: "bars" }>>> = ({
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {grow > 0.85 ? `${b.value}${scene.unit ?? ""}` : ""}
+                  {showValue && inside ? valueText : ""}
                 </div>
+                {showValue && !inside ? (
+                  <div
+                    style={{
+                      paddingLeft: 14,
+                      fontFamily: theme.font,
+                      fontSize: 32,
+                      fontWeight: 900,
+                      color: theme.ink,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {valueText}
+                  </div>
+                ) : null}
               </div>
               {b.note ? (
                 <div
                   style={{
+                    maxWidth: 400,
                     fontFamily: theme.font,
                     fontSize: 28,
                     fontWeight: 700,
                     color: theme.inkSoft,
-                    whiteSpace: "nowrap",
+                    wordBreak: "keep-all",
+                    lineHeight: 1.25,
                   }}
                 >
                   {b.note}

@@ -1,0 +1,130 @@
+{
+  "slug": "planning-fallacy-opera-house",
+  "title": "계획은 왜 늘 빗나갈까",
+  "subtitle": "현실성의 부족은 대가를 치러요",
+  "source": "리딩파워 유형편 완성 · Unit 15 글의 순서 배열 Practice 04",
+  "kind": "academic",
+  "characters": {
+    "garam": {
+      "name": "가람",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F3CFB3",
+      "hair": "short",
+      "hairColor": "#2C221C",
+      "outfit": "hoodie",
+      "outfitColor": "#C98A4B",
+      "accentColor": "#3E3228",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "gye": {
+      "name": "계 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E4C09E",
+      "hair": "short",
+      "hairColor": "#4A423A",
+      "outfit": "labcoat",
+      "outfitColor": "#9FAFBA",
+      "accentColor": "#3A444E",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "계획은 왜 늘 빗나갈까",
+      "subtitle": "심리 · 비현실적인 목표의 대가",
+      "narration": "이번 지문은 사람들이 자기 능력을 실제보다 크게 보는 습관을 다루고 있어요.",
+      "cast": [
+        { "who": "garam", "expression": "thinking", "pose": "raise" },
+        { "who": "gye", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "가람이는 계획표대로 된 적이 거의 없다는 걸 떠올렸어요.",
+      "question": "왜 계획은 늘 생각보다 오래 걸릴까?",
+      "thought": true,
+      "narrationOut": "사람들은 흔히 실제로 성취하는 것보다 더 많은 것을 해낼 수 있다고 생각해요.",
+      "cast": [{ "who": "garam", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "현실성의 부족",
+      "meaning": "할 수 있는 양을 크게 보고, 들어갈 비용은 예상한 대로일 거라고 믿는 생각이에요.",
+      "icon": "📐",
+      "narration": "실제로는 많은 사람이 과업 목표에 미치지 못하고, 예산 초과는 대규모 공공사업의 흔한 특징이에요.",
+      "cast": [{ "who": "gye", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "bars",
+      "heading": "시드니 오페라 하우스",
+      "unit": "백만 달러",
+      "bars": [
+        { "label": "계획된 비용", "value": 7, "note": "1963년 완공 예정" },
+        { "label": "실제 비용", "value": 102, "note": "10년 뒤 완공" }
+      ],
+      "narration": "시드니 오페라 하우스는 1963년에 7백만 달러로 완공될 예정이었지만, 10년 뒤 1억 2백만 달러로 마무리됐어요."
+    },
+    {
+      "type": "compare",
+      "heading": "현실성이 부족할 때 치르는 대가",
+      "left": {
+        "label": "마음에 남는 것",
+        "icon": "💔",
+        "points": ["실망감", "자존감의 상실", "줄어든 사회적 평가"]
+      },
+      "right": {
+        "label": "실제로 날아가는 것",
+        "icon": "⏳",
+        "points": ["시간이 낭비된다", "돈이 낭비된다", "둘 다 상당한 양이다"]
+      },
+      "narration": "자신의 목표를 충족시키지 못하는 것은 실망감과 자존감의 상실로 이어질 수 있어요."
+    },
+    {
+      "type": "flow",
+      "heading": "비현실적인 목표가 남기는 것",
+      "steps": [
+        { "label": "능력 밖의 과정에 등록", "icon": "📝" },
+        { "label": "실패한다", "icon": "❌" },
+        { "label": "시간과 돈이 낭비된다", "icon": "💸" },
+        { "label": "다음 도전을 망설인다", "icon": "🚪" }
+      ],
+      "narration": "중립적인 관찰자가 보기에 자기 능력을 넘어서는 프로그램에 등록한 사람을 생각해 보세요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "가람이는 실패한 다음이 왜 더 문제인지 물었어요.",
+      "lines": [
+        { "who": "garam", "text": "실패하고 나면 왜 더 힘들어지는 거예요?" },
+        { "who": "gye", "text": "실망감 때문에, 정말 자기 손이 닿는 목표까지 망설이게 되거든요." },
+        { "who": "garam", "text": "할 수 있는 것도 안 하게 되는 거네요." }
+      ],
+      "narrationOut": "그래서 현실성의 부족은 그 자리에서 끝나지 않고 다음까지 따라와요.",
+      "cast": [
+        { "who": "garam", "expression": "sad", "pose": "shrug" },
+        { "who": "gye", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Because of disappointment, he might be hesitant in the future to strive for other goals that are truly within his grasp.",
+      "translation": "실망감 때문에 그는 장래에 진정 자신의 손이 미치는 곳에 있는 다른 목표를 위해 노력하는 것을 주저할지 모릅니다.",
+      "highlight": ["disappointment", "hesitant", "within", "grasp"],
+      "narration": "비현실적인 목표가 남기는 가장 긴 대가예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "사람들은 해낼 수 있는 양을 크게 본다",
+        "오페라 하우스처럼 예산과 기간이 초과된다",
+        "실망이 다음 도전까지 망설이게 만든다"
+      ],
+      "narration": "현실성의 부족은 반드시 대가를 치르게 된다는 이야기예요.",
+      "cast": [{ "who": "garam", "expression": "thinking", "pose": "cheer" }]
+    }
+  ]
+}

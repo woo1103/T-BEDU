@@ -1,0 +1,120 @@
+{
+  "slug": "organizations-everywhere",
+  "title": "하루의 3분의 1은 조직 안에서",
+  "subtitle": "조직과의 접촉은 거의 끊이지 않아요",
+  "source": "리딩파워 유형편 완성 · Chapter 04 간접 글쓰기 Chapter Review 03",
+  "kind": "academic",
+  "characters": {
+    "jiho": {
+      "name": "지호",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F3CFB3",
+      "hair": "spiky",
+      "hairColor": "#2E241E",
+      "outfit": "hoodie",
+      "outfitColor": "#C98A4B",
+      "accentColor": "#3E3228",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "jo": {
+      "name": "조 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Kore" },
+      "skin": "#F0CBAE",
+      "hair": "bun",
+      "hairColor": "#4A3A2E",
+      "outfit": "suit",
+      "outfitColor": "#6A5CC4",
+      "accentColor": "#363048",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "하루의 3분의 1은 조직 안에서",
+      "subtitle": "사회 · 조직 속의 삶",
+      "narration": "이번 지문은 우리가 얼마나 많은 시간을 조직 안에서 보내는지를 다루고 있어요.",
+      "cast": [
+        { "who": "jiho", "expression": "confused", "pose": "raise" },
+        { "who": "jo", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "지호는 자기 하루가 조직과 얼마나 얽혀 있는지 생각해 본 적이 없었어요.",
+      "question": "나는 조직이랑 별로 상관없이 사는 거 아닌가?",
+      "thought": true,
+      "narrationOut": "우리들 중 대부분은 조직의 구성원으로서 적어도 하루 24시간의 3분의 1을 써요.",
+      "cast": [{ "who": "jiho", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "compare",
+      "heading": "깨어 있는 시간은 어디에",
+      "left": {
+        "label": "집에서",
+        "icon": "🏠",
+        "points": ["가족과 함께", "친구와 함께", "생각보다 적은 시간"]
+      },
+      "right": {
+        "label": "조직에서",
+        "icon": "🏢",
+        "points": ["동료와 함께", "깨어 있는 시간의 더 많은 부분", "하루의 중심이 된다"]
+      },
+      "narration": "깨어 있는 시간 중 더 많은 시간을 집에서보다 조직에서 동료들과 보내요."
+    },
+    {
+      "type": "concept",
+      "term": "정체성과 이어진 구성원 자격",
+      "meaning": "특히 미국에서는 정체성의 상당 부분이 자신이 획득한 조직의 구성원 자격과 관련되어 있어요.",
+      "icon": "🪪",
+      "narration": "내가 어디에 속해 있는지가 곧 나를 설명하는 말이 되는 거예요.",
+      "cast": [{ "who": "jo", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "하루에 스치는 조직들",
+      "steps": [
+        { "label": "식료품 가게에서 줄 서기", "icon": "🛒" },
+        { "label": "병원에서 기다리기", "icon": "🏥" },
+        { "label": "판매원과 협상하기", "icon": "🚗" },
+        { "label": "조직을 얼핏 본다", "icon": "👀" }
+      ],
+      "narration": "우리는 조직의 구성원이면서 동시에 조직의 고객이자 손님이기도 해요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "street",
+      "narration": "지호는 조직이 왜 그렇게 중심이 되었는지 물었어요.",
+      "lines": [
+        { "who": "jiho", "text": "조직이 그렇게까지 중심이 된 이유가 뭐예요?" },
+        { "who": "jo", "text": "존립이 가능한 경제를 만들고 정치 체제를 구축할 때 조직이 사회의 중심이 되거든요." },
+        { "who": "jiho", "text": "그러니까 피하려야 피할 수가 없는 거네요." }
+      ],
+      "narrationOut": "그 결과 우리가 조직과 접촉하는 일은 거의 끊이지 않아요.",
+      "cast": [
+        { "who": "jiho", "expression": "surprised", "pose": "shrug" },
+        { "who": "jo", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "As a result, our contact with organizations is nearly constant.",
+      "translation": "그 결과, 우리의 조직과의 접촉은 거의 끊임이 없습니다.",
+      "highlight": ["contact", "nearly", "constant"],
+      "narration": "지문이 결론으로 내놓는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "하루의 3분의 1을 조직의 구성원으로 보낸다",
+        "정체성의 상당 부분이 구성원 자격과 이어져 있다",
+        "고객으로서도 하루 종일 조직을 스친다"
+      ],
+      "narration": "조직은 피해 가는 것이 아니라 그 안에서 사는 것이라는 이야기예요.",
+      "cast": [{ "who": "jiho", "expression": "thinking", "pose": "cheer" }]
+    }
+  ]
+}

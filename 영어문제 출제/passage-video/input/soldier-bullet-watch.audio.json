@@ -1,0 +1,110 @@
+{
+  "s0-narration": {
+    "file": "audio/soldier-bullet-watch/s0-narration.wav",
+    "seconds": 5.52,
+    "hash": "4f821fdc8932",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/soldier-bullet-watch/s1-narration.wav",
+    "seconds": 4.8,
+    "hash": "1e7dc5c2d098",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/soldier-bullet-watch/s1-narrationOut.wav",
+    "seconds": 2.8,
+    "hash": "4e8a6b1e9d8c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-narration": {
+    "file": "audio/soldier-bullet-watch/s2-narration.wav",
+    "seconds": 5.8,
+    "hash": "9356a367bd12",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-narrationOut": {
+    "file": "audio/soldier-bullet-watch/s2-narrationOut.wav",
+    "seconds": 3.72,
+    "hash": "0f7c377d2c7a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/soldier-bullet-watch/s3-narration.wav",
+    "seconds": 4.36,
+    "hash": "e9856e4fb45a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narrationOut": {
+    "file": "audio/soldier-bullet-watch/s3-narrationOut.wav",
+    "seconds": 6.52,
+    "hash": "310979fea067",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/soldier-bullet-watch/s4-narration.wav",
+    "seconds": 1.6,
+    "hash": "5f901cbb704e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/soldier-bullet-watch/s4-narrationOut.wav",
+    "seconds": 4.36,
+    "hash": "4105ab1608bd",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-speech": {
+    "file": "audio/soldier-bullet-watch/s4-speech.wav",
+    "seconds": 4.16,
+    "hash": "ac1101bf2781",
+    "voice": "ko-KR-Chirp3-HD-Algenib"
+  },
+  "s5-narration": {
+    "file": "audio/soldier-bullet-watch/s5-narration.wav",
+    "seconds": 2.2,
+    "hash": "f2d5af1a8e1d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/soldier-bullet-watch/s5-narrationOut.wav",
+    "seconds": 4.36,
+    "hash": "23fa6279f189",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-speech": {
+    "file": "audio/soldier-bullet-watch/s5-speech.wav",
+    "seconds": 7.631333333333333,
+    "hash": "4c07db0ded84",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s6-narration": {
+    "file": "audio/soldier-bullet-watch/s6-narration.wav",
+    "seconds": 5.16,
+    "hash": "5fc3b0264e8e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narrationOut": {
+    "file": "audio/soldier-bullet-watch/s6-narrationOut.wav",
+    "seconds": 3.84,
+    "hash": "8846bf796134",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-speech": {
+    "file": "audio/soldier-bullet-watch/s6-speech.wav",
+    "seconds": 3.32,
+    "hash": "c4d7541b8995",
+    "voice": "ko-KR-Chirp3-HD-Algenib"
+  },
+  "s7-narration": {
+    "file": "audio/soldier-bullet-watch/s7-narration.wav",
+    "seconds": 3.08,
+    "hash": "bff3b6b5e7fb",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-narration": {
+    "file": "audio/soldier-bullet-watch/s8-narration.wav",
+    "seconds": 3.2,
+    "hash": "5bb7de84e197",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

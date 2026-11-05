@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/group-polarization/s0-narration.wav",
+    "seconds": 5.36,
+    "hash": "e2aa10a35b82",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/group-polarization/s1-narration.wav",
+    "seconds": 4.12,
+    "hash": "74671a023b1d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/group-polarization/s1-narrationOut.wav",
+    "seconds": 5.92,
+    "hash": "b34c48bbf0d2",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/group-polarization/s1-question.wav",
+    "seconds": 2.84,
+    "hash": "eda3a3ec7aad",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/group-polarization/s2-narration.wav",
+    "seconds": 4.12,
+    "hash": "68e8c77520e0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/group-polarization/s3-narration.wav",
+    "seconds": 4.88,
+    "hash": "e80fe4aad1b1",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/group-polarization/s4-narration.wav",
+    "seconds": 3.2,
+    "hash": "002868f484d8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/group-polarization/s5-narration.wav",
+    "seconds": 2.92,
+    "hash": "04b63344ed9f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/group-polarization/s5-narrationOut.wav",
+    "seconds": 4.32,
+    "hash": "c0d76f8919a6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/group-polarization/s5-line0.wav",
+    "seconds": 2.68,
+    "hash": "dd24def078ad",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/group-polarization/s5-line1.wav",
+    "seconds": 5.693333333333333,
+    "hash": "592b9ed7f5a8",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/group-polarization/s5-line2.wav",
+    "seconds": 2.32,
+    "hash": "f79516eb5bfc",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/group-polarization/s6-narration.wav",
+    "seconds": 3.96,
+    "hash": "cedd8f42f9ad",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/group-polarization/s7-narration.wav",
+    "seconds": 3.92,
+    "hash": "24f3ccd53c70",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

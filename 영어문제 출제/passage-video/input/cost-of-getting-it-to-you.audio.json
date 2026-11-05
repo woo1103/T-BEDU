@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/cost-of-getting-it-to-you/s0-narration.wav",
+    "seconds": 6.76,
+    "hash": "3b411eaedc1c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/cost-of-getting-it-to-you/s1-narration.wav",
+    "seconds": 3.8,
+    "hash": "bcdfabcd0ba0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/cost-of-getting-it-to-you/s1-narrationOut.wav",
+    "seconds": 6.28,
+    "hash": "a70edd4ad01c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/cost-of-getting-it-to-you/s1-question.wav",
+    "seconds": 3.48,
+    "hash": "539a3379d51f",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/cost-of-getting-it-to-you/s2-narration.wav",
+    "seconds": 4.64,
+    "hash": "e7f591acb11e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/cost-of-getting-it-to-you/s3-narration.wav",
+    "seconds": 3.52,
+    "hash": "5928a2b08620",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/cost-of-getting-it-to-you/s4-narration.wav",
+    "seconds": 6.36,
+    "hash": "3f955de3d0a9",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/cost-of-getting-it-to-you/s5-narration.wav",
+    "seconds": 3.96,
+    "hash": "bce52ef66df7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/cost-of-getting-it-to-you/s5-narrationOut.wav",
+    "seconds": 3.84,
+    "hash": "6c5249239a3f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/cost-of-getting-it-to-you/s5-line0.wav",
+    "seconds": 3.64,
+    "hash": "7715c3023876",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/cost-of-getting-it-to-you/s5-line1.wav",
+    "seconds": 5.28,
+    "hash": "6a2211657682",
+    "voice": "ko-KR-Chirp3-HD-Algenib"
+  },
+  "s5-line2": {
+    "file": "audio/cost-of-getting-it-to-you/s5-line2.wav",
+    "seconds": 4.16,
+    "hash": "33ddf22dcf66",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/cost-of-getting-it-to-you/s6-narration.wav",
+    "seconds": 3.08,
+    "hash": "a39d6216fec5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/cost-of-getting-it-to-you/s7-narration.wav",
+    "seconds": 4.52,
+    "hash": "e62df0a78d52",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

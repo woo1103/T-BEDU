@@ -1,0 +1,189 @@
+{
+  "slug": "kids-pester-power",
+  "title": "회사가 아이를 겨냥하는 이유",
+  "subtitle": "아이의 욕구가 가족 전체를 움직여요",
+  "source": "리딩파워 유형편 완성 · Unit 16 문단 요약 Example 01",
+  "kind": "academic",
+  "characters": {
+    "haeun": {
+      "name": "하은",
+      "voice": {
+        "name": "ko-KR-Chirp3-HD-Erinome",
+        "rate": 1.08
+      },
+      "skin": "#F6D4B9",
+      "hair": "braids",
+      "hairColor": "#33251F",
+      "outfit": "tshirt",
+      "outfitColor": "#C9748A",
+      "accentColor": "#3E3440",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "gwang": {
+      "name": "광 박사",
+      "voice": {
+        "name": "ko-KR-Chirp3-HD-Charon",
+        "rate": 0.95
+      },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "suit",
+      "outfitColor": "#6A6E8A",
+      "accentColor": "#333646",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "회사가 아이를 겨냥하는 이유",
+      "subtitle": "마케팅 · 아이가 가진 영향력",
+      "narration": "이번 지문은 광고가 왜 어린 소비자를 향하는지를 다루고 있어요.",
+      "cast": [
+        {
+          "who": "haeun",
+          "expression": "happy",
+          "pose": "raise"
+        },
+        {
+          "who": "gwang",
+          "expression": "neutral",
+          "pose": "present"
+        }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "하은이는 아이들은 돈이 없는데 왜 광고가 아이를 향하는지 궁금했어요.",
+      "question": "돈도 없는 아이한테 왜 광고를 하지?",
+      "thought": true,
+      "narrationOut": "오늘날 마케팅과 광고투성이의 세상에서 사람들은 상표로부터 벗어날 수 없어요.",
+      "cast": [
+        {
+          "who": "haeun",
+          "expression": "confused",
+          "pose": "think"
+        }
+      ]
+    },
+    {
+      "type": "concept",
+      "term": "일찍 시작할수록 오래 쓴다",
+      "meaning": "상표나 상품을 사용하기 시작하는 시기가 어릴수록, 앞으로도 계속 사용할 가능성이 더 높아져요.",
+      "icon": "🔖",
+      "narration": "그런데 그것만이 회사들이 어린 소비자를 겨냥하는 유일한 이유는 아니에요.",
+      "cast": [
+        {
+          "who": "gwang",
+          "expression": "neutral",
+          "pose": "point"
+        }
+      ]
+    },
+    {
+      "type": "bars",
+      "heading": "텍사스 A&M 대학 맥닐 교수가 말한 숫자",
+      "unit": "퍼센트",
+      "bars": [
+        {
+          "label": "즉흥적인 음식 구매 중 아이가 졸라서 일어난 것",
+          "value": 75
+        },
+        {
+          "label": "아이가 원해서 먹을 것을 사는 엄마",
+          "value": 50,
+          "note": "두 명당 한 명"
+        }
+      ],
+      "narration": "즉흥적인 음식 구매의 75퍼센트는 부모에게 조르는 아이 때문일 수 있다고 해요."
+    },
+    {
+      "type": "flow",
+      "heading": "아이 하나가 움직이는 범위",
+      "steps": [
+        {
+          "label": "아이의 욕구를 촉발",
+          "icon": "✨"
+        },
+        {
+          "label": "부모에게 조른다",
+          "icon": "🗣️"
+        },
+        {
+          "label": "조부모에게도",
+          "icon": "👵"
+        },
+        {
+          "label": "가족 전체의 욕구",
+          "icon": "👨‍👩‍👧"
+        }
+      ],
+      "narration": "아이에게 있는 욕구를 촉발시키는 것이 곧 가족 전체의 욕구를 촉발시키는 것이에요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "market",
+      "narration": "하은이는 아이의 영향력이 어디까지 미치는지 물었어요.",
+      "lines": [
+        {
+          "who": "haeun",
+          "text": "아이가 집안 소비에까지 영향을 주나요?"
+        },
+        {
+          "who": "gwang",
+          "text": "가정의 소비뿐 아니라 조부모에게도, 아이를 돌봐 주는 사람에게도 영향력을 지녀요."
+        },
+        {
+          "who": "haeun",
+          "text": "그래서 회사들이 아이한테 공을 들이는 거네요."
+        }
+      ],
+      "narrationOut": "바로 이것이 회사들이 아이들의 마음을 조종하려고 책략을 쓰는 이유예요.",
+      "cast": [
+        {
+          "who": "haeun",
+          "expression": "surprised",
+          "pose": "shrug"
+        },
+        {
+          "who": "gwang",
+          "expression": "neutral",
+          "pose": "present",
+          "flip": true
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "To trigger desire in a child is to trigger desire in the whole family.",
+      "translation": "아이에게 있는 욕구를 촉발시키는 것이 가족 전체의 욕구를 촉발시키는 것입니다.",
+      "highlight": [
+        "trigger",
+        "desire",
+        "whole",
+        "family"
+      ],
+      "narration": "이 지문의 핵심이 이 한 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "어릴 때 쓰기 시작하면 오래 쓰게 된다",
+        "아이는 가정의 소비에 영향력을 지닌다",
+        "그래서 회사들이 아이의 마음을 겨냥한다"
+      ],
+      "narration": "아이 하나를 움직이면 가족 전체가 움직인다는 이야기예요.",
+      "cast": [
+        {
+          "who": "haeun",
+          "expression": "thinking",
+          "pose": "cheer"
+        }
+      ]
+    }
+  ]
+}

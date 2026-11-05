@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/hire-the-incompetent/s0-narration.wav",
+    "seconds": 6.4,
+    "hash": "7303a294cb73",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/hire-the-incompetent/s1-narration.wav",
+    "seconds": 5.32,
+    "hash": "33a0f78bc634",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/hire-the-incompetent/s1-narrationOut.wav",
+    "seconds": 6.76,
+    "hash": "9299559e3317",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/hire-the-incompetent/s1-question.wav",
+    "seconds": 3.12,
+    "hash": "2b0dfe0ef804",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/hire-the-incompetent/s2-narration.wav",
+    "seconds": 4,
+    "hash": "4bfe31293ea4",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/hire-the-incompetent/s3-narration.wav",
+    "seconds": 3.68,
+    "hash": "74a1deafe53d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/hire-the-incompetent/s4-narration.wav",
+    "seconds": 6.56,
+    "hash": "8379394e7620",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/hire-the-incompetent/s5-narration.wav",
+    "seconds": 3.8,
+    "hash": "3cae0923ada8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/hire-the-incompetent/s5-narrationOut.wav",
+    "seconds": 5.92,
+    "hash": "336afccd7edb",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/hire-the-incompetent/s5-line0.wav",
+    "seconds": 2.8,
+    "hash": "7a898dd568fd",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/hire-the-incompetent/s5-line1.wav",
+    "seconds": 5.72,
+    "hash": "1a9db34693b2",
+    "voice": "ko-KR-Chirp3-HD-Algenib"
+  },
+  "s5-line2": {
+    "file": "audio/hire-the-incompetent/s5-line2.wav",
+    "seconds": 3.64,
+    "hash": "684b21d687be",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/hire-the-incompetent/s6-narration.wav",
+    "seconds": 3.64,
+    "hash": "2c7ffd857ffc",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/hire-the-incompetent/s7-narration.wav",
+    "seconds": 3.48,
+    "hash": "5056de9bcdc5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

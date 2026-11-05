@@ -1,0 +1,114 @@
+{
+  "slug": "semiotics-signs",
+  "title": "나무를 가리키는 여러 가지 방법",
+  "subtitle": "기호는 해석될 때만 기호가 돼요",
+  "source": "리딩파워 유형편 완성 · Unit 15 글의 순서 배열 Practice 03",
+  "kind": "academic",
+  "characters": {
+    "sol": {
+      "name": "솔",
+      "voice": { "name": "ko-KR-Chirp3-HD-Erinome", "rate": 1.08 },
+      "skin": "#F6D4B9",
+      "hair": "braids",
+      "hairColor": "#2F241E",
+      "outfit": "tshirt",
+      "outfitColor": "#5E9E86",
+      "accentColor": "#33443E",
+      "accessory": "headband",
+      "build": "slim"
+    },
+    "gi": {
+      "name": "기 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#665E56",
+      "outfit": "suit",
+      "outfitColor": "#6A5CC4",
+      "accentColor": "#363048",
+      "accessory": "roundGlasses",
+      "prop": "pen",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "나무를 가리키는 여러 가지 방법",
+      "subtitle": "기호학 · 기호란 무엇인가",
+      "narration": "이번 지문은 기호가 무엇인지를 나무 한 그루로 설명하고 있어요.",
+      "cast": [
+        { "who": "sol", "expression": "happy", "pose": "raise" },
+        { "who": "gi", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "솔이는 기호학이라는 말을 처음 듣고 어렵게만 느꼈어요.",
+      "question": "기호라는 게 그냥 글자 같은 건가?",
+      "thought": true,
+      "narrationOut": "간단히 말해서, 기호란 다른 어떤 것을 나타내는 것이에요.",
+      "cast": [{ "who": "sol", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "기호",
+      "meaning": "다른 어떤 것을 나타내는 것이에요. 창밖의 나무 한 그루를 가리키는 방법이 온갖 종류로 있는 것처럼요.",
+      "icon": "🌳",
+      "narration": "기호학은 바로 이 기호에 관한 이론이에요.",
+      "cast": [{ "who": "gi", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "나무를 나타내는 기호들",
+      "steps": [
+        { "label": "적힌 네 글자", "icon": "🔤" },
+        { "label": "말로 하는 '나무'", "icon": "🗣️" },
+        { "label": "나무의 그림", "icon": "🖼️" },
+        { "label": "플라스틱 장난감", "icon": "🧸" }
+      ],
+      "narration": "페이지에 적힌 t-r-e-e 네 글자도, 입으로 말하는 '나무'도 모두 기호예요."
+    },
+    {
+      "type": "analogy",
+      "heading": "몸짓도 기호가 돼요",
+      "concept": { "label": "나무라는 기호", "icon": "🌳" },
+      "everyday": { "label": "몸짓 놀이의 자세", "icon": "🙆" },
+      "because": "두 다리를 모으고 두 팔을 머리 위로 V자로 펼치면, 팀원들은 여러분이 나무를 표현한다고 추측할 거예요.",
+      "narration": "기호는 말, 이미지, 소리, 몸짓, 물체, 심지어 생각의 형태까지 띨 수 있어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "솔이는 그럼 무엇이든 기호가 될 수 있는지 물었어요.",
+      "lines": [
+        { "who": "sol", "text": "그럼 아무거나 다 기호가 될 수 있는 거예요?" },
+        { "who": "gi", "text": "될 잠재력은 있어요. 하지만 기호로 해석될 때에만 기호로서 구실을 해요." },
+        { "who": "sol", "text": "보는 사람이 알아봐야 비로소 기호가 되는 거네요." }
+      ],
+      "narrationOut": "창밖을 봄으로써 머릿속에 생기는 '나무'라는 생각 역시 기호예요.",
+      "cast": [
+        { "who": "sol", "expression": "surprised", "pose": "shrug" },
+        { "who": "gi", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Although almost anything has the potential to be a sign, it can only function as a sign if it is interpreted as a sign.",
+      "translation": "거의 어떤 것이든 기호가 될 수 있는 잠재력을 가지고 있지만, 그것이 기호로 해석될 경우에만 기호로서의 구실을 할 수 있습니다.",
+      "highlight": ["potential", "only", "interpreted"],
+      "narration": "기호학의 조건을 못 박는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "기호는 다른 어떤 것을 나타내는 것이다",
+        "글자·말·그림·물체·몸짓·생각 모두 기호가 된다",
+        "해석될 때에만 기호로서 구실을 한다"
+      ],
+      "narration": "무엇이든 기호가 될 수 있지만, 알아보는 사람이 있어야 해요.",
+      "cast": [{ "who": "sol", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

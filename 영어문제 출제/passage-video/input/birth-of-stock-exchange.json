@@ -1,0 +1,121 @@
+{
+  "slug": "birth-of-stock-exchange",
+  "title": "회사를 조각으로 나눈 생각",
+  "subtitle": "주식과 증권 거래소가 생긴 과정이에요",
+  "source": "리딩파워 유형편 완성 · Unit 14 문장 삽입 Practice 04",
+  "kind": "academic",
+  "characters": {
+    "taeo": {
+      "name": "태오",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F3CFB3",
+      "hair": "spiky",
+      "hairColor": "#2E241E",
+      "outfit": "hoodie",
+      "outfitColor": "#6A5CC4",
+      "accentColor": "#363048",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "ju": {
+      "name": "주 선생",
+      "voice": { "name": "ko-KR-Chirp3-HD-Algenib" },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#3A322B",
+      "outfit": "suit",
+      "outfitColor": "#8A5A4A",
+      "accentColor": "#3B302A",
+      "accessory": "glasses",
+      "prop": "coin",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "회사를 조각으로 나눈 생각",
+      "subtitle": "경제 · 주식과 증권 거래소의 탄생",
+      "narration": "이번 지문은 주식이라는 것이 어떻게 생겨났는지를 다루고 있어요.",
+      "cast": [
+        { "who": "taeo", "expression": "confused", "pose": "raise" },
+        { "who": "ju", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "태오는 주식이라는 말을 들어는 봤지만 정체가 잡히지 않았어요.",
+      "question": "회사를 조각으로 산다는 게 무슨 말이지?",
+      "thought": true,
+      "narrationOut": "사업체는 성장을 원할 때마다 투자자를 찾아야 해요.",
+      "cast": [{ "who": "taeo", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "주식",
+      "meaning": "회사를 '몫'으로 나눈 것이에요. 각각의 주식은 이익금의 특정한 비율을 나타내요.",
+      "icon": "📄",
+      "narration": "누군가 회사를 몫으로 나눈다는 멋진 생각을 해낸 거예요.",
+      "cast": [{ "who": "ju", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "주고받는 것",
+      "left": {
+        "label": "사업체가 얻는 것",
+        "icon": "🏭",
+        "points": ["필요한 돈을 받는다", "성장할 수 있다", "투자자를 찾아 나선다"]
+      },
+      "right": {
+        "label": "투자자가 얻는 것",
+        "icon": "💰",
+        "points": ["이익금의 일부", "이익이 있을 때만", "주식의 가치 상승"]
+      },
+      "narration": "투자자는 사업체가 필요로 하는 돈을 기꺼이 내려는 사람들이에요."
+    },
+    {
+      "type": "flow",
+      "heading": "거래소가 생기기까지",
+      "steps": [
+        { "label": "회사를 몫으로 나눔", "icon": "✂️" },
+        { "label": "중개인이 모여 판다", "icon": "🤝" },
+        { "label": "이익이 나면 값이 뛴다", "icon": "📈" },
+        { "label": "건물 안으로 들어간다", "icon": "🏛️" }
+      ],
+      "narration": "주식 중개인이라 불리는 사람들이 뉴욕 시의 중심가에 모여 주식을 팔곤 했어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "street",
+      "narration": "태오는 주식 값이 왜 오르는지 물었어요.",
+      "lines": [
+        { "who": "taeo", "text": "주식 값이 오른다는 건 왜 그런 거예요?" },
+        { "who": "ju", "text": "회사가 많은 이익을 내면 그 주식이 투자자에게 매년 많은 돈을 지불해 주니까요." },
+        { "who": "taeo", "text": "그래서 그만큼 가치가 생기는 거군요." }
+      ],
+      "narrationOut": "마침내 큰 회사의 중개인들이 사업을 건물 안으로 옮기면서, 월 가의 뉴욕 증권 거래소가 탄생했어요.",
+      "cast": [
+        { "who": "taeo", "expression": "surprised", "pose": "shrug" },
+        { "who": "ju", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Eventually, the brokers for these large companies moved their business into a building, and the New York Stock Exchange on Wall Street was born.",
+      "translation": "마침내 이러한 큰 회사들을 위해 일하는 주식 중개인들은 자신의 사업을 건물 안으로 옮겼으며, 월 가의 뉴욕 증권 거래소가 탄생하였습니다.",
+      "highlight": ["Eventually", "building", "Stock", "Exchange"],
+      "narration": "길거리에서 시작된 거래가 거래소가 되는 순간이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "성장하려는 사업체는 투자자를 찾아야 한다",
+        "회사를 몫으로 나눈 것이 주식이다",
+        "중개인들이 건물로 옮겨 증권 거래소가 됐다"
+      ],
+      "narration": "회사를 조각으로 나눈 생각 하나가 거래소까지 만들어 낸 거예요.",
+      "cast": [{ "who": "taeo", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

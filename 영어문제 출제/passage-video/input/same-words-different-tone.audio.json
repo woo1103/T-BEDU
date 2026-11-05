@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/same-words-different-tone/s0-narration.wav",
+    "seconds": 4.84,
+    "hash": "07a433dfa989",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/same-words-different-tone/s1-narration.wav",
+    "seconds": 4.4,
+    "hash": "9cd10751e089",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/same-words-different-tone/s1-narrationOut.wav",
+    "seconds": 3.6,
+    "hash": "7fa9713d695d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/same-words-different-tone/s1-question.wav",
+    "seconds": 3.12,
+    "hash": "8c9a103396d0",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/same-words-different-tone/s2-narration.wav",
+    "seconds": 4.8,
+    "hash": "73934e8b3809",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/same-words-different-tone/s3-narration.wav",
+    "seconds": 6.36,
+    "hash": "38b6560845ec",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/same-words-different-tone/s4-narration.wav",
+    "seconds": 3.76,
+    "hash": "f593e2b4a89c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/same-words-different-tone/s5-narration.wav",
+    "seconds": 3.84,
+    "hash": "083ed15f6822",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/same-words-different-tone/s5-narrationOut.wav",
+    "seconds": 4.92,
+    "hash": "bb541e38ca0d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/same-words-different-tone/s5-line0.wav",
+    "seconds": 3.4,
+    "hash": "05f5872d3eb8",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/same-words-different-tone/s5-line1.wav",
+    "seconds": 6.32,
+    "hash": "44762454672f",
+    "voice": "ko-KR-Chirp3-HD-Kore"
+  },
+  "s5-line2": {
+    "file": "audio/same-words-different-tone/s5-line2.wav",
+    "seconds": 2.56,
+    "hash": "c2953750107d",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/same-words-different-tone/s6-narration.wav",
+    "seconds": 3.68,
+    "hash": "a4d8d013827d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/same-words-different-tone/s7-narration.wav",
+    "seconds": 4.04,
+    "hash": "5a53e0b663d3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

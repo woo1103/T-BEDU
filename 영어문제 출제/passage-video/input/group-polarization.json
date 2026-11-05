@@ -1,0 +1,117 @@
+{
+  "slug": "group-polarization",
+  "title": "모여서 이야기하면 더 틀린다",
+  "subtitle": "대중의 지혜에는 조건이 있어요",
+  "source": "리딩파워 유형편 완성 · Unit 16 문단 요약 Example 02",
+  "kind": "academic",
+  "characters": {
+    "ara": {
+      "name": "아라",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "bob",
+      "hairColor": "#352620",
+      "outfit": "uniform",
+      "outfitColor": "#6A5CC4",
+      "accentColor": "#363048",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "jip": {
+      "name": "집 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E4C09E",
+      "hair": "short",
+      "hairColor": "#4A423A",
+      "outfit": "labcoat",
+      "outfitColor": "#9FAFBA",
+      "accentColor": "#3A444E",
+      "accessory": "roundGlasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "모여서 이야기하면 더 틀린다",
+      "subtitle": "심리 · 집단 극단화",
+      "narration": "이번 지문은 여럿이 모여 내리는 결정이 정말 더 나은지를 다루고 있어요.",
+      "cast": [
+        { "who": "ara", "expression": "confused", "pose": "raise" },
+        { "who": "jip", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "아라는 여럿이 의논하면 당연히 더 나은 답이 나올 줄 알았어요.",
+      "question": "여럿이 머리를 맞대면 더 낫지 않나?",
+      "thought": true,
+      "narrationOut": "분명히 다수가 개인보다 더 잘할 수 있지만, 불행히도 그게 항상 사실인 것은 아니에요.",
+      "cast": [{ "who": "ara", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "대중의 지혜가 작동하는 조건",
+      "meaning": "모든 판단이 서로 독립적이라는 사실에 부분적으로 기대고 있어요. 서로 영향을 주고받지 않아야 평균이 정확해져요.",
+      "icon": "🧮",
+      "narration": "이 조건이 깨지면 숫자가 많다는 것만으로는 소용이 없어요.",
+      "cast": [{ "who": "jip", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "같은 사람들, 다른 결과",
+      "left": {
+        "label": "따로 적어 낼 때",
+        "icon": "📝",
+        "points": ["소의 몸무게를 종이에 쓴다", "혁명 가능성을 웹사이트에 입력", "견해의 평균이 매우 정확하다"]
+      },
+      "right": {
+        "label": "모여서 이야기할 때",
+        "icon": "💬",
+        "points": ["같은 질문을 집단으로 논의", "이끌어 내는 답이 달라진다", "점점 더 부정확해진다"]
+      },
+      "narration": "놀랍게도 같은 사람들이 모여 이야기하면 답이 점점 더 부정확해져요."
+    },
+    {
+      "type": "concept",
+      "term": "집단 극단화",
+      "meaning": "개인으로서 가진 편견이 무엇이든, 집단으로 토론할 때 그 편견이 배가되는 현상이에요.",
+      "icon": "📢",
+      "narration": "연구원들이 발견한 효과가 바로 이것이에요.",
+      "cast": [{ "who": "jip", "expression": "neutral", "pose": "present" }]
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "아라는 그게 실제로 어떤 모습인지 물었어요.",
+      "lines": [
+        { "who": "ara", "text": "편견이 배가된다는 게 어떤 모습인가요?" },
+        { "who": "jip", "text": "개인들이 위험을 감수하는 쪽으로 약간 기울어 있으면, 집단은 그쪽으로 돌진해 버려요." },
+        { "who": "ara", "text": "약간 기운 게 확 쏠리는 거네요." }
+      ],
+      "narrationOut": "기울어진 방향이 어디든, 집단은 그 방향으로 훨씬 멀리 가 버려요.",
+      "cast": [
+        { "who": "ara", "expression": "surprised", "pose": "shrug" },
+        { "who": "jip", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "If individuals lean slightly toward taking a risk, the group leaps toward it.",
+      "translation": "만약 개인들이 위험을 감수하는 방향으로 약간 기운다면 집단은 그것을 향해 돌진해 버립니다.",
+      "highlight": ["slightly", "lean", "leaps"],
+      "narration": "'약간'과 '돌진'의 차이가 이 지문의 전부예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "대중의 지혜는 판단이 독립적일 때 작동한다",
+        "모여서 논의하면 답이 더 부정확해진다",
+        "개인의 편견이 집단에서 배가된다"
+      ],
+      "narration": "숫자가 많다고 저절로 지혜로워지지는 않는다는 이야기예요.",
+      "cast": [{ "who": "ara", "expression": "thinking", "pose": "cheer" }]
+    }
+  ]
+}

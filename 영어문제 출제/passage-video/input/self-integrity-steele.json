@@ -1,0 +1,120 @@
+{
+  "slug": "self-integrity-steele",
+  "title": "자아상이 흔들리면 벌어지는 일",
+  "subtitle": "무너진 이미지를 되돌리려 해요",
+  "source": "리딩파워 유형편 완성 · Unit 16 문단 요약 Practice 04",
+  "kind": "academic",
+  "characters": {
+    "jun": {
+      "name": "준",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F3CFB3",
+      "hair": "spiky",
+      "hairColor": "#2E241E",
+      "outfit": "tshirt",
+      "outfitColor": "#6A5CC4",
+      "accentColor": "#363048",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "mi": {
+      "name": "미 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Kore" },
+      "skin": "#F0CBAE",
+      "hair": "bob",
+      "hairColor": "#4A3A2E",
+      "outfit": "labcoat",
+      "outfitColor": "#8FA8B5",
+      "accentColor": "#3B4650",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "자아상이 흔들리면 벌어지는 일",
+      "subtitle": "심리 · 자기 완전성의 이미지",
+      "narration": "이번 지문은 자기 이미지가 위협받았을 때 사람이 어떻게 행동하는지를 다루고 있어요.",
+      "cast": [
+        { "who": "jun", "expression": "confused", "pose": "raise" },
+        { "who": "mi", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "준이는 나쁜 말을 들으면 그냥 기분만 나쁠 거라고 생각했어요.",
+      "question": "안 좋은 소리를 들으면 기분만 상하는 거 아닌가?",
+      "thought": true,
+      "narrationOut": "사람들은 자기 완전성의 이미지를 유지하려는 욕구를 가지고 있어요.",
+      "cast": [{ "who": "jun", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "자기 완전성의 이미지",
+      "meaning": "스스로를 온전하고 떳떳한 사람으로 보고 싶어 하는 마음이에요. 이 이미지가 흔들리면 되돌리려는 동기가 생겨요.",
+      "icon": "🪞",
+      "narration": "1975년에 스틸이 이 점을 보여 주는 초기 연구를 내놓았어요.",
+      "cast": [{ "who": "mi", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "실험이 진행된 순서",
+      "steps": [
+        { "label": "자아상에 위협을 가함", "icon": "💬" },
+        { "label": "이틀이 지난다", "icon": "📅" },
+        { "label": "도움을 요청하는 전화", "icon": "📞" },
+        { "label": "도움의 양을 비교", "icon": "📊" }
+      ],
+      "narration": "이틀 후, 동료 연구원이 각 여성에게 전화를 걸어 식품 협동조합을 도와 달라고 부탁했어요."
+    },
+    {
+      "type": "compare",
+      "heading": "들은 말에 따라 갈린 행동",
+      "left": {
+        "label": "자아상을 위협받은 집단",
+        "icon": "⚠️",
+        "points": ["비협조적이라는 말을 들음", "부주의한 운전자라는 말을 들음", "거의 두 배 더 많이 도왔다"]
+      },
+      "right": {
+        "label": "나머지 집단",
+        "icon": "➖",
+        "points": ["협조적이라는 말을 들음", "통제 집단은 아무 말도 안 들음", "평소만큼만 도왔다"]
+      },
+      "narration": "지역 사회의 일원으로서 어떤 사람인지가 누구나 아는 일이라고 말해 자아상에 위협을 가한 거예요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "준이는 왜 더 많이 도왔는지 물었어요.",
+      "lines": [
+        { "who": "jun", "text": "안 좋은 말을 들었는데 왜 오히려 더 도운 거예요?" },
+        { "who": "mi", "text": "협조적인 사람이라는 자아 개념을 되돌리려는 동기가 생긴 거예요." },
+        { "who": "jun", "text": "말로 무너진 걸 행동으로 메운 거네요." }
+      ],
+      "narrationOut": "스틸은 바로 그 복구하려는 동기로 이 효과를 설명했어요.",
+      "cast": [
+        { "who": "jun", "expression": "surprised", "pose": "shrug" },
+        { "who": "mi", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Steele explains this effect in terms of the women's motive to restore their self-concepts as cooperative people.",
+      "translation": "스틸은 협조적인 사람이라는 자신들의 자아 개념을 복구하려는 여성들의 동기의 관점에서 이 효과를 설명합니다.",
+      "highlight": ["motive", "restore", "self-concepts"],
+      "narration": "실험의 결과를 설명해 주는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "사람은 자기 완전성의 이미지를 지키려 한다",
+        "비협조적이라는 말을 들은 쪽이 더 많이 도왔다",
+        "무너진 자아 개념을 복구하려는 동기 때문이다"
+      ],
+      "narration": "흔들린 이미지를 행동으로 되돌리려 한다는 이야기예요.",
+      "cast": [{ "who": "jun", "expression": "thinking", "pose": "cheer" }]
+    }
+  ]
+}

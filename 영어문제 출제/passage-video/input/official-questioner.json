@@ -1,0 +1,190 @@
+{
+  "slug": "official-questioner",
+  "title": "오늘의 공식 질문자",
+  "subtitle": "질문할 책임이 수업을 바꿨어요",
+  "source": "리딩파워 유형편 완성 · Unit 15 글의 순서 배열 Example 01",
+  "kind": "story",
+  "characters": {
+    "prof": {
+      "name": "교수",
+      "voice": {
+        "name": "ko-KR-Chirp3-HD-Algenib"
+      },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "suit",
+      "outfitColor": "#6A6E8A",
+      "accentColor": "#333646",
+      "accessory": "glasses",
+      "build": "normal"
+    },
+    "carrie": {
+      "name": "캐리",
+      "voice": {
+        "name": "ko-KR-Chirp3-HD-Zephyr"
+      },
+      "skin": "#F5D1B6",
+      "hair": "long",
+      "hairColor": "#8A5A2E",
+      "outfit": "hoodie",
+      "outfitColor": "#C9748A",
+      "accentColor": "#3E3440",
+      "accessory": "none",
+      "build": "slim"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "오늘의 공식 질문자",
+      "subtitle": "이야기 · 한 학생이 겪은 변화",
+      "narration": "이번 지문은 한 교수가 수업에서 시도한 일과, 그 결과를 들려준 학생의 이야기예요.",
+      "cast": [
+        {
+          "who": "prof",
+          "expression": "happy",
+          "pose": "present"
+        },
+        {
+          "who": "carrie",
+          "expression": "neutral",
+          "pose": "idle"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "매 수업, 무작위로 뽑는 두 사람",
+      "narration": "교수는 수업 시간마다 무작위로 두 명을 뽑아 '공식 질문자'라는 칭호를 줬어요.",
+      "narrationOut": "이 학생들에게는 그 수업 동안 최소한 하나의 질문을 해야 할 책임이 주어졌어요.",
+      "cast": [
+        {
+          "who": "prof",
+          "expression": "neutral",
+          "pose": "point"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "그 날의 공식 질문자가 사무실을 찾아왔다",
+      "narration": "그 날의 공식 질문자였던 학생 캐리가 교수의 사무실로 찾아왔어요.",
+      "narrationOut": "교수는 서먹한 분위기를 깨려고 가볍게 말을 건넸어요.",
+      "cast": [
+        {
+          "who": "carrie",
+          "expression": "neutral",
+          "pose": "idle"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "쾌활하게 건넨 농담",
+      "narration": "교수는 쾌활한 말투로 물었어요.",
+      "speech": {
+        "who": "prof",
+        "text": "이번 학기 첫 번째 공식 질문자 중 한 명으로 지명되어 영광이었니?"
+      },
+      "narrationOut": "그런데 돌아온 대답은 진지했어요.",
+      "cast": [
+        {
+          "who": "prof",
+          "expression": "happy",
+          "pose": "present"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "진지한 어조로 돌아온 대답",
+      "narration": "캐리는 진지한 어조로 수업이 시작될 때의 심정을 말했어요.",
+      "speech": {
+        "who": "carrie",
+        "text": "지명해 주셨을 때는 정말 많이 긴장했어요."
+      },
+      "narrationOut": "하지만 그 수업이 진행되는 동안, 그녀는 다른 강의 때와는 아주 다른 느낌을 받았어요.",
+      "cast": [
+        {
+          "who": "carrie",
+          "expression": "sad",
+          "pose": "idle"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "다른 강의와 똑같은 강의였는데",
+      "narration": "그 강의는 다른 강의들과 비슷했지만, 이번만은 달랐어요.",
+      "speech": {
+        "who": "carrie",
+        "text": "어쩔 수 없이 더 높은 의식 수준을 가져야 했어요. 강의와 토론 내용을 훨씬 더 잘 알게 됐고요."
+      },
+      "narrationOut": "그 결과 그 수업에서 더 많은 것을 얻게 되었다고 그녀는 인정했어요.",
+      "cast": [
+        {
+          "who": "carrie",
+          "expression": "excited",
+          "pose": "present"
+        }
+      ]
+    },
+    {
+      "type": "flow",
+      "heading": "질문할 책임이 만든 변화",
+      "steps": [
+        {
+          "label": "질문자로 지명된다",
+          "icon": "🎯"
+        },
+        {
+          "label": "많이 긴장한다",
+          "icon": "😰"
+        },
+        {
+          "label": "의식 수준이 올라간다",
+          "icon": "👂"
+        },
+        {
+          "label": "더 많이 얻는다",
+          "icon": "📈"
+        }
+      ],
+      "narration": "긴장에서 시작된 것이 결국 더 깊은 집중으로 이어진 거예요."
+    },
+    {
+      "type": "quote",
+      "sentence": "She was forced to have a higher level of consciousness — she was more aware of the content of the lecture and discussion.",
+      "translation": "그녀는 더욱 높은 의식 수준을 가져야 했고, 강의와 토론의 내용을 더 잘 알게 되었습니다.",
+      "highlight": [
+        "forced",
+        "higher",
+        "aware"
+      ],
+      "narration": "이 이야기가 말하려는 바가 이 문장에 담겨 있어요."
+    },
+    {
+      "type": "recap",
+      "heading": "이야기의 흐름",
+      "points": [
+        "매 수업 두 명을 공식 질문자로 뽑았다",
+        "캐리는 지명됐을 때 매우 긴장했다",
+        "그러나 그 수업에서 더 많은 것을 얻었다"
+      ],
+      "narration": "질문해야 한다는 책임 하나가 듣는 방식을 바꿔 놓았어요.",
+      "cast": [
+        {
+          "who": "carrie",
+          "expression": "excited",
+          "pose": "cheer"
+        }
+      ]
+    }
+  ]
+}

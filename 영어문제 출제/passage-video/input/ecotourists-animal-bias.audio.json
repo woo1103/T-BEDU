@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/ecotourists-animal-bias/s0-narration.wav",
+    "seconds": 4.96,
+    "hash": "00183a17f4c0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/ecotourists-animal-bias/s1-narration.wav",
+    "seconds": 5.24,
+    "hash": "b3599ee6d1d5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/ecotourists-animal-bias/s1-narrationOut.wav",
+    "seconds": 4.36,
+    "hash": "44d2ceb02ac5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/ecotourists-animal-bias/s1-question.wav",
+    "seconds": 4.24,
+    "hash": "79acb7b3d669",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/ecotourists-animal-bias/s2-narration.wav",
+    "seconds": 6.4,
+    "hash": "4b30e561d7f0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/ecotourists-animal-bias/s3-narration.wav",
+    "seconds": 4.12,
+    "hash": "e1d7d6199aa6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/ecotourists-animal-bias/s4-narration.wav",
+    "seconds": 5.36,
+    "hash": "d942a9034240",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/ecotourists-animal-bias/s5-narration.wav",
+    "seconds": 4.72,
+    "hash": "ea130c3dbcc7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/ecotourists-animal-bias/s5-narrationOut.wav",
+    "seconds": 5.92,
+    "hash": "b76d75eec930",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/ecotourists-animal-bias/s5-line0.wav",
+    "seconds": 3.32,
+    "hash": "11364e76fb13",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/ecotourists-animal-bias/s5-line1.wav",
+    "seconds": 5.633333333333334,
+    "hash": "43a135aa89e0",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/ecotourists-animal-bias/s5-line2.wav",
+    "seconds": 2.4,
+    "hash": "35dfb44de4d9",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/ecotourists-animal-bias/s6-narration.wav",
+    "seconds": 3.92,
+    "hash": "a773338739df",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/ecotourists-animal-bias/s7-narration.wav",
+    "seconds": 3.64,
+    "hash": "637e677c284b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

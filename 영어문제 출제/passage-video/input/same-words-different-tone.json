@@ -1,0 +1,120 @@
+{
+  "slug": "same-words-different-tone",
+  "title": "같은 말, 다른 어조",
+  "subtitle": "'B 받았어'가 두 가지 뜻이 돼요",
+  "source": "리딩파워 유형편 완성 · Unit 16 문단 요약 Practice 02",
+  "kind": "academic",
+  "characters": {
+    "dain": {
+      "name": "다인",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "ponytail",
+      "hairColor": "#33251F",
+      "outfit": "uniform",
+      "outfitColor": "#C4564E",
+      "accentColor": "#3B3330",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "eo": {
+      "name": "어 선생님",
+      "voice": { "name": "ko-KR-Chirp3-HD-Kore" },
+      "skin": "#F0CBAE",
+      "hair": "bun",
+      "hairColor": "#4A3A2E",
+      "outfit": "suit",
+      "outfitColor": "#5E9E86",
+      "accentColor": "#33443E",
+      "accessory": "none",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "같은 말, 다른 어조",
+      "subtitle": "의사소통 · 어조가 하는 일",
+      "narration": "이번 지문은 똑같은 문장이 전혀 다른 뜻이 되는 경우를 다루고 있어요.",
+      "cast": [
+        { "who": "dain", "expression": "confused", "pose": "raise" },
+        { "who": "eo", "expression": "happy", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "다인이는 친구가 한 말이 왜 다르게 들렸는지 생각했어요.",
+      "question": "같은 말인데 왜 느낌이 다르지?",
+      "thought": true,
+      "narrationOut": "수학 시험 성적을 살펴보는 두 학생을 상상해 보세요.",
+      "cast": [{ "who": "dain", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "compare",
+      "heading": "'B'를 받은 두 학생",
+      "left": {
+        "label": "늘 C를 받던 학생",
+        "icon": "📈",
+        "points": ["열심히 하지만 C를 넘기 어렵다", "목소리에 놀라움과 행복감", "흥분되고 희망에 차 있다"]
+      },
+      "right": {
+        "label": "늘 A를 받던 학생",
+        "icon": "📉",
+        "points": ["학교에서 수학이 1등이다", "행복하지 않다는 것이 드러난다", "실망이나 걱정을 암시한다"]
+      },
+      "narration": "그런데 이 특정 시험에서 두 학생은 모두 'B'를 받았어요."
+    },
+    {
+      "type": "concept",
+      "term": "어조",
+      "meaning": "같은 단어를 쓰면서도 기분의 차이를 드러내는 목소리의 결이에요. 어조가 다르면 같은 말이 같은 것을 뜻하지 않아요.",
+      "icon": "🎵",
+      "narration": "두 학생은 성적을 이야기할 때 같은 단어를 쓰겠지만, 어조는 현저하게 다를 거예요.",
+      "cast": [{ "who": "eo", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "뜻이 갈리는 길",
+      "steps": [
+        { "label": "같은 문장을 말한다", "icon": "💬" },
+        { "label": "어조가 다르다", "icon": "🎵" },
+        { "label": "기분이 드러난다", "icon": "🙂" },
+        { "label": "뜻이 갈린다", "icon": "↔️" }
+      ],
+      "narration": "서로 다른 어조가 학생들의 기분의 차이를 나타내요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "다인이는 어떻게 그 차이를 알아챌 수 있는지 물었어요.",
+      "lines": [
+        { "who": "dain", "text": "같은 문장인데 어떻게 차이를 알 수 있어요?" },
+        { "who": "eo", "text": "첫 번째 학생은 놀라움과 행복감을 담아서 말할 거예요. 두 번째 학생은 실망이 묻어나겠죠." },
+        { "who": "dain", "text": "단어가 아니라 목소리를 듣는 거군요." }
+      ],
+      "narrationOut": "두 학생은 모두 같은 단어를 썼지만, 같은 것을 의미하지는 않았어요.",
+      "cast": [
+        { "who": "dain", "expression": "surprised", "pose": "shrug" },
+        { "who": "eo", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Both students used the same words, but they did not mean the same thing.",
+      "translation": "두 학생은 모두 같은 단어를 사용했으나 같은 것을 의미하지 않았습니다.",
+      "highlight": ["same", "words", "not", "same", "thing"],
+      "narration": "지문 전체를 한 문장으로 모아 주는 부분이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "두 학생이 같은 'B'를 받았다",
+        "같은 문장을 말해도 어조가 달랐다",
+        "어조가 기분의 차이를 드러낸다"
+      ],
+      "narration": "말의 뜻은 단어만으로 정해지지 않는다는 이야기예요.",
+      "cast": [{ "who": "dain", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

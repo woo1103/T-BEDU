@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/communal-bathing/s0-narration.wav",
+    "seconds": 5.08,
+    "hash": "e22a2e22afe5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/communal-bathing/s1-narration.wav",
+    "seconds": 4.44,
+    "hash": "cd259f3194f7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/communal-bathing/s1-narrationOut.wav",
+    "seconds": 6.12,
+    "hash": "203e5c06f877",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/communal-bathing/s1-question.wav",
+    "seconds": 2.48,
+    "hash": "b4bf18767c8b",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/communal-bathing/s2-narration.wav",
+    "seconds": 8.2,
+    "hash": "37d2f9aa3483",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/communal-bathing/s3-narration.wav",
+    "seconds": 5.64,
+    "hash": "878edb44e63b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/communal-bathing/s4-narration.wav",
+    "seconds": 5.48,
+    "hash": "7cbb7476fde4",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/communal-bathing/s5-narration.wav",
+    "seconds": 3.84,
+    "hash": "2cd8bdf8bba0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/communal-bathing/s5-narrationOut.wav",
+    "seconds": 6.04,
+    "hash": "3442d18cdaa5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/communal-bathing/s5-line0.wav",
+    "seconds": 3.56,
+    "hash": "cb1eb4aba1d7",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/communal-bathing/s5-line1.wav",
+    "seconds": 5.693333333333333,
+    "hash": "279c99c2ce5f",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/communal-bathing/s5-line2.wav",
+    "seconds": 2.68,
+    "hash": "a0c2e2dfc332",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/communal-bathing/s6-narration.wav",
+    "seconds": 2.08,
+    "hash": "2003341e9ec2",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/communal-bathing/s7-narration.wav",
+    "seconds": 4.28,
+    "hash": "021494cc2c70",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/whale-research-skepticism/s0-narration.wav",
+    "seconds": 5.12,
+    "hash": "11d3ae93737d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/whale-research-skepticism/s1-narration.wav",
+    "seconds": 4.08,
+    "hash": "a8fd46ce90bd",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/whale-research-skepticism/s1-narrationOut.wav",
+    "seconds": 3.2,
+    "hash": "98ef5651a9a8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/whale-research-skepticism/s1-question.wav",
+    "seconds": 3.16,
+    "hash": "ff55fb974369",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/whale-research-skepticism/s2-narration.wav",
+    "seconds": 6.76,
+    "hash": "de96e8616c1b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/whale-research-skepticism/s3-narration.wav",
+    "seconds": 6.64,
+    "hash": "7ddfe7bcb93d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/whale-research-skepticism/s4-narration.wav",
+    "seconds": 7.56,
+    "hash": "1da0028e997c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/whale-research-skepticism/s5-narration.wav",
+    "seconds": 2.96,
+    "hash": "63a9f7540536",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/whale-research-skepticism/s5-narrationOut.wav",
+    "seconds": 4.48,
+    "hash": "38779c399293",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/whale-research-skepticism/s5-line0.wav",
+    "seconds": 3.64,
+    "hash": "56a1109827f9",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/whale-research-skepticism/s5-line1.wav",
+    "seconds": 7.673333333333333,
+    "hash": "5a26cffd7c48",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/whale-research-skepticism/s5-line2.wav",
+    "seconds": 3.16,
+    "hash": "1e03226bcb1f",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-narration": {
+    "file": "audio/whale-research-skepticism/s6-narration.wav",
+    "seconds": 3.8,
+    "hash": "71735899df6b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/whale-research-skepticism/s7-narration.wav",
+    "seconds": 4.48,
+    "hash": "a8d8aaa80975",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

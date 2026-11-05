@@ -1,0 +1,120 @@
+{
+  "slug": "ecotourists-animal-bias",
+  "title": "아무도 참치를 보러 가지 않는다",
+  "subtitle": "생태 관광객도 동물을 가려요",
+  "source": "리딩파워 유형편 완성 · Unit 14 문장 삽입 Practice 01",
+  "kind": "academic",
+  "characters": {
+    "seoyun": {
+      "name": "서윤",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D4B9",
+      "hair": "braids",
+      "hairColor": "#38281F",
+      "outfit": "tshirt",
+      "outfitColor": "#4E9E8C",
+      "accentColor": "#33443E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "pyo": {
+      "name": "표 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#DDB48A",
+      "hair": "short",
+      "hairColor": "#3A322B",
+      "outfit": "labcoat",
+      "outfitColor": "#A8906A",
+      "accentColor": "#3E3629",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "아무도 참치를 보러 가지 않는다",
+      "subtitle": "생태 관광 · 동물을 고르는 기준",
+      "narration": "이번 지문은 생태 관광객이 어떤 동물에 끌리는지를 다루고 있어요.",
+      "cast": [
+        { "who": "seoyun", "expression": "happy", "pose": "raise" },
+        { "who": "pyo", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "서윤이는 자연을 보러 가는 사람이면 모든 동물을 똑같이 좋아할 줄 알았어요.",
+      "question": "동물 보러 가는 사람들이 동물을 가리기도 하나?",
+      "thought": true,
+      "narrationOut": "생태 관광객들은 동물에 관한 한 분명한 취향을 가지고 있어요.",
+      "cast": [{ "who": "seoyun", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "compare",
+      "heading": "끌리는 동물과 외면받는 동물",
+      "left": {
+        "label": "보러 가는 동물",
+        "icon": "🐬",
+        "points": ["'좋은' 동물과 재미있는 동물", "큰 동물은 경외한다", "나쁜 동물에도 매혹된다"]
+      },
+      "right": {
+        "label": "보러 가지 않는 동물",
+        "icon": "🐟",
+        "points": ["못생겼다고 여겨지는 동물", "재미없다고 여겨지는 동물", "관심 자체가 없다"]
+      },
+      "narration": "지루하거나 못생겼다고 여겨지는 야생 동물을 보러 여행하는 사람은 정말 아무도 없어요."
+    },
+    {
+      "type": "concept",
+      "term": "'좋은' 동물이 되는 이유",
+      "meaning": "돌고래와 원숭이는 지능 면에서 우리와 가장 가까워서 좋은 동물로 여겨져요. 돌고래는 아름답고, 원숭이는 재미있다고 생각하죠.",
+      "icon": "🐵",
+      "narration": "코끼리는 그 크기만으로 우리에게 인상을 남겨요.",
+      "cast": [{ "who": "pyo", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "관심이 갈리는 길",
+      "steps": [
+        { "label": "우리와 닮았다", "icon": "🐬" },
+        { "label": "크거나 위험하다", "icon": "🦁" },
+        { "label": "매혹된다", "icon": "✨" },
+        { "label": "나머지는 외면", "icon": "🚫" }
+      ],
+      "narration": "뱀과 사자는 나쁘고 사악한 살인자로 여겨지지만 그래도 여전히 매력적이에요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "서윤이는 외면받는 동물이 구체적으로 어떤 쪽인지 물었어요.",
+      "lines": [
+        { "who": "seoyun", "text": "외면받는 동물은 어떤 동물인가요?" },
+        { "who": "pyo", "text": "난쟁이땃쥐나 개미핥기, 영양을 보려고 많은 돈을 쓰려는 사람은 없을 거예요." },
+        { "who": "seoyun", "text": "참치를 보러 가는 사람도 없겠네요." }
+      ],
+      "narrationOut": "참치에게 바라는 건 하나뿐이에요. 어부의 그물에 '좋은' 돌고래가 걸리지 않는 것이죠.",
+      "cast": [
+        { "who": "seoyun", "expression": "surprised", "pose": "shrug" },
+        { "who": "pyo", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "No one goes tuna watching; we just want our supermarkets to ensure that when fishermen go hunting tuna, no 'nice' dolphins get caught in their nets!",
+      "translation": "아무도 참치 관찰 여행을 가지 않으며, 우리는 어부가 참치를 잡으러 나갈 때 '좋은' 돌고래가 그물에 걸리지 않도록 해 주기를 원할 따름입니다!",
+      "highlight": ["No", "one", "tuna", "nice", "dolphins"],
+      "narration": "우리가 동물을 얼마나 가려서 보는지 꼬집는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "생태 관광객은 좋고 재미있고 큰 동물에 끌린다",
+        "나쁜 동물도 매혹의 대상은 된다",
+        "못생기고 재미없는 동물에는 관심이 없다"
+      ],
+      "narration": "자연을 보러 간다면서도 사실은 골라서 보고 있는 셈이에요.",
+      "cast": [{ "who": "seoyun", "expression": "thinking", "pose": "cheer" }]
+    }
+  ]
+}

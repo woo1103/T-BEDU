@@ -1,0 +1,121 @@
+{
+  "slug": "babel-fish-clarity",
+  "title": "완벽한 통역기가 전쟁을 불렀다",
+  "subtitle": "분명해지자 차이가 선명해졌어요",
+  "source": "리딩파워 유형편 완성 · Unit 16 문단 요약 Practice 01",
+  "kind": "academic",
+  "characters": {
+    "uju": {
+      "name": "우주",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F3CFB3",
+      "hair": "spiky",
+      "hairColor": "#2E241E",
+      "outfit": "tshirt",
+      "outfitColor": "#4E7FC4",
+      "accentColor": "#333B4E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "eo": {
+      "name": "어 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#665E56",
+      "outfit": "suit",
+      "outfitColor": "#5A6E8A",
+      "accentColor": "#303A46",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "완벽한 통역기가 전쟁을 불렀다",
+      "subtitle": "소설 속 상상 · 소통과 차이",
+      "narration": "이번 지문은 한 공상과학 소설에 나오는 통역 생명체 이야기를 다루고 있어요.",
+      "cast": [
+        { "who": "uju", "expression": "happy", "pose": "raise" },
+        { "who": "eo", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "우주는 말만 통하면 다툴 일이 없을 거라고 생각했어요.",
+      "question": "서로 완벽하게 알아들으면 싸울 일도 없지 않나?",
+      "thought": true,
+      "narrationOut": "1970년대 후반, 더글러스 애덤스가 쓴 소설이 바로 그 질문을 다뤘어요.",
+      "cast": [{ "who": "uju", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "바벨 피시",
+      "meaning": "귀에 넣으면 상대가 하는 말을 듣는 사람의 언어로 자동으로, 그리고 분명하게 통역해 주는 작은 생명체예요.",
+      "icon": "🐟",
+      "narration": "소설은 우주여행자가 겪는 문제 하나를 짚어요. 아주 다양한 언어 때문에 서로 분명하게 소통하지 못한다는 것이죠.",
+      "cast": [{ "who": "eo", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "기대와 결과",
+      "left": {
+        "label": "기대했던 것",
+        "icon": "🤝",
+        "points": ["분명한 이해를 증진", "서로 다른 인종 사이의 관계를 도움", "오해가 사라진다"]
+      },
+      "right": {
+        "label": "실제 결과",
+        "icon": "⚔️",
+        "points": ["우주에 알려진 가장 유혈이 낭자한 전쟁", "차이가 선명해졌다", "분명함이 전쟁을 불렀다"]
+      },
+      "narration": "놀랍게도 바벨 피시를 사용한 최종 결과는 우주에 알려진 가장 유혈이 낭자한 전쟁이었어요."
+    },
+    {
+      "type": "flow",
+      "heading": "분명해질수록 벌어진 일",
+      "steps": [
+        { "label": "서로를 분명히 이해", "icon": "👂" },
+        { "label": "말에 같은 의미 부여", "icon": "🔤" },
+        { "label": "차이가 선명해짐", "icon": "🔍" },
+        { "label": "전쟁으로 이어짐", "icon": "⚔️" }
+      ],
+      "narration": "일단 서로를 분명하게 이해하고 말에 비슷한 의미를 부여하자, 그 분명함이 차이를 선명하게 규정했어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "우주는 왜 그런 결과가 나왔는지 물었어요.",
+      "lines": [
+        { "who": "uju", "text": "잘 통하게 됐는데 왜 전쟁이 난 거예요?" },
+        { "who": "eo", "text": "흐릿할 때는 가려져 있던 차이가, 분명해지자 또렷하게 드러났거든요." },
+        { "who": "uju", "text": "오해가 아니라 이해가 문제였던 거네요." }
+      ],
+      "narrationOut": "소통이 안 돼서 다투는 게 아니라, 너무 잘 통해서 다툴 수도 있다는 이야기예요.",
+      "cast": [
+        { "who": "uju", "expression": "surprised", "pose": "shrug" },
+        { "who": "eo", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "This clarity sharply defined their differences and led to war.",
+      "translation": "이 분명함은 그들의 차이점을 선명하게 규정하여 전쟁을 일으켰습니다.",
+      "highlight": ["clarity", "sharply", "differences", "war"],
+      "narration": "지문이 뒤집어 보여 주는 결론이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "바벨 피시는 말을 완벽하게 통역해 주었다",
+        "그러나 결과는 가장 유혈이 낭자한 전쟁이었다",
+        "분명함이 차이를 선명하게 만들었기 때문이다"
+      ],
+      "narration": "잘 통하는 것이 늘 화해로 이어지지는 않는다는 이야기예요.",
+      "cast": [{ "who": "uju", "expression": "thinking", "pose": "cheer" }]
+    }
+  ]
+}

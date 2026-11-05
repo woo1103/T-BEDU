@@ -1,0 +1,184 @@
+{
+  "slug": "soldier-bullet-watch",
+  "title": "총알을 매단 시곗줄",
+  "subtitle": "대왕의 농담에 돌아온 대답이에요",
+  "source": "리딩파워 유형편 완성 · Unit 15 글의 순서 배열 Practice 01",
+  "kind": "story",
+  "characters": {
+    "soldier": {
+      "name": "병사",
+      "voice": {
+        "name": "ko-KR-Chirp3-HD-Fenrir",
+        "rate": 1.05
+      },
+      "skin": "#F0CBAE",
+      "hair": "short",
+      "hairColor": "#3A2A20",
+      "outfit": "uniform",
+      "outfitColor": "#4A5E8A",
+      "accentColor": "#2C3442",
+      "accessory": "cap",
+      "build": "slim"
+    },
+    "king": {
+      "name": "프리드리히 대왕",
+      "voice": {
+        "name": "ko-KR-Chirp3-HD-Algenib"
+      },
+      "skin": "#E8CCAE",
+      "hair": "short",
+      "hairColor": "#6A5A48",
+      "outfit": "robe",
+      "outfitColor": "#8A5A4A",
+      "accentColor": "#3B302A",
+      "accessory": "crown",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "총알을 매단 시곗줄",
+      "subtitle": "이야기 · 프리드리히 대왕과 병사",
+      "narration": "이번 지문은 프러시아 군의 한 병사와 대왕 사이에 있었던 일을 들려주고 있어요.",
+      "cast": [
+        {
+          "who": "soldier",
+          "expression": "neutral",
+          "pose": "idle"
+        },
+        {
+          "who": "king",
+          "expression": "happy",
+          "pose": "present"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "매우 자랑스러운 시곗줄",
+      "narration": "어느 프러시아 군 연대의 한 병사에게는 매우 자랑스러운 시곗줄이 있었어요.",
+      "narrationOut": "그런데 시계를 살 형편이 되지 않았어요.",
+      "cast": [
+        {
+          "who": "soldier",
+          "expression": "happy",
+          "pose": "present"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "시곗줄 끝에 매달린 것",
+      "narration": "그래서 그는 시곗줄의 매여 있지 않은 끝에 총알 하나를 매달아 차고 다니곤 했어요.",
+      "narrationOut": "시계가 있어야 할 자리에 총알이 달려 있었던 거예요.",
+      "cast": [
+        {
+          "who": "soldier",
+          "expression": "neutral",
+          "pose": "idle"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "outdoor",
+      "caption": "대왕이 그 신기한 장신구를 보았다",
+      "narration": "하루는 프리드리히 대왕이 이 신기한 장신구를 보았어요.",
+      "narrationOut": "대왕은 그 병사와 재미있는 시간을 보내기로 하고, 다이아몬드가 박힌 자기 시계를 꺼냈어요.",
+      "cast": [
+        {
+          "who": "king",
+          "expression": "happy",
+          "pose": "point"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "outdoor",
+      "caption": "대왕이 건넨 질문",
+      "narration": "대왕이 물었어요.",
+      "speech": {
+        "who": "king",
+        "text": "내 시계를 보니 다섯 시로군. 자네 시계로는 몇 시인가?"
+      },
+      "narrationOut": "병사의 시곗줄에는 시계가 없었으니, 짓궂은 질문이었어요.",
+      "cast": [
+        {
+          "who": "king",
+          "expression": "happy",
+          "pose": "present"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "outdoor",
+      "caption": "병사의 대답",
+      "narration": "병사는 이렇게 대답했어요.",
+      "speech": {
+        "who": "soldier",
+        "text": "제 시계는 시간을 말해 주지는 않습니다만, 폐하를 위해 죽어야 하는 것이 제 의무라고 매 순간 말해 줍니다."
+      },
+      "narrationOut": "농담으로 던진 질문에 돌아온 것은 충성의 고백이었어요.",
+      "cast": [
+        {
+          "who": "soldier",
+          "expression": "neutral",
+          "pose": "present"
+        }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "outdoor",
+      "caption": "대왕이 건넨 것",
+      "sfx": "짠—",
+      "narration": "프리드리히는 이 대답에 매우 흡족해서 자기 시계를 그 병사에게 건넸어요.",
+      "speech": {
+        "who": "king",
+        "text": "자네가 시간도 알 수 있도록 이 시계를 받게."
+      },
+      "narrationOut": "총알이 달려 있던 시곗줄에 마침내 시계가 걸리게 된 거예요.",
+      "cast": [
+        {
+          "who": "king",
+          "expression": "excited",
+          "pose": "present"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "My watch does not tell me the hour, but tells me every minute that it is my duty to die for Your Majesty.",
+      "translation": "제 시계는 저에게 시간을 말해 주지는 않습니다만, 폐하를 위해 죽어야 하는 것이 제 의무라고 매 순간 저에게 말해 줍니다.",
+      "highlight": [
+        "not",
+        "every",
+        "minute",
+        "duty"
+      ],
+      "narration": "이 이야기 전체를 뒤집어 놓는 한마디예요."
+    },
+    {
+      "type": "recap",
+      "heading": "이야기의 흐름",
+      "points": [
+        "시계를 살 형편이 안 되어 총알을 매달았다",
+        "대왕이 장난삼아 시간을 물었다",
+        "병사의 대답에 감동해 자기 시계를 주었다"
+      ],
+      "narration": "짓궂은 농담이 뜻밖의 선물로 끝난 이야기예요.",
+      "cast": [
+        {
+          "who": "soldier",
+          "expression": "excited",
+          "pose": "cheer"
+        }
+      ]
+    }
+  ]
+}

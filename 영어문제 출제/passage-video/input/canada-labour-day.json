@@ -1,0 +1,120 @@
+{
+  "slug": "canada-labour-day",
+  "title": "캐나다가 날짜를 바꾸지 않은 이유",
+  "subtitle": "전통과 국경이 함께 걸려 있었어요",
+  "source": "리딩파워 유형편 완성 · Chapter 04 간접 글쓰기 Chapter Review 01",
+  "kind": "academic",
+  "characters": {
+    "nawoo": {
+      "name": "나우",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F3CFB3",
+      "hair": "short",
+      "hairColor": "#2C221C",
+      "outfit": "tshirt",
+      "outfitColor": "#C4564E",
+      "accentColor": "#3B3330",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "ro": {
+      "name": "로 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5F574F",
+      "outfit": "suit",
+      "outfitColor": "#5A6E8A",
+      "accentColor": "#303A46",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "캐나다가 날짜를 바꾸지 않은 이유",
+      "subtitle": "사회 · 노동절의 날짜",
+      "narration": "이번 지문은 캐나다 노동절이 9월에 남아 있는 이유를 다루고 있어요.",
+      "cast": [
+        { "who": "nawoo", "expression": "confused", "pose": "raise" },
+        { "who": "ro", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "나우는 노동절이 나라마다 다른 날이라는 걸 알고 의아했어요.",
+      "question": "세계 대부분이 같은 날인데 왜 혼자 다르지?",
+      "thought": true,
+      "narrationOut": "캐나다에서 노동절은 1880년대 이후로 9월 첫째 월요일에 기념되어 오고 있어요.",
+      "cast": [{ "who": "nawoo", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "바뀌지 않은 9월의 날짜",
+      "meaning": "캐나다 정부는 세계 대다수가 기념하는 5월 1일을 노동절로 채택하도록 권유받았어요. 그런데도 9월의 날짜는 변함없이 유지되고 있어요.",
+      "icon": "📅",
+      "narration": "권유를 받고도 날짜를 옮기지 않은 데에는 이유가 있어요.",
+      "cast": [{ "who": "ro", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "날짜를 옮기지 않은 두 가지 이유",
+      "left": {
+        "label": "전통과 인상의 문제",
+        "icon": "🏛️",
+        "points": ["전통과 단절하는 일이 된다", "국제주의적인 공감에 맞추는 것으로 보일 수 있다", "노동 운동의 성격 문제"]
+      },
+      "right": {
+        "label": "현실적인 문제",
+        "icon": "🤝",
+        "points": ["미국이 같은 날에 기념한다", "국경 양쪽에서 영업하는 기업들", "불편함을 줄여 준다"]
+      },
+      "narration": "공휴일을 옮기는 것은 전통과 단절하는 일일 뿐 아니라 다른 인상까지 줄 수 있었어요."
+    },
+    {
+      "type": "flow",
+      "heading": "날짜를 맞춰 두면",
+      "steps": [
+        { "label": "미국과 같은 날", "icon": "🇺🇸" },
+        { "label": "국경 양쪽에서 영업", "icon": "🏢" },
+        { "label": "일정이 어긋나지 않음", "icon": "🗓️" },
+        { "label": "불편함이 줄어든다", "icon": "✅" }
+      ],
+      "narration": "공휴일을 동일한 날로 맞추면 국경 양쪽에서 주요 영업 활동을 하는 기업들의 불편함이 줄어들어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "나우는 날짜 하나가 그렇게 중요한지 물었어요.",
+      "lines": [
+        { "who": "nawoo", "text": "날짜 하나 옮기는 게 그렇게 큰일인가요?" },
+        { "who": "ro", "text": "전통을 끊는 일이기도 하고, 기업들의 일정에도 바로 영향을 주니까요." },
+        { "who": "nawoo", "text": "그래서 권유를 받고도 그대로 둔 거군요." }
+      ],
+      "narrationOut": "전통과 현실적인 편의가 함께 9월의 날짜를 지켜 온 셈이에요.",
+      "cast": [
+        { "who": "nawoo", "expression": "surprised", "pose": "shrug" },
+        { "who": "ro", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Synchronizing the holiday reduces possible inconvenience for businesses with major operations on both sides of the border.",
+      "translation": "그 공휴일을 동일한 날로 맞추는 것은 국경 양쪽에서 주요 영업 활동을 하는 기업들의 있을 수 있는 불편함을 줄여 줍니다.",
+      "highlight": ["Synchronizing", "inconvenience", "both", "sides"],
+      "narration": "날짜를 지켜 온 가장 현실적인 이유예요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "캐나다 노동절은 1880년대부터 9월 첫째 월요일이다",
+        "5월 1일로 옮기라는 권유를 받았지만 바꾸지 않았다",
+        "전통과 미국과의 일정 때문에 그대로 유지한다"
+      ],
+      "narration": "날짜 하나에 전통과 경제가 함께 묶여 있었던 거예요.",
+      "cast": [{ "who": "nawoo", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

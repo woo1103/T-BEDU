@@ -1,0 +1,121 @@
+{
+  "slug": "communal-bathing",
+  "title": "함께 씻던 시절이 사라졌다",
+  "subtitle": "공중 목욕의 소실은 더 큰 변화의 징후예요",
+  "source": "리딩파워 유형편 완성 · Unit 15 글의 순서 배열 Practice 02",
+  "kind": "academic",
+  "characters": {
+    "yerim": {
+      "name": "예림",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B6",
+      "hair": "ponytail",
+      "hairColor": "#31241E",
+      "outfit": "uniform",
+      "outfitColor": "#5E9E6A",
+      "accentColor": "#33443A",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "ha": {
+      "name": "하 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5F574F",
+      "outfit": "suit",
+      "outfitColor": "#5A6E8A",
+      "accentColor": "#303A46",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "함께 씻던 시절이 사라졌다",
+      "subtitle": "사회 · 공중 목욕의 소실",
+      "narration": "이번 지문은 목욕이 집단적 행위였던 시절과 지금을 비교하고 있어요.",
+      "cast": [
+        { "who": "yerim", "expression": "confused", "pose": "raise" },
+        { "who": "ha", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "예림이는 목욕이 원래 혼자 하는 일이라고만 생각했어요.",
+      "question": "목욕이 혼자 하는 일이 아니었던 적도 있나?",
+      "thought": true,
+      "narrationOut": "인류 역사의 대부분 기간 동안, 세계 대부분의 지역에서 목욕은 집단적 행위였어요.",
+      "cast": [{ "who": "yerim", "expression": "surprised", "pose": "think" }]
+    },
+    {
+      "type": "compare",
+      "heading": "목욕탕이 하던 일",
+      "left": {
+        "label": "그리스에서는",
+        "icon": "🎭",
+        "points": ["자기표현과 연결됐다", "노래와 춤이 있었다", "스포츠와 이어졌다"]
+      },
+      "right": {
+        "label": "로마에서는",
+        "icon": "🏛️",
+        "points": ["지역 공동체 센터였다", "먹고 운동하는 곳", "책 읽고 정치를 토론하는 곳"]
+      },
+      "narration": "고대 아시아에서는 영혼과 육체의 정화와 관련된 의학적 혜택이 있다고 믿어진 종교적 의식이었어요."
+    },
+    {
+      "type": "concept",
+      "term": "공중 목욕의 소실",
+      "meaning": "함께 씻는 관습이 현대 사회에서는 드물어졌어요. 특히 큰 도시의 영어권 국가에서는 실질적으로 없어졌어요.",
+      "icon": "🛁",
+      "narration": "일본, 스웨덴, 터키처럼 아직 사회생활의 중요한 일부로 남아 있는 곳도 있어요.",
+      "cast": [{ "who": "ha", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "무엇이 함께 변했나",
+      "steps": [
+        { "label": "작은 제의적 사회", "icon": "🔥" },
+        { "label": "거대한 대도시로", "icon": "🏙️" },
+        { "label": "느슨한 관계망", "icon": "🕸️" },
+        { "label": "사적인 개인들", "icon": "🚪" }
+      ],
+      "narration": "공중 목욕의 소실은 이 더 큰 전 세계적 변화의 한 가지 증상이에요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "예림이는 목욕탕이 사라진 것이 왜 중요한지 물었어요.",
+      "lines": [
+        { "who": "yerim", "text": "목욕탕 하나 사라진 게 그렇게 중요한 일인가요?" },
+        { "who": "ha", "text": "함께 모이던 자리가 사라진 거니까요. 그게 사회가 어떻게 변했는지를 보여 줘요." },
+        { "who": "yerim", "text": "그래서 '증상'이라고 표현한 거군요." }
+      ],
+      "narrationOut": "작은 제의적 사회에서 거대한 도회적 대도시로 옮겨 간 흐름의 한 증상이라는 이야기예요.",
+      "cast": [
+        { "who": "yerim", "expression": "thinking", "pose": "shrug" },
+        { "who": "ha", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "The eclipse of communal bathing is one symptom of a wider global transformation.",
+      "translation": "공중 목욕의 소실은 더 넓은 전 세계적인 변화의 한 가지 증상입니다.",
+      "highlight": ["eclipse", "symptom", "wider", "transformation"],
+      "narration": "지문이 결론으로 내놓는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "목욕은 오랫동안 집단적 행위였다",
+        "그리스·로마에서는 공동체의 중심이었다",
+        "현대 대도시에서는 거의 사라졌다"
+      ],
+      "narration": "함께 씻던 자리가 사라진 것이 사회 변화의 한 증상이라는 거예요.",
+      "cast": [{ "who": "yerim", "expression": "thinking", "pose": "cheer" }]
+    }
+  ]
+}

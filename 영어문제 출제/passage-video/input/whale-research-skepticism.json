@@ -1,0 +1,120 @@
+{
+  "slug": "whale-research-skepticism",
+  "title": "더 알면 더 잘 지킬 수 있을까",
+  "subtitle": "역사는 회의할 이유를 줘요",
+  "source": "리딩파워 유형편 완성 · Chapter 04 간접 글쓰기 Chapter Review 02",
+  "kind": "academic",
+  "characters": {
+    "barda": {
+      "name": "바다",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B6",
+      "hair": "long",
+      "hairColor": "#31241E",
+      "outfit": "tshirt",
+      "outfitColor": "#4E9E8C",
+      "accentColor": "#33443E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "go": {
+      "name": "고 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#DDB48A",
+      "hair": "short",
+      "hairColor": "#332B24",
+      "outfit": "labcoat",
+      "outfitColor": "#A8906A",
+      "accentColor": "#3E3629",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "더 알면 더 잘 지킬 수 있을까",
+      "subtitle": "환경 · 고래 연구를 둘러싼 논쟁",
+      "narration": "이번 지문은 고래를 연구하는 것이 정말 고래를 돕는지를 묻고 있어요.",
+      "cast": [
+        { "who": "barda", "expression": "thinking", "pose": "raise" },
+        { "who": "go", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "바다는 많이 알수록 잘 보호할 수 있다는 말에 고개를 끄덕였어요.",
+      "question": "더 많이 알면 더 잘 지킬 수 있는 거 아닌가?",
+      "thought": true,
+      "narrationOut": "이 주장은 의심할 여지없이 장점이 있어요.",
+      "cast": [{ "who": "barda", "expression": "happy", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "연구가 만든 자리",
+      "meaning": "지금껏 이루어진 과학적 연구가 없었다면, 오늘날 우리는 고래의 권리에 찬성하는 입장에 서 있지도 못했을 거예요.",
+      "icon": "🔬",
+      "narration": "그래서 추가적인 호의적 연구가 고래에게 이익이 된다고 확신할 수 있다면, 누가 반대하겠어요.",
+      "cast": [{ "who": "go", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "주장과 반론",
+      "left": {
+        "label": "찬성하는 쪽",
+        "icon": "📖",
+        "points": ["더 알수록 더 잘 보호한다", "연구가 권리 주장의 근거가 됐다", "호의적 연구라면 반대할 이유가 없다"]
+      },
+      "right": {
+        "label": "회의하는 쪽",
+        "icon": "⚠️",
+        "points": ["역사가 회의할 이유를 준다", "과학은 동물에게 불리하게 쓰인 적이 더 많다", "고래라고 다를까"]
+      },
+      "narration": "말하기는 언짢지만, 과학은 동물에게 유리하기보다 불리하게 이용된 적이 더 많아요."
+    },
+    {
+      "type": "flow",
+      "heading": "늑대에게 일어난 일",
+      "steps": [
+        { "label": "호의적인 연구", "icon": "🔬" },
+        { "label": "결과가 쌓인다", "icon": "📊" },
+        { "label": "다른 손에 들어간다", "icon": "🔁" },
+        { "label": "늑대에게 불리하게", "icon": "🐺" }
+      ],
+      "narration": "시드니 홀트는 늑대와 관련된 호의적 연구의 결과가 지금 늑대에게 불리하게 이용되고 있는 사례를 들었어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "바다는 그럼 연구를 하지 말아야 하는지 물었어요.",
+      "lines": [
+        { "who": "barda", "text": "그럼 연구를 아예 하지 말아야 한다는 말인가요?" },
+        { "who": "go", "text": "연구가 없었다면 고래의 권리를 주장할 수도 없었어요. 다만 결과가 어떻게 쓰일지는 장담할 수 없죠." },
+        { "who": "barda", "text": "연구 자체가 아니라 쓰임이 문제군요." }
+      ],
+      "narrationOut": "이런 일이 고래에게도 해당되지 않을 거라고 누가 확신할 수 있을까요.",
+      "cast": [
+        { "who": "barda", "expression": "confused", "pose": "shrug" },
+        { "who": "go", "expression": "sad", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Sad though it is to say, science has been more often used against animals than for them.",
+      "translation": "말하기는 언짢지만, 과학은 동물에게 유리하기보다는 불리하게 이용된 적이 더 많습니다.",
+      "highlight": ["against", "animals", "than", "for"],
+      "narration": "이 지문이 회의하는 이유를 그대로 적어 둔 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "연구 덕분에 고래의 권리를 주장할 수 있게 됐다",
+        "그러나 과학은 동물에게 불리하게 쓰인 적이 더 많다",
+        "늑대 연구가 늑대에게 불리하게 쓰이고 있다"
+      ],
+      "narration": "더 아는 것이 늘 더 지키는 것으로 이어지지는 않는다는 이야기예요.",
+      "cast": [{ "who": "barda", "expression": "thinking", "pose": "cheer" }]
+    }
+  ]
+}

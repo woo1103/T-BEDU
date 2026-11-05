@@ -1,0 +1,92 @@
+{
+  "s0-narration": {
+    "file": "audio/nodding-headphones/s0-narration.wav",
+    "seconds": 4.52,
+    "hash": "48ba840098b5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/nodding-headphones/s1-narration.wav",
+    "seconds": 4.72,
+    "hash": "32f1c036ba12",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/nodding-headphones/s1-narrationOut.wav",
+    "seconds": 5.76,
+    "hash": "8d9884a036d7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/nodding-headphones/s1-question.wav",
+    "seconds": 2.3383333333333334,
+    "hash": "5f9b06492f31",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s2-narration": {
+    "file": "audio/nodding-headphones/s2-narration.wav",
+    "seconds": 5.2,
+    "hash": "4dd1c6fbfb73",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/nodding-headphones/s3-narration.wav",
+    "seconds": 5.32,
+    "hash": "e0379e0596fb",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/nodding-headphones/s4-narration.wav",
+    "seconds": 6.88,
+    "hash": "1764f51286e6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/nodding-headphones/s5-narration.wav",
+    "seconds": 4.72,
+    "hash": "2c3717693303",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/nodding-headphones/s6-narration.wav",
+    "seconds": 3.76,
+    "hash": "d28ba528c7d4",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narrationOut": {
+    "file": "audio/nodding-headphones/s6-narrationOut.wav",
+    "seconds": 5.28,
+    "hash": "25e2c2ea43b6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-line0": {
+    "file": "audio/nodding-headphones/s6-line0.wav",
+    "seconds": 3.477333333333333,
+    "hash": "3bd848ee07c5",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s6-line1": {
+    "file": "audio/nodding-headphones/s6-line1.wav",
+    "seconds": 5.993333333333333,
+    "hash": "5fb839f489ba",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s6-line2": {
+    "file": "audio/nodding-headphones/s6-line2.wav",
+    "seconds": 2.4053333333333335,
+    "hash": "a89ea309aa2f",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s7-narration": {
+    "file": "audio/nodding-headphones/s7-narration.wav",
+    "seconds": 2.8,
+    "hash": "be0856920ebd",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-narration": {
+    "file": "audio/nodding-headphones/s8-narration.wav",
+    "seconds": 3.64,
+    "hash": "06903428631a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

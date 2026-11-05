@@ -1,0 +1,120 @@
+{
+  "slug": "groupwork-effort-gap",
+  "title": "조별 과제가 어긋나는 이유",
+  "subtitle": "덜 하는 쪽만 문제가 아니에요",
+  "source": "리딩파워 유형편 완성 · Unit 14 문장 삽입 Practice 03",
+  "kind": "academic",
+  "characters": {
+    "jiwoo": {
+      "name": "지우",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D2B6",
+      "hair": "long",
+      "hairColor": "#352620",
+      "outfit": "uniform",
+      "outfitColor": "#5E9E6A",
+      "accentColor": "#33443A",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "mo": {
+      "name": "모 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E7C5A3",
+      "hair": "short",
+      "hairColor": "#625A52",
+      "outfit": "suit",
+      "outfitColor": "#4A5E8A",
+      "accentColor": "#2C3442",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "조별 과제가 어긋나는 이유",
+      "subtitle": "집단 역학 · 노력의 불균형",
+      "narration": "이번 지문은 집단 작업에서 가장 흔한 문제를 다루고 있어요.",
+      "cast": [
+        { "who": "jiwoo", "expression": "sad", "pose": "raise" },
+        { "who": "mo", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "지우는 조별 과제를 할 때마다 똑같은 일이 반복된다고 느꼈어요.",
+      "question": "왜 늘 누구는 놀고 누구만 고생할까?",
+      "thought": true,
+      "narrationOut": "모든 사람이 똑같은 양의 노력을 들이지 않는 것이 가장 흔한 문제예요.",
+      "cast": [{ "who": "jiwoo", "expression": "sad", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "책임감의 수준 차이",
+      "meaning": "구성원마다 업무 윤리나 일의 질에 대한 기준이 달라서, 집단 업무에 대한 책임감의 수준도 다르게 나타나요.",
+      "icon": "⚖️",
+      "narration": "개인적인 업무량의 영향도 있지만, 공부에 대한 개인의 태도 같은 더 넓은 요인도 있어요.",
+      "cast": [{ "who": "mo", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "같은 문제의 두 얼굴",
+      "left": {
+        "label": "덜 하는 구성원",
+        "icon": "🥱",
+        "points": ["노력의 양이 적다", "기준이 서로 다르다", "흔히 지적되는 쪽"]
+      },
+      "right": {
+        "label": "지나치게 열성적인 구성원",
+        "icon": "🔥",
+        "points": ["남들보다 더 하기로 마음먹는다", "다른 구성원을 짜증 나게 한다", "같은 문제의 다른 측면"]
+      },
+      "narration": "한 구성원이 나머지보다 더 많은 일을 하기로 마음먹는 것도 같은 문제의 한 측면이에요."
+    },
+    {
+      "type": "flow",
+      "heading": "갈등이 쌓이는 순서",
+      "steps": [
+        { "label": "한 명이 더 떠안는다", "icon": "🙋" },
+        { "label": "나머지가 짜증 난다", "icon": "😤" },
+        { "label": "책임을 줄인다", "icon": "📉" },
+        { "label": "결국 분노가 쌓인다", "icon": "💢" }
+      ],
+      "narration": "다른 구성원들은 책임을 줄이고 대부분의 일을 그 사람에게 맡겨 버려요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "지우는 열심히 한 쪽이 왜 화가 나는지 물었어요.",
+      "lines": [
+        { "who": "jiwoo", "text": "자기가 하겠다고 한 건데 왜 화가 나는 거예요?" },
+        { "who": "mo", "text": "공평한 몫보다 더 많이 맡으면, 자원했더라도 결국 늘어난 업무량에 분노를 느끼게 돼요." },
+        { "who": "jiwoo", "text": "그럼 조 전체 분위기가 달라지겠네요." }
+      ],
+      "narrationOut": "이것이 집단 역학을 바꾸고, 아마 집단 안에 갈등을 일으키게 돼요.",
+      "cast": [
+        { "who": "jiwoo", "expression": "surprised", "pose": "shrug" },
+        { "who": "mo", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "By taking on more than her fair share, the overeager member may eventually come to feel resentful with her increased workload, even if she volunteered for extra tasks.",
+      "translation": "공평한 몫보다 더 많이 일을 맡음으로써, 지나치게 열성적인 구성원은 추가 업무를 자원했더라도 결국 증가된 업무량으로 인해 분노를 느끼게 될 것입니다.",
+      "highlight": ["more", "fair", "share", "resentful"],
+      "narration": "이 지문이 새로 짚어 주는 쪽이 바로 이 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "집단 작업의 흔한 문제는 노력의 불균형이다",
+        "덜 하는 쪽만이 아니라 더 하는 쪽도 문제가 된다",
+        "결국 집단 역학이 바뀌고 갈등이 생긴다"
+      ],
+      "narration": "혼자 다 떠안는 것도 해결이 아니라는 이야기예요.",
+      "cast": [{ "who": "jiwoo", "expression": "thinking", "pose": "cheer" }]
+    }
+  ]
+}

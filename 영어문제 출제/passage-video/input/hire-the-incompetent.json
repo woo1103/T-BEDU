@@ -1,0 +1,121 @@
+{
+  "slug": "hire-the-incompetent",
+  "title": "완벽한 지원자를 건너뛰어라",
+  "subtitle": "배운 것을 잊을 수 있는 사람을 찾아요",
+  "source": "리딩파워 유형편 완성 · Chapter 04 간접 글쓰기 Chapter Review 04",
+  "kind": "academic",
+  "characters": {
+    "chae": {
+      "name": "채린",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "bob",
+      "hairColor": "#352620",
+      "outfit": "suit",
+      "outfitColor": "#C9748A",
+      "accentColor": "#3E3440",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "gyeong": {
+      "name": "경 대표",
+      "voice": { "name": "ko-KR-Chirp3-HD-Algenib" },
+      "skin": "#E8CCAE",
+      "hair": "short",
+      "hairColor": "#453D35",
+      "outfit": "suit",
+      "outfitColor": "#4A5E8A",
+      "accentColor": "#2C3442",
+      "accessory": "glasses",
+      "prop": "pen",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "완벽한 지원자를 건너뛰어라",
+      "subtitle": "경영 · 채용을 보는 다른 눈",
+      "narration": "이번 지문은 이력서를 볼 때 무엇을 보아야 하는지를 뒤집어 말하고 있어요.",
+      "cast": [
+        { "who": "chae", "expression": "confused", "pose": "raise" },
+        { "who": "gyeong", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "채린이는 자격을 가장 잘 갖춘 사람을 뽑는 게 당연하다고 생각했어요.",
+      "question": "경력 많은 사람을 뽑는 게 당연한 거 아닌가?",
+      "thought": true,
+      "narrationOut": "그런데 다음번에 이력서를 볼 때는 완벽한 자격을 갖춘 지원자를 모두 한번 무시해 보라고 해요.",
+      "cast": [{ "who": "chae", "expression": "surprised", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "배운 것을 잊는 일",
+      "meaning": "사우스웨스트 항공사는 다른 항공사에서 일한 경력자를 뽑지 않아요. 거기서 배운 것을 잊을 수 있다고 확신하지 않는 한 말이죠.",
+      "icon": "🧹",
+      "narration": "경력이 곧 자산이 아니라 짐이 될 수도 있다는 거예요.",
+      "cast": [{ "who": "gyeong", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "어떤 사람을 찾을까",
+      "left": {
+        "label": "완벽한 자격을 갖춘 사람",
+        "icon": "🏅",
+        "points": ["'유능함'이라는 말이 붙는다", "흔히 '나쁜 태도'의 다른 말이다", "잊어야 할 습관이 쌓여 있다"]
+      },
+      "right": {
+        "label": "거듭 서툴렀던 사람",
+        "icon": "🌱",
+        "points": ["빠르게 익힐 만큼 영리하다", "새로운 것을 시도할 만큼 안달이 나 있다", "버려야 할 습관이 없다"]
+      },
+      "narration": "'유능함'은 너무도 자주 '나쁜 태도'의 다른 말이 되곤 해요."
+    },
+    {
+      "type": "flow",
+      "heading": "왜 젊은 사람들이 많을까",
+      "steps": [
+        { "label": "경력이 거의 없다", "icon": "🪶" },
+        { "label": "유능함에 빠지지 않았다", "icon": "🛡️" },
+        { "label": "잊을 습관이 없다", "icon": "✨" },
+        { "label": "새것을 시도한다", "icon": "🚀" }
+      ],
+      "narration": "오늘날 부를 창출하는 신생 회사들이 아주 젊은 사람들로 운영되고 채워진 것은 그리 놀라운 일이 아니에요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "채린이는 그래도 경력이 필요하지 않냐고 물었어요.",
+      "lines": [
+        { "who": "chae", "text": "그래도 경력이 있어야 일을 하지 않나요?" },
+        { "who": "gyeong", "text": "일은 금방 익혀요. 문제는 전에 배운 방식을 내려놓을 수 있느냐죠." },
+        { "who": "chae", "text": "익히는 속도보다 버리는 능력을 본다는 거군요." }
+      ],
+      "narrationOut": "빠르게 익히고도 새로운 것을 시도할 만큼 안달이 난 사람, 그런 사람을 찾으라는 이야기예요.",
+      "cast": [
+        { "who": "chae", "expression": "thinking", "pose": "shrug" },
+        { "who": "gyeong", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Because they have very little work history, these people haven't fallen prey to becoming competent. They don't have to unlearn bad habits.",
+      "translation": "경력이 거의 없기 때문에, 이 사람들은 유능해지는 것의 희생양이 되지 않았습니다. 그들은 나쁜 습관을 잊을 필요가 없습니다.",
+      "highlight": ["little", "work", "history", "unlearn"],
+      "narration": "이 지문이 뒤집어 말하려는 바가 여기 다 있어요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "완벽한 자격을 갖춘 지원자를 한번 건너뛰어 보라",
+        "'유능함'은 자주 '나쁜 태도'의 다른 말이다",
+        "빨리 익히고 새것을 시도하는 사람을 찾아라"
+      ],
+      "narration": "배울 능력보다 버릴 능력을 본다는 이야기예요.",
+      "cast": [{ "who": "chae", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

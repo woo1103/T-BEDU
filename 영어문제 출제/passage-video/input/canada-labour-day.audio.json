@@ -1,0 +1,86 @@
+{
+  "s0-narration": {
+    "file": "audio/canada-labour-day/s0-narration.wav",
+    "seconds": 4.68,
+    "hash": "9fb9e8090d20",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/canada-labour-day/s1-narration.wav",
+    "seconds": 4.16,
+    "hash": "39992dd517a9",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/canada-labour-day/s1-narrationOut.wav",
+    "seconds": 6.76,
+    "hash": "af40b42212c8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/canada-labour-day/s1-question.wav",
+    "seconds": 3.142333333333333,
+    "hash": "c20659f83d1c",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s2-narration": {
+    "file": "audio/canada-labour-day/s2-narration.wav",
+    "seconds": 4,
+    "hash": "c328dd3dbb0e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/canada-labour-day/s3-narration.wav",
+    "seconds": 5.84,
+    "hash": "9b993bd7380e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/canada-labour-day/s4-narration.wav",
+    "seconds": 6.04,
+    "hash": "8984f6d433a7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/canada-labour-day/s5-narration.wav",
+    "seconds": 3.4,
+    "hash": "44a52bd99030",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/canada-labour-day/s5-narrationOut.wav",
+    "seconds": 4.88,
+    "hash": "20e6ff19ee7f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/canada-labour-day/s5-line0.wav",
+    "seconds": 2.1373333333333333,
+    "hash": "ff33b9d42b0f",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s5-line1": {
+    "file": "audio/canada-labour-day/s5-line1.wav",
+    "seconds": 4.613333333333333,
+    "hash": "969db5d3ca32",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/canada-labour-day/s5-line2.wav",
+    "seconds": 2.4723333333333333,
+    "hash": "6af226809cea",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s6-narration": {
+    "file": "audio/canada-labour-day/s6-narration.wav",
+    "seconds": 3.32,
+    "hash": "87f82eac45ec",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/canada-labour-day/s7-narration.wav",
+    "seconds": 4.24,
+    "hash": "2dd9aae9cb65",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "slug": "flipped-learning",
+  "title": "수업 시간에 설명을 안 한다면",
+  "subtitle": "역진행 수업은 순서를 뒤집어요",
+  "source": "리딩파워 유형편 완성 · Unit 14 문장 삽입 Example 02",
+  "kind": "academic",
+  "characters": {
+    "hajun": {
+      "name": "하준",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F3CFB3",
+      "hair": "spiky",
+      "hairColor": "#2E241E",
+      "outfit": "hoodie",
+      "outfitColor": "#4E7FC4",
+      "accentColor": "#333B4E",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "yu": {
+      "name": "유 선생님",
+      "voice": { "name": "ko-KR-Chirp3-HD-Kore" },
+      "skin": "#F0CBAE",
+      "hair": "bob",
+      "hairColor": "#4A3A2E",
+      "outfit": "suit",
+      "outfitColor": "#5E9E86",
+      "accentColor": "#33443E",
+      "accessory": "none",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "수업 시간에 설명을 안 한다면",
+      "subtitle": "교육 · 역진행 수업 방식",
+      "narration": "이번 지문은 수업의 순서를 뒤집는 방식을 다루고 있어요.",
+      "cast": [
+        { "who": "hajun", "expression": "confused", "pose": "raise" },
+        { "who": "yu", "expression": "happy", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "하준이는 수업 시간에 설명을 안 한다는 말을 듣고 어리둥절했어요.",
+      "question": "그럼 내용은 대체 언제 배우는 거지?",
+      "thought": true,
+      "narrationOut": "역진행 수업 방식은 다양한 학습 양식을 허용해요.",
+      "cast": [{ "who": "hajun", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "역진행 수업 방식",
+      "meaning": "가르치는 것을 학습자 중심 접근으로 바꿔서, 수업 시간은 주제를 더 깊이 탐구하는 데 쓰는 방식이에요.",
+      "icon": "🔄",
+      "narration": "교육자들은 모둠 활동이나 개별 학습을 지원하도록 학습 공간을 물리적으로 재배치해요.",
+      "cast": [{ "who": "yu", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "두 모형의 차이",
+      "left": {
+        "label": "전통적 교사 중심",
+        "icon": "🧑‍🏫",
+        "points": ["교사가 정보의 주된 원천", "모두 같은 속도로", "수업은 설명으로 채워진다"]
+      },
+      "right": {
+        "label": "역진행 학습자 중심",
+        "icon": "🧑‍💻",
+        "points": ["학생이 시간과 장소를 고른다", "일정표와 평가가 융통성 있다", "수업은 심층 탐구에 쓴다"]
+      },
+      "narration": "역진행 수업을 하는 교육자들은 학습 일정과 평가에서 융통성이 있어요."
+    },
+    {
+      "type": "flow",
+      "heading": "수업이 바뀌는 순서",
+      "steps": [
+        { "label": "공간을 재배치", "icon": "🪑" },
+        { "label": "융통성 있는 공간", "icon": "🚪" },
+        { "label": "깊이 있는 탐구", "icon": "🔍" },
+        { "label": "지식 구성에 참여", "icon": "🧩" }
+      ],
+      "narration": "학생들은 배우는 시간과 장소를 스스로 고르게 돼요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "하준이는 그래서 뭐가 달라지는지 물었어요.",
+      "lines": [
+        { "who": "hajun", "text": "순서를 바꾸면 학생한테 뭐가 달라지나요?" },
+        { "who": "yu", "text": "학습에 직접 참여하고 자기 학습을 스스로 평가하게 돼요." },
+        { "who": "hajun", "text": "듣기만 하는 게 아니라 만들어 가는 거네요." }
+      ],
+      "narrationOut": "학생들은 개인적으로 의미 있는 방법으로 지식의 구성에 적극적으로 관여하게 돼요.",
+      "cast": [
+        { "who": "hajun", "expression": "surprised", "pose": "shrug" },
+        { "who": "yu", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "The Flipped Learning model shifts instruction to a learner-centered approach, where in-class time is spent exploring topics in greater depth.",
+      "translation": "역진행 수업 방식은 가르치는 것을 학습자 중심적인 접근으로 변화시키며, 거기서 수업 시간은 더 심층적으로 주제를 탐구하는 데 사용됩니다.",
+      "highlight": ["learner-centered", "in-class", "depth"],
+      "narration": "이 방식의 핵심이 이 문장에 들어 있어요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "역진행 수업은 다양한 학습 양식을 허용한다",
+        "교사 중심에서 학습자 중심으로 옮겨 간다",
+        "수업 시간은 더 깊이 탐구하는 데 쓴다"
+      ],
+      "narration": "그래서 학생이 지식을 받는 쪽이 아니라 만드는 쪽이 돼요.",
+      "cast": [{ "who": "hajun", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

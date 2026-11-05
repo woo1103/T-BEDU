@@ -1,0 +1,121 @@
+{
+  "slug": "cost-of-getting-it-to-you",
+  "title": "토마토 값에 들어 있는 것들",
+  "subtitle": "물건값은 물건만의 값이 아니에요",
+  "source": "리딩파워 유형편 완성 · Unit 15 글의 순서 배열 Example 02",
+  "kind": "academic",
+  "characters": {
+    "nari": {
+      "name": "나리",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D4B9",
+      "hair": "bob",
+      "hairColor": "#38281F",
+      "outfit": "tshirt",
+      "outfitColor": "#C4564E",
+      "accentColor": "#3B3330",
+      "accessory": "none",
+      "prop": "basket",
+      "build": "slim"
+    },
+    "gye": {
+      "name": "계 선생",
+      "voice": { "name": "ko-KR-Chirp3-HD-Algenib" },
+      "skin": "#E8CCAE",
+      "hair": "short",
+      "hairColor": "#453D35",
+      "outfit": "apron",
+      "outfitColor": "#5E9E6A",
+      "accentColor": "#33443A",
+      "accessory": "none",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "토마토 값에 들어 있는 것들",
+      "subtitle": "경제 · 물건값을 이루는 비용",
+      "narration": "이번 지문은 우리가 물건을 살 때 실제로 무엇에 돈을 내는지를 다루고 있어요.",
+      "cast": [
+        { "who": "nari", "expression": "confused", "pose": "raise" },
+        { "who": "gye", "expression": "happy", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "나리는 같은 토마토인데 가격이 왜 다른지 궁금했어요.",
+      "question": "똑같은 토마토인데 왜 값이 다르지?",
+      "thought": true,
+      "narrationOut": "물품을 살 때 우리는 그 물품뿐 아니라 그것이 우리에게 도달하기까지 드는 비용도 지불해요.",
+      "cast": [{ "who": "nari", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "compare",
+      "heading": "같은 토마토, 두 곳의 값",
+      "left": {
+        "label": "농장에서 살 때",
+        "icon": "🚜",
+        "points": ["재배 비용이 매우 적다", "훨씬 저렴하게 팔 수 있다", "그래도 괜찮은 수익이 남는다"]
+      },
+      "right": {
+        "label": "슈퍼마켓에서 살 때",
+        "icon": "🏪",
+        "points": ["여러 비용이 더 붙는다", "농부에게 낼 때보다 비싸다", "그 차액을 우리가 낸다"]
+      },
+      "narration": "농장을 방문해 토마토 하나를 산다고 생각해 보면 차이가 분명해져요."
+    },
+    {
+      "type": "concept",
+      "term": "물품이 도달하기까지의 비용",
+      "meaning": "운송비, 임대료, 전기세, 직원 임금, 광고비처럼 물건을 내 손에 오게 하는 데 드는 모든 비용이에요.",
+      "icon": "🧾",
+      "narration": "값표에 적힌 숫자 안에 이 모든 것이 함께 들어 있어요.",
+      "cast": [{ "who": "gye", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "토마토 하나에 붙는 비용",
+      "steps": [
+        { "label": "상점으로 운송", "icon": "🚚" },
+        { "label": "임대료와 전기세", "icon": "🏪" },
+        { "label": "직원 임금", "icon": "👥" },
+        { "label": "주간지 광고", "icon": "📰" }
+      ],
+      "narration": "그 토마토는 상점으로 운송되어야 하고, 상점은 임대료와 전기세와 임금을 지불해야 해요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "market",
+      "narration": "나리는 그럼 농부는 손해를 보는 건지 물었어요.",
+      "lines": [
+        { "who": "nari", "text": "그럼 농장에서 싸게 팔면 농부는 손해 아닌가요?" },
+        { "who": "gye", "text": "아니에요. 재배하는 데 드는 비용이 적어서 싸게 팔아도 괜찮은 수익이 남아요." },
+        { "who": "nari", "text": "그럼 비싼 건 토마토가 아니라 그 다음 과정이네요." }
+      ],
+      "narrationOut": "값의 차이는 토마토가 아니라 토마토가 지나온 길에서 생겨요.",
+      "cast": [
+        { "who": "nari", "expression": "surprised", "pose": "shrug" },
+        { "who": "gye", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "When you purchase an item, you are paying not just for the item, but the costs to get that item to you.",
+      "translation": "여러분이 어떤 물품을 구입할 때, 여러분은 그 물품뿐만 아니라 그 물품이 여러분에게 도달하기까지 드는 비용도 지불합니다.",
+      "highlight": ["not", "just", "costs", "to", "you"],
+      "narration": "지문 전체를 한 문장으로 요약해 주는 부분이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "물건값에는 물건이 오기까지의 비용이 들어 있다",
+        "농장에서는 싸게 팔아도 수익이 남는다",
+        "운송·임대료·임금·광고가 값을 올린다"
+      ],
+      "narration": "값표의 숫자는 토마토 하나가 걸어온 길의 합계인 셈이에요.",
+      "cast": [{ "who": "nari", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

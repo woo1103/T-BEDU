@@ -1,0 +1,120 @@
+{
+  "slug": "dog-obedience-signals",
+  "title": "손가락 하나로 알아듣는 개",
+  "subtitle": "신호가 점점 작아지는 훈련이에요",
+  "source": "리딩파워 유형편 완성 · Unit 14 문장 삽입 Practice 02",
+  "kind": "academic",
+  "characters": {
+    "minjae": {
+      "name": "민재",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F3CFB3",
+      "hair": "short",
+      "hairColor": "#2C221C",
+      "outfit": "tshirt",
+      "outfitColor": "#C4564E",
+      "accentColor": "#3B3330",
+      "accessory": "cap",
+      "build": "slim"
+    },
+    "kang": {
+      "name": "강 조련사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Algenib" },
+      "skin": "#E8CCAE",
+      "hair": "short",
+      "hairColor": "#453D35",
+      "outfit": "tshirt",
+      "outfitColor": "#5A6E8A",
+      "accentColor": "#303A46",
+      "accessory": "none",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "손가락 하나로 알아듣는 개",
+      "subtitle": "동물 훈련 · 복종 훈련과 신호",
+      "narration": "이번 지문은 개가 신호를 알아듣게 되는 과정을 다루고 있어요.",
+      "cast": [
+        { "who": "minjae", "expression": "happy", "pose": "raise" },
+        { "who": "kang", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "민재는 아무 말도 안 했는데 개가 움직이는 걸 보고 놀랐어요.",
+      "question": "말을 안 했는데 어떻게 알아듣지?",
+      "thought": true,
+      "narrationOut": "복종 훈련은 조련사가 주는 신호에 따라 개가 특정한 행동을 하도록 가르치는 거예요.",
+      "cast": [{ "who": "minjae", "expression": "surprised", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "신호",
+      "meaning": "언어적인 것일 수도, 비언어적인 것일 수도, 둘의 조합일 수도 있어요. 개는 이 신호에 따라 행동해요.",
+      "icon": "✋",
+      "narration": "초보 단계에서는 말로 하는 명령과 수신호를 함께 가르쳐요.",
+      "cast": [{ "who": "kang", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "개가 하는 행동의 폭",
+      "left": {
+        "label": "간단한 행동",
+        "icon": "🐕",
+        "points": ["주인의 옆에 앉기", "신호 하나로 끝난다", "초보 단계에서 배운다"]
+      },
+      "right": {
+        "label": "복잡한 행동",
+        "icon": "🎯",
+        "points": ["방해물을 처리하고", "선택된 물건을 가져오기", "여러 단계를 거친다"]
+      },
+      "narration": "같은 복종 훈련 안에서도 요구하는 행동의 폭이 이렇게 넓어요."
+    },
+    {
+      "type": "flow",
+      "heading": "신호가 작아지는 순서",
+      "steps": [
+        { "label": "말 + 수신호", "icon": "🗣️" },
+        { "label": "개가 배워 간다", "icon": "🐕" },
+        { "label": "말을 없앤다", "icon": "🔇" },
+        { "label": "눈짓·손가락만", "icon": "👆" }
+      ],
+      "narration": "개가 배워 감에 따라 음성 언어는 제거될 수 있어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "민재는 그렇게 작은 신호를 정말 알아보는지 물었어요.",
+      "lines": [
+        { "who": "minjae", "text": "눈동자를 굴리는 정도로도 정말 알아들어요?" },
+        { "who": "kang", "text": "아주 전문적으로 훈련하면 손가락을 살짝 구부리는 것에도 반응해요." },
+        { "who": "minjae", "text": "보고 있는 사람은 전혀 못 알아차릴 텐데요." }
+      ],
+      "narrationOut": "사람 눈에는 감지되지 않아도, 주인에게 온전히 주의를 쏟는 개는 쉽게 알아차려요.",
+      "cast": [
+        { "who": "minjae", "expression": "excited", "pose": "shrug" },
+        { "who": "kang", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "These signals may be imperceptible to the human audience, but are easily picked up by the trained dog whose full attention is focused on his owner.",
+      "translation": "이러한 신호들은 보고 있는 사람들에게 감지될 수 없겠지만, 온전한 주의가 주인에게 집중되어 있는 훈련된 개는 쉽게 알아차릴 수 있습니다.",
+      "highlight": ["imperceptible", "easily", "full", "attention"],
+      "narration": "훈련의 결과가 이 한 문장에 담겨 있어요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "복종 훈련은 신호에 따라 행동하게 가르치는 것이다",
+        "처음에는 말과 수신호를 함께 쓴다",
+        "나중에는 아주 작은 몸짓만으로 통한다"
+      ],
+      "narration": "신호는 점점 작아지고, 개의 주의는 점점 또렷해져요.",
+      "cast": [{ "who": "minjae", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

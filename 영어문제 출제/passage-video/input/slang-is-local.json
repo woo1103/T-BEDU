@@ -1,0 +1,121 @@
+{
+  "slug": "slang-is-local",
+  "title": "은어는 학교마다 다르다",
+  "subtitle": "같은 동네에도 여러 겹으로 갈려요",
+  "source": "리딩파워 유형편 완성 · Unit 14 문장 삽입 Example 01",
+  "kind": "academic",
+  "characters": {
+    "eunseo": {
+      "name": "은서",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "ponytail",
+      "hairColor": "#33251F",
+      "outfit": "uniform",
+      "outfitColor": "#6A5CC4",
+      "accentColor": "#363048",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "no": {
+      "name": "노 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "suit",
+      "outfitColor": "#6A6E8A",
+      "accentColor": "#333646",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "은어는 학교마다 다르다",
+      "subtitle": "언어학 · 은어를 파악하기 어려운 이유",
+      "narration": "이번 지문은 언어학자가 은어를 알아내기 왜 그렇게 어려운지를 다루고 있어요.",
+      "cast": [
+        { "who": "eunseo", "expression": "happy", "pose": "raise" },
+        { "who": "no", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "은서는 친구들끼리 쓰는 말이 어디서나 통할 거라고 생각했어요.",
+      "question": "은어는 또래끼리면 다 통하는 거 아니야?",
+      "thought": true,
+      "narrationOut": "그런데 언어학자들에게 은어를 파악하는 일은 실제로 상당히 어려워요.",
+      "cast": [{ "who": "eunseo", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "지역 은어",
+      "meaning": "학교나 마을에서만 쓰는 은어예요. 그 안에 있는 사람이 알려 주지 않으면 밖에서는 알아낼 방법이 없어요.",
+      "icon": "🗣️",
+      "narration": "그래서 연구자가 혼자 책상에서 찾아낼 수 있는 것이 아니에요.",
+      "cast": [{ "who": "no", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "같은 동네인데도 갈린다",
+      "left": {
+        "label": "초등학교의 은어",
+        "icon": "🎒",
+        "points": ["아이들이 쓰는 말", "중등학교와 다를 가능성이 높다", "쓰는 집단이 다르다"]
+      },
+      "right": {
+        "label": "중등학교의 은어",
+        "icon": "📘",
+        "points": ["같은 말이 안 통하기도 한다", "학교가 여럿이면 또 갈린다", "학교마다 종류가 다르다"]
+      },
+      "narration": "한 지역 안에도 몇 가지 다른 종류의 은어가 있을 거예요."
+    },
+    {
+      "type": "flow",
+      "heading": "은어가 갈리는 층",
+      "steps": [
+        { "label": "지역마다 다르다", "icon": "🗺️" },
+        { "label": "학교마다 다르다", "icon": "🏫" },
+        { "label": "학년마다 다르다", "icon": "📚" },
+        { "label": "한 학교 안에서도", "icon": "🚪" }
+      ],
+      "narration": "심지어 한 학교 안에서 서로 다르게 쓰이는 어휘도 있을 수 있어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "classroom",
+      "narration": "은서는 그걸 어떻게 확인했는지 물었어요.",
+      "lines": [
+        { "who": "eunseo", "text": "한 학교 안에서도 다르다는 건 어떻게 아셨어요?" },
+        { "who": "no", "text": "고등학교 졸업반 학생들과 함께 자기 학교의 은어를 주의 깊게 들어 봤어요." },
+        { "who": "eunseo", "text": "그랬더니 뭐가 나왔나요?" }
+      ],
+      "narrationOut": "1학년 학생들이 쓰는 은어가 졸업반 자신들의 것과 매우 달랐어요.",
+      "cast": [
+        { "who": "eunseo", "expression": "surprised", "pose": "shrug" },
+        { "who": "no", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "And there may even be words that are used differently within a single school.",
+      "translation": "그리고 심지어 한 학교 내에서 서로 다르게 사용되는 어휘들도 있을 수 있습니다.",
+      "highlight": ["even", "differently", "single", "school"],
+      "narration": "은어가 얼마나 잘게 갈리는지 보여 주는 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "은어는 그 안에 있는 사람만 알려 줄 수 있다",
+        "지역·학교·학년마다 종류가 갈린다",
+        "한 학교 안에서도 다르게 쓰이는 말이 있다"
+      ],
+      "narration": "그래서 언어학자가 은어를 파악하기가 그렇게 어려운 거예요.",
+      "cast": [{ "who": "eunseo", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}
