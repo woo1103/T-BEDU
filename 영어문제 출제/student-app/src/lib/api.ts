@@ -78,12 +78,26 @@ export function register(input: RegisterInput): Promise<AuthResult> {
   return postJson("/api/auth/student/register", input);
 }
 
+// 로그인 토큰이 만료되면(30일) 빈 화면 대신 다시 로그인하게 한다
+export const EXPIRED_KEY = "teb_session_expired";
+function checkExpired(res: Response) {
+  if (res.status !== 401 || !getToken()) return;
+  clearSession();
+  try {
+    sessionStorage.setItem(EXPIRED_KEY, "1");
+  } catch {
+    /* ignore */
+  }
+  window.location.reload();
+}
+
 // 인증이 필요한 GET
 export async function authGet(path: string) {
   const token = getToken();
   const res = await fetch(`${API_BASE}${path}`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
+  checkExpired(res);
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || "요청에 실패했습니다");
   return data;
@@ -99,6 +113,7 @@ async function authPost(path: string, body: unknown) {
     },
     body: JSON.stringify(body),
   });
+  checkExpired(res);
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || "요청에 실패했습니다");
   return data;

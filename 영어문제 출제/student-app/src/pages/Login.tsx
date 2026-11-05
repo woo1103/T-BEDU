@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { login, saveSession, type Student } from "../lib/api";
+import { EXPIRED_KEY, login, saveSession, type Student } from "../lib/api";
 
 interface Props {
   onSuccess: (s: Student) => void;
@@ -9,7 +9,16 @@ interface Props {
 export default function Login({ onSuccess, goRegister }: Props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [err, setErr] = useState("");
+  // 로그인이 만료돼 이 화면으로 돌아왔다면 이유를 알려 준다
+  const [err, setErr] = useState(() => {
+    try {
+      if (!sessionStorage.getItem(EXPIRED_KEY)) return "";
+      sessionStorage.removeItem(EXPIRED_KEY);
+      return "로그인이 만료됐어요. 다시 로그인해 주세요.";
+    } catch {
+      return "";
+    }
+  });
   const [loading, setLoading] = useState(false);
 
   async function submit(e: FormEvent) {

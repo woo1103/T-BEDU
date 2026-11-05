@@ -57,6 +57,8 @@ export default function Home({
   const [today, setToday] = useState<TodayItem[] | null>(null);
   const [showAllToday, setShowAllToday] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     if (enrolled) {
@@ -67,17 +69,14 @@ export default function Home({
 
   useEffect(() => {
     (async () => {
+      // 성취도·알림이 실패해도 과제 목록은 보여 준다
+      getAchievement().then(setAch).catch(() => {});
+      getTrend().then((tr) => setTrend(tr.points)).catch(() => {});
+      getNotifications().then((nt) => setUnread(nt.unread)).catch(() => {});
       try {
-        const [a, ac, tr, nt] = await Promise.all([
-          getAssignments(),
-          getAchievement(),
-          getTrend(),
-          getNotifications(),
-        ]);
+        const a = await getAssignments();
         setAssignments(a.assignments);
-        setAch(ac);
-        setTrend(tr.points);
-        setUnread(nt.unread);
+        setLoadFailed(false);
         // 오늘 할 일: 영상·오답은 실패해도 과제만으로 보여 준다
         const [vd, wn] = await Promise.all([
           getVideos().catch(() => ({ videos: [] })),
@@ -85,12 +84,13 @@ export default function Home({
         ]);
         setToday(buildToday(a.assignments, vd.videos, wn.notes.filter((n) => n.question).length));
       } catch {
-        /* ignore */
+        // 불러오기 실패를 "과제 없음"으로 보이지 않게 한다
+        setLoadFailed(true);
       } finally {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [reloadKey]);
 
   return (
     <div className="min-h-screen bg-[#f4f6f5] pb-10">
@@ -268,6 +268,19 @@ export default function Home({
           {loading ? (
             <div className="bg-white rounded-2xl p-6 text-center text-gray-400 text-sm shadow-sm">
               불러오는 중...
+            </div>
+          ) : loadFailed ? (
+            <div className="bg-white rounded-2xl p-6 text-center text-sm shadow-sm">
+              <p className="text-red-600">과제를 불러오지 못했어요.</p>
+              <button
+                onClick={() => {
+                  setLoading(true);
+                  setReloadKey((k) => k + 1);
+                }}
+                className="mt-2 text-[#245B3E] underline"
+              >
+                다시 불러오기
+              </button>
             </div>
           ) : assignments.length === 0 ? (
             <div className="bg-white rounded-2xl p-6 text-center text-gray-400 text-sm shadow-sm">

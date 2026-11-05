@@ -110,6 +110,12 @@ export default function ExamsPage() {
       alert("대상 학생을 1명 이상 선택하세요.");
       return;
     }
+    if (
+      assignStudents.length === 0 &&
+      !confirm("이 반에는 학생이 없어서 지금은 아무에게도 보이지 않아요. 그래도 배정할까요?")
+    ) {
+      return;
+    }
     setAssigning(true);
     try {
       // 전원 선택이면 반 전체(studentIds 생략), 일부면 지정 학생만
@@ -130,7 +136,7 @@ export default function ExamsPage() {
         return;
       }
       const cls = classes.find((c) => c.id === assignClassId);
-      alert(`'${cls?.name ?? "반"}'에 '${assignTarget.title}' 과제를 배정했습니다.`);
+      alert(`'${cls?.name ?? "반"}' 학생 ${assignStudentIds.size}명에게 '${assignTarget.title}' 과제를 배정했습니다.`);
       setAssignTarget(null);
     } catch {
       alert("배정 중 오류가 발생했습니다.");
