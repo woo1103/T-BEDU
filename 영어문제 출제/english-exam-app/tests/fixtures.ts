@@ -86,3 +86,11 @@ export function makeItems(seed: number, count: number, maxSentences = 15): ExamI
 export function countPdfPages(buf: Buffer): number {
   return (buf.toString("latin1").match(/\/Type\s*\/Page[^s]/g) || []).length;
 }
+
+// PDF 각 쪽의 크기(pt)
+export function pdfPageSizes(buf: Buffer): { w: number; h: number }[] {
+  return [...buf.toString("latin1").matchAll(/\/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)\s*\]/g)].map((m) => ({
+    w: Number(m[1]),
+    h: Number(m[2]),
+  }));
+}

@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { renderToBuffer } from "@react-pdf/renderer";
 import ExamPDF, { planExamPages } from "@/components/pdf/ExamPDF";
 import MockExamPDF, { planMockPages, type MockExamOptions } from "@/components/pdf/MockExamPDF";
-import { countPdfPages, makeItems } from "./fixtures";
+import { countPdfPages, makeItems, pdfPageSizes } from "./fixtures";
 
 const MOCK_OPTIONS: MockExamOptions = {
   examName: "2026학년도 10월 고1 모의고사 문제지",
@@ -71,5 +71,47 @@ describe("해설지에 해설", () => {
     );
     expect(teacher).toBeGreaterThan(planned + 1);
     expect(student).toBe(planned);
+  });
+});
+
+describe("모의고사 양식 — 쪽은 항상 A4 세로", () => {
+  const expectA4 = (buf: Buffer) => {
+    const sizes = pdfPageSizes(buf);
+    expect(sizes.length).toBeGreaterThan(0);
+    for (const p of sizes) {
+      expect(p.w).toBeCloseTo(595.28, 0);
+      expect(p.h).toBeCloseTo(841.89, 0);
+    }
+  };
+
+  it.each([1, 2, 5, 28])("%i문항(내용이 적은 쪽 포함)", async (n) => {
+    const items = makeItems(11, n, 6);
+    expectA4(await renderToBuffer(<MockExamPDF items={items} options={MOCK_OPTIONS} mode="student" />));
+    expectA4(await renderToBuffer(<MockExamPDF items={items} options={MOCK_OPTIONS} mode="teacher" />));
+  });
+
+  it("계획한 쪽 수 그대로(넘침으로 빈 쪽이 생기지 않음)", async () => {
+    const items = makeItems(42, 28, 10);
+    const buf = await renderToBuffer(<MockExamPDF items={items} options={MOCK_OPTIONS} mode="student" />);
+    expect(countPdfPages(buf)).toBe(planMockPages(items, MOCK_OPTIONS).length);
+  });
+
+  it("긴 문항도 쪽 전체 폭으로 나가지 않고 두 단에 이어진다", async () => {
+    const base = makeItems(5, 3, 6);
+    const long = "Research suggests that students remember information better when they explain it to others in their own words. ".repeat(19);
+    const longChoice = "students remember information better when they explain it to others in their own words and practise it regularly";
+    const items = base.map((it, i) => ({
+      ...it,
+      question: {
+        ...it.question,
+        questionType: "naesin_topic",
+        passage: i === 1 ? long : "Short passage.",
+        choices: JSON.stringify(["①", "②", "③", "④", "⑤"].map((label, k) => ({ label, text: longChoice, isCorrect: k === 0 }))),
+      },
+    }));
+    const pages = planMockPages(items, MOCK_OPTIONS);
+    expect(pages.every((p) => p.kind === "columns")).toBe(true);
+    const buf = await renderToBuffer(<MockExamPDF items={items} options={MOCK_OPTIONS} mode="student" revealOverflow />);
+    expect(countPdfPages(buf)).toBe(pages.length);
   });
 });

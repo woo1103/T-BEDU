@@ -89,7 +89,12 @@ const COLUMNS_PAD_TOP = 10;
 const SAFETY = 14; // 추정 오차 여유
 const colHeightFor = (pageIndex: number) =>
   PAGE_H - PAD_TOP - PAD_BOTTOM - (pageIndex === 0 ? FIRST_HEADER_H : HEADER_H) - COLUMNS_PAD_TOP - SAFETY;
+// 쪽 머리 아래 단 영역 전체 높이(쪽 경계 판정에 걸리지 않게 1pt 덜)
+const columnsAreaHeight = (pageIndex: number) =>
+  PAGE_H - PAD_TOP - PAD_BOTTOM - (pageIndex === 0 ? FIRST_HEADER_H : HEADER_H) - 1;
 const ITEM_GAP = 16;
+// 긴 지문일수록 추정 오차(양쪽 정렬·굵은 정답 표시 등)가 커서 고정 여유만으론 부족 → 비례 여유 3%
+const HEIGHT_PAD = 1.03;
 
 const NUM_W = 20; // 문항 번호 칸
 const Q_FS = 10;
@@ -147,6 +152,7 @@ const s = StyleSheet.create({
   gradeText: { fontSize: 13, fontWeight: 700, textAlign: "center" },
   // 본문 단
   columns: { flexDirection: "row", flex: 1, paddingTop: COLUMNS_PAD_TOP },
+  columnsFixed: { flexDirection: "row", paddingTop: COLUMNS_PAD_TOP },
   column: { width: COL_W },
   divider: { width: GUTTER, alignItems: "center" },
   dividerLine: { width: 0.8, flex: 1, backgroundColor: "#111111" },
@@ -378,7 +384,7 @@ const NOTICE_TYPES = ["27_notice", "28_notice2"];
 function questionBlock(
   item: MockExamItem,
   displayNo: number,
-  opts: { groupHead?: string; numberOnly?: boolean }
+  opts: { groupHead?: string; numberOnly?: boolean; part?: "head" | "tail" }
 ): Block {
   const q = item.question;
   const pts = item.customPoints || q.points;
@@ -485,6 +491,7 @@ function questionBlock(
     }
   }
   h += footnotesHeight(notes);
+  const headH = h;
 
   // 요약문은 (A) …… (B) 표 형태 선지
   const summaryRows =
@@ -499,23 +506,29 @@ function questionBlock(
   const writing = isWritingType(q.questionType);
   if (writing) h += 66;
 
+  // part: 한 단을 넘는 문항을 지문(head)·선지(tail) 두 블록으로 나눌 때
+  const showHead = opts.part !== "tail";
+  const showTail = opts.part !== "head";
   return {
-    key: `q${displayNo}`,
-    height: h,
+    key: `q${displayNo}${opts.part ?? ""}`,
+    height: opts.part === "head" ? headH : opts.part === "tail" ? h - headH : h,
     render: (highlight, mode) => (
       <View>
-        {opts.groupHead && <T style={s.groupHead}>{opts.groupHead}</T>}
-        <View style={s.qRow}>
-          <T style={s.qNum}>{displayNo}.</T>
-          {stem ? <T style={s.qText}>{stem}</T> : null}
-        </View>
-        {content}
-        {notes.map((n, i) => (
-          <T key={i} style={s.footnote}>
-            {n}
-          </T>
-        ))}
-        {summaryRows ? (
+        {showHead && opts.groupHead && <T style={s.groupHead}>{opts.groupHead}</T>}
+        {showHead && (
+          <View style={s.qRow}>
+            <T style={s.qNum}>{displayNo}.</T>
+            {stem ? <T style={s.qText}>{stem}</T> : null}
+          </View>
+        )}
+        {showHead && content}
+        {showHead &&
+          notes.map((n, i) => (
+            <T key={i} style={s.footnote}>
+              {n}
+            </T>
+          ))}
+        {!showTail ? null : summaryRows ? (
           <View style={s.choicesWrap}>
             <View style={s.choiceRow}>
               <T style={[s.choiceLabel]}> </T>
@@ -540,10 +553,40 @@ function questionBlock(
         ) : (
           <Choices choices={choices} highlight={highlight} />
         )}
-        {writing && mode === "student" && <View style={s.answerArea} />}
+        {showTail && writing && mode === "student" && <View style={s.answerArea} />}
       </View>
     ),
   };
+}
+
+// 한 단(첫 쪽 기준)을 넘는 문항은 지문·선지로 나눠 두 단에 이어 놓는다 — 쪽 전체 폭으로 나가지 않게
+function fitBlocks(item: MockExamItem, displayNo: number, opts: { groupHead?: string; numberOnly?: boolean }): Block[] {
+  const limit = colHeightFor(0);
+  const whole = questionBlock(item, displayNo, opts);
+  if (whole.height * HEIGHT_PAD <= limit) return [whole];
+  const head = questionBlock(item, displayNo, { ...opts, part: "head" });
+  const tail = questionBlock(item, displayNo, { ...opts, part: "tail" });
+  if (head.height * HEIGHT_PAD <= limit) return [head, tail];
+
+  // 지문만으로 한 단을 넘으면 일반 지문은 문장 단위로 잘라 이어 놓는다(유형별 구조가 있는 지문은 그대로)
+  const q = item.question;
+  const { chart } = splitChart(q.passage);
+  if (chart || parsePassage(q.passage, q.questionType).type !== "default") return [head, tail];
+  const chunks: string[] = [];
+  let cur = "";
+  for (const sentence of q.passage.match(/[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g) ?? [q.passage]) {
+    if (cur && passageHeight(cur + sentence) * HEIGHT_PAD > limit * 0.8) {
+      chunks.push(cur.trim());
+      cur = "";
+    }
+    cur += sentence;
+  }
+  if (cur.trim()) chunks.push(cur.trim());
+  return [
+    questionBlock({ ...item, question: { ...q, passage: chunks[0] } }, displayNo, { ...opts, part: "head" }),
+    ...chunks.slice(1).map((c, k) => setPassageBlock(`q${displayNo}p${k}`, null, c)),
+    tail,
+  ];
 }
 
 function noticeBlock(key: string, text: string): Block {
@@ -613,7 +656,7 @@ function buildBlocks(items: MockExamItem[], offset: number, includeListening: bo
       blocks.push(setPassageBlock(`set${first}-${k}`, k === 0 ? `[${first}~${last}] ${SET_HEAD}` : null, para));
     });
     for (const it of run.items) {
-      blocks.push(questionBlock({ ...it, question: { ...it.question, passage: "" } }, it.orderNum + offset, {}));
+      blocks.push(...fitBlocks({ ...it, question: { ...it.question, passage: "" } }, it.orderNum + offset, {}));
     }
   }
   flush();
@@ -634,14 +677,14 @@ function stemGroupBlocks(items: MockExamItem[], offset: number, blocks: Block[])
       const last = items[j - 1].orderNum + offset;
       for (let k = i; k < j; k++) {
         blocks.push(
-          questionBlock(items[k], items[k].orderNum + offset, {
+          ...fitBlocks(items[k], items[k].orderNum + offset, {
             groupHead: k === i ? `[${first}~${last}] ${stem}` : undefined,
             numberOnly: true,
           })
         );
       }
     } else {
-      blocks.push(questionBlock(items[i], items[i].orderNum + offset, {}));
+      blocks.push(...fitBlocks(items[i], items[i].orderNum + offset, {}));
     }
     i = j;
   }
@@ -650,8 +693,7 @@ function stemGroupBlocks(items: MockExamItem[], offset: number, blocks: Block[])
 // 쪽 배치 계획(렌더링과 테스트가 같은 계산을 쓴다)
 export function planMockPages(items: MockExamItem[], options: MockExamOptions) {
   const offset = options.includeListening ? 17 : 0;
-  // 긴 지문일수록 추정 오차(양쪽 정렬·굵은 정답 표시 등)가 커서 고정 여유만으론 부족 → 비례 여유 3%
-  return packColumns(buildBlocks(items, offset, options.includeListening), (b) => b.height * 1.03, {
+  return packColumns(buildBlocks(items, offset, options.includeListening), (b) => b.height * HEIGHT_PAD, {
     columnsPerPage: 2,
     columnHeight: colHeightFor,
     gap: ITEM_GAP,
@@ -703,7 +745,7 @@ function PageHeader({ o, pageNo }: { o: MockExamOptions; pageNo: number }) {
 
 function Footer({ pageNo, total }: { pageNo: number; total: number }) {
   return (
-    <View style={s.footer}>
+    <View style={s.footer} fixed>
       <View style={s.slashBox}>
         <Svg width={52} height={20} style={{ position: "absolute", top: 0, left: 0 }}>
           <Line x1="6" y1="19" x2="46" y2="1" stroke="#111111" strokeWidth={0.8} />
@@ -747,11 +789,15 @@ export default function MockExamPDF({
       {pages.map((pg, i) => {
         const pageNo = i + 1;
         return (
-          // 단 페이지는 추정 오차가 있어도 다음 쪽으로 넘어가지 않게(빈 쪽 방지) wrap 끔
-          <Page key={i} size="A4" style={s.page} wrap={revealOverflow || pg.kind !== "columns"}>
+          // Page에 wrap={false}를 주면 쪽 높이가 내용만큼 줄어든다(짧은 쪽은 가로로 뒤집힘) — 쪽은 항상 A4.
+          // 대신 단 영역을 고정 높이 + wrap 끔으로 두어, 추정 오차가 있어도 다음 쪽으로 넘어가지 않는다(빈 쪽 방지)
+          <Page key={i} size="A4" style={s.page}>
             {i === 0 ? <FirstHeader o={options} /> : <PageHeader o={options} pageNo={pageNo} />}
             {pg.kind === "columns" ? (
-              <View style={s.columns}>
+              <View
+                style={revealOverflow ? s.columns : [s.columnsFixed, { height: columnsAreaHeight(i) }]}
+                wrap={revealOverflow}
+              >
                 {column(pg.columns[0] ?? [])}
                 <View style={s.divider}>
                   <View style={s.dividerLine} />
