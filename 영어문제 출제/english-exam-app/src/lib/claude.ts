@@ -369,3 +369,63 @@ ${hint?.source ? `- 출처 힌트: ${hint.source}` : ""}
     }));
   return { problems };
 }
+
+// 영어 교과서·부교재 한 쪽(이미지) → 영어 지문을 그대로 옮겨 적기(선생님이 확인·수정 후 저장)
+export interface ExtractedPassage {
+  lesson?: string;
+  title?: string;
+  content: string;
+  continued: boolean; // 앞 쪽에서 이어지는 글(쪽 맨 위)
+}
+
+export async function extractPassages(input: { base64: string; mediaType: string }): Promise<{ passages: ExtractedPassage[] }> {
+  const instruction = `이 이미지는 영어 교과서나 부교재의 한 쪽입니다. 쪽에 있는 영어 지문(본문 글)을 찾아 그대로 옮겨 적으세요.
+- 지문 본문만 옮긴다. 문제의 발문·선지, 한국어 해석, 단어장, 쪽 번호, 머리말·꼬리말, 그림 설명은 넣지 않는다.
+- 철자·대소문자·구두점·따옴표를 원문 그대로. 고치거나 요약하지 않는다.
+- 줄 끝 하이픈으로 나뉜 단어는 붙여 쓰고, 줄바꿈은 없애되 문단은 빈 줄 하나로 나눈다.
+- 대화문은 한 줄에 한 사람씩("A: ...").
+- 지문 끝에 * 로 시작하는 단어 뜻 풀이가 있으면 그 줄은 지문 끝에 그대로 둔다.
+- 지문마다 lesson(쪽에 보이는 과·단원 표기, 예: "Lesson 3", 없으면 생략), title(지문 제목, 없으면 생략)
+- 쪽 맨 위의 글이 앞 쪽에서 이어지는 문장으로 시작하면 그 지문에 "continued": true (그 외 false)
+- 영어 지문이 없는 쪽이면 {"passages":[]}
+반드시 아래 JSON만 출력(다른 텍스트 금지):
+{"passages":[{"lesson":"Lesson 3","title":"...","content":"...","continued":false}]}`;
+
+  const message = await client.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 8192,
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "image",
+            source: {
+              type: "base64",
+              media_type: input.mediaType as "image/png" | "image/jpeg" | "image/webp" | "image/gif",
+              data: input.base64,
+            },
+          },
+          { type: "text", text: instruction },
+        ],
+      },
+    ],
+  });
+  await logUsage("passageExtract", message);
+
+  const text = message.content[0].type === "text" ? message.content[0].text : "";
+  const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error("지문 인식 결과를 읽을 수 없습니다.");
+  const parsed = JSON.parse(m[1] || m[0]);
+  const raw: Record<string, unknown>[] = Array.isArray(parsed.passages) ? parsed.passages : [];
+  return {
+    passages: raw
+      .map((p, i) => ({
+        lesson: typeof p.lesson === "string" && p.lesson.trim() ? p.lesson.trim() : undefined,
+        title: typeof p.title === "string" && p.title.trim() ? p.title.trim() : undefined,
+        content: typeof p.content === "string" ? p.content.trim() : "",
+        continued: i === 0 && p.continued === true,
+      }))
+      .filter((p) => p.content),
+  };
+}

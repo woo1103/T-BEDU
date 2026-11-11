@@ -39,12 +39,20 @@ export default function PassagesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-800">지문 관리</h2>
-        <Link
-          href="/passages/new"
-          className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors"
-        >
-          + 지문 등록
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/passages/import"
+            className="px-4 py-2 border border-amber-600 text-amber-700 rounded-lg text-sm font-medium hover:bg-amber-50 transition-colors"
+          >
+            📄 PDF로 가져오기
+          </Link>
+          <Link
+            href="/passages/new"
+            className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors"
+          >
+            + 지문 등록
+          </Link>
+        </div>
       </div>
 
       {/* 필터 */}

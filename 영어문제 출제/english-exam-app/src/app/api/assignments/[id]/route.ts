@@ -52,6 +52,11 @@ export async function DELETE(
   if (!(await canAccessClass(staff, asg.classId))) {
     return NextResponse.json({ error: "담당 반이 아닙니다" }, { status: 403 });
   }
-  await prisma.assignment.delete({ where: { id } });
+  // 제출·답·오답노트는 함께 지워지지만 성취도 스냅샷은 연결이 없어 따로 지운다(추이에 남지 않게)
+  const subs = await prisma.submission.findMany({ where: { assignmentId: id }, select: { id: true } });
+  await prisma.$transaction([
+    prisma.achievementSnapshot.deleteMany({ where: { submissionId: { in: subs.map((s) => s.id) } } }),
+    prisma.assignment.delete({ where: { id } }),
+  ]);
   return NextResponse.json({ success: true });
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireStaff, canAccessClass, isAdmin } from "@/lib/api-auth";
 import { notifyClassStudents, notifyStudentIds } from "@/lib/notify";
+import { parseTargetIds } from "@/lib/assignment-targets";
 
 export async function GET(request: NextRequest) {
   const staff = await requireStaff();
@@ -23,7 +24,19 @@ export async function GET(request: NextRequest) {
     },
     orderBy: { assignedAt: "desc" },
   });
-  return NextResponse.json({ assignments });
+  // 지정 학생 과제: 대상 학생 이름(과제 관리에서 학생별로 빼기)
+  const ids = [...new Set(assignments.flatMap((a) => parseTargetIds(a.studentIds) ?? []))];
+  const names = new Map(
+    (ids.length ? await prisma.studentProfile.findMany({ where: { id: { in: ids } }, select: { id: true, name: true } }) : []).map(
+      (p) => [p.id, p.name]
+    )
+  );
+  return NextResponse.json({
+    assignments: assignments.map((a) => ({
+      ...a,
+      targets: parseTargetIds(a.studentIds)?.map((id) => ({ id, name: names.get(id) ?? "(삭제된 학생)" })) ?? null,
+    })),
+  });
 }
 
 // 반에 시험지(Exam) 배정 → Assessment(type=exam) + Assignment 생성

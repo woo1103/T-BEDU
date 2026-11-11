@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireStaff, isAdmin } from "@/lib/api-auth";
 import { studentAchievement } from "@/lib/achievement";
+import { isTarget, parseTargetIds } from "@/lib/assignment-targets";
 
 // 교사: 한 학생의 프로필 + 성취도 + 최근 제출 + 코멘트. [id] = StudentProfile.id
 export async function GET(
@@ -52,6 +53,35 @@ export async function GET(
     orderBy: { updatedAt: "desc" },
   });
 
+  // 이 학생이 받은 과제(반 과제 중 대상인 것) — 학생 상세에서 '이 학생에서 빼기'
+  const classAsgs = await prisma.assignment.findMany({
+    where: { classId: { in: profile.enrollments.map((e) => e.classId) } },
+    include: {
+      class: { select: { name: true } },
+      submissions: { where: { studentId: id }, orderBy: { submittedAt: "desc" }, take: 1, select: { score: true, totalPoints: true, submittedAt: true } },
+    },
+    orderBy: { assignedAt: "desc" },
+    take: 100,
+  });
+  const assignments = classAsgs
+    .filter((a) => isTarget(a.studentIds, id))
+    .map((a) => {
+      const ids = parseTargetIds(a.studentIds);
+      const sub = a.submissions[0];
+      return {
+        id: a.id,
+        title: a.title,
+        className: a.class.name,
+        assignedAt: a.assignedAt,
+        dueAt: a.dueAt,
+        active: a.active,
+        // 반 전체 / 지정 학생 몇 명(이 학생뿐이면 빼면 과제가 지워짐)
+        targetCount: ids ? ids.length : null,
+        submitted: !!sub?.submittedAt,
+        score: sub?.submittedAt ? `${sub.score}/${sub.totalPoints}` : null,
+      };
+    });
+
   // 영상 시청 진도
   const watch = await prisma.watchProgress.findMany({
     where: { studentId: id },
@@ -81,6 +111,7 @@ export async function GET(
       submittedAt: s.submittedAt,
     })),
     comments,
+    assignments,
     videoProgress: watch.map((w) => ({
       videoId: w.videoId,
       title: w.video.title,

@@ -41,6 +41,16 @@ interface Data {
     submittedAt: string | null;
   }[];
   comments: Comment[];
+  assignments: {
+    id: string;
+    title: string;
+    className: string;
+    dueAt: string | null;
+    active: boolean;
+    targetCount: number | null; // null = 반 전체
+    submitted: boolean;
+    score: string | null;
+  }[];
   videoProgress: {
     videoId: string;
     title: string;
@@ -125,6 +135,20 @@ export default function StudentDetailPage({
     } else {
       alert((await res.json()).error || "삭제 실패");
     }
+  }
+
+  // 과제에서 이 학생만 빼기(이 학생에게만 낸 과제면 과제를 지움)
+  async function removeFromAssignment(a: Data["assignments"][number]) {
+    const only = a.targetCount === 1;
+    const msg = only
+      ? `'${a.title}'은(는) 이 학생에게만 낸 과제예요. 과제를 삭제할까요?`
+      : a.targetCount === null
+      ? `'${a.title}'에서 이 학생만 뺄까요?\n반의 다른 학생에게는 그대로 남아요. (이후 이 반에 새로 들어오는 학생에게는 자동으로 배정되지 않아요)`
+      : `'${a.title}'에서 이 학생만 뺄까요? 다른 학생에게는 그대로 남아요.`;
+    if (!confirm(msg + (a.submitted ? "\n이 학생의 제출 기록도 함께 지워져요. (되돌릴 수 없음)" : ""))) return;
+    const res = await fetch(`/api/assignments/${a.id}/students/${id}`, { method: "DELETE" });
+    if (res.ok) await load();
+    else alert((await res.json()).error || "삭제 실패");
   }
 
   async function saveGrade() {
@@ -324,6 +348,32 @@ export default function StudentDetailPage({
                     삭제
                   </button>
                 </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* 받은 과제 */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 className="font-semibold text-gray-800 mb-3">받은 과제</h3>
+        {(data.assignments ?? []).length === 0 ? (
+          <p className="text-sm text-gray-400">받은 과제가 없어요.</p>
+        ) : (
+          <ul className="divide-y divide-gray-50">
+            {data.assignments.map((a) => (
+              <li key={a.id} className="py-2 flex items-center gap-3 text-sm flex-wrap">
+                <span className="flex-1 min-w-0">
+                  <span className="text-gray-800">{a.title}</span>
+                  <span className="text-xs text-gray-400 ml-2">
+                    {a.className} · {a.targetCount === null ? "반 전체" : a.targetCount === 1 ? "이 학생만" : `지정 ${a.targetCount}명`}
+                    {!a.active && " · 비활성"}
+                  </span>
+                </span>
+                <span className={`text-xs ${a.submitted ? "text-gray-600" : "text-gray-400"}`}>{a.submitted ? a.score : "미제출"}</span>
+                <button onClick={() => removeFromAssignment(a)} className="text-xs text-red-500 hover:underline">
+                  {a.targetCount === 1 ? "과제 삭제" : "이 학생에서 빼기"}
+                </button>
               </li>
             ))}
           </ul>

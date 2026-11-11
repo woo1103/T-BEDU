@@ -13,6 +13,7 @@ interface Assignment {
   assessment: { subject: string; type: string };
   class: { id: string; name: string };
   _count: { submissions: number };
+  targets: { id: string; name: string }[] | null; // null = 반 전체
 }
 
 const SUBJECT_LABEL: Record<string, string> = { english: "영어", math: "수학" };
@@ -49,6 +50,37 @@ export default function AssignmentsPage() {
     });
     if (res.ok) await load();
     else alert((await res.json()).error || "실패");
+  }
+
+  // 반 전체 과제에서 학생을 빼려면 반 학생 목록을 펼친다
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [classStudents, setClassStudents] = useState<{ id: string; name: string }[]>([]);
+  async function openStudents(a: Assignment) {
+    if (openId === a.id) return setOpenId(null);
+    setOpenId(a.id);
+    if (a.targets) return setClassStudents(a.targets);
+    setClassStudents([]);
+    const d = await (await fetch(`/api/classes/${a.classId}`)).json();
+    setClassStudents(
+      (d.class?.enrollments ?? []).map((e: { student: { id: string; name: string } }) => ({ id: e.student.id, name: e.student.name }))
+    );
+  }
+
+  // 과제에서 학생 한 명만 빼기(마지막 한 명이면 과제가 지워짐)
+  async function removeStudent(a: Assignment, s: { id: string; name: string }) {
+    const last = (a.targets?.length ?? classStudents.length) <= 1;
+    const msg = last
+      ? `${s.name} 학생이 이 과제의 마지막 대상이에요. 과제를 삭제할까요?`
+      : a.targets
+      ? `'${a.title}'에서 ${s.name} 학생만 뺄까요?`
+      : `'${a.title}'에서 ${s.name} 학생만 뺄까요?\n이후 이 반에 새로 들어오는 학생에게는 자동으로 배정되지 않아요.`;
+    if (!confirm(msg + "\n그 학생의 제출 기록도 함께 지워져요. (되돌릴 수 없음)")) return;
+    const res = await fetch(`/api/assignments/${a.id}/students/${s.id}`, { method: "DELETE" });
+    if (!res.ok) return alert((await res.json()).error || "실패");
+    const r = await res.json();
+    if (r.deletedAssignment) setOpenId(null);
+    else setClassStudents((prev) => prev.filter((x) => x.id !== s.id));
+    await load();
   }
 
   async function remove(id: string) {
@@ -112,6 +144,12 @@ export default function AssignmentsPage() {
                     <span className="text-xs text-gray-400">
                       제출 {a._count.submissions}건
                     </span>
+                    <button
+                      onClick={() => openStudents(a)}
+                      className="text-xs text-gray-600 hover:underline"
+                    >
+                      {a.targets ? `지정 ${a.targets.length}명` : "반 전체"} {openId === a.id ? "▲" : "▼"}
+                    </button>
                     <Link
                       href={`/assignments/${a.id}/paper`}
                       className="text-xs text-emerald-700 hover:underline"
@@ -131,6 +169,27 @@ export default function AssignmentsPage() {
                       삭제
                     </button>
                   </div>
+                  {openId === a.id && (
+                    <div className="mt-2 bg-gray-50 rounded-lg p-2 flex flex-wrap gap-1.5">
+                      {classStudents.length === 0 ? (
+                        <span className="text-xs text-gray-400">학생이 없어요.</span>
+                      ) : (
+                        classStudents.map((s) => (
+                          <span key={s.id} className="inline-flex items-center gap-1 text-xs bg-white border border-gray-200 rounded-full pl-2 pr-1 py-0.5">
+                            {s.name}
+                            <button
+                              onClick={() => removeStudent(a, s)}
+                              className="w-4 h-4 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-50"
+                              aria-label={`${s.name} 학생을 과제에서 빼기`}
+                              title="이 학생만 과제에서 빼기"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))
+                      )}
+                    </div>
+                  )}
                 </li>
               );
             })}
