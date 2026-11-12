@@ -50,6 +50,7 @@ interface ExamDetail {
   headerInfo: string | null;
   instructions: string | null;
   items: ExamItemDetail[];
+  usage?: { assignments: number; classes: string[]; submissions: number };
 }
 
 interface SelectedItem {
@@ -88,6 +89,8 @@ export default function ExamEditPage({
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
 
+  // 이미 학생이 푼 시험지면 덮어쓰지 않고 복제본으로 저장하게 안내
+  const [usage, setUsage] = useState<ExamDetail["usage"]>(undefined);
   const [bulkModalOpen, setBulkModalOpen] = useState(false);
   const [bulkCheckedIds, setBulkCheckedIds] = useState<Set<string>>(new Set());
   const [bulkExpanded, setBulkExpanded] = useState<Set<string>>(new Set());
@@ -98,6 +101,7 @@ export default function ExamEditPage({
       fetch(`/api/questions`).then((r) => r.json()),
     ]).then(([exam, qs]: [ExamDetail, QuestionRow[]]) => {
       setTitle(exam.title);
+      setUsage(exam.usage);
       setExamType(exam.examType as ExamType);
       setTimeLimit(exam.timeLimit || undefined);
       setInstructions(exam.instructions || "");
@@ -350,27 +354,39 @@ export default function ExamEditPage({
       alert("최소 1개 이상의 문제를 추가해주세요.");
       return;
     }
+    const body = {
+      title,
+      examType,
+      totalPoints: calculatedTotal,
+      timeLimit,
+      headerInfo: { school, grade, date: date || new Date().toISOString().split("T")[0] },
+      instructions,
+      items: selectedItems.map((it) => ({
+        questionId: it.questionId,
+        orderNum: it.orderNum,
+        customPoints: it.customPoints,
+      })),
+    };
+    // 푼 학생이 있는 시험지: 문항이 바뀌면 기존 제출의 번호·점수가 어긋나므로 복제본으로 저장
+    const submitted = usage?.submissions ?? 0;
+    const asCopy =
+      submitted > 0 &&
+      confirm(
+        `이 시험지는 이미 학생 ${submitted}명이 풀었어요.
+원본을 그대로 두고 수정한 내용을 새 시험지(복제본)로 저장할까요?
+
+[확인] 복제본으로 저장(권장)   [취소] 그냥 원본을 덮어쓰기`
+      );
     setSaving(true);
     try {
-      const res = await fetch(`/api/exams/${id}`, {
-        method: "PUT",
+      const res = await fetch(asCopy ? "/api/exams" : `/api/exams/${id}`, {
+        method: asCopy ? "POST" : "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          examType,
-          totalPoints: calculatedTotal,
-          timeLimit,
-          headerInfo: { school, grade, date: date || new Date().toISOString().split("T")[0] },
-          instructions,
-          items: selectedItems.map((it) => ({
-            questionId: it.questionId,
-            orderNum: it.orderNum,
-            customPoints: it.customPoints,
-          })),
-        }),
+        body: JSON.stringify(asCopy ? { ...body, title: title.includes("(수정본)") ? title : `${title} (수정본)` } : body),
       });
       if (!res.ok) throw new Error("저장 실패");
-      router.push(`/exams/${id}/preview`);
+      const saved = asCopy ? ((await res.json()) as { id: string }) : { id };
+      router.push(`/exams/${saved.id}/preview`);
     } catch {
       alert("저장 중 오류가 발생했습니다.");
     } finally {
@@ -496,6 +512,13 @@ export default function ExamEditPage({
         </Link>
         <h2 className="text-lg font-semibold text-gray-800">시험지 편집</h2>
       </div>
+      {usage && usage.submissions > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-900">
+          이미 학생 <b>{usage.submissions}명</b>이 푼 시험지예요
+          {usage.classes.length > 0 && <> ({usage.classes.join(", ")})</>}. 문항을 바꾸면 기존 점수 기록과 번호가 어긋나니,
+          저장할 때 <b>복제본으로 저장</b>을 권해요. 제목·안내문만 고치는 거라면 덮어써도 괜찮아요.
+        </div>
+      )}
 
       {/* 시험지 정보 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-4">

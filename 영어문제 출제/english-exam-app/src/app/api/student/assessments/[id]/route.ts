@@ -59,6 +59,8 @@ export async function GET(
   const base = {
     assignment: { id: assignment.id, title: assignment.title, dueAt: assignment.dueAt },
     type,
+    // 시험지에 제한 시간(분)이 있으면 학생 앱이 타이머를 보여 준다
+    timeLimit: assignment.assessment.exam?.timeLimit ?? null,
   };
 
   if (type === "worksheet") {

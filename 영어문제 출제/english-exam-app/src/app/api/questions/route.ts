@@ -40,7 +40,23 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  return NextResponse.json(questions);
+  // 문항별 누적 정답률(학생 답 기준). 답이 없는 문항은 stats 없음.
+  const ids = questions.map((q) => q.id);
+  const grouped = ids.length
+    ? await prisma.answer.groupBy({
+        by: ["refId", "isCorrect"],
+        where: { refType: "question", refId: { in: ids } },
+        _count: { _all: true },
+      })
+    : [];
+  const stats = new Map<string, { answered: number; correct: number }>();
+  for (const g of grouped) {
+    const cur = stats.get(g.refId) ?? { answered: 0, correct: 0 };
+    cur.answered += g._count._all;
+    if (g.isCorrect) cur.correct += g._count._all;
+    stats.set(g.refId, cur);
+  }
+  return NextResponse.json(questions.map((q) => ({ ...q, stats: stats.get(q.id) ?? null })));
 }
 
 export async function POST(request: NextRequest) {

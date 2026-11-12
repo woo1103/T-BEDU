@@ -21,11 +21,20 @@ export default function NewPassagePage() {
     }
     setSaving(true);
     try {
-      const res = await fetch("/api/passages", {
+      let res = await fetch("/api/passages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ textbook, grade, lesson, title, content }),
       });
+      if (res.status === 409) {
+        const d = await res.json();
+        if (!confirm(`${d.error}\n그래도 하나 더 저장할까요?`)) return;
+        res = await fetch("/api/passages?force=1", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ textbook, grade, lesson, title, content }),
+        });
+      }
       if (!res.ok) throw new Error("저장 실패");
       router.push("/passages");
     } catch {

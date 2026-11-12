@@ -25,6 +25,7 @@ export interface ResultItem {
   maxPoints: number;
   writing: boolean;
   feedback: string | null;
+  explanation: string | null; // 틀린 문항에만 실어 준다(결과 화면에서 바로 복습)
 }
 
 // 서술형(주관식) 유형 판별
@@ -64,6 +65,7 @@ export interface Meta {
   maxPoints: number;
   writing: boolean;
   choice: boolean; // 번호로 고르는 객관식(종이 답 입력에서 숫자 한 글자로 받는다)
+  explanation: string | null;
 }
 
 export function buildMetas(assignment: AssignmentWithItems): Meta[] {
@@ -78,6 +80,7 @@ export function buildMetas(assignment: AssignmentWithItems): Meta[] {
       maxPoints: it.points,
       writing: false,
       choice: it.choicesCount != null,
+      explanation: null,
     }));
   }
   const items = assignment.assessment.exam?.items ?? [];
@@ -93,6 +96,7 @@ export function buildMetas(assignment: AssignmentWithItems): Meta[] {
       maxPoints: item.customPoints ?? q.points,
       writing,
       choice: !writing,
+      explanation: writing ? null : q.explanation,
     };
   });
 }
@@ -122,6 +126,7 @@ export function reconstructResults(
       maxPoints: m.maxPoints,
       writing: m.writing,
       feedback: a?.feedback ?? null,
+      explanation: a && !a.isCorrect ? m.explanation : null,
     };
   });
 }
@@ -236,6 +241,7 @@ export async function gradeAndSave(
       maxPoints: meta.maxPoints,
       writing: meta.writing,
       feedback,
+      explanation: isCorrect ? null : meta.explanation,
     });
   }
 

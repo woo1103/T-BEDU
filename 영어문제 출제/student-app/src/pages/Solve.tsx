@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { clearDraft, formatRemaining, loadDraft, saveDraft, startedAt } from "../lib/draft";
 import PassageView from "../components/PassageView";
 import MathText from "../components/MathText";
 import {
@@ -31,6 +32,11 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<GradeResult | null>(null);
   const [err, setErr] = useState("");
+  // 제한 시간(분)과 남은 시간 표시. 다 되면 자동 제출.
+  const [timeLimit, setTimeLimit] = useState<number | null>(null);
+  const [remaining, setRemaining] = useState<{ text: string; left: number } | null>(null);
+  const [restored, setRestored] = useState(0);
+  const autoSubmitted = useRef(false);
 
   useEffect(() => {
     (async () => {
@@ -45,6 +51,13 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
         }
         const d = await getAssessment(assignmentId);
         setType(d.type);
+        setTimeLimit(d.timeLimit ?? null);
+        // 풀다 만 답이 있으면 되살린다
+        const draft = loadDraft(assignmentId);
+        if (Object.keys(draft).length) {
+          setSelected(draft);
+          setRestored(Object.values(draft).filter((v) => v.trim()).length);
+        }
         if (d.type === "worksheet") {
           setWsItems(d.items as WorksheetSolveItem[]);
           setFileUrl(d.fileUrl ?? null);
@@ -58,6 +71,28 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
       }
     })();
   }, [assignmentId, initialDone]);
+
+  // 고를 때마다 임시 저장
+  useEffect(() => {
+    if (!result) saveDraft(assignmentId, selected);
+  }, [assignmentId, selected, result]);
+
+  // 타이머: 처음 연 때부터 센다(껐다 켜도 이어짐). 0이 되면 한 번만 자동 제출.
+  useEffect(() => {
+    if (!timeLimit || result || loading) return;
+    const started = startedAt(assignmentId);
+    const tick = () => setRemaining(formatRemaining(timeLimit, started));
+    tick();
+    const t = setInterval(tick, 1000);
+    return () => clearInterval(t);
+  }, [assignmentId, timeLimit, result, loading]);
+  useEffect(() => {
+    if (remaining && remaining.left === 0 && !result && !submitting && !autoSubmitted.current) {
+      autoSubmitted.current = true;
+      submit();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 시간이 다 된 순간 한 번만
+  }, [remaining?.left]);
 
   const total = type === "worksheet" ? wsItems.length : examItems.length;
   const answeredCount = Object.values(selected).filter((v) => v.trim() !== "").length;
@@ -77,6 +112,7 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
               selected: selected[it.questionId] ?? "",
             }));
       const r = await submitAnswers(assignmentId, answers);
+      clearDraft(assignmentId);
       setResult(r);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e) {
@@ -92,10 +128,25 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
         <button onClick={onDone} className="text-white/80 text-lg leading-none">
           ‹
         </button>
-        <span className="font-semibold truncate">{title}</span>
+        <span className="font-semibold truncate flex-1">{title}</span>
+        {remaining && !result && (
+          <span
+            className={`text-sm font-mono px-2 py-0.5 rounded-lg ${
+              remaining.left <= 5 * 60_000 ? "bg-red-500 text-white" : "bg-white/15"
+            }`}
+            aria-label="남은 시간"
+          >
+            ⏱ {remaining.text}
+          </span>
+        )}
       </header>
 
       <main className="p-4 max-w-md mx-auto space-y-4">
+        {!result && restored > 0 && (
+          <p className="text-xs text-gray-600 bg-white rounded-xl px-3 py-2 shadow-sm">
+            지난번에 고른 답 {restored}개를 되살렸어요. 이어서 풀면 돼요.
+          </p>
+        )}
         {result && (
           <div className="bg-white rounded-2xl p-5 shadow-sm">
             <div className="text-center">
@@ -154,6 +205,14 @@ export default function Solve({ assignmentId, title, initialDone, onDone }: Prop
                       <p className="text-xs text-gray-600 mt-1 leading-relaxed">
                         {r.feedback}
                       </p>
+                    )}
+                    {!r.isCorrect && r.explanation && (
+                      <details className="mt-2">
+                        <summary className="text-xs text-[#245B3E] cursor-pointer">해설 보기</summary>
+                        <p className="text-xs text-gray-700 mt-1 leading-relaxed whitespace-pre-wrap bg-white/70 rounded-lg p-2">
+                          {r.explanation}
+                        </p>
+                      </details>
                     )}
                   </div>
                 ))}

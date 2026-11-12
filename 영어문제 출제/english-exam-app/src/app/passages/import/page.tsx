@@ -111,19 +111,23 @@ export default function PassageImportPage() {
     if (noLesson) return alert(`과/단원이 비어 있는 지문이 ${noLesson}개 있어요.`);
     setSaving(true);
     let ok = 0;
+    let skipped = 0;
     try {
       for (const it of chosen) {
-        const res = await fetch("/api/passages", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ textbook: textbook.trim(), grade, lesson: it.lesson.trim(), title: it.title.trim(), content: it.content }),
-        });
+        const payload = JSON.stringify({ textbook: textbook.trim(), grade, lesson: it.lesson.trim(), title: it.title.trim(), content: it.content });
+        const res = await fetch("/api/passages", { method: "POST", headers: { "Content-Type": "application/json" }, body: payload });
+        if (res.status === 409) {
+          // 이미 있는 지문은 건너뛴다(같은 PDF를 두 번 읽었을 때)
+          skipped++;
+          setItems((prev) => prev.filter((x) => x.key !== it.key));
+          continue;
+        }
         if (!res.ok) throw new Error("저장 실패");
         ok++;
         // 저장한 것은 목록에서 빼서, 중간에 실패해도 다시 누르면 남은 것만 저장된다
         setItems((prev) => prev.filter((x) => x.key !== it.key));
       }
-      alert(`지문 ${ok}개를 저장했어요.`);
+      alert(`지문 ${ok}개를 저장했어요.${skipped ? ` 이미 있던 지문 ${skipped}개는 건너뛰었어요.` : ""}`);
       router.push("/passages");
     } catch {
       alert(`지문 ${ok}개까지 저장했고, 그다음에서 멈췄어요. 다시 저장을 누르면 남은 지문만 저장돼요.`);

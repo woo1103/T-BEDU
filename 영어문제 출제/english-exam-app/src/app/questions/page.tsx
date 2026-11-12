@@ -35,6 +35,7 @@ interface QuestionRow {
   aiGenerated: boolean;
   createdAt: string;
   verifyStatus?: string | null;
+  stats?: { answered: number; correct: number } | null; // 학생 답 누적
   verifyNote?: string | null;
   examItems?: ExamUsage[];
   passageRef?: {
@@ -46,7 +47,13 @@ interface QuestionRow {
   } | null;
 }
 
-type SortKey = "date_desc" | "date_asc" | "grade" | "textbook";
+type SortKey = "date_desc" | "date_asc" | "grade" | "textbook" | "rate_asc";
+
+// 정답률(%). 답이 3개 미만이면 믿기 어려워 null
+function rateOf(q: QuestionRow): number | null {
+  if (!q.stats || q.stats.answered < 3) return null;
+  return Math.round((q.stats.correct / q.stats.answered) * 100);
+}
 
 export default function QuestionsPage() {
   const [questions, setQuestions] = useState<QuestionRow[]>([]);
@@ -140,7 +147,8 @@ export default function QuestionsPage() {
 
   async function handleDelete(id: string) {
     if (!confirm("이 문제를 삭제하시겠습니까?")) return;
-    await fetch(`/api/questions/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/questions/${id}`, { method: "DELETE" });
+    if (!res.ok) return alert((await res.json().catch(() => ({}))).error || "삭제 실패");
     fetchQuestions();
   }
 
@@ -162,6 +170,8 @@ export default function QuestionsPage() {
       if (sortKey === "date_asc") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       if (sortKey === "grade") return (a.passageRef?.grade || "ㅎ").localeCompare(b.passageRef?.grade || "ㅎ");
       if (sortKey === "textbook") return (a.passageRef?.textbook || "ㅎ").localeCompare(b.passageRef?.textbook || "ㅎ");
+      // 정답률 낮은 순: 답이 충분한 문항 먼저, 그다음 답 없는 문항
+      if (sortKey === "rate_asc") return (rateOf(a) ?? 101) - (rateOf(b) ?? 101);
       return 0;
     });
     return arr;
@@ -255,6 +265,7 @@ export default function QuestionsPage() {
               <option value="date_asc">오래된 등록순</option>
               <option value="grade">학년순</option>
               <option value="textbook">교과서순</option>
+              <option value="rate_asc">정답률 낮은 순</option>
             </select>
           </div>
           <div>
@@ -335,6 +346,7 @@ export default function QuestionsPage() {
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">출처</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">교과서/학년</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">출제 이력</th>
+                <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium" title="학생 답 3개 이상일 때 표시">정답률</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium">날짜</th>
                 <th className="text-left px-4 py-3 text-xs text-gray-500 font-medium"></th>
               </tr>
@@ -411,6 +423,17 @@ export default function QuestionsPage() {
                       ) : (
                         <span className="text-xs text-gray-300">-</span>
                       )}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {(() => {
+                        const r = rateOf(q);
+                        if (r === null) return <span className="text-xs text-gray-300" title={q.stats ? `답 ${q.stats.answered}개(3개 미만)` : "아직 푼 학생 없음"}>-</span>;
+                        return (
+                          <span className={`text-xs px-2 py-1 rounded ${r < 50 ? "bg-red-50 text-red-600 font-medium" : "bg-gray-50 text-gray-600"}`} title={`${q.stats!.correct}/${q.stats!.answered}명 정답`}>
+                            {r}%
+                          </span>
+                        );
+                      })()}
                     </td>
                     <td className="px-4 py-3 text-xs text-gray-400">
                       {new Date(q.createdAt).toLocaleDateString("ko-KR")}

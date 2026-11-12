@@ -33,6 +33,20 @@ export async function POST(request: NextRequest) {
   const content = (body.content || "").trim();
   const wordCount = content ? content.split(/\s+/).length : 0;
 
+  // 같은 교과서에 같은 본문이 이미 있으면 알려 준다(PDF 가져오기를 두 번 돌렸을 때 등). ?force=1 이면 그냥 저장
+  if (content && request.nextUrl.searchParams.get("force") !== "1") {
+    const dup = await prisma.passage.findFirst({
+      where: { textbook: body.textbook, content },
+      select: { id: true, lesson: true, title: true },
+    });
+    if (dup) {
+      return NextResponse.json(
+        { error: `같은 지문이 이미 있어요: ${dup.lesson}${dup.title ? ` · ${dup.title}` : ""}`, duplicateOf: dup.id },
+        { status: 409 }
+      );
+    }
+  }
+
   const passage = await prisma.passage.create({
     data: {
       textbook: body.textbook,

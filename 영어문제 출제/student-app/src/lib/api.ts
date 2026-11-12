@@ -164,6 +164,7 @@ export interface AssessmentResponse {
   items: AssessmentItem[] | WorksheetSolveItem[];
   fileUrl?: string | null;
   worksheetTitle?: string;
+  timeLimit?: number | null; // 분
 }
 
 export function getAssessment(
@@ -183,6 +184,7 @@ export interface ResultItem {
   maxPoints: number;
   writing: boolean;
   feedback: string | null;
+  explanation?: string | null; // 틀린 문항의 해설
 }
 
 export interface GradeResult {

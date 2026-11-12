@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { questionUsage } from "@/lib/usage-check";
 
 export async function GET(
   _request: NextRequest,
@@ -61,6 +62,16 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
+  // 시험지에 들어간 문항은 지울 수 없다(DB 제약) — 이유를 알려 준다
+  const usage = await questionUsage(id);
+  if (usage.exams.length > 0) {
+    const names = usage.exams.slice(0, 3).map((e) => `'${e.title}'`).join(", ");
+    const more = usage.exams.length > 3 ? ` 외 ${usage.exams.length - 3}개` : "";
+    return NextResponse.json(
+      { error: `시험지 ${names}${more}에 들어 있어 지울 수 없어요. 시험지에서 먼저 빼 주세요.`, usage },
+      { status: 409 }
+    );
+  }
   await prisma.question.delete({ where: { id } });
   return NextResponse.json({ success: true });
 }

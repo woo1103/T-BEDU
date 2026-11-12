@@ -26,6 +26,9 @@ interface ClassRow {
 
 export default function ExamsPage() {
   const [exams, setExams] = useState<ExamRow[]>([]);
+  const [search, setSearch] = useState("");
+  const [fGrade, setFGrade] = useState("");
+  const [fType, setFType] = useState("");
   const [loading, setLoading] = useState(true);
 
   // 반 배정(과제 할당) 모달
@@ -89,9 +92,29 @@ export default function ExamsPage() {
 
   async function handleDelete(id: string) {
     if (!confirm("이 시험지를 삭제하시겠습니까?")) return;
-    await fetch(`/api/exams/${id}`, { method: "DELETE" });
+    let res = await fetch(`/api/exams/${id}`, { method: "DELETE" });
+    if (res.status === 409) {
+      const d = await res.json();
+      // 제출 없는 과제만 있으면 과제까지 함께 지울지 한 번 더 묻는다
+      if (!d.needsForce || !confirm(`${d.error}
+아직 푼 학생은 없어요. 과제도 함께 지우고 시험지를 삭제할까요?`)) {
+        if (!d.needsForce) alert(d.error);
+        return;
+      }
+      res = await fetch(`/api/exams/${id}?force=1`, { method: "DELETE" });
+    }
+    if (!res.ok) return alert((await res.json().catch(() => ({}))).error || "삭제 실패");
     setExams((prev) => prev.filter((e) => e.id !== id));
   }
+
+  const grades = Array.from(new Set(exams.map((e) => e.grade).filter((g): g is string => !!g))).sort();
+  const q = search.trim().toLowerCase();
+  const visible = exams.filter(
+    (e) =>
+      (!q || e.title.toLowerCase().includes(q) || (e.source ?? "").toLowerCase().includes(q)) &&
+      (!fGrade || e.grade === fGrade) &&
+      (!fType || e.examType === fType)
+  );
 
   function openAssign(exam: ExamRow) {
     setAssignTarget(exam);
@@ -149,7 +172,7 @@ export default function ExamsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <p className="text-sm text-gray-500">
-          총 {exams.length}개의 시험지
+          총 {exams.length}개의 시험지{visible.length !== exams.length && ` · 조건에 맞는 ${visible.length}개`}
         </p>
         <Link
           href="/exams/new"
@@ -159,9 +182,42 @@ export default function ExamsPage() {
         </Link>
       </div>
 
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 flex flex-wrap gap-2 items-center">
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="시험지 제목 검색..."
+          className="flex-1 min-w-[12rem] border border-gray-300 rounded-lg px-3 py-2 text-sm"
+          aria-label="시험지 제목 검색"
+        />
+        <select value={fGrade} onChange={(e) => setFGrade(e.target.value)} className="border border-gray-300 rounded-lg px-2 py-2 text-sm" aria-label="학년">
+          <option value="">전체 학년</option>
+          {grades.map((g) => (
+            <option key={g} value={g}>
+              {g}
+            </option>
+          ))}
+        </select>
+        <select value={fType} onChange={(e) => setFType(e.target.value)} className="border border-gray-300 rounded-lg px-2 py-2 text-sm" aria-label="유형">
+          <option value="">전체 유형</option>
+          {Object.entries(EXAM_TYPE_MAP).map(([k, v]) => (
+            <option key={k} value={k}>
+              {v.name}
+            </option>
+          ))}
+        </select>
+        {(search || fGrade || fType) && (
+          <button onClick={() => { setSearch(""); setFGrade(""); setFType(""); }} className="text-xs text-gray-500 underline">
+            지우기
+          </button>
+        )}
+      </div>
+
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
         {loading ? (
           <div className="p-12 text-center text-gray-400">불러오는 중...</div>
+        ) : visible.length === 0 && exams.length > 0 ? (
+          <div className="p-12 text-center text-gray-400">조건에 맞는 시험지가 없어요.</div>
         ) : exams.length === 0 ? (
           <div className="p-12 text-center text-gray-400">
             <p className="text-lg mb-2">시험지가 없습니다</p>
@@ -174,7 +230,7 @@ export default function ExamsPage() {
           </div>
         ) : (
           <SourceTree
-            items={exams.map((e) => ({ ...e, subject: "english" }))}
+            items={visible.map((e) => ({ ...e, subject: "english" }))}
             renderItem={(exam) => (
               <div className="flex items-center justify-between gap-3 py-1.5">
                 <div className="min-w-0">
