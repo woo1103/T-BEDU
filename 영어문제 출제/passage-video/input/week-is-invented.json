@@ -1,0 +1,123 @@
+{
+  "slug": "week-is-invented",
+  "title": "일주일은 누가 만들었나",
+  "subtitle": "사회학 · 시간은 문화가 빚는다",
+  "source": "2026년 10월 고1 모의고사 22번",
+  "kind": "academic",
+  "characters": {
+    "yeeun": {
+      "name": "예은",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F6D4B9",
+      "hair": "bob",
+      "hairColor": "#33251F",
+      "outfit": "tshirt",
+      "outfitColor": "#D98A4A",
+      "accentColor": "#3A3028",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "ha": {
+      "name": "하 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "suit",
+      "outfitColor": "#4C6B9A",
+      "accentColor": "#2C3850",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "일주일은 누가 만들었나",
+      "subtitle": "사회학 · 시간은 문화가 빚는다",
+      "narration": "이번 지문은 우리가 시간을 어떻게 받아들이는지를 다뤄요.",
+      "cast": [
+        { "who": "yeeun", "expression": "confused", "pose": "raise" },
+        { "who": "ha", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "예은이는 당연하게 여기던 것을 문득 다시 봤어요.",
+      "question": "왜 하필 일주일은 7일이지?",
+      "thought": true,
+      "narrationOut": "사회학자들은 시간에 대한 인식이 자연의 속성이 아니라고 말해요.",
+      "cast": [{ "who": "yeeun", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "compare",
+      "heading": "시간은 무엇으로 정해지나",
+      "left": {
+        "label": "흔히 생각하는 것",
+        "icon": "⏰",
+        "points": ["자연의 기본 속성", "째깍거리는 시계처럼", "개인 경험의 심리 현상"]
+      },
+      "right": {
+        "label": "사회학자들의 설명",
+        "icon": "🏛️",
+        "points": ["전통이 형성한다", "문화적 기준이 빚는다", "문화마다 다르다"]
+      },
+      "narration": "시간을 인식하는 방식은 상당 부분 전통과 문화가 만든 거예요."
+    },
+    {
+      "type": "concept",
+      "term": "일주일이라는 사회적 발명품",
+      "meaning": "시간의 기본 단위인 일주일도 문화마다 다른 사회적 발명품이에요.",
+      "icon": "🗓️",
+      "narration": "Zerubavel의 책이 일주일을 그렇게 설명해요.",
+      "cast": [{ "who": "ha", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "당연해 보이는 숫자들",
+      "steps": [
+        { "label": "9시 출근", "icon": "🏢" },
+        { "label": "5시 퇴근", "icon": "🚪" },
+        { "label": "주말 휴식", "icon": "🛋️" },
+        { "label": "월말 납부", "icon": "🧾" },
+        { "label": "65세 은퇴", "icon": "🎣" }
+      ],
+      "narration": "이 숫자들은 자연이 정해 준 것이 아니에요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "예은이는 그 숫자들이 왜 그렇게 굳어졌는지 물었어요.",
+      "lines": [
+        { "who": "yeeun", "text": "왜 다들 9시부터 5시까지 일하는 걸 당연하게 여길까요?" },
+        { "who": "ha", "text": "인간의 본질이 정한 게 아니라 사회가 만들어 낸 틀이에요." },
+        { "who": "yeeun", "text": "그런데 왜 자연스럽게 느껴지죠?" },
+        { "who": "ha", "text": "우리가 그걸 내면화해서 '기준'으로 받아들였기 때문이에요." }
+      ],
+      "narrationOut": "만들어진 것이 오래되면 타고난 것처럼 보이게 돼요.",
+      "cast": [
+        { "who": "yeeun", "expression": "surprised", "pose": "shrug" },
+        { "who": "ha", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "These numbers and patterns are rather social creations that we internalize and come to accept as \"normal.\"",
+      "translation": "이러한 숫자와 양식은 오히려 우리가 내면화하여 결국 '기준'으로 받아들이게 된 사회적 창조물이다.",
+      "highlight": ["social", "creations", "internalize", "normal"],
+      "narration": "이 지문의 요지가 이 한 문장에 담겨 있어요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "시간 인식은 자연의 속성이 아니다",
+        "전통과 문화가 그 방식을 빚는다",
+        "익숙한 숫자들은 사회적 창조물이다"
+      ],
+      "narration": "당연해 보이는 시간표가 사실은 만들어진 것이라는 이야기예요.",
+      "cast": [{ "who": "yeeun", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

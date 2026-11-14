@@ -1,0 +1,121 @@
+{
+  "slug": "star-trek-abundance",
+  "title": "희소성이 사라진 세계",
+  "subtitle": "경제 · Star Trek으로 보는 풍요",
+  "source": "2026년 10월 고1 모의고사 31번",
+  "kind": "academic",
+  "characters": {
+    "taeo": {
+      "name": "태오",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F0C9A6",
+      "hair": "spiky",
+      "hairColor": "#2E2018",
+      "outfit": "tshirt",
+      "outfitColor": "#D9663E",
+      "accentColor": "#333A46",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "ryu": {
+      "name": "류 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "suit",
+      "outfitColor": "#4A5E9A",
+      "accentColor": "#2C3450",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "희소성이 사라진 세계",
+      "subtitle": "경제 · Star Trek으로 보는 풍요",
+      "narration": "이번 지문은 공상과학 속 세계를 경제학의 눈으로 들여다봐요.",
+      "cast": [
+        { "who": "taeo", "expression": "surprised", "pose": "raise" },
+        { "who": "ryu", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "태오는 Star Trek을 경제학으로 본다는 말이 낯설었어요.",
+      "question": "우주 모험 이야기에 경제학이 왜 나와?",
+      "thought": true,
+      "narrationOut": "그렇게 보면 곧 닥칠지 모르는 세계가 보인다고 해요.",
+      "cast": [{ "who": "taeo", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "희소성",
+      "meaning": "모든 사람이 원하는 걸 다 주기에는 대체로 무엇이든 충분하지 않다는 생각이에요.",
+      "icon": "⚖️",
+      "narration": "고전 경제학 전체가 이 개념 위에 세워져 있어요.",
+      "cast": [{ "who": "ryu", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "부족하니까 생긴 장치",
+      "steps": [
+        { "label": "충분하지 않다", "icon": "📉" },
+        { "label": "시장이 생긴다", "icon": "🏪" },
+        { "label": "가격을 매긴다", "icon": "🏷️" },
+        { "label": "이익 큰 곳으로", "icon": "🎯" }
+      ],
+      "narration": "자원을 가장 큰 이익이 나는 곳에 배분하려고 시장과 가격을 써요."
+    },
+    {
+      "type": "compare",
+      "heading": "두 세계의 전제",
+      "left": {
+        "label": "고전 경제학의 세계",
+        "icon": "⚖️",
+        "points": ["늘 부족하다", "시장과 가격으로 배분", "누군가는 못 가진다"]
+      },
+      "right": {
+        "label": "Star Trek의 세계",
+        "icon": "🚀",
+        "points": ["희소성이 별로 없다", "원하는 음식을 복제", "별 사이를 여행한다"]
+      },
+      "narration": "그 세계에서는 기술이 부족함 자체를 거의 없애 버렸어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "태오는 그런 세계에서 사람들이 무엇을 하는지 물었어요.",
+      "lines": [
+        { "who": "taeo", "text": "다 풍족하면 사람들은 뭘 하며 살아요?" },
+        { "who": "ryu", "text": "모두가 충분히 교육받아 탐험가, 연구원, 예술가, 의사가 돼요." },
+        { "who": "taeo", "text": "그건 그냥 이야기 속 설정 아닌가요?" },
+        { "who": "ryu", "text": "생성형 AI가 우리 사회의 많은 면을 그렇게 풍요롭게 할 수 있어요." }
+      ],
+      "narrationOut": "그래서 이 공상과학이 곧 닥칠 세계를 보는 창이 되는 거예요.",
+      "cast": [
+        { "who": "taeo", "expression": "surprised", "pose": "shrug" },
+        { "who": "ryu", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Generative AI has the potential to allow many dimensions of our own society to be similarly highly abundant.",
+      "translation": "생성형 AI는 우리 사회의 많은 측면이 마찬가지로 매우 풍요로워질 수 있게 할 잠재력을 지니고 있다.",
+      "highlight": ["Generative", "AI", "abundant"],
+      "narration": "이야기가 우리 현실로 이어지는 한 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "고전 경제학은 부족함을 전제로 한다",
+        "Star Trek 세계에는 희소성이 거의 없다",
+        "생성형 AI가 그런 풍요를 가져올 수 있다"
+      ],
+      "narration": "부족함이 사라지면 경제학의 전제도 흔들린다는 이야기예요.",
+      "cast": [{ "who": "taeo", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

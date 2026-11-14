@@ -1,0 +1,132 @@
+{
+  "slug": "illusory-truth-effect",
+  "title": "자주 들으면 참처럼",
+  "subtitle": "심리학 · 진실 착각 효과",
+  "source": "2026년 10월 고1 모의고사 38번",
+  "kind": "academic",
+  "characters": {
+    "chaeyun": {
+      "name": "채윤",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "bob",
+      "hairColor": "#352620",
+      "outfit": "uniform",
+      "outfitColor": "#C96A6A",
+      "accentColor": "#3E2C2C",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "ok": {
+      "name": "옥 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "labcoat",
+      "outfitColor": "#5A7A9A",
+      "accentColor": "#2C3A48",
+      "accessory": "glasses",
+      "prop": "pen",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "자주 들으면 참처럼",
+      "subtitle": "심리학 · 진실 착각 효과",
+      "narration": "이번 지문은 1977년에 이루어진 한 심리학 실험을 소개해요.",
+      "cast": [
+        { "who": "chaeyun", "expression": "confused", "pose": "raise" },
+        { "who": "ok", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "채윤이는 어디선가 자꾸 듣던 말이 사실처럼 느껴졌어요.",
+      "question": "여러 번 들었으니까 맞는 말이겠지?",
+      "thought": true,
+      "narrationOut": "심리학자 Hasher와 Goldstein이 바로 이것을 실험했어요.",
+      "cast": [{ "who": "chaeyun", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "flow",
+      "heading": "실험은 이렇게 진행됐다",
+      "steps": [
+        { "label": "진술문 60개", "icon": "📄" },
+        { "label": "참·거짓 평가", "icon": "✅" },
+        { "label": "2주 간격 3회", "icon": "📆" },
+        { "label": "평가 비교", "icon": "📊" }
+      ],
+      "narration": "대학생들에게 얼마나 확신하는지를 세 번에 걸쳐 물었어요."
+    },
+    {
+      "type": "bars",
+      "heading": "60개 진술문의 구성",
+      "unit": "개",
+      "bars": [
+        { "label": "매번 반복된 진술문", "value": 20 },
+        { "label": "매번 새로 나온 진술문", "value": 40 }
+      ],
+      "narration": "결정적으로 20개만 매번 반복되고, 나머지 40개는 새것이었어요."
+    },
+    {
+      "type": "concept",
+      "term": "진실 착각 효과",
+      "meaning": "어떤 진술문을 더 자주 들을수록 그것이 더 '참'인 것처럼 들리는 현상이에요.",
+      "icon": "🔁",
+      "narration": "연구자들이 알아낸 것은 놀라웠어요.",
+      "cast": [{ "who": "ok", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "무엇이 믿음을 움직였나",
+      "left": {
+        "label": "움직이지 않은 것",
+        "icon": "⚖️",
+        "points": ["진술문이 참인지", "진술문이 거짓인지", "내용 자체는 무관했다"]
+      },
+      "right": {
+        "label": "움직인 것",
+        "icon": "📈",
+        "points": ["몇 번 들었는가", "반복의 작용에 따라", "믿음이 올라갔다"]
+      },
+      "narration": "참이든 거짓이든 상관없이, 반복에 따라 믿음이 올라갔어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "채윤이는 그 결과가 왜 놀라운지 물었어요.",
+      "lines": [
+        { "who": "chaeyun", "text": "거짓인 문장도 믿음이 올라갔다는 건가요?" },
+        { "who": "ok", "text": "네. 참인지 거짓인지와 상관없이 올라갔어요." },
+        { "who": "chaeyun", "text": "그럼 반복만으로 생각이 바뀔 수 있겠네요." },
+        { "who": "ok", "text": "그래서 이걸 진실 착각 효과라고 부르게 됐어요." }
+      ],
+      "narrationOut": "자주 듣는다는 것만으로 사실처럼 느껴질 수 있는 거예요.",
+      "cast": [
+        { "who": "chaeyun", "expression": "surprised", "pose": "shrug" },
+        { "who": "ok", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "The more often you hear a statement, the more 'true' it sounds.",
+      "translation": "여러분이 어떤 진술문을 더 자주 들을수록, 그것은 더 '참인' 것처럼 들린다.",
+      "highlight": ["more", "often", "more", "true"],
+      "narration": "이 실험이 밝혀낸 바가 이 한 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "같은 진술문을 2주 간격으로 세 번 평가했다",
+        "참·거짓과 상관없이 믿음이 올라갔다",
+        "이것을 진실 착각 효과라고 부른다"
+      ],
+      "narration": "반복이 사실 여부를 대신해 버린다는 이야기예요.",
+      "cast": [{ "who": "chaeyun", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

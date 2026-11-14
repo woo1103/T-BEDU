@@ -1,0 +1,136 @@
+{
+  "slug": "last-day-lab-report",
+  "title": "방학 하루 전에 들은 말",
+  "subtitle": "이야기 · 들뜬 마음이 가라앉기까지",
+  "source": "2026년 10월 고1 모의고사 19번",
+  "kind": "story",
+  "characters": {
+    "rafe": {
+      "name": "Rafe",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F0C9A6",
+      "hair": "spiky",
+      "hairColor": "#2E2018",
+      "outfit": "hoodie",
+      "outfitColor": "#E08A3C",
+      "accentColor": "#333A46",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "manta": {
+      "name": "Manta 선생님",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#58504A",
+      "outfit": "labcoat",
+      "outfitColor": "#4A7C59",
+      "accentColor": "#2C3A32",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "방학 하루 전에 들은 말",
+      "subtitle": "이야기 · 들뜬 마음이 가라앉기까지",
+      "narration": "이번 지문은 여름 방학 전 마지막 날에 일어난 일이에요.",
+      "cast": [
+        { "who": "rafe", "expression": "excited", "pose": "cheer" },
+        { "who": "manta", "expression": "neutral", "pose": "idle" }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "여름 방학 전, 학교에서의 마지막 날",
+      "narration": "몇 달간의 퀴즈와 과제를 끝낸 Rafe는 빨리 떠나고 싶었어요.",
+      "speech": {
+        "who": "rafe",
+        "text": "이보다 더 달콤한 게 있을까?",
+        "thought": true
+      },
+      "narrationOut": "모든 것을 뒤로 하고 떠날 생각뿐이었어요.",
+      "cast": [{ "who": "rafe", "expression": "happy", "pose": "think" }]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "사물함을 정리하며 춤추듯",
+      "narration": "Rafe는 사물함을 정리하면서 거의 춤을 추다시피 했어요.",
+      "narrationOut": "어떤 것도 그 기분을 망칠 수 없을 것 같았어요.",
+      "cast": [{ "who": "rafe", "expression": "excited", "pose": "cheer" }]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "가방을 잠그던 순간, 따로 불려 갔다",
+      "narration": "책가방을 잠그고 떠나려는데 과학 선생님이 따로 불렀어요.",
+      "speech": {
+        "who": "manta",
+        "text": "Rafe, 지난 한 달간 내 경고에도 최종 실험 보고서를 내지 않았구나."
+      },
+      "narrationOut": "그 말은 찬물을 끼얹듯 Rafe에게 충격을 줬어요.",
+      "cast": [{ "who": "manta", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "맞는 말이라서 더 아팠다",
+      "narration": "선생님 말이 맞았어요. Rafe는 그것을 까맣게 잊고 있었어요.",
+      "speech": {
+        "who": "rafe",
+        "text": "완전히 잊고 있었어… 변명할 말이 없네.",
+        "thought": true
+      },
+      "narrationOut": "그리고 선생님이 한마디를 덧붙였어요.",
+      "cast": [{ "who": "rafe", "expression": "surprised", "pose": "shrug" }]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "덧붙여 온 한마디",
+      "narration": "선생님은 보충할 방법을 알려 줬어요.",
+      "speech": {
+        "who": "manta",
+        "text": "그걸 보충하려면, 너는 여름 학교에 출석해야 해."
+      },
+      "narrationOut": "여유로운 아침과 끝없는 자유 시간은 그대로 사라졌어요.",
+      "cast": [{ "who": "manta", "expression": "neutral", "pose": "present" }]
+    },
+    {
+      "type": "compare",
+      "heading": "꿈꾸던 여름 vs 다가온 여름",
+      "left": {
+        "label": "몇 시간 전까지의 여름",
+        "icon": "🏖️",
+        "points": ["여유로운 아침", "끝없는 자유 시간", "모든 것을 뒤로 하고"]
+      },
+      "right": {
+        "label": "지금 알게 된 여름",
+        "icon": "🧪",
+        "points": ["여름 학교에 출석", "실험대 앞에서", "가장 하기 싫은 일"]
+      },
+      "narration": "단 몇 마디에 여름의 그림이 통째로 바뀌었어요."
+    },
+    {
+      "type": "quote",
+      "sentence": "The words hit me like cold water.",
+      "translation": "그 말은 찬물을 끼얹듯이 나에게 충격을 줬다.",
+      "highlight": ["hit", "cold", "water"],
+      "narration": "들뜬 기분이 꺾이는 순간이 이 한 문장에 담겨 있어요."
+    },
+    {
+      "type": "recap",
+      "heading": "마음이 움직인 길",
+      "points": [
+        "방학 하루 전, 더없이 들떠 있었다",
+        "보고서를 내지 않았다는 말을 들었다",
+        "방학을 실험대에서 보내게 됐다"
+      ],
+      "narration": "신이 났던 마음이 실망으로 가라앉은 하루였어요.",
+      "cast": [{ "who": "rafe", "expression": "sad", "pose": "shrug" }]
+    }
+  ]
+}

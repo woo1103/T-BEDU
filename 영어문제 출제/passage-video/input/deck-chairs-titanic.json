@@ -1,0 +1,129 @@
+{
+  "slug": "deck-chairs-titanic",
+  "title": "갑판 의자만 옮기는 사람",
+  "subtitle": "진로 · 바꾸지 않으면서 바라기",
+  "source": "2026년 10월 고1 모의고사 21번",
+  "kind": "academic",
+  "characters": {
+    "sea": {
+      "name": "세아",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F3D0B4",
+      "hair": "long",
+      "hairColor": "#4A3222",
+      "outfit": "suit",
+      "outfitColor": "#3E8E8C",
+      "accentColor": "#2A3A3A",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "dohyun": {
+      "name": "도현 코치",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E8CCAE",
+      "hair": "short",
+      "hairColor": "#453D35",
+      "outfit": "suit",
+      "outfitColor": "#8A5A9B",
+      "accentColor": "#3A2C40",
+      "accessory": "none",
+      "prop": "pen",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "갑판 의자만 옮기는 사람",
+      "subtitle": "진로 · 바꾸지 않으면서 바라기",
+      "narration": "이번 지문은 일에 만족하지 못하는 사람들의 공통점을 다뤄요.",
+      "cast": [
+        { "who": "sea", "expression": "sad", "pose": "shrug" },
+        { "who": "dohyun", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "세아는 지금 일이 마음에 들지 않았어요.",
+      "question": "언젠가는 완벽한 일자리를 만나게 되겠지?",
+      "thought": true,
+      "narrationOut": "만족하지 못하는 직업인들 사이에 되풀이되는 믿음이에요.",
+      "cast": [{ "who": "sea", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "언젠가는 바뀌겠지",
+      "meaning": "미래의 알 수 없는 어느 날, 상황이 기적적으로 바뀔 거라고 믿는 거예요.",
+      "icon": "🪄",
+      "narration": "그러면서도 현재 상황을 바꾸려고 하는 일은 거의 없어요.",
+      "cast": [{ "who": "dohyun", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "그래서 그들이 하는 일",
+      "steps": [
+        { "label": "일이 싫다", "icon": "😞" },
+        { "label": "구인란 검색", "icon": "🔎" },
+        { "label": "비슷한 직책", "icon": "🪑" },
+        { "label": "또 환멸", "icon": "🔁" }
+      ],
+      "narration": "다른 회사에서 새로 고침 버튼만 누르면 마법이 올 거라 기대해요."
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "비슷한 일자리로 옮기기", "icon": "🪑" },
+      "everyday": { "label": "타이타닉 갑판 의자 재배치", "icon": "🚢" },
+      "because": "배가 가라앉는데 의자 위치만 바꾸는 것처럼, 근본은 그대로 두는 거예요.",
+      "narration": "지문은 이 행동을 이렇게 비유했어요."
+    },
+    {
+      "type": "compare",
+      "heading": "무엇을 바꾸는가",
+      "left": {
+        "label": "새로 고침만 누르기",
+        "icon": "🔄",
+        "points": ["직책만 비슷하게 검색", "뭔가 하는 기분만 든다", "똑같이 환상이 깨진다"]
+      },
+      "right": {
+        "label": "접근 방식을 바꾸기",
+        "icon": "🧭",
+        "points": ["게임 자체를 바꾼다", "현재를 의미 있게 손본다", "다른 보상이 돌아온다"]
+      },
+      "narration": "같은 게임을 계속하면 똑같은 보상을 얻게 돼요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "세아는 이직이 답이 아니냐고 물었어요.",
+      "lines": [
+        { "who": "sea", "text": "그래도 회사를 옮기면 좀 낫지 않을까요?" },
+        { "who": "dohyun", "text": "직책이 같다면, 얼마 안 가 똑같은 자리에 서게 돼요." },
+        { "who": "sea", "text": "그럼 뭘 바꿔야 하죠?" },
+        { "who": "dohyun", "text": "접근 방식을 통째로 바꿔야 해요." }
+      ],
+      "narrationOut": "자리를 옮기는 일과 방식을 바꾸는 일은 전혀 다른 일이에요.",
+      "cast": [
+        { "who": "sea", "expression": "confused", "pose": "shrug" },
+        { "who": "dohyun", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "If you keep playing the same game, you'll win the same prizes.",
+      "translation": "여러분이 계속해서 같은 게임을 한다면, 똑같은 보상을 얻게 될 것이다.",
+      "highlight": ["same", "game", "same", "prizes"],
+      "narration": "밑줄 친 비유가 말하려던 바가 여기 있어요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "언젠가 바뀐다고 믿으며 가만히 있는다",
+        "비슷한 자리로 옮겨 봐야 그대로다",
+        "접근 방식 자체를 바꿔야 한다"
+      ],
+      "narration": "의자를 옮기지 말고 배를 바꾸라는 이야기예요.",
+      "cast": [{ "who": "sea", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

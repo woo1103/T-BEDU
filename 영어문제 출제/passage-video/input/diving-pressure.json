@@ -1,0 +1,132 @@
+{
+  "slug": "diving-pressure",
+  "title": "10미터마다 1바씩",
+  "subtitle": "과학 · 잠수부가 견디는 압력",
+  "source": "2026년 10월 고1 모의고사 39번",
+  "kind": "academic",
+  "characters": {
+    "minjae": {
+      "name": "민재",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F0C9A6",
+      "hair": "spiky",
+      "hairColor": "#2E2018",
+      "outfit": "tshirt",
+      "outfitColor": "#3E9ACC",
+      "accentColor": "#2C3846",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "seol": {
+      "name": "설 교관",
+      "voice": { "name": "ko-KR-Chirp3-HD-Algenib" },
+      "skin": "#E0B894",
+      "hair": "short",
+      "hairColor": "#3A322C",
+      "outfit": "uniform",
+      "outfitColor": "#2E6A5A",
+      "accentColor": "#1E3830",
+      "accessory": "none",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "10미터마다 1바씩",
+      "subtitle": "과학 · 잠수부가 견디는 압력",
+      "narration": "이번 지문은 물속에서 몸이 겪는 압력을 설명해요.",
+      "cast": [
+        { "who": "minjae", "expression": "surprised", "pose": "raise" },
+        { "who": "seol", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "민재는 땅 위에서도 엄청난 압력을 받는다는 말을 들었어요.",
+      "question": "몸에 몇 톤이 눌리는데 왜 아무렇지도 않지?",
+      "thought": true,
+      "narrationOut": "지구 표면에서 우리 몸은 1제곱미터당 16~18톤을 받고 있어요.",
+      "cast": [{ "who": "minjae", "expression": "confused", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "압력이 느껴지지 않는 이유",
+      "meaning": "바깥 압력이 폐와 몸속 공기 공간의 내부 압력과 균형을 이루고 있어서예요.",
+      "icon": "⚖️",
+      "narration": "안과 밖이 맞춰져 있으면 압력은 느껴지지 않아요.",
+      "cast": [{ "who": "seol", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "땅 위와 물속",
+      "left": {
+        "label": "지구 표면에서",
+        "icon": "🏞️",
+        "points": ["대기압만 작용한다", "내부 압력과 균형", "그래서 느끼지 않는다"]
+      },
+      "right": {
+        "label": "물속에 잠겼을 때",
+        "icon": "🌊",
+        "points": ["대기압에 수압까지", "깊이에 비례해 커진다", "맞춰 주지 않으면 느낀다"]
+      },
+      "narration": "잠수할 때는 대기압 외에 물의 압력도 몸에 작용해요."
+    },
+    {
+      "type": "bars",
+      "heading": "깊이에 따라 커지는 압력",
+      "unit": "바",
+      "bars": [
+        { "label": "수면 (0미터)", "value": 1, "note": "대기압만" },
+        { "label": "수심 10미터", "value": 2, "note": "1바가 더해진다" },
+        { "label": "수심 20미터", "value": 3, "note": "또 1바가 더" }
+      ],
+      "narration": "수압은 깊이에 비례해서 10미터마다 1바씩 늘어나요."
+    },
+    {
+      "type": "flow",
+      "heading": "잠수부를 지키는 방법",
+      "steps": [
+        { "label": "물속에 잠긴다", "icon": "🤿" },
+        { "label": "수압이 는다", "icon": "📈" },
+        { "label": "같은 압력으로", "icon": "🎚️" },
+        { "label": "호흡 기체 공급", "icon": "🫧" }
+      ],
+      "narration": "주변 물이 가하는 압력과 같은 압력으로 공기를 넣어 줘요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "민재는 10미터에서는 어떻게 되는지 물었어요.",
+      "lines": [
+        { "who": "minjae", "text": "10미터까지 내려가면 압력이 얼마나 되나요?" },
+        { "who": "seol", "text": "2바를 겪게 돼요. 대기압에 수압 1바가 더해지니까요." },
+        { "who": "minjae", "text": "그럼 공기는 어떻게 넣어 주죠?" },
+        { "who": "seol", "text": "2기압의 호흡용 혼합 기체를 공급해야 균형이 맞아요." }
+      ],
+      "narrationOut": "안과 밖을 같게 맞춰 주는 것이 잠수의 핵심이에요.",
+      "cast": [
+        { "who": "minjae", "expression": "surprised", "pose": "shrug" },
+        { "who": "seol", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Water pressure increases proportionally with depth. It increases by 1 bar for every 10 meters.",
+      "translation": "수압은 깊이에 비례하여 증가한다. 그것은 10미터마다 1바씩 증가한다.",
+      "highlight": ["proportionally", "depth", "1", "bar"],
+      "narration": "이 글의 숫자가 모두 이 규칙에서 나와요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "안과 밖의 압력이 같으면 느껴지지 않는다",
+        "수압은 10미터마다 1바씩 커진다",
+        "같은 압력으로 호흡 기체를 공급한다"
+      ],
+      "narration": "압력을 이기는 게 아니라 맞춰 주는 것이라는 이야기예요.",
+      "cast": [{ "who": "minjae", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

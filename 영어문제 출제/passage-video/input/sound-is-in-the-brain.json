@@ -1,0 +1,129 @@
+{
+  "slug": "sound-is-in-the-brain",
+  "title": "소리는 뇌에서 시작된다",
+  "subtitle": "과학 · 쓰러진 나무의 수수께끼",
+  "source": "2026년 10월 고1 모의고사 36번",
+  "kind": "academic",
+  "characters": {
+    "haru": {
+      "name": "하루",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F0C9A6",
+      "hair": "spiky",
+      "hairColor": "#33251F",
+      "outfit": "hoodie",
+      "outfitColor": "#5AA06A",
+      "accentColor": "#2C3A32",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "ko": {
+      "name": "고 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E8CCAE",
+      "hair": "short",
+      "hairColor": "#58504A",
+      "outfit": "labcoat",
+      "outfitColor": "#6A6AA8",
+      "accentColor": "#303050",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "소리는 뇌에서 시작된다",
+      "subtitle": "과학 · 쓰러진 나무의 수수께끼",
+      "narration": "이번 지문은 소리가 어디에서 생기는지를 다뤄요.",
+      "cast": [
+        { "who": "haru", "expression": "confused", "pose": "raise" },
+        { "who": "ko", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "하루는 오래된 철학 난제를 하나 들었어요.",
+      "question": "숲에서 나무가 쓰러졌는데 아무도 없다면, 소리가 난 걸까?",
+      "thought": true,
+      "narrationOut": "지문은 이 질문에 분명하게 아니라고 답해요.",
+      "cast": [{ "who": "haru", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "모든 소리는 운동에서",
+      "meaning": "공기나 물, 강철, 나무 같은 매질 속의 분자를 교란하는 움직임에서 시작돼요.",
+      "icon": "〰️",
+      "narration": "소리는 언제나 어떤 종류의 운동에서 출발해요.",
+      "cast": [{ "who": "ko", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "고막에 닿기 전의 소리", "icon": "🔊" },
+      "everyday": { "label": "뇌가 없을 때의 빛", "icon": "🌈" },
+      "because": "Newton은 빛의 파동에 색이 없고, 색은 뇌에서만 생긴다고 했어요.",
+      "narration": "소리도 빛과 똑같다고 지문은 말해요."
+    },
+    {
+      "type": "flow",
+      "heading": "소리가 되기까지",
+      "steps": [
+        { "label": "어떤 운동", "icon": "🌬️" },
+        { "label": "분자 교란", "icon": "〰️" },
+        { "label": "고막 도달", "icon": "👂" },
+        { "label": "뇌의 인식", "icon": "🧠" },
+        { "label": "비로소 소리", "icon": "🔊" }
+      ],
+      "narration": "뇌에 닿기 전까지는 아직 소리가 아니에요."
+    },
+    {
+      "type": "compare",
+      "heading": "측정되는 것과 들리는 것",
+      "left": {
+        "label": "고막에 닿기 전",
+        "icon": "📏",
+        "points": ["분자들의 교란일 뿐", "측정기로 잴 수 있다", "아직 소리가 아니다"]
+      },
+      "right": {
+        "label": "뇌에 닿은 뒤",
+        "icon": "🧠",
+        "points": ["심리학적 개념이 된다", "뇌가 만들어 낸 산물", "그제야 소리가 된다"]
+      },
+      "narration": "교란은 잴 수 있지만, 뇌에 닿아야 소리가 돼요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "하루는 그럼 그 나무는 어떻게 되는 거냐고 물었어요.",
+      "lines": [
+        { "who": "haru", "text": "그럼 쓰러진 나무는 아무 일도 안 한 건가요?" },
+        { "who": "ko", "text": "분자를 교란하고 혼란은 만들죠. 다만 그게 소리는 아니에요." },
+        { "who": "haru", "text": "새나 여우가 있었다면 달랐겠네요." },
+        { "who": "ko", "text": "어떤 생명체도 듣지 않았다면, 소리를 낸 것이 아니에요." }
+      ],
+      "narrationOut": "소리는 공기 중이 아니라 뇌 안에서 완성되는 거예요.",
+      "cast": [
+        { "who": "haru", "expression": "surprised", "pose": "shrug" },
+        { "who": "ko", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Sound is a psychological concept, a product of brains.",
+      "translation": "소리는 심리학적 개념, 즉 뇌가 만들어 내는 산물이다.",
+      "highlight": ["psychological", "concept", "product", "brains"],
+      "narration": "이 글 전체를 떠받치는 한 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "소리는 분자를 교란하는 운동에서 시작된다",
+        "뇌에 닿기 전까지는 교란일 뿐이다",
+        "듣는 생명체가 없으면 소리는 없다"
+      ],
+      "narration": "소리를 만드는 건 나무가 아니라 듣는 뇌라는 이야기예요.",
+      "cast": [{ "who": "haru", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

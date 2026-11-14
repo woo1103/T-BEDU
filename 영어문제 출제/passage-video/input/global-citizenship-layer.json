@@ -1,0 +1,122 @@
+{
+  "slug": "global-citizenship-layer",
+  "title": "세계 시민은 한 겹 더하기",
+  "subtitle": "사회 · 정체성은 쌓이는 것",
+  "source": "2026년 10월 고1 모의고사 20번",
+  "kind": "academic",
+  "characters": {
+    "harin": {
+      "name": "하린",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "ponytail",
+      "hairColor": "#352620",
+      "outfit": "hoodie",
+      "outfitColor": "#C9748A",
+      "accentColor": "#3E3440",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "yun": {
+      "name": "윤 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "suit",
+      "outfitColor": "#5B6BA8",
+      "accentColor": "#2E3450",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "세계 시민은 한 겹 더하기",
+      "subtitle": "사회 · 정체성은 쌓이는 것",
+      "narration": "이번 지문은 '세계 시민'이라는 생각을 어떻게 볼지 이야기해요.",
+      "cast": [
+        { "who": "harin", "expression": "confused", "pose": "raise" },
+        { "who": "yun", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "하린이는 세계 시민이라는 말이 와닿지 않았어요.",
+      "question": "나를 세계 시민이라고 생각해 본 적이 있나?",
+      "thought": true,
+      "narrationOut": "그렇게 생각하는 건 필요하기도 하고 가능하기도 하다고 해요.",
+      "cast": [{ "who": "harin", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "국민 국가는 오래되지 않았다",
+      "meaning": "인류 역사 대부분의 기간 동안 국민 국가는 아예 존재하지 않았어요.",
+      "icon": "🏛️",
+      "narration": "사람들은 자신을 국민 국가의 시민이라고 생각하지 않았어요.",
+      "cast": [{ "who": "yun", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "정체성은 이렇게 쌓여 왔다",
+      "steps": [
+        { "label": "가족", "icon": "👨‍👩‍👧" },
+        { "label": "민족 집단", "icon": "🪢" },
+        { "label": "종교", "icon": "🕊️" },
+        { "label": "국가 시민", "icon": "🏳️" },
+        { "label": "세계 시민", "icon": "🌍" }
+      ],
+      "narration": "국민 국가의 부상은 기존 정체성 위에 국가 시민을 더하게 했어요."
+    },
+    {
+      "type": "compare",
+      "heading": "대체일까, 덧붙임일까",
+      "left": {
+        "label": "흔한 오해",
+        "icon": "🔁",
+        "points": ["세계 시민이 되면", "다른 정체성은 밀려난다", "하나만 골라야 한다"]
+      },
+      "right": {
+        "label": "지문이 말하는 것",
+        "icon": "🧅",
+        "points": ["기존 정체성은 그대로", "그 위에 한 겹 더", "여러 이야기가 함께"]
+      },
+      "narration": "정체성에 관한 단 하나의 이야기가 있는 건 아니에요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "하린이는 왜 지금 그런 정체성이 필요한지 물었어요.",
+      "lines": [
+        { "who": "harin", "text": "왜 지금 세계 시민을 이야기해야 하나요?" },
+        { "who": "yun", "text": "전 세계가 연결돼 있고, 함께 직면한 과제들이 있으니까요." },
+        { "who": "harin", "text": "가족과 공동체에 대한 의무가 사라지는 건 아니고요?" },
+        { "who": "yun", "text": "오히려 그 의무가 있기 때문에 세계로도 넓어지는 거예요." }
+      ],
+      "narrationOut": "가족과 공동체, 그리고 전 세계에 대한 의무가 함께 간다는 뜻이에요.",
+      "cast": [
+        { "who": "harin", "expression": "thinking", "pose": "shrug" },
+        { "who": "yun", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "This doesn't mean that global citizenship replaces these other identities.",
+      "translation": "이것이 세계 시민 정체성이 이러한 다른 정체성들을 대체한다는 것을 의미하지는 않는다.",
+      "highlight": ["doesn't", "replaces", "other", "identities"],
+      "narration": "이 글이 가장 힘주어 말하는 한 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "국민 국가도 원래 있던 것이 아니다",
+        "정체성은 대체되지 않고 쌓여 왔다",
+        "그 위에 세계 시민을 한 겹 더하자"
+      ],
+      "narration": "하나를 버리는 게 아니라 한 겹 더하자는 이야기예요.",
+      "cast": [{ "who": "harin", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

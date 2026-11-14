@@ -1,0 +1,122 @@
+{
+  "slug": "simplifying-assumptions",
+  "title": "주어진 것으로 두고 간다",
+  "subtitle": "과학 · 모든 모델의 단순화 가정",
+  "source": "2026년 10월 고1 모의고사 34번",
+  "kind": "academic",
+  "characters": {
+    "junseo": {
+      "name": "준서",
+      "voice": { "name": "ko-KR-Chirp3-HD-Fenrir", "rate": 1.05 },
+      "skin": "#F0C9A6",
+      "hair": "spiky",
+      "hairColor": "#2E2018",
+      "outfit": "tshirt",
+      "outfitColor": "#3E8ECC",
+      "accentColor": "#2C3846",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "no": {
+      "name": "노 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#6A625A",
+      "outfit": "labcoat",
+      "outfitColor": "#8A6A4A",
+      "accentColor": "#3A2E24",
+      "accessory": "glasses",
+      "prop": "flask",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "주어진 것으로 두고 간다",
+      "subtitle": "과학 · 모든 모델의 단순화 가정",
+      "narration": "이번 지문은 모델을 만들 때 꼭 필요한 일을 이야기해요.",
+      "cast": [
+        { "who": "junseo", "expression": "confused", "pose": "raise" },
+        { "who": "no", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "준서는 설명이 끝까지 가지 않는 게 늘 걸렸어요.",
+      "question": "전부 설명하지 않으면 틀린 모델 아닌가?",
+      "thought": true,
+      "narrationOut": "그런데 '모든' 모델은 단순화하는 가정을 세워야만 해요.",
+      "cast": [{ "who": "junseo", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "주어진 것으로 받아들이기",
+      "meaning": "설명하지 않고 그냥 사실로 두고 넘어가는 것들이 어느 모델에나 있어요.",
+      "icon": "📦",
+      "narration": "새로운 아이디어가 특정 시기에 나타난다는 사실 같은 것들이에요.",
+      "cast": [{ "who": "no", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "두 분야의 같은 선택",
+      "left": {
+        "label": "Wallace와 Darwin",
+        "icon": "🧬",
+        "points": ["진화 모델을 내놓았다", "유전 원리를 몰랐다", "그냥 일어난다고 두었다"]
+      },
+      "right": {
+        "label": "물리학자들",
+        "icon": "⚛️",
+        "points": ["원자 결합을 모델로", "전하의 이유는 안 묻는다", "측정값을 받고 넘어간다"]
+      },
+      "narration": "가장 미세한 수준에서조차 단순화하는 가정이 필요해요."
+    },
+    {
+      "type": "flow",
+      "heading": "모델을 세우는 길",
+      "steps": [
+        { "label": "경계를 정한다", "icon": "✂️" },
+        { "label": "가정을 둔다", "icon": "📦" },
+        { "label": "한 수준에 집중", "icon": "🔬" },
+        { "label": "쓸모가 생긴다", "icon": "🛠️" }
+      ],
+      "narration": "휴대 전화든 생물이든, 먼저 어디까지 볼지를 정해요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "준서는 그래도 빈틈이 남는 게 아니냐고 물었어요.",
+      "lines": [
+        { "who": "junseo", "text": "설명 안 한 부분이 있으면 불완전한 거 아닌가요?" },
+        { "who": "no", "text": "물리학자도 전자가 왜 그 질량인지는 설명하지 않아요." },
+        { "who": "junseo", "text": "그냥 측정값을 받아들이고 넘어가는 거군요." },
+        { "who": "no", "text": "그래도 원자 결합 모델은 충분히 쓸모가 있어요." }
+      ],
+      "narrationOut": "다른 수준을 다 설명하지 않아도 유용한 모델을 세울 수 있어요.",
+      "cast": [
+        { "who": "junseo", "expression": "surprised", "pose": "shrug" },
+        { "who": "no", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "We can build useful models at one level of analysis without a complete accounting of what's happening at all other levels.",
+      "translation": "우리는 모든 다른 수준에서 일어나는 것에 대한 완전한 설명 없이 하나의 분석 수준에서 유용한 모델을 구축할 수 있다.",
+      "highlight": ["useful", "one", "level", "without"],
+      "narration": "이 지문의 핵심이 이 한 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "모든 모델은 단순화 가정을 세워야 한다",
+        "Darwin도 물리학자도 그렇게 해 왔다",
+        "다 설명하지 않아도 쓸모 있는 모델이 된다"
+      ],
+      "narration": "전부 설명하려 들지 않아야 모델이 성립한다는 이야기예요.",
+      "cast": [{ "who": "junseo", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "slug": "feeling-heard-three",
+  "title": "들었다는 걸 보여 줘야",
+  "subtitle": "소통 · 경청에 필요한 세 가지",
+  "source": "2026년 10월 고1 모의고사 32번",
+  "kind": "academic",
+  "characters": {
+    "sora": {
+      "name": "소라",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "bob",
+      "hairColor": "#3C2A20",
+      "outfit": "uniform",
+      "outfitColor": "#4F8FA8",
+      "accentColor": "#2C3C44",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "gang": {
+      "name": "강 팀장",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E8CCAE",
+      "hair": "short",
+      "hairColor": "#4A423A",
+      "outfit": "suit",
+      "outfitColor": "#96644A",
+      "accentColor": "#3A2C24",
+      "accessory": "none",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "들었다는 걸 보여 줘야",
+      "subtitle": "소통 · 경청에 필요한 세 가지",
+      "narration": "이번 지문은 사람들이 경청받고 있다고 느끼는 조건을 다뤄요.",
+      "cast": [
+        { "who": "sora", "expression": "confused", "pose": "raise" },
+        { "who": "gang", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "소라는 열심히 들었는데도 상대가 섭섭해하는 게 이상했어요.",
+      "question": "분명히 다 들었는데, 왜 안 들었다고 하지?",
+      "thought": true,
+      "narrationOut": "사람들은 고객이든 아니든 경청받고 있다고 느끼기를 원해요.",
+      "cast": [{ "who": "sora", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "경청받는다는 느낌",
+      "meaning": "누군가가 내 우려에 귀를 기울이고 그것을 해결해 줄 것 같다는 느낌이에요.",
+      "icon": "👂",
+      "narration": "전화를 걸거나 사무실로 찾아올 때 사람들이 원하는 게 이거예요.",
+      "cast": [{ "who": "gang", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "경청에 필요한 세 가지",
+      "steps": [
+        { "label": "주의 기울임", "icon": "👀" },
+        { "label": "내용 이해", "icon": "🧠" },
+        { "label": "들었음 표현", "icon": "💬" }
+      ],
+      "narration": "이 세 가지가 모두 이루어져야 경청받았다고 느껴요."
+    },
+    {
+      "type": "compare",
+      "heading": "세 번째가 왜 핵심인가",
+      "left": {
+        "label": "아무 반응이 없을 때",
+        "icon": "🪨",
+        "points": ["다 들었을지도 모른다", "완전히 이해했을지도", "알 길이 없다"]
+      },
+      "right": {
+        "label": "신호를 보여 줄 때",
+        "icon": "🙋",
+        "points": ["들었다는 외적 신호", "상대가 확인할 수 있다", "비로소 경청이 된다"]
+      },
+      "narration": "외적인 신호가 없으면 실제로 들었는지 알 수 없어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "소라는 세 번째 조건을 다시 물었어요.",
+      "lines": [
+        { "who": "sora", "text": "속으로 잘 듣기만 하면 되는 거 아닌가요?" },
+        { "who": "gang", "text": "아무 반응도 없는 사람과 이야기한다고 상상해 보세요." },
+        { "who": "sora", "text": "들었는지 안 들었는지 확인할 방법이 없네요." },
+        { "who": "gang", "text": "그래서 들었다는 걸 보여 주는 이 마지막 부분이 핵심이에요." }
+      ],
+      "narrationOut": "듣는 일은 마음속이 아니라 바깥에서 완성되는 거예요.",
+      "cast": [
+        { "who": "sora", "expression": "surprised", "pose": "shrug" },
+        { "who": "gang", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "The other person has to demonstrate that they listened. This last part is key.",
+      "translation": "상대방은 자신이 귀를 기울였다는 것을 보여 줘야 한다. 이 마지막 부분이 핵심이다.",
+      "highlight": ["demonstrate", "listened", "key"],
+      "narration": "이 지문이 가장 힘주어 말하는 한 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "사람들은 경청받고 있다고 느끼기를 원한다",
+        "주의, 이해, 그리고 표현이 모두 필요하다",
+        "보여 주지 않으면 들은 것이 되지 않는다"
+      ],
+      "narration": "마음으로 듣는 것만으로는 전해지지 않는다는 이야기예요.",
+      "cast": [{ "who": "sora", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

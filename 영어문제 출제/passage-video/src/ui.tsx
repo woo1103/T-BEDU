@@ -632,6 +632,16 @@ export const SceneFrame: React.FC<{
   // 씬 시작 시 아주 짧은 화면 밀림 — 컷이 바뀐 느낌을 준다
   const slide = interpolate(frame, [0, 10], [16, 0], { extrapolateRight: "clamp" });
 
+  // 진행 표시 점 크기 — 씬이 많으면(교과서 한 단원처럼 30씬 넘는 영상) 점이 줄줄이 늘어나
+  // 가운데 출처 라벨까지 밀고 들어온다. 전체 폭이 PROGRESS_MAX_W 를 넘으면
+  // 점 크기와 간격을 같은 비율로 줄여 항상 오른쪽 구석에 머물게 한다.
+  const PROGRESS_MAX_W = 430;
+  const fullW = (total - 1) * (13 + 9) + 34;
+  const k = fullW > PROGRESS_MAX_W ? PROGRESS_MAX_W / fullW : 1;
+  const dotW = Math.max(4, Math.round(13 * k));
+  const dotGap = Math.max(2, Math.round(9 * k));
+  const dotActiveW = Math.max(dotW, Math.round(34 * k));
+
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden", background: theme.bg }}>
       {bare ? null : <Setting kind={setting ?? "plain"} accent={accent} />}
@@ -700,7 +710,7 @@ export const SceneFrame: React.FC<{
           right: 70,
           top: 46,
           display: "flex",
-          gap: 9,
+          gap: dotGap,
           alignItems: "center",
         }}
       >
@@ -708,12 +718,13 @@ export const SceneFrame: React.FC<{
           <div
             key={i}
             style={{
-              width: i === index ? 34 : 13,
-              height: 13,
+              width: i === index ? dotActiveW : dotW,
+              height: dotW,
               borderRadius: 999,
               // 밝은 배경과 어두운 배경 모두에서 보이는 회색
               background: i <= index ? accent : "rgba(138,146,168,0.45)",
-              border: i <= index ? `2px solid ${theme.line}` : "none",
+              // 점이 작아지면 2px 테두리가 점을 먹어 버린다
+              border: i <= index ? `${dotW >= 10 ? 2 : 1}px solid ${theme.line}` : "none",
             }}
           />
         ))}

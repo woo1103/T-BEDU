@@ -1,0 +1,121 @@
+{
+  "slug": "task-space-seam",
+  "title": "화면 두 개로 갈라진 틈",
+  "subtitle": "기술 · 원격 협업이 잃는 것",
+  "source": "2026년 10월 고1 모의고사 37번",
+  "kind": "academic",
+  "characters": {
+    "yuna": {
+      "name": "유나",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "ponytail",
+      "hairColor": "#4A3222",
+      "outfit": "tshirt",
+      "outfitColor": "#D96A8A",
+      "accentColor": "#3E3440",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "bae": {
+      "name": "배 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "suit",
+      "outfitColor": "#4A8A9A",
+      "accentColor": "#2C4248",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "화면 두 개로 갈라진 틈",
+      "subtitle": "기술 · 원격 협업이 잃는 것",
+      "narration": "이번 지문은 대면 협업과 원격 협업의 차이를 다뤄요.",
+      "cast": [
+        { "who": "yuna", "expression": "confused", "pose": "raise" },
+        { "who": "bae", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "유나는 화상 회의가 유독 피곤하게 느껴졌어요.",
+      "question": "같이 일하는 건데 왜 이렇게 답답하지?",
+      "thought": true,
+      "narrationOut": "그 이유를 작업 공간과 의사소통 공간으로 설명할 수 있어요.",
+      "cast": [{ "who": "yuna", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "갈라진 틈이 없는 의사소통",
+      "meaning": "작업 공간과 의사소통 공간 사이에 기능적 분리가 없는 상태를 말해요.",
+      "icon": "🧩",
+      "narration": "MIT의 Ishii 교수가 대면 협업을 이렇게 불렀어요.",
+      "cast": [{ "who": "bae", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "대면과 원격은 무엇이 다른가",
+      "left": {
+        "label": "얼굴을 맞댈 때",
+        "icon": "🤝",
+        "points": ["서로가 다 보인다", "의사소통 단서도 보인다", "작업 공간이 그 안에 있다"]
+      },
+      "right": {
+        "label": "원격으로 일할 때",
+        "icon": "💻",
+        "points": ["한 화면엔 얼굴", "다른 화면엔 문서", "둘을 동시에 못 본다"]
+      },
+      "narration": "원격에서는 작업 공간이 의사소통 공간에서 흔히 분리돼요."
+    },
+    {
+      "type": "flow",
+      "heading": "틈이 생기는 과정",
+      "steps": [
+        { "label": "원격으로 전환", "icon": "🌐" },
+        { "label": "화면이 나뉜다", "icon": "🖥️" },
+        { "label": "단서를 놓친다", "icon": "🫥" },
+        { "label": "인위적인 틈", "icon": "🪚" }
+      ],
+      "narration": "그래서 두 공간 사이에 인위적인 갈라진 틈이 생겨요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "유나는 이 틈을 어떻게 다뤄야 하냐고 물었어요.",
+      "lines": [
+        { "who": "yuna", "text": "문서를 보면 상대 표정이 안 보이는 게 그 틈이군요." },
+        { "who": "bae", "text": "맞아요. 두 공간을 동시에 보는 게 불가능해지는 거예요." },
+        { "who": "yuna", "text": "이런 건 미리 알 수 있나요?" },
+        { "who": "bae", "text": "의사소통 모델을 통해 예측해야 하는 영향이 바로 이런 거예요." }
+      ],
+      "narrationOut": "기술이 미치는 영향을 미리 내다봐야 한다는 이야기로 이어져요.",
+      "cast": [
+        { "who": "yuna", "expression": "surprised", "pose": "shrug" },
+        { "who": "bae", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "When people are working remotely, the task space is often separated from the communication space.",
+      "translation": "사람들이 원격으로 작업할 때, 그 작업 공간은 흔히 의사소통 공간으로부터 분리된다.",
+      "highlight": ["remotely", "task", "separated", "communication"],
+      "narration": "이 지문의 중심 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "대면에서는 두 공간이 겹쳐 있다",
+        "원격에서는 화면이 나뉘며 갈라진다",
+        "이런 영향을 모델로 예측해야 한다"
+      ],
+      "narration": "같은 일을 해도 공간이 갈라지면 소통이 달라져요.",
+      "cast": [{ "who": "yuna", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

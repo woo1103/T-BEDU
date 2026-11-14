@@ -1,0 +1,121 @@
+{
+  "slug": "whistleblower-protection",
+  "title": "말한 사람을 지켜야 한다",
+  "subtitle": "법·사회 · 내부 고발자 보호",
+  "source": "2026년 10월 고1 모의고사 23번",
+  "kind": "academic",
+  "characters": {
+    "jiwoo": {
+      "name": "지우",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F3D0B4",
+      "hair": "ponytail",
+      "hairColor": "#3C2A20",
+      "outfit": "suit",
+      "outfitColor": "#5AA08C",
+      "accentColor": "#2C3C38",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "min": {
+      "name": "민 변호사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E8CCAE",
+      "hair": "short",
+      "hairColor": "#4A423A",
+      "outfit": "suit",
+      "outfitColor": "#7A5A8A",
+      "accentColor": "#382C40",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "말한 사람을 지켜야 한다",
+      "subtitle": "법·사회 · 내부 고발자 보호",
+      "narration": "이번 지문은 기업의 위법 행위를 알린 사람들에 관한 이야기예요.",
+      "cast": [
+        { "who": "jiwoo", "expression": "confused", "pose": "raise" },
+        { "who": "min", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "지우는 기업의 비리가 어떻게 드러나는지 궁금했어요.",
+      "question": "회사 안에서 벌어진 일을 누가 밖에 알릴 수 있지?",
+      "thought": true,
+      "narrationOut": "그런 일은 용기 있는 제보자가 위험을 무릅썼기에 드러났어요.",
+      "cast": [{ "who": "jiwoo", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "내부 고발자",
+      "meaning": "위법 행위를 끝내려고 많은 위험을 무릅쓰고 그것을 세상에 알리는 사람이에요.",
+      "icon": "📣",
+      "narration": "최근 몇 년 사이 기업 차원의 위법 행위가 늘었어요.",
+      "cast": [{ "who": "min", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "신고하지 못하면 벌어지는 일",
+      "steps": [
+        { "label": "보복이 두렵다", "icon": "😨" },
+        { "label": "신고를 꺼린다", "icon": "🤐" },
+        { "label": "적발 안 된다", "icon": "🕳️" },
+        { "label": "피해가 번진다", "icon": "🌊" }
+      ],
+      "narration": "직원들이 두려워 신고하지 못하면 위반이 여러 해 묻혀 버려요."
+    },
+    {
+      "type": "compare",
+      "heading": "누가 피해를 입나",
+      "left": {
+        "label": "묻혀 있을 때",
+        "icon": "⚠️",
+        "points": ["해당 기업 자체", "제삼자와 경제 전반", "일반 대중과 법치주의"]
+      },
+      "right": {
+        "label": "보호가 있을 때",
+        "icon": "🛡️",
+        "points": ["그 사람의 행위를 보호", "공익도 함께 보호", "두 가지 모두에 긍정적"]
+      },
+      "narration": "보호는 개인과 공익이라는 두 가지 기능을 함께 지녀요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "지우는 왜 제도가 필요한지 물었어요.",
+      "lines": [
+        { "who": "jiwoo", "text": "알리고 싶어도 못 알리는 사람이 많겠네요." },
+        { "who": "min", "text": "보복이나 불이익이 두려우면 입을 닫게 되니까요." },
+        { "who": "jiwoo", "text": "그래서 보호 제도가 주목받게 된 거군요." },
+        { "who": "min", "text": "균형이 잘 잡힌 보호라면 개인도 공익도 함께 지킬 수 있어요." }
+      ],
+      "narrationOut": "그래서 내부 고발자 보호가 주목받는 것은 놀랄 일이 아니에요.",
+      "cast": [
+        { "who": "jiwoo", "expression": "surprised", "pose": "shrug" },
+        { "who": "min", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Protecting those who would assist in reducing unlawful behaviour has two main functions.",
+      "translation": "위법한 행위를 줄이는 데 도움을 주려는 사람들을 보호하는 것은 두 가지 주요 기능을 지닌다.",
+      "highlight": ["Protecting", "two", "main", "functions"],
+      "narration": "이 글의 주제가 이 한 문장에 담겨 있어요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "기업의 위법 행위가 드러나는 일이 늘었다",
+        "보복이 두려우면 아무도 신고하지 않는다",
+        "보호는 개인과 공익을 함께 지킨다"
+      ],
+      "narration": "알린 사람을 지켜야 모두가 지켜진다는 이야기예요.",
+      "cast": [{ "who": "jiwoo", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

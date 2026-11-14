@@ -1,0 +1,122 @@
+{
+  "slug": "goldenrod-loudspeaker",
+  "title": "미역취가 켠 확성기",
+  "subtitle": "생물 · 위험할수록 널리 알린다",
+  "source": "2026년 10월 고1 모의고사 40번",
+  "kind": "academic",
+  "characters": {
+    "seoyul": {
+      "name": "서율",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "braids",
+      "hairColor": "#352620",
+      "outfit": "tshirt",
+      "outfitColor": "#D9A03E",
+      "accentColor": "#3A3022",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "nam": {
+      "name": "남 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "labcoat",
+      "outfitColor": "#4A8A5E",
+      "accentColor": "#2C4234",
+      "accessory": "glasses",
+      "prop": "leaf",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "미역취가 켠 확성기",
+      "subtitle": "생물 · 위험할수록 널리 알린다",
+      "narration": "이번 지문은 식물이 주고받는 화학적 신호에 관한 연구예요.",
+      "cast": [
+        { "who": "seoyul", "expression": "surprised", "pose": "raise" },
+        { "who": "nam", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "서율이는 식물도 서로에게 신호를 보낸다는 말에 놀랐어요.",
+      "question": "식물이 서로한테 위험을 알린다고?",
+      "thought": true,
+      "narrationOut": "연구자들은 미역취들이 사는 지역에 따라 신호가 달라진다는 걸 발견했어요.",
+      "cast": [{ "who": "seoyul", "expression": "surprised", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "화학적 비상 신호",
+      "meaning": "공격을 받은 미역취가 주변에 위험을 알리려고 내보내는 화학적 표현이에요.",
+      "icon": "🌿",
+      "narration": "같은 신호라도 어디에 사느냐에 따라 모양이 달라져요.",
+      "cast": [{ "who": "nam", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "사는 곳에 따라 달라지는 신호",
+      "left": {
+        "label": "평화로운 지역",
+        "icon": "🤫",
+        "points": ["공격받는 일이 드물다", "매우 독특한 신호", "가까운 친족만 이해한다"]
+      },
+      "right": {
+        "label": "적대적인 지역",
+        "icon": "📢",
+        "points": ["위협이 잦다", "쉽게 이해되는 표현", "그 지역 모두가 알아듣는다"]
+      },
+      "narration": "암호 같은 속삭임 대신 확성기로 위협을 널리 알리는 거예요."
+    },
+    {
+      "type": "flow",
+      "heading": "왜 널리 알릴까",
+      "steps": [
+        { "label": "위협이 잦다", "icon": "⚠️" },
+        { "label": "모두에게 알린다", "icon": "📢" },
+        { "label": "이웃이 산다", "icon": "🌾" },
+        { "label": "나도 이롭다", "icon": "🤝" }
+      ],
+      "narration": "이 교신은 받는 식물뿐 아니라 보내는 식물에게도 이로워요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "outdoor",
+      "narration": "서율이는 보내는 쪽이 왜 이득을 보는지 물었어요.",
+      "lines": [
+        { "who": "seoyul", "text": "알려 주는 쪽은 손해 아닌가요?" },
+        { "who": "nam", "text": "정말 힘든 시기에 들판에 혼자 남겨지면 더 곤란해져요." },
+        { "who": "seoyul", "text": "주변이 다 사라지면 어떻게 되는데요?" },
+        { "who": "nam", "text": "짝지을 상대도, 꽃가루 매개자를 불러 줄 이웃도 없어요." }
+      ],
+      "narrationOut": "이웃을 지키는 일이 결국 자기를 지키는 일이 되는 거예요.",
+      "cast": [
+        { "who": "seoyul", "expression": "thinking", "pose": "shrug" },
+        { "who": "nam", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "These chemical communications are beneficial not only to the plant receiving them but also to the sender.",
+      "translation": "이러한 화학적 교신들은 그것들을 받는 식물뿐만 아니라 보내는 식물에게도 이롭다.",
+      "highlight": ["beneficial", "receiving", "sender"],
+      "narration": "이 연구가 처음으로 확인한 사실이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "평화로운 곳의 미역취는 친족만 알게 알린다",
+        "위협이 잦은 곳에서는 모두에게 알린다",
+        "그 신호는 보내는 쪽에도 이롭다"
+      ],
+      "narration": "위험할수록 더 널리 알리는 쪽이 살아남는다는 이야기예요.",
+      "cast": [{ "who": "seoyul", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

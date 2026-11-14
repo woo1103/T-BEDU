@@ -1,0 +1,388 @@
+{
+  "slug": "subscription-economy-l2",
+  "title": "구독으로 사는 시대",
+  "subtitle": "교과서 L2 · 구독 경제 한 단원",
+  "source": "서천고 2학년 교과서 Lesson 2",
+  "kind": "academic",
+  "characters": {
+    "jiyun": {
+      "name": "지윤",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "ponytail",
+      "hairColor": "#352620",
+      "outfit": "uniform",
+      "outfitColor": "#5B8DD9",
+      "accentColor": "#2C3E5C",
+      "accessory": "none",
+      "prop": "phone",
+      "build": "slim"
+    },
+    "han": {
+      "name": "한 교수",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "suit",
+      "outfitColor": "#C97A4A",
+      "accentColor": "#3A2C22",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "구독으로 사는 시대",
+      "subtitle": "교과서 L2 · 구독 경제 한 단원",
+      "narration": "이번 단원은 구독 경제가 우리 삶을 어떻게 바꿨는지 다뤄요.",
+      "cast": [
+        { "who": "jiyun", "expression": "happy", "pose": "raise" },
+        { "who": "han", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "고등학생 지윤이는 문득 자기 하루를 돌아봤어요.",
+      "question": "내 하루에 구독이 몇 개나 들어와 있지?",
+      "thought": true,
+      "narrationOut": "지윤이의 하루를 아침부터 따라가 볼게요.",
+      "cast": [{ "who": "jiyun", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "아침, 음악으로 하루를 연다",
+      "narration": "지윤이는 스마트폰으로 음악 스트리밍에 로그인하며 하루를 시작해요.",
+      "speech": {
+        "who": "jiyun",
+        "text": "좋아하는 노래를 듣고, 새 아티스트도 찾아봐요."
+      },
+      "narrationOut": "매일 새로운 노래를 발견하는 것이 즐거워요.",
+      "cast": [{ "who": "jiyun", "expression": "happy", "pose": "present" }]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "건강한 아침 식사도 배송으로",
+      "narration": "신선한 채소와 과일을 보내 주는 구독 서비스에서 배송을 받아요.",
+      "narrationOut": "아침 식탁까지 구독이 들어와 있는 거예요.",
+      "cast": [{ "who": "jiyun", "expression": "excited", "pose": "cheer" }]
+    },
+    {
+      "type": "story",
+      "setting": "library",
+      "caption": "방과 후, 동영상 강의로 지식을 넓힌다",
+      "narration": "흥미롭다고 느끼는 것은 무엇이든 동영상 강의로 찾아봐요.",
+      "speech": {
+        "who": "jiyun",
+        "text": "학교 공부도 복습하고, 관심 분야 최신 지식도 챙겨요."
+      },
+      "narrationOut": "강의를 보는 목적이 복습과 최신 지식, 두 가지예요.",
+      "cast": [{ "who": "jiyun", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "주말에는 가족과 함께",
+      "narration": "주말에는 가족과 스트리밍으로 영화나 드라마를 봐요.",
+      "narrationOut": "소중한 시간을 함께 보내는 데에도 구독이 쓰여요.",
+      "cast": [{ "who": "jiyun", "expression": "happy", "pose": "cheer" }]
+    },
+    {
+      "type": "flow",
+      "heading": "지윤이의 하루에 들어온 구독 네 가지",
+      "steps": [
+        { "label": "음악 듣기", "icon": "🎧" },
+        { "label": "식품 배송", "icon": "🥬" },
+        { "label": "동영상 강의", "icon": "💻" },
+        { "label": "영화·드라마", "icon": "🎬" }
+      ],
+      "narration": "아침부터 주말까지, 네 가지 구독이 하루를 채우고 있어요."
+    },
+    {
+      "type": "concept",
+      "term": "구독 경제",
+      "meaning": "한 번 사고 끝나는 대신, 정기 구독으로 계속 이어지는 가치를 받는 모델이에요.",
+      "icon": "🔄",
+      "narration": "지윤이는 오늘날 인기 있는 이 모델에 적극 참여하고 있어요.",
+      "cast": [{ "who": "han", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "구독은 원래부터 있었다",
+      "left": {
+        "label": "처음의 구독",
+        "icon": "🥛",
+        "points": ["우유와 신문 같은 상품", "몇 가지에 국한됐다", "새로운 개념이 아니다"]
+      },
+      "right": {
+        "label": "지금의 구독",
+        "icon": "🌐",
+        "points": ["모든 산업으로 확장", "엔터테인먼트·기술·패션", "교육까지 들어왔다"]
+      },
+      "narration": "구독에 기반한 모델이라는 개념은 사실 새로운 게 아니에요."
+    },
+    {
+      "type": "concept",
+      "term": "지속적인 가치",
+      "meaning": "새 콘텐츠, 더 많은 개인화, 업데이트 이용 권한처럼 계속 주어지는 혜택이에요.",
+      "icon": "♻️",
+      "narration": "기업은 한 번 팔릴 히트 상품보다 이것을 우선시해요.",
+      "cast": [{ "who": "han", "expression": "neutral", "pose": "present" }]
+    },
+    {
+      "type": "compare",
+      "heading": "누가 무엇을 얻는가",
+      "left": {
+        "label": "기업이 얻는 것",
+        "icon": "🏢",
+        "points": ["안정적인 수익", "고객 충성도를 쌓는다"]
+      },
+      "right": {
+        "label": "소비자가 얻는 것",
+        "icon": "🙋",
+        "points": ["더 폭넓은 선택", "개인화된 경험", "유연한 계약으로 절약"]
+      },
+      "narration": "구독 경제는 기업과 소비자 모두에게 이점을 가져다줘요."
+    },
+    {
+      "type": "flow",
+      "heading": "구독 경제를 밀어 올린 두 동인",
+      "steps": [
+        { "label": "소비 경향 변화", "icon": "🔀" },
+        { "label": "플랫폼 성장", "icon": "📱" },
+        { "label": "구독 경제 부상", "icon": "📈" }
+      ],
+      "narration": "구독 경제의 부상은 이 두 가지와 밀접하게 연결돼 있어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "지윤이는 왜 사람들이 구독을 좋아하는지 물었어요.",
+      "lines": [
+        { "who": "jiyun", "text": "그런데 왜 다들 구독을 이렇게 좋아하는 거예요?" },
+        { "who": "han", "text": "크게 세 가지예요. 경험, 맞춤화, 그리고 유연함이죠." },
+        { "who": "jiyun", "text": "경험이 먼저 나오는 게 의외인데요?" },
+        { "who": "han", "text": "요즘은 물건을 갖는 것보다 경험을 앞세우는 사람이 많거든요." }
+      ],
+      "narrationOut": "하나씩 차례로 살펴볼게요.",
+      "cast": [
+        { "who": "jiyun", "expression": "confused", "pose": "shrug" },
+        { "who": "han", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "concept",
+      "term": "소유보다 경험",
+      "meaning": "구독은 소유할 필요 없이 서비스나 콘텐츠에 접근하게 해 줘요.",
+      "icon": "✨",
+      "narration": "그래서 점점 더 많은 사람에게 구독이 매력적으로 보여요.",
+      "cast": [{ "who": "han", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "구독으로 누리는 일", "icon": "🎵" },
+      "everyday": { "label": "도서관에서 빌려 읽기", "icon": "📚" },
+      "because": "집에 두지 않아도 마음껏 쓸 수 있다는 점이 똑같아요.",
+      "narration": "디스크 앨범 없이 무제한으로 음악을 듣는 것과 같아요."
+    },
+    {
+      "type": "concept",
+      "term": "다양성과 맞춤화",
+      "meaning": "선택지가 다양해서, 자기 선호와 관심사에 맞춰 경험을 개인화할 수 있어요.",
+      "icon": "🎨",
+      "narration": "서랍을 채우지 않고도 여러 의류 스타일을 입어 볼 수 있어요.",
+      "cast": [{ "who": "han", "expression": "neutral", "pose": "present" }]
+    },
+    {
+      "type": "flow",
+      "heading": "화장품 구독이 하는 일",
+      "steps": [
+        { "label": "피부 분석", "icon": "🔬" },
+        { "label": "맞춤 추천", "icon": "💡" },
+        { "label": "맞춤 제조", "icon": "🧴" },
+        { "label": "나만의 경험", "icon": "🌟" }
+      ],
+      "narration": "획일적인 구매 과정이 아니라 내 피부를 앞세운 경험이에요."
+    },
+    {
+      "type": "concept",
+      "term": "유연성과 편리성",
+      "meaning": "필요할 때 필요한 것만 골라서, 구독료를 유연하게 조정할 수 있어요.",
+      "icon": "🎚️",
+      "narration": "젊은 세대가 특히 이런 점을 좋아한다고 해요.",
+      "cast": [{ "who": "han", "expression": "happy", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "유연함에는 두 가지 방식이 있다",
+      "left": {
+        "label": "고정 비용 모델",
+        "icon": "🎟️",
+        "points": ["정해진 가격을 낸다", "다양한 상품을 경험", "폭넓게 누리는 쪽"]
+      },
+      "right": {
+        "label": "골라 담는 모델",
+        "icon": "🧺",
+        "points": ["필요할 때만 선택", "구독료를 조정한다", "돈을 아끼는 쪽"]
+      },
+      "narration": "폭넓게 누릴 수도, 정말 필요한 것만 고를 수도 있어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "room",
+      "narration": "지윤이는 이 모든 게 어떻게 가능해졌는지 물었어요.",
+      "lines": [
+        { "who": "jiyun", "text": "예전에도 이렇게 편하게 쓸 수 있었나요?" },
+        { "who": "han", "text": "아니요. 스마트폰을 중심으로 기기가 발달하면서 달라졌어요." },
+        { "who": "jiyun", "text": "지금은 클릭 몇 번이면 끝이잖아요." },
+        { "who": "han", "text": "온라인 플랫폼이 구독 경제를 끌고 가는 셈이죠." }
+      ],
+      "narrationOut": "소비자도 기업도 플랫폼 덕분에 달라졌어요.",
+      "cast": [
+        { "who": "jiyun", "expression": "surprised", "pose": "shrug" },
+        { "who": "han", "expression": "neutral", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "compare",
+      "heading": "영화 한 편을 보려면",
+      "left": {
+        "label": "과거에는",
+        "icon": "🎟️",
+        "points": ["극장에 가야 했다", "비디오를 사야 했다", "다른 선택이 없었다"]
+      },
+      "right": {
+        "label": "오늘날에는",
+        "icon": "📲",
+        "points": ["누구든 플랫폼에 접속", "방대한 영화를 즐긴다", "기기 하나면 된다"]
+      },
+      "narration": "보고 싶은 사람은 누구든 바로 볼 수 있게 됐어요."
+    },
+    {
+      "type": "concept",
+      "term": "AI와 빅데이터",
+      "meaning": "기업은 이 기술로 소비자의 요구와 취향, 소비 패턴을 파악해요.",
+      "icon": "🤖",
+      "narration": "플랫폼은 기업이 맞춤 상품을 내놓기도 쉽게 만들어요.",
+      "cast": [{ "who": "han", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "flow",
+      "heading": "맞춤 추천이 만들어지는 길",
+      "steps": [
+        { "label": "이용 기록", "icon": "🧾" },
+        { "label": "취향 파악", "icon": "🔍" },
+        { "label": "맞춤 제안", "icon": "🎁" },
+        { "label": "만족도 상승", "icon": "😊" }
+      ],
+      "narration": "구매 이력으로 옷을, 시청 기록으로 영상을 추천해 줘요."
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "그런데 결제 내역을 열어 보니",
+      "narration": "어느 날 지윤이는 한 달 구독료를 모두 더해 봤어요.",
+      "speech": {
+        "who": "jiyun",
+        "text": "하나하나는 얼마 안 되는데, 다 합치니 꽤 크네…",
+        "thought": true
+      },
+      "narrationOut": "구독 경제에는 고려해야 할 단점도 있어요.",
+      "cast": [{ "who": "jiyun", "expression": "surprised", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "과소비의 가능성",
+      "meaning": "편리하고 접근하기 쉬워서, 실제로 필요한 것보다 많이 가입하게 돼요.",
+      "icon": "🛒",
+      "narration": "첫 번째 우려는 바로 과소비예요.",
+      "cast": [{ "who": "han", "expression": "neutral", "pose": "present" }]
+    },
+    {
+      "type": "compare",
+      "heading": "하나일 때와 여러 개일 때",
+      "left": {
+        "label": "개별 구독 하나",
+        "icon": "🙂",
+        "points": ["감당할 만해 보인다", "부담이 느껴지지 않는다"]
+      },
+      "right": {
+        "label": "여러 개를 함께",
+        "icon": "😵",
+        "points": ["비용이 빠르게 불어난다", "재정적 압박이 온다"]
+      },
+      "narration": "과소비에 이어지는 두 번째 단점이 재정적 부담이에요."
+    },
+    {
+      "type": "flow",
+      "heading": "그래서 해야 할 일",
+      "steps": [
+        { "label": "꼭 필요한 것만", "icon": "✅" },
+        { "label": "비슷한 건 제외", "icon": "🚫" },
+        { "label": "비용 따져보기", "icon": "🧮" },
+        { "label": "정기 해지", "icon": "🗑️" }
+      ],
+      "narration": "불필요한 구독을 정기적으로 검토하고 해지하면 도움이 돼요."
+    },
+    {
+      "type": "concept",
+      "term": "환경이라는 또 하나의 문제",
+      "meaning": "정기 배송은 일회용 포장 사용을 늘려서 환경에 해를 끼칠 수 있어요.",
+      "icon": "📦",
+      "narration": "구독 경제는 환경 오염의 원인이 되기도 해요.",
+      "cast": [{ "who": "han", "expression": "sad", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "포장을 바꾸면 달라진다",
+      "left": {
+        "label": "지금의 포장",
+        "icon": "🗑️",
+        "points": ["일회용 포장재", "배송마다 쌓인다", "환경에 해를 끼친다"]
+      },
+      "right": {
+        "label": "바꿀 수 있는 포장",
+        "icon": "🌱",
+        "points": ["친환경 포장재", "재사용 가능한 포장", "문제를 줄여 준다"]
+      },
+      "narration": "포장재를 바꾸는 것만으로도 이 문제를 줄일 수 있어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "지윤이는 그럼 구독을 줄여야 하냐고 물었어요.",
+      "lines": [
+        { "who": "jiyun", "text": "단점이 이렇게 많으면 구독은 줄어들까요?" },
+        { "who": "han", "text": "아니요. 이미 우리 삶에 깊이 자리 잡았어요." },
+        { "who": "jiyun", "text": "뛰어드는 기업도 점점 늘고 있고요." },
+        { "who": "han", "text": "그러니 없애는 게 아니라 잘 쓰는 법을 배워야죠." }
+      ],
+      "narrationOut": "앞으로도 새로운 분야에서 구독 서비스가 계속 나올 거예요.",
+      "cast": [
+        { "who": "jiyun", "expression": "thinking", "pose": "shrug" },
+        { "who": "han", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "We need to become wise consumers who receive the services that are really needed.",
+      "translation": "우리는 정말 필요한 서비스를 받는 현명한 소비자가 되어야 한다.",
+      "highlight": ["wise", "consumers", "really", "needed"],
+      "narration": "이 단원 전체가 닿으려는 결론이 이 한 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "단원을 세 줄로",
+      "points": [
+        "구독은 우유·신문에서 모든 산업으로 퍼졌다",
+        "경험·맞춤화·유연함이 사람들을 끌어당긴다",
+        "과소비와 환경을 살피는 현명한 소비자가 되자"
+      ],
+      "narration": "구독을 없애는 게 아니라 잘 고르는 것이 답이에요.",
+      "cast": [{ "who": "jiyun", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}

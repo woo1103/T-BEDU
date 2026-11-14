@@ -1,0 +1,118 @@
+{
+  "slug": "training-cost-request",
+  "title": "연수비를 지원해 주세요",
+  "subtitle": "이메일 · 한 직원이 보낸 요청",
+  "source": "2026년 10월 고1 모의고사 18번",
+  "kind": "story",
+  "characters": {
+    "karen": {
+      "name": "Karen",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F3D0B4",
+      "hair": "bob",
+      "hairColor": "#6B4A2E",
+      "outfit": "suit",
+      "outfitColor": "#4F7FBF",
+      "accentColor": "#2E3E56",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "palmer": {
+      "name": "Palmer 부장",
+      "voice": { "name": "ko-KR-Chirp3-HD-Kore" },
+      "skin": "#E8C8A8",
+      "hair": "bun",
+      "hairColor": "#4A3C32",
+      "outfit": "suit",
+      "outfitColor": "#B86A4A",
+      "accentColor": "#3A2C24",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "연수비를 지원해 주세요",
+      "subtitle": "이메일 · 한 직원이 보낸 요청",
+      "narration": "이번 지문은 한 직원이 상사에게 보낸 이메일이에요.",
+      "cast": [
+        { "who": "karen", "expression": "happy", "pose": "present" },
+        { "who": "palmer", "expression": "neutral", "pose": "idle" }
+      ]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "마케팅 부서의 마케팅 보조원",
+      "narration": "Karen은 마케팅 부서에서 일하는 마케팅 보조원이에요.",
+      "speech": {
+        "who": "karen",
+        "text": "부서에 더 많이 기여하고 싶어서, 추가 연수를 받고 싶습니다."
+      },
+      "narrationOut": "자기 능력을 더 키우고 싶다는 마음에서 시작된 요청이었어요.",
+      "cast": [{ "who": "karen", "expression": "happy", "pose": "present" }]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "지난 분기에 알아차린 것",
+      "narration": "지난 분기 동안 Karen은 부서에 부족한 점을 하나 발견했어요.",
+      "speech": {
+        "who": "karen",
+        "text": "우리 부서는 온라인에서 잠재 고객을 더 잘 끌어들여야 해요."
+      },
+      "narrationOut": "그래서 회사가 연수 비용의 일부를 지원해 주기를 요청했어요.",
+      "cast": [{ "who": "karen", "expression": "thinking", "pose": "point" }]
+    },
+    {
+      "type": "concept",
+      "term": "Smart Growth Training",
+      "meaning": "디지털 마케팅 전략에 초점을 맞춘 2주짜리 과정이에요. 비용은 1,600달러예요.",
+      "icon": "📈",
+      "narration": "최근에 연수 과정을 찾아보다가 발견한 과정이에요.",
+      "cast": [{ "who": "karen", "expression": "excited", "pose": "present" }]
+    },
+    {
+      "type": "story",
+      "setting": "plain",
+      "caption": "메일을 맺는 한마디",
+      "narration": "Karen은 이 과정이 지금 하는 일에 도움이 될 거라고 믿었어요.",
+      "speech": {
+        "who": "karen",
+        "text": "제 요청을 긍정적으로 고려해 주시기를 바랍니다."
+      },
+      "narrationOut": "비용을 지원해 달라는 부탁으로 메일이 끝나요.",
+      "cast": [{ "who": "karen", "expression": "neutral", "pose": "raise" }]
+    },
+    {
+      "type": "flow",
+      "heading": "메일이 흘러가는 순서",
+      "steps": [
+        { "label": "자기 소개", "icon": "✉️" },
+        { "label": "부족한 점", "icon": "🔍" },
+        { "label": "찾은 과정", "icon": "📚" },
+        { "label": "비용 요청", "icon": "🙏" }
+      ],
+      "narration": "요청하는 글은 대개 이런 순서로 쌓여 올라가요."
+    },
+    {
+      "type": "quote",
+      "sentence": "For this reason, I'm requesting that the company cover part of my training cost.",
+      "translation": "이러한 이유로, 저는 회사가 제 연수 비용의 일부를 지원해 줄 것을 요청합니다.",
+      "highlight": ["requesting", "cover", "training", "cost"],
+      "narration": "이 메일을 쓴 진짜 이유가 이 한 문장에 있어요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "부서에 더 기여하려고 연수를 받고 싶다",
+        "디지털 마케팅 2주 과정을 찾아냈다",
+        "회사가 비용 일부를 지원해 주기를 요청한다"
+      ],
+      "narration": "연수비 지원을 요청하려고 쓴 메일이었어요.",
+      "cast": [{ "who": "karen", "expression": "happy", "pose": "cheer" }]
+    }
+  ]
+}

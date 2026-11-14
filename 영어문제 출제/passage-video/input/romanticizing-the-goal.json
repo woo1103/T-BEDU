@@ -1,0 +1,121 @@
+{
+  "slug": "romanticizing-the-goal",
+  "title": "상상과 사랑에 빠지면",
+  "subtitle": "심리학 · 목표를 낭만화하는 일",
+  "source": "2026년 10월 고1 모의고사 24번",
+  "kind": "academic",
+  "characters": {
+    "nara": {
+      "name": "나라",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F5D1B6",
+      "hair": "long",
+      "hairColor": "#8A5A2E",
+      "outfit": "hoodie",
+      "outfitColor": "#D9668A",
+      "accentColor": "#3E3440",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "seo": {
+      "name": "서 박사",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "labcoat",
+      "outfitColor": "#4A7A96",
+      "accentColor": "#2C3C48",
+      "accessory": "glasses",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "상상과 사랑에 빠지면",
+      "subtitle": "심리학 · 목표를 낭만화하는 일",
+      "narration": "이번 지문은 목표를 세우고도 왜 움직이지 않는지를 다뤄요.",
+      "cast": [
+        { "who": "nara", "expression": "happy", "pose": "raise" },
+        { "who": "seo", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "나라는 목표를 떠올리는 것만으로 기분이 좋아졌어요.",
+      "question": "다 이룬 내 모습을 상상하면 힘이 날 줄 알았는데.",
+      "thought": true,
+      "narrationOut": "그런데 연구는 정반대의 결과를 말해요.",
+      "cast": [{ "who": "nara", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "때 이른 성취감",
+      "meaning": "환상이 거짓된 성취감을 미리 줘서, 목표에 들이는 노력을 오히려 줄여요.",
+      "icon": "🫧",
+      "narration": "긍정적인 환상이 노력을 덜 기울이게 할 수 있다고 해요.",
+      "cast": [{ "who": "seo", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "우리가 보는 것 vs 밀어내는 것",
+      "left": {
+        "label": "목표에 대한 상상",
+        "icon": "💭",
+        "points": ["달라진 내 모습", "변화라는 그림", "사랑에 빠지기 쉽다"]
+      },
+      "right": {
+        "label": "일상의 현실",
+        "icon": "📆",
+        "points": ["하루하루가 달라져야", "복잡하고 어렵다", "생각에서 밀어낸다"]
+      },
+      "narration": "우리는 목표를 낭만화하면서 복잡함과 어려움은 얼버무려요."
+    },
+    {
+      "type": "flow",
+      "heading": "환상이 행동을 멈추는 길",
+      "steps": [
+        { "label": "환상을 품는다", "icon": "✨" },
+        { "label": "미리 즐긴다", "icon": "😌" },
+        { "label": "이유를 안 본다", "icon": "🙈" },
+        { "label": "움직이지 않는다", "icon": "🛑" }
+      ],
+      "narration": "원하는 미래를 지금 여기에서 머릿속으로 즐겨 버리는 거예요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "lab",
+      "narration": "나라는 그럼 상상을 하지 말아야 하냐고 물었어요.",
+      "lines": [
+        { "who": "nara", "text": "그럼 목표를 떠올리는 게 해로운 건가요?" },
+        { "who": "seo", "text": "상상만 하고 일상이 얼마나 달라져야 하는지는 밀어내니까요." },
+        { "who": "nara", "text": "환상이 아직 현실이 아닌 이유를 봐야겠네요." },
+        { "who": "seo", "text": "그걸 돌아보지 않으면 행동할 필요가 생기지 않아요." }
+      ],
+      "narrationOut": "환상을 즐기는 동안 행동해야 할 필요는 사라져 버려요.",
+      "cast": [
+        { "who": "nara", "expression": "confused", "pose": "shrug" },
+        { "who": "seo", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Positive fantasies about our future can lead us to put less effort into our goals.",
+      "translation": "우리의 미래에 대한 긍정적 환상이 우리가 우리의 목표에 노력을 '덜' 기울이게 할 수 있다.",
+      "highlight": ["Positive", "fantasies", "less", "effort"],
+      "narration": "이 글의 제목이 될 만한 한 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "우리는 목표가 아니라 상상과 사랑에 빠진다",
+        "환상은 때 이른 성취감을 미리 준다",
+        "그래서 행동할 필요가 생기지 않는다"
+      ],
+      "narration": "상상이 성취감을 미리 당겨쓰면 몸은 움직이지 않아요.",
+      "cast": [{ "who": "nara", "expression": "thinking", "pose": "cheer" }]
+    }
+  ]
+}

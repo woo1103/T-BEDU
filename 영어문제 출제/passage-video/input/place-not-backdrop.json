@@ -1,0 +1,118 @@
+{
+  "slug": "place-not-backdrop",
+  "title": "장소는 배경이 아니다",
+  "subtitle": "철학 · 공간과 경험의 뒤얽힘",
+  "source": "2026년 10월 고1 모의고사 33번",
+  "kind": "academic",
+  "characters": {
+    "dain": {
+      "name": "다인",
+      "voice": { "name": "ko-KR-Chirp3-HD-Zephyr" },
+      "skin": "#F3D0B4",
+      "hair": "long",
+      "hairColor": "#4A3222",
+      "outfit": "dress",
+      "outfitColor": "#9A6BAE",
+      "accentColor": "#3A2C42",
+      "accessory": "none",
+      "build": "slim"
+    },
+    "pyo": {
+      "name": "표 선생",
+      "voice": { "name": "ko-KR-Chirp3-HD-Charon", "rate": 0.95 },
+      "skin": "#E6C3A1",
+      "hair": "short",
+      "hairColor": "#5E564E",
+      "outfit": "suit",
+      "outfitColor": "#4A7A6A",
+      "accentColor": "#2C3C36",
+      "accessory": "glasses",
+      "prop": "book",
+      "build": "normal"
+    }
+  },
+  "scenes": [
+    {
+      "type": "title",
+      "title": "장소는 배경이 아니다",
+      "subtitle": "철학 · 공간과 경험의 뒤얽힘",
+      "narration": "이번 지문은 우리가 겪는 일과 그 장소의 관계를 다뤄요.",
+      "cast": [
+        { "who": "dain", "expression": "thinking", "pose": "raise" },
+        { "who": "pyo", "expression": "neutral", "pose": "present" }
+      ]
+    },
+    {
+      "type": "hook",
+      "narration": "다인이는 어떤 기억을 떠올리면 늘 그 장소가 함께 떠올랐어요.",
+      "question": "그 일이 왜 그 장소랑 떼어지지 않을까?",
+      "thought": true,
+      "narrationOut": "우리의 모든 경험은 물리적 공간에서 '일어나요'.",
+      "cast": [{ "who": "dain", "expression": "thinking", "pose": "think" }]
+    },
+    {
+      "type": "concept",
+      "term": "분리될 수 없는 뒤얽힘",
+      "meaning": "그 나무와 그 아래의 땅은, 그곳에서 일어난 일과 떼어 놓을 수 없어요.",
+      "icon": "🌳",
+      "narration": "공간은 그 안에서 일어난 사건으로부터 분리될 수 없어요.",
+      "cast": [{ "who": "pyo", "expression": "neutral", "pose": "point" }]
+    },
+    {
+      "type": "compare",
+      "heading": "장소를 보는 두 가지 눈",
+      "left": {
+        "label": "흔히 생각하는 장소",
+        "icon": "🖼️",
+        "points": ["수동적인 배경", "경험의 바깥에 있다", "그냥 상황일 뿐"]
+      },
+      "right": {
+        "label": "지문이 말하는 장소",
+        "icon": "🫧",
+        "points": ["모든 경험의 매개체", "행동과 생각이 지나간다", "기억과 감정도 함께"]
+      },
+      "narration": "공간적 틀이 모든 경험의 매개체라는 가능성을 받아들여야 해요."
+    },
+    {
+      "type": "analogy",
+      "concept": { "label": "장소가 존재를 감싸는 일", "icon": "📍" },
+      "everyday": { "label": "몸을 감싸는 의복", "icon": "🧥" },
+      "because": "의복이 변장인 동시에 그 사람을 드러내듯, 장소도 존재를 감싸요.",
+      "narration": "문학 평론가 Georges Poulet가 이렇게 말했어요."
+    },
+    {
+      "type": "dialogue",
+      "setting": "library",
+      "narration": "다인이는 장소가 그렇게까지 중요하냐고 물었어요.",
+      "lines": [
+        { "who": "dain", "text": "장소는 그냥 일이 벌어진 자리 아닌가요?" },
+        { "who": "pyo", "text": "그 자리가 경험을 규정해요. 떼어 내면 사건도 흐려져요." },
+        { "who": "dain", "text": "그럼 장소가 없다면 어떻게 되죠?" },
+        { "who": "pyo", "text": "Poulet는 존재들이 추상적 개념에 불과할 거라고 했어요." }
+      ],
+      "narrationOut": "장소는 경험을 담는 그릇이 아니라 경험의 일부인 거예요.",
+      "cast": [
+        { "who": "dain", "expression": "surprised", "pose": "shrug" },
+        { "who": "pyo", "expression": "happy", "pose": "present", "flip": true }
+      ]
+    },
+    {
+      "type": "quote",
+      "sentence": "Without places, beings would be only abstractions.",
+      "translation": "장소가 없다면, 존재들은 단지 추상적 개념에 불과할 것이다.",
+      "highlight": ["Without", "places", "abstractions"],
+      "narration": "이 글이 닿으려는 결론이 이 한 문장이에요."
+    },
+    {
+      "type": "recap",
+      "heading": "세 줄로 정리",
+      "points": [
+        "경험은 늘 어떤 공간에서 일어난다",
+        "그래서 장소와 사건은 분리되지 않는다",
+        "장소는 배경이 아니라 경험의 매개체다"
+      ],
+      "narration": "장소를 빼면 경험도 남지 않는다는 이야기예요.",
+      "cast": [{ "who": "dain", "expression": "excited", "pose": "cheer" }]
+    }
+  ]
+}
