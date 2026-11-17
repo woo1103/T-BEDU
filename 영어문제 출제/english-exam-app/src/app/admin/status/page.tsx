@@ -43,6 +43,7 @@ export default function StatusPage() {
   const [videos, setVideos] = useState<VideoStatus[]>([]);
   const [items, setItems] = useState<ItemStat[]>([]);
   const [loading, setLoading] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0); // 삭제 뒤 다시 불러오기
 
   useEffect(() => {
     fetch("/api/classes")
@@ -65,7 +66,33 @@ export default function StatusPage() {
       setItems(it.items || []);
       setLoading(false);
     });
-  }, [classId]);
+  }, [classId, reloadKey]);
+
+  // 과제 하나 삭제(제출 기록 포함) / 이 반 과제 전체 삭제
+  async function removeOne(a: AssignmentStatus) {
+    const warn = a.submittedCount > 0 ? `\n제출한 학생 ${a.submittedCount}명의 점수·오답노트 기록도 함께 지워져요.` : "";
+    if (!confirm(`'${a.title}' 과제를 이 반에서 삭제할까요?${warn}\n(되돌릴 수 없음)`)) return;
+    const res = await fetch(`/api/assignments/${a.id}`, { method: "DELETE" });
+    if (!res.ok) return alert((await res.json().catch(() => ({}))).error || "삭제 실패");
+    setReloadKey((k) => k + 1);
+  }
+  async function removeAll() {
+    if (assignments.length === 0) return;
+    const withSubs = assignments.filter((a) => a.submittedCount > 0).length;
+    const className = classes.find((c) => c.id === classId)?.name ?? "이 반";
+    if (!confirm(`'${className}'에 낸 과제 ${assignments.length}개를 모두 삭제할까요? (되돌릴 수 없음)`)) return;
+    // 제출이 있는 과제는 한 번 더 묻는다. 아니오면 제출 없는 과제만 지운다
+    const includeSubs =
+      withSubs > 0 &&
+      confirm(
+        `그중 ${withSubs}개는 이미 제출한 학생이 있어요.\n[확인] 제출 기록(점수·오답노트)까지 모두 삭제   [취소] 제출 없는 과제만 삭제`
+      );
+    const res = await fetch(`/api/classes/${classId}/assignments${includeSubs ? "?withSubmissions=1" : ""}`, { method: "DELETE" });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok) return alert(d.error || "삭제 실패");
+    alert(`과제 ${d.removed}개를 삭제했어요.${d.kept ? ` 제출이 있는 ${d.kept}개는 남겨 두었어요.` : ""}`);
+    setReloadKey((k) => k + 1);
+  }
 
   async function remind(studentIds: string[], title: string, body: string) {
     if (studentIds.length === 0) return;
@@ -115,7 +142,14 @@ export default function StatusPage() {
         <>
           {/* 과제 미제출 */}
           <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="font-semibold text-gray-800 mb-3">과제 미제출 현황</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold text-gray-800">과제 미제출 현황</h3>
+              {assignments.length > 0 && (
+                <button onClick={removeAll} className="text-xs text-red-500 hover:text-red-700 border border-red-200 rounded px-2 py-1">
+                  이 반 과제 전체 삭제
+                </button>
+              )}
+            </div>
             {assignments.length === 0 ? (
               <p className="text-sm text-gray-400">배정된 과제가 없습니다.</p>
             ) : (
@@ -124,8 +158,11 @@ export default function StatusPage() {
                   <li key={a.id} className="border border-gray-100 rounded-lg p-3">
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       <span className="text-sm font-medium text-gray-800">{a.title}</span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-500 flex items-center gap-3">
                         제출 {a.submittedCount}/{a.total}
+                        <button onClick={() => removeOne(a)} className="text-red-400 hover:text-red-600" title="이 과제 삭제">
+                          삭제
+                        </button>
                       </span>
                     </div>
                     {a.missing.length > 0 ? (
