@@ -6,7 +6,7 @@ import MathText from "@/components/MathText";
 import FigureCropper from "@/components/math/FigureCropper";
 import MathProblemEditor from "@/components/math/MathProblemEditor";
 import MathTypePicker, { typeLabel, useMathTypes } from "@/components/math/MathTypePicker";
-import { cropToJpeg, openPages, pageToJpeg } from "@/lib/page-images";
+import { cropToJpeg, openPages, pageToJpeg, type EncodedImage } from "@/lib/page-images";
 import { answerFromStoredValue, detectChoicesCount, normalizeAnswer } from "@/lib/math-worksheet";
 
 interface MathProblem {
@@ -27,6 +27,34 @@ interface MathProblem {
 }
 
 type Box = [number, number, number, number];
+
+// 업로드 인식 결과(아직 저장 전)
+interface ExtractedProblem {
+  number?: number;
+  problemLatex: string;
+  solution?: string;
+  unit?: string;
+  difficulty?: string;
+  box?: Box | null;
+  figureBox?: Box | null;
+}
+
+// 확인 목록의 한 문항: 고른 것만 은행에 저장한다
+interface Draft {
+  key: string;
+  source: string;
+  sourceType: string;
+  grade: string;
+  page: number;
+  number: number | null;
+  problemLatex: string;
+  solution: string | null;
+  unit: string | null;
+  difficulty: string | null;
+  crop: EncodedImage | null;
+  figure: EncodedImage | null;
+  checked: boolean;
+}
 
 const GRADES = ["초1", "초2", "초3", "초4", "초5", "초6", "중1", "중2", "중3", "고1", "고2", "고3"];
 const SELECTION_KEY = "mathbank-selection";
@@ -57,6 +85,19 @@ export default function MathBankPage() {
   const [ingesting, setIngesting] = useState(false);
   const [ingestLog, setIngestLog] = useState("");
   const stopRef = useRef(false);
+  const [pageFrom, setPageFrom] = useState("");
+  const [pageTo, setPageTo] = useState("");
+  const [drafts, setDrafts] = useState<Draft[]>([]);
+  const [savingDrafts, setSavingDrafts] = useState(false);
+  const [draftOriginal, setDraftOriginal] = useState<Record<string, boolean>>({});
+
+  // 저장 안 한 인식 결과가 있으면 창을 닫거나 새로 고칠 때 한 번 묻는다(AI로 다시 읽어야 하므로)
+  useEffect(() => {
+    if (drafts.length === 0 && !ingesting) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [drafts.length, ingesting]);
 
   // 필터
   const [fGrade, setFGrade] = useState("");
@@ -110,65 +151,126 @@ export default function MathBankPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fGrade, fUnit, fSource, fDiff, fType]);
 
-  // 쪽마다: 쪽 이미지 인식 → 문항 저장 → 각 문항 영역·그림을 잘라 저장
+  // 쪽마다: 쪽 이미지 인식 → 문항 영역·그림을 잘라 "확인 목록"에 담는다(아직 저장 안 함).
+  // 선생님이 확인 목록에서 고른 문항만 은행에 저장한다. 인식이 실패한 쪽은 건너뛰고 끝에 알려 준다.
   async function onFile(file: File) {
     setIngesting(true);
     stopRef.current = false;
-    let saved = 0;
-    let imagesFailed = 0;
+    let found = 0;
+    const failed: number[] = [];
+    const meta = { source: source.trim(), sourceType, grade: uploadGrade };
     try {
       setIngestLog("파일 여는 중...");
       const doc = await openPages(file);
-      for (let page = 1; page <= doc.count; page++) {
+      const from = Math.max(1, Math.min(doc.count, Number(pageFrom) || 1));
+      const to = Math.max(from, Math.min(doc.count, Number(pageTo) || doc.count));
+      for (let page = from; page <= to; page++) {
         if (stopRef.current) break;
-        setIngestLog(`쪽 ${page}/${doc.count} 인식 중 · 지금까지 문제 ${saved}개 저장`);
-        const canvas = await doc.render(page);
-        const img = pageToJpeg(canvas);
-        const res = await fetch("/api/math-problems/ingest", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            base64: img.base64,
-            mediaType: img.mime,
-            source: source || undefined,
-            sourceType,
-            grade: uploadGrade || undefined,
+        setIngestLog(`쪽 ${page}/${doc.count} 인식 중 · 지금까지 문제 ${found}개 찾음` + (failed.length ? ` · 실패한 쪽 ${failed.join(", ")}` : ""));
+        try {
+          const canvas = await doc.render(page);
+          const img = pageToJpeg(canvas);
+          const res = await fetch("/api/math-problems/ingest", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              base64: img.base64,
+              mediaType: img.mime,
+              source: meta.source || undefined,
+              grade: meta.grade || undefined,
+              page,
+            }),
+          });
+          const r = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(r.error || "인식 실패");
+          const list = (r.problems ?? []) as ExtractedProblem[];
+          const drafts: Draft[] = list.map((p, i) => ({
+            key: `${Date.now()}-${page}-${i}`,
+            ...meta,
             page,
-          }),
-        });
-        const r = await res.json();
-        if (!res.ok) throw new Error(`쪽 ${page}: ${r.error || "인식 실패"}`);
-        const created = r.problems as (MathProblem & { box: Box | null; figureBox: Box | null })[];
-        saved += created.length;
-        await Promise.all(
-          created.map(async (p) => {
-            if (!p.box && !p.figureBox) return;
-            const body: Record<string, unknown> = {};
-            if (p.box) body.crop = cropToJpeg(canvas, p.box);
+            number: p.number ?? null,
+            problemLatex: p.problemLatex,
+            solution: p.solution ?? null,
+            unit: p.unit ?? null,
+            difficulty: p.difficulty ?? null,
+            crop: p.box ? cropToJpeg(canvas, p.box) : null,
             // 그림 좌표는 몇 % 빗나갈 수 있음: 여유가 작으면 그림이 잘리고 크면 주변 글자가 들어온다 → 2%로 절충,
-            // 어긋나면 목록의 "그림 다시 자르기"로 바로잡는다
-            if (p.figureBox) body.figure = cropToJpeg(canvas, p.figureBox, 0.02);
-            const ir = await fetch(`/api/math-problems/${p.id}/images`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(body),
-            });
-            if (!ir.ok) imagesFailed++;
-          })
-        );
+            // 어긋나면 저장 후 목록의 "그림 다시 자르기"로 바로잡는다
+            figure: p.figureBox ? cropToJpeg(canvas, p.figureBox, 0.02) : null,
+            checked: true,
+          }));
+          found += drafts.length;
+          setDrafts((d) => [...d, ...drafts]);
+        } catch (e) {
+          console.warn(`쪽 ${page} 인식 실패`, e);
+          failed.push(page);
+        }
       }
       setIngestLog(
-        (stopRef.current ? "멈춤 · " : "완료 · ") +
-          `문제 ${saved}개 저장` +
-          (imagesFailed > 0 ? ` (그림 저장 실패 ${imagesFailed}건 — 글자는 저장됨)` : "")
+        (stopRef.current ? "멈춤 · " : "인식 끝 · ") +
+          `문제 ${found}개를 찾았어요. 아래 확인 목록에서 저장할 문제만 골라 "저장"을 누르세요.` +
+          (failed.length
+            ? ` 실패한 쪽: ${failed.join(", ")} — 시작·끝 쪽을 그 쪽으로 맞추고 같은 파일을 다시 올리면 그 쪽만 읽어요.`
+            : "")
       );
-      await load();
     } catch (e) {
-      setIngestLog(`${e instanceof Error ? e.message : "오류"} · 그 전까지 문제 ${saved}개는 저장됨`);
-      await load();
+      setIngestLog(`${e instanceof Error ? e.message : "오류"} · 찾은 문제 ${found}개는 확인 목록에 있어요`);
     } finally {
       setIngesting(false);
     }
+  }
+
+  // 확인 목록에서 고른 문항만 한 문항씩 저장(문제 + 원본·그림). 저장된 것은 확인 목록에서 빠진다
+  async function saveDrafts() {
+    const targets = drafts.filter((d) => d.checked);
+    if (targets.length === 0) return;
+    setSavingDrafts(true);
+    let ok = 0;
+    const errors: string[] = [];
+    try {
+      for (const d of targets) {
+        setIngestLog(`저장 중 ${ok + errors.length + 1}/${targets.length}`);
+        const res = await fetch("/api/math-problems/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            source: d.source || undefined,
+            sourceType: d.sourceType,
+            grade: d.grade || undefined,
+            page: d.page,
+            problem: {
+              number: d.number ?? undefined,
+              problemLatex: d.problemLatex,
+              solution: d.solution ?? undefined,
+              unit: d.unit ?? undefined,
+              difficulty: d.difficulty ?? undefined,
+            },
+            crop: d.crop ?? undefined,
+            figure: d.figure ?? undefined,
+          }),
+        });
+        if (res.ok) {
+          ok++;
+          setDrafts((list) => list.filter((x) => x.key !== d.key));
+        } else {
+          const r = await res.json().catch(() => ({}));
+          errors.push(`${d.page}쪽 #${d.number ?? "?"}: ${r.error || "저장 실패"}`);
+        }
+      }
+      setIngestLog(
+        `문제 ${ok}개를 은행에 저장했어요.` + (errors.length ? ` 저장 못 한 문제 ${errors.length}개(확인 목록에 남김): ${errors.slice(0, 3).join(" / ")}` : "")
+      );
+      await load();
+    } finally {
+      setSavingDrafts(false);
+    }
+  }
+
+  function discardDrafts(onlyUnchecked: boolean) {
+    const n = onlyUnchecked ? drafts.filter((d) => !d.checked).length : drafts.length;
+    if (n === 0) return;
+    if (!confirm(`확인 목록에서 문제 ${n}개를 버릴까요? (은행에는 저장되지 않아요)`)) return;
+    setDrafts((list) => (onlyUnchecked ? list.filter((d) => d.checked) : []));
   }
 
   async function remove(id: string) {
@@ -177,6 +279,39 @@ export default function MathBankPage() {
     if (res.ok) {
       setSelected((s) => s.filter((x) => x !== id));
       await load();
+    } else {
+      alert((await res.json().catch(() => ({}))).error || "삭제 실패");
+    }
+  }
+
+  // 고른 문제 한꺼번에 삭제(잘못 올린 문제지 정리 등). 학습지에 쓰인 문제는 서버가 남긴다
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+  async function removeSelected() {
+    if (selected.length === 0) return;
+    if (!confirm(`고른 문제 ${selected.length}개를 은행에서 삭제할까요?
+잘라 둔 그림도 함께 지워지고 되돌릴 수 없어요.
+(학습지에 쓰인 문제는 남겨 둬요)`)) return;
+    setBulkDeleting(true);
+    try {
+      const res = await fetch("/api/math-problems/bulk-delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: selected }),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) return alert(d.error || "삭제 실패");
+      const kept: { id: string; worksheets: string[] }[] = d.kept ?? [];
+      const titles = [...new Set(kept.flatMap((k) => k.worksheets))];
+      alert(
+        `문제 ${d.removed}개를 삭제했어요.` +
+          (kept.length ? `
+학습지에 쓰인 ${kept.length}개는 남겨 두고 선택에 그대로 둘게요: ${titles.slice(0, 5).join(", ")}${titles.length > 5 ? " 외" : ""}` : "")
+      );
+      // 남긴 문제만 선택에 남긴다(어느 것인지 바로 보이게)
+      setSelected(kept.map((k) => k.id));
+      await load();
+    } finally {
+      setBulkDeleting(false);
     }
   }
 
@@ -202,14 +337,14 @@ export default function MathBankPage() {
       <div>
         <h2 className="text-2xl font-bold text-gray-900">수학 문제 은행</h2>
         <p className="text-sm text-gray-500 mt-1">
-          기출·교재 PDF나 사진을 올리면 쪽마다 AI가 문항을 나누고 수식을 인식해 저장합니다. 그래프·도형은 그림으로 잘라 함께
+          기출·교재 PDF나 사진을 올리면 쪽마다 AI가 문항을 나누고 수식을 인식합니다. 확인 목록에서 고른 문제만 저장돼요. 그래프·도형은 그림으로 잘라 함께
           저장해요. 문제를 골라 학습지를 만들고 2분할·4분할로 인쇄할 수 있습니다.
         </p>
       </div>
 
       {/* 업로드 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-3">
-        <h3 className="font-semibold text-gray-800">문제 업로드 (자동 수집)</h3>
+        <h3 className="font-semibold text-gray-800">문제 업로드</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <input
             id="mb-source"
@@ -260,6 +395,30 @@ export default function MathBankPage() {
               }}
             />
           </label>
+          <span className="flex items-center gap-1 text-xs text-gray-500">
+            <input
+              id="mb-page-from"
+              value={pageFrom}
+              onChange={(e) => setPageFrom(e.target.value.replace(/\D/g, ""))}
+              placeholder="처음"
+              inputMode="numeric"
+              disabled={ingesting}
+              className="w-14 border border-gray-300 rounded-lg px-2 py-1.5 text-xs"
+              aria-label="시작 쪽"
+            />
+            쪽부터
+            <input
+              id="mb-page-to"
+              value={pageTo}
+              onChange={(e) => setPageTo(e.target.value.replace(/\D/g, ""))}
+              placeholder="끝"
+              inputMode="numeric"
+              disabled={ingesting}
+              className="w-14 border border-gray-300 rounded-lg px-2 py-1.5 text-xs"
+              aria-label="끝 쪽"
+            />
+            쪽까지 (비우면 전체)
+          </span>
           {ingesting && (
             <button
               onClick={() => (stopRef.current = true)}
@@ -269,8 +428,102 @@ export default function MathBankPage() {
             </button>
           )}
         </div>
+        <p className="text-xs text-gray-400">
+          올리면 바로 저장되지 않고 아래 &quot;확인 목록&quot;에 모여요. 저장할 문제만 골라 저장을 누르세요.
+        </p>
         {ingestLog && <p className="text-xs text-gray-600">{ingestLog}</p>}
       </div>
+
+      {/* 확인 목록: 인식했지만 아직 저장 안 한 문제 */}
+      {drafts.length > 0 && (
+        <div className="bg-white rounded-xl shadow-sm border-2 border-purple-200">
+          <div className="p-4 border-b border-purple-100 flex items-center gap-3 flex-wrap">
+            <span className="font-semibold text-gray-800">
+              확인 목록 · {drafts.length}문제 중 {drafts.filter((d) => d.checked).length}개 고름
+            </span>
+            <button
+              onClick={() => {
+                const all = drafts.every((d) => d.checked);
+                setDrafts((list) => list.map((d) => ({ ...d, checked: !all })));
+              }}
+              className="text-xs text-purple-700 hover:text-purple-900"
+            >
+              {drafts.every((d) => d.checked) ? "모두 해제" : "모두 고르기"}
+            </button>
+            <span className="ml-auto flex items-center gap-2">
+              <button
+                onClick={() => discardDrafts(false)}
+                disabled={savingDrafts || ingesting}
+                className="text-xs px-3 py-1.5 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+              >
+                모두 버리기
+              </button>
+              {drafts.some((d) => !d.checked) && (
+                <button
+                  onClick={() => discardDrafts(true)}
+                  disabled={savingDrafts || ingesting}
+                  className="text-xs px-3 py-1.5 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                >
+                  안 고른 {drafts.filter((d) => !d.checked).length}개 버리기
+                </button>
+              )}
+              <button
+                onClick={saveDrafts}
+                disabled={savingDrafts || ingesting || !drafts.some((d) => d.checked)}
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50"
+              >
+                {savingDrafts ? "저장 중..." : ingesting ? "인식이 끝나면 저장" : `고른 ${drafts.filter((d) => d.checked).length}개 저장`}
+              </button>
+            </span>
+          </div>
+          <ul className="divide-y divide-gray-100 max-h-[70vh] overflow-y-auto">
+            {drafts.map((d) => (
+              <li key={d.key} className={`p-4 space-y-2 ${d.checked ? "bg-purple-50/40" : "opacity-60"}`}>
+                <div className="flex items-center gap-1.5 flex-wrap text-xs">
+                  <input
+                    type="checkbox"
+                    checked={d.checked}
+                    onChange={() => setDrafts((list) => list.map((x) => (x.key === d.key ? { ...x, checked: !x.checked } : x)))}
+                    className="mr-1"
+                    aria-label="저장할 문제로 고르기"
+                  />
+                  <span className="text-gray-500">
+                    {d.page}쪽 #{d.number ?? "?"}
+                  </span>
+                  {d.unit && <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">{d.unit}</span>}
+                  {d.difficulty && <span className="px-1.5 py-0.5 rounded bg-purple-50 text-purple-600">{d.difficulty}</span>}
+                  {d.crop && (
+                    <button
+                      onClick={() => setDraftOriginal((s) => ({ ...s, [d.key]: !s[d.key] }))}
+                      className="ml-auto text-gray-500 hover:text-gray-800"
+                    >
+                      {draftOriginal[d.key] ? "원본 닫기" : "원본 보기"}
+                    </button>
+                  )}
+                </div>
+                <div className="text-sm text-gray-800 leading-relaxed">
+                  <MathText text={d.problemLatex} />
+                </div>
+                {d.figure && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={`data:${d.figure.mime};base64,${d.figure.base64}`}
+                    alt="문제 그림"
+                    className="max-h-56 border border-gray-100 rounded"
+                  />
+                )}
+                {draftOriginal[d.key] && d.crop && (
+                  <div className="border border-dashed border-gray-300 rounded p-2">
+                    <p className="text-xs text-gray-400 mb-1">원본(인식이 맞는지 비교용)</p>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`data:${d.crop.mime};base64,${d.crop.base64}`} alt="원본 문제" className="max-h-96" />
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* 필터 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-wrap gap-2 items-center">
@@ -420,6 +673,13 @@ export default function MathBankPage() {
             <span className="text-sm font-medium text-gray-800">{selected.length}개 선택</span>
             <button onClick={() => setSelected([])} className="text-xs text-gray-500 hover:text-gray-800">
               선택 비우기
+            </button>
+            <button
+              onClick={removeSelected}
+              disabled={bulkDeleting}
+              className="text-xs px-3 py-1.5 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 disabled:opacity-50"
+            >
+              {bulkDeleting ? "삭제 중..." : `선택한 ${selected.length}개 삭제`}
             </button>
             <button
               onClick={() => setMakingSheet(true)}

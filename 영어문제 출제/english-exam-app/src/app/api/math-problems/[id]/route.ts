@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireStaff } from "@/lib/api-auth";
 import { findMathType } from "@/lib/math-types";
+import { deleteMathProblems } from "@/lib/math-problem-delete";
 
 // 수학 문제 수정 (LaTeX·정답·출처·메타)
 export async function PATCH(
@@ -35,12 +36,14 @@ export async function DELETE(
   const staff = await requireStaff();
   if (!staff) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
   const { id } = await params;
-  const removed = await prisma.mathProblem.delete({
-    where: { id },
-    select: { cropImageId: true, figureImageId: true },
-  });
-  // 이 문제의 잘라낸 그림도 함께 삭제
-  const imageIds = [removed.cropImageId, removed.figureImageId].filter((x): x is string => !!x);
-  if (imageIds.length > 0) await prisma.mathImage.deleteMany({ where: { id: { in: imageIds } } });
+  // 그림까지 함께 지우고, 학습지에 쓰인 문제는 지우지 않는다
+  const { removed, kept } = await deleteMathProblems([id]);
+  if (kept.length > 0) {
+    return NextResponse.json(
+      { error: `이 문제는 학습지에 쓰이고 있어 지울 수 없어요: ${kept[0].worksheets.join(", ")}` },
+      { status: 409 }
+    );
+  }
+  if (removed === 0) return NextResponse.json({ error: "이미 지워진 문제예요" }, { status: 404 });
   return NextResponse.json({ success: true });
 }

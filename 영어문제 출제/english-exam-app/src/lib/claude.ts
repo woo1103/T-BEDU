@@ -341,16 +341,26 @@ ${hint?.source ? `- 출처 힌트: ${hint.source}` : ""}
 반드시 아래 JSON만 출력(다른 텍스트 금지):
 {"problems":[{"number":1,"problemLatex":"...","solution":"...","unit":"...","difficulty":"중","box":[60,120,480,430],"figureBox":[120,260,420,400]}]}`;
 
-  const message = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 8192,
-    messages: [{ role: "user", content: [mediaBlock, { type: "text", text: instruction }] }],
-  });
-  await logUsage("mathExtract", message);
-  const text = message.content[0].type === "text" ? message.content[0].text : "";
-  const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
-  if (!m) throw new Error("문제 인식 결과를 파싱할 수 없습니다.");
-  const parsed = JSON.parse(m[1] || m[0]);
+  // 수식·따옴표 때문에 가끔 JSON 형식이 깨진다 → 같은 쪽을 다시 읽는다(최대 3번)
+  let parsed: { problems?: unknown } | null = null;
+  let lastError = "문제 인식 결과를 파싱할 수 없습니다.";
+  for (let attempt = 1; attempt <= 3 && !parsed; attempt++) {
+    const message = await client.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 8192,
+      messages: [{ role: "user", content: [mediaBlock, { type: "text", text: instruction }] }],
+    });
+    await logUsage("mathExtract", message);
+    const text = message.content[0]?.type === "text" ? message.content[0].text : "";
+    const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
+    if (!m) continue;
+    try {
+      parsed = JSON.parse(m[1] || m[0]);
+    } catch (e) {
+      lastError = `AI 결과 형식 오류(${attempt}번 읽음): ${e instanceof Error ? e.message : e}`;
+    }
+  }
+  if (!parsed) throw new Error(lastError);
   const raw = Array.isArray(parsed.problems) ? parsed.problems : [];
   const problems: ExtractedMathProblem[] = raw
     .filter((p: { problemLatex?: string }) => (p.problemLatex ?? "").trim())
