@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import MathText from "@/components/MathText";
+import MathTypePicker, { typeLabel, useMathTypes } from "@/components/math/MathTypePicker";
 
 export interface EditableMathProblem {
   id: string;
@@ -13,9 +14,10 @@ export interface EditableMathProblem {
   answer: string | null;
   solution: string | null;
   cropImageId: string | null;
+  typeCode?: string | null;
 }
 
-const GRADES = ["중1", "중2", "중3", "고1", "고2", "고3"];
+const GRADES = ["초1", "초2", "초3", "초4", "초5", "초6", "중1", "중2", "중3", "고1", "고2", "고3"];
 const DIFFS = ["하", "중", "상", "킬러"];
 
 // 인식이 틀린 수식·글자 고치기: 왼쪽 원본, 오른쪽 편집 + 실시간 미리보기
@@ -37,6 +39,8 @@ export default function MathProblemEditor({
   const [source, setSource] = useState(problem.source ?? "");
   const [answer, setAnswer] = useState(problem.answer ?? "");
   const [solution, setSolution] = useState(problem.solution ?? "");
+  const [typeCode, setTypeCode] = useState(problem.typeCode ?? "");
+  const types = useMathTypes();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -55,7 +59,7 @@ export default function MathProblemEditor({
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         // 빈 칸은 ""로 보내 지운다(서버가 빈 문자열을 null로 저장)
-        body: JSON.stringify({ problemLatex: latex, unit, grade, difficulty, source, answer, solution }),
+        body: JSON.stringify({ problemLatex: latex, unit, grade, difficulty, source, answer, solution, typeCode }),
       });
       if (!res.ok) throw new Error((await res.json()).error || "저장 실패");
       onSaved();
@@ -146,6 +150,26 @@ export default function MathProblemEditor({
                   ))}
                 </select>
               </label>
+            </div>
+            <div className="block">
+              <span className="text-xs text-gray-500">
+                유형 {typeCode ? <b className="font-mono text-emerald-700">{typeCode}</b> : "(아직 없음)"}
+              </span>
+              <div className="mt-1">
+                <MathTypePicker
+                  value={typeCode}
+                  gradeHint={grade}
+                  onChange={(code) => {
+                    setTypeCode(code);
+                    // 유형을 고르면 학년·단원 칸이 비어 있을 때 채워 준다
+                    const r = types?.courses.find((c) => code.startsWith(c.code + "-"));
+                    const u = r?.units.find((x) => code.startsWith(x.code + "-"));
+                    if (r && !grade) setGrade(r.grade);
+                    if (u && !unit.trim()) setUnit(u.name);
+                  }}
+                />
+              </div>
+              {typeCode && <p className="text-xs text-gray-500 mt-1">{typeLabel(types, typeCode)}</p>}
             </div>
             <label className="block">
               <span className="text-xs text-gray-500">정답 (객관식은 선지 번호, 예: ③)</span>

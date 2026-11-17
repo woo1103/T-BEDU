@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireStaff } from "@/lib/api-auth";
+import { typeCodeFilter } from "@/lib/math-types";
 
-// 수학 문제 은행 목록 (필터: grade, unit, source, difficulty, q=검색)
+// 수학 문제 은행 목록 (필터: grade, unit, source, difficulty, type=유형·단원·과정 코드, q=검색)
 export async function GET(request: NextRequest) {
   const staff = await requireStaff();
   if (!staff) return NextResponse.json({ error: "권한 없음" }, { status: 403 });
@@ -14,11 +15,15 @@ export async function GET(request: NextRequest) {
     difficulty?: string;
     source?: { contains: string };
     problemLatex?: { contains: string };
+    typeCode?: { equals: string } | { startsWith: string } | null;
   } = {};
   if (sp.get("grade")) where.grade = sp.get("grade")!;
   if (sp.get("unit")) where.unit = sp.get("unit")!;
   if (sp.get("difficulty")) where.difficulty = sp.get("difficulty")!;
   if (sp.get("source")) where.source = { contains: sp.get("source")! };
+  const type = sp.get("type");
+  if (type === "none") where.typeCode = null; // 유형 미지정만
+  else if (type) where.typeCode = typeCodeFilter(type);
   const q = sp.get("q");
   if (q) where.problemLatex = { contains: q };
 

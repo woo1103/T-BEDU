@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import MathText from "@/components/MathText";
 import FigureCropper from "@/components/math/FigureCropper";
 import MathProblemEditor from "@/components/math/MathProblemEditor";
+import MathTypePicker, { typeLabel, useMathTypes } from "@/components/math/MathTypePicker";
 import { cropToJpeg, openPages, pageToJpeg } from "@/lib/page-images";
 import { answerFromStoredValue, detectChoicesCount, normalizeAnswer } from "@/lib/math-worksheet";
 
@@ -22,11 +23,12 @@ interface MathProblem {
   solution: string | null;
   cropImageId: string | null;
   figureImageId: string | null;
+  typeCode: string | null;
 }
 
 type Box = [number, number, number, number];
 
-const GRADES = ["중1", "중2", "중3", "고1", "고2", "고3"];
+const GRADES = ["초1", "초2", "초3", "초4", "초5", "초6", "중1", "중2", "중3", "고1", "고2", "고3"];
 const SELECTION_KEY = "mathbank-selection";
 
 function loadSelection(): string[] {
@@ -61,6 +63,9 @@ export default function MathBankPage() {
   const [fUnit, setFUnit] = useState("");
   const [fSource, setFSource] = useState("");
   const [fDiff, setFDiff] = useState("");
+  // 유형코드표에서 "문제 보기"로 오면 ?type= 으로 그 유형을 거른다
+  const [fType, setFType] = useState("");
+  const types = useMathTypes();
   const [q, setQ] = useState("");
 
   // 선택(학습지 만들기) — 필터를 바꿔도·새로고침해도 유지, 선택한 순서 = 학습지 순서
@@ -73,6 +78,8 @@ export default function MathBankPage() {
 
   useEffect(() => {
     setSelected(loadSelection());
+    const t = new URLSearchParams(window.location.search).get("type");
+    if (t) setFType(t);
   }, []);
   useEffect(() => {
     try {
@@ -89,6 +96,7 @@ export default function MathBankPage() {
     if (fUnit) sp.set("unit", fUnit);
     if (fSource) sp.set("source", fSource);
     if (fDiff) sp.set("difficulty", fDiff);
+    if (fType) sp.set("type", fType);
     if (q.trim()) sp.set("q", q.trim());
     const d = await (await fetch(`/api/math-problems?${sp}`)).json();
     const list: MathProblem[] = d.problems || [];
@@ -100,7 +108,7 @@ export default function MathBankPage() {
   useEffect(() => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fGrade, fUnit, fSource, fDiff]);
+  }, [fGrade, fUnit, fSource, fDiff, fType]);
 
   // 쪽마다: 쪽 이미지 인식 → 문항 저장 → 각 문항 영역·그림을 잘라 저장
   async function onFile(file: File) {
@@ -282,6 +290,7 @@ export default function MathBankPage() {
           <option value="">난이도 전체</option>
           {["하", "중", "상", "킬러"].map((d) => <option key={d} value={d}>{d}</option>)}
         </select>
+        <MathTypePicker value={fType} onChange={setFType} mode="filter" compact />
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -336,6 +345,11 @@ export default function MathBankPage() {
                     {p.grade && <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-600">{p.grade}</span>}
                     {p.unit && <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">{p.unit}</span>}
                     {p.difficulty && <span className="px-1.5 py-0.5 rounded bg-purple-50 text-purple-600">{p.difficulty}</span>}
+                    {p.typeCode && (
+                      <span className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700" title={typeLabel(types, p.typeCode)}>
+                        <span className="font-mono">{p.typeCode}</span> {typeLabel(types, p.typeCode).split(" · ").pop()}
+                      </span>
+                    )}
                     {p.number != null && (
                       <span className="text-gray-400">
                         {p.sourcePage ? `${p.sourcePage}쪽 ` : ""}#{p.number}

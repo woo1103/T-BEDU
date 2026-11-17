@@ -412,11 +412,13 @@ model MathProblem {
   sourcePage    Int?    // 원본 PDF 쪽 번호
   cropImageId   String? // 문제 영역을 잘라낸 이미지(MathImage) — 인식 확인용
   figureImageId String? // 그림·그래프·표만 잘라낸 이미지(MathImage) — 학습지 인쇄용
+  typeCode      String? // 유형코드표(src/data/math-types.json)의 유형 코드, 예 M1-1-01-07
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   @@index([grade])
   @@index([unit])
+  @@index([typeCode])
 }
 
 model Video {
