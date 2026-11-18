@@ -23,10 +23,14 @@ export async function GET(request: NextRequest) {
   const questions = await prisma.question.findMany({
     where,
     orderBy: { createdAt: "desc" },
+    // 응답을 가볍게: 지문 본문은 문항의 passage에 이미 있으므로 지문 정보는 분류용 칸만,
+    // 출제 이력은 시험지 제목·날짜만 싣는다(문항이 많아지면 응답 크기 제한 4.5MB에 걸려 목록이 안 뜸)
     include: {
-      passageRef: true,
+      passageRef: { select: { id: true, textbook: true, grade: true, lesson: true, title: true } },
       examItems: {
-        include: {
+        select: {
+          id: true,
+          examId: true,
           exam: {
             select: {
               id: true,

@@ -471,13 +471,43 @@ export default function NewExamPage() {
     return { tree, orphans };
   }
 
+  // 문제 목록 불러오기: 실패(로그인 만료·서버 오류·시간 초과)해도 "불러오는 중"에 멈추지 않고 이유와 다시 시도 버튼을 보인다
+  const [questionsError, setQuestionsError] = useState("");
+  async function loadQuestions() {
+    setLoadingQuestions(true);
+    setQuestionsError("");
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 60_000);
+    try {
+      const res = await fetch("/api/questions", { signal: ctrl.signal });
+      const text = await res.text();
+      let data: unknown = null;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        /* JSON이 아닌 응답(서버 오류 페이지 등) */
+      }
+      if (res.status === 401) throw new Error("로그인이 만료됐어요. 다시 로그인해 주세요.");
+      if (!res.ok || !Array.isArray(data)) {
+        const msg = (data as { error?: string } | null)?.error;
+        throw new Error(`문제 목록을 불러오지 못했어요 (${res.status}${msg ? ` · ${msg}` : ""})`);
+      }
+      setAvailableQuestions(data as QuestionRow[]);
+    } catch (e) {
+      setQuestionsError(
+        e instanceof Error && e.name === "AbortError"
+          ? "문제 목록을 불러오는 데 1분 넘게 걸려 멈췄어요."
+          : e instanceof Error
+            ? e.message
+            : "문제 목록을 불러오지 못했어요"
+      );
+    } finally {
+      clearTimeout(timer);
+      setLoadingQuestions(false);
+    }
+  }
   useEffect(() => {
-    fetch("/api/questions")
-      .then((res) => res.json())
-      .then((data) => {
-        setAvailableQuestions(data);
-        setLoadingQuestions(false);
-      });
+    loadQuestions();
   }, []);
 
   function addQuestion(q: QuestionRow) {
@@ -850,6 +880,16 @@ export default function NewExamPage() {
 
           {loadingQuestions ? (
             <p className="text-sm text-gray-400">불러오는 중...</p>
+          ) : questionsError ? (
+            <div className="text-sm text-red-600 space-y-2">
+              <p>{questionsError}</p>
+              <button
+                onClick={loadQuestions}
+                className="px-3 py-1.5 text-xs rounded-lg border border-red-200 hover:bg-red-50"
+              >
+                다시 불러오기
+              </button>
+            </div>
           ) : availableQuestions.length === 0 ? (
             <p className="text-sm text-gray-400">
               등록된 문제가 없습니다. 먼저 문제를 만들어주세요.
