@@ -1,0 +1,92 @@
+{
+  "s0-narration": {
+    "file": "audio/week-is-invented/s0-narration.wav",
+    "seconds": 4.08,
+    "hash": "b7c0105f3b2c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/week-is-invented/s1-narration.wav",
+    "seconds": 3.88,
+    "hash": "ae781f62937b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/week-is-invented/s1-narrationOut.wav",
+    "seconds": 4.52,
+    "hash": "29e405f7d542",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/week-is-invented/s1-question.wav",
+    "seconds": 2.32,
+    "hash": "5e0db1e32bdd",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/week-is-invented/s2-narration.wav",
+    "seconds": 5.08,
+    "hash": "53113d47c184",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/week-is-invented/s3-narration.wav",
+    "seconds": 3.44,
+    "hash": "7810974668e2",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/week-is-invented/s4-narration.wav",
+    "seconds": 3.04,
+    "hash": "53b7e20626ff",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/week-is-invented/s5-narration.wav",
+    "seconds": 4.4,
+    "hash": "393a02b78bbc",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/week-is-invented/s5-narrationOut.wav",
+    "seconds": 3.36,
+    "hash": "22e4f8ce1b26",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/week-is-invented/s5-line0.wav",
+    "seconds": 4.4,
+    "hash": "a7b1d089af0c",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/week-is-invented/s5-line1.wav",
+    "seconds": 4.433333333333334,
+    "hash": "a82c37ddb9f7",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/week-is-invented/s5-line2.wav",
+    "seconds": 2.48,
+    "hash": "fc7d23304954",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line3": {
+    "file": "audio/week-is-invented/s5-line3.wav",
+    "seconds": 4.013333333333334,
+    "hash": "89e49fb95123",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s6-narration": {
+    "file": "audio/week-is-invented/s6-narration.wav",
+    "seconds": 4.08,
+    "hash": "a69b3ecbf214",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/week-is-invented/s7-narration.wav",
+    "seconds": 4.24,
+    "hash": "4e5c53e05e92",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

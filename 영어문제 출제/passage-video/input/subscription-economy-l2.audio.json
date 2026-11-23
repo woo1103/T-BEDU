@@ -1,0 +1,344 @@
+{
+  "s0-narration": {
+    "file": "audio/subscription-economy-l2/s0-narration.wav",
+    "seconds": 4.96,
+    "hash": "9c0d558c293d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/subscription-economy-l2/s1-narration.wav",
+    "seconds": 3.92,
+    "hash": "8561d3a23846",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/subscription-economy-l2/s1-narrationOut.wav",
+    "seconds": 3,
+    "hash": "ae6f0d65a247",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/subscription-economy-l2/s1-question.wav",
+    "seconds": 2.8,
+    "hash": "aa7d3d3394fd",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/subscription-economy-l2/s2-narration.wav",
+    "seconds": 4.48,
+    "hash": "00fd9c479b64",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-narrationOut": {
+    "file": "audio/subscription-economy-l2/s2-narrationOut.wav",
+    "seconds": 3.04,
+    "hash": "f338b3bfc186",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-speech": {
+    "file": "audio/subscription-economy-l2/s2-speech.wav",
+    "seconds": 3.36,
+    "hash": "29103dca117e",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s3-narration": {
+    "file": "audio/subscription-economy-l2/s3-narration.wav",
+    "seconds": 4.68,
+    "hash": "ff5fa39d7aec",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narrationOut": {
+    "file": "audio/subscription-economy-l2/s3-narrationOut.wav",
+    "seconds": 3.52,
+    "hash": "a68a69980caa",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/subscription-economy-l2/s4-narration.wav",
+    "seconds": 4.12,
+    "hash": "fb77590559e2",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/subscription-economy-l2/s4-narrationOut.wav",
+    "seconds": 4.36,
+    "hash": "e37bf85e7665",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-speech": {
+    "file": "audio/subscription-economy-l2/s4-speech.wav",
+    "seconds": 4.4,
+    "hash": "330d4b4ce574",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-narration": {
+    "file": "audio/subscription-economy-l2/s5-narration.wav",
+    "seconds": 4,
+    "hash": "ee838fa839b8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/subscription-economy-l2/s5-narrationOut.wav",
+    "seconds": 3.12,
+    "hash": "d49ba05cefd8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/subscription-economy-l2/s6-narration.wav",
+    "seconds": 4.24,
+    "hash": "9a7bf7f164c8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/subscription-economy-l2/s7-narration.wav",
+    "seconds": 4.96,
+    "hash": "b8ca2d554a6e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-narration": {
+    "file": "audio/subscription-economy-l2/s8-narration.wav",
+    "seconds": 4.24,
+    "hash": "dee10deed0f7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s9-narration": {
+    "file": "audio/subscription-economy-l2/s9-narration.wav",
+    "seconds": 3.92,
+    "hash": "cfe7eb04259c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s10-narration": {
+    "file": "audio/subscription-economy-l2/s10-narration.wav",
+    "seconds": 4.6,
+    "hash": "a0d81a3b5a11",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s11-narration": {
+    "file": "audio/subscription-economy-l2/s11-narration.wav",
+    "seconds": 4.32,
+    "hash": "a977a1a9f320",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s12-narration": {
+    "file": "audio/subscription-economy-l2/s12-narration.wav",
+    "seconds": 3.68,
+    "hash": "f0d0d085e0fe",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s12-narrationOut": {
+    "file": "audio/subscription-economy-l2/s12-narrationOut.wav",
+    "seconds": 2.32,
+    "hash": "8eccfb9670db",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s12-line0": {
+    "file": "audio/subscription-economy-l2/s12-line0.wav",
+    "seconds": 3.28,
+    "hash": "68ecfb8361f0",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s12-line1": {
+    "file": "audio/subscription-economy-l2/s12-line1.wav",
+    "seconds": 4.673333333333333,
+    "hash": "bbfcf58fd5d7",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s12-line2": {
+    "file": "audio/subscription-economy-l2/s12-line2.wav",
+    "seconds": 2.72,
+    "hash": "521918d208fc",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s12-line3": {
+    "file": "audio/subscription-economy-l2/s12-line3.wav",
+    "seconds": 4.073333333333333,
+    "hash": "22d221512268",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s13-narration": {
+    "file": "audio/subscription-economy-l2/s13-narration.wav",
+    "seconds": 3.84,
+    "hash": "fbd23fda3368",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s14-narration": {
+    "file": "audio/subscription-economy-l2/s14-narration.wav",
+    "seconds": 4.16,
+    "hash": "f41ccd1b1f17",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s15-narration": {
+    "file": "audio/subscription-economy-l2/s15-narration.wav",
+    "seconds": 3.92,
+    "hash": "5a8f32f31014",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s16-narration": {
+    "file": "audio/subscription-economy-l2/s16-narration.wav",
+    "seconds": 4.08,
+    "hash": "2fdc66d8cb7a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s17-narration": {
+    "file": "audio/subscription-economy-l2/s17-narration.wav",
+    "seconds": 3.48,
+    "hash": "1a8538a28fb6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s18-narration": {
+    "file": "audio/subscription-economy-l2/s18-narration.wav",
+    "seconds": 3.96,
+    "hash": "8688478486df",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s19-narration": {
+    "file": "audio/subscription-economy-l2/s19-narration.wav",
+    "seconds": 3.16,
+    "hash": "a0831972f10e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s19-narrationOut": {
+    "file": "audio/subscription-economy-l2/s19-narrationOut.wav",
+    "seconds": 3.52,
+    "hash": "a5b17a586cf3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s19-line0": {
+    "file": "audio/subscription-economy-l2/s19-line0.wav",
+    "seconds": 2.72,
+    "hash": "32001d692ac5",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s19-line1": {
+    "file": "audio/subscription-economy-l2/s19-line1.wav",
+    "seconds": 5.273333333333333,
+    "hash": "db54339d24b5",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s19-line2": {
+    "file": "audio/subscription-economy-l2/s19-line2.wav",
+    "seconds": 2.72,
+    "hash": "ee71e645d41f",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s19-line3": {
+    "file": "audio/subscription-economy-l2/s19-line3.wav",
+    "seconds": 3.5933333333333333,
+    "hash": "58949ae31f6f",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s20-narration": {
+    "file": "audio/subscription-economy-l2/s20-narration.wav",
+    "seconds": 2.92,
+    "hash": "e41ca90b6893",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s21-narration": {
+    "file": "audio/subscription-economy-l2/s21-narration.wav",
+    "seconds": 4.36,
+    "hash": "2511b3b424f1",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s22-narration": {
+    "file": "audio/subscription-economy-l2/s22-narration.wav",
+    "seconds": 4.36,
+    "hash": "76f7e263225b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s23-narration": {
+    "file": "audio/subscription-economy-l2/s23-narration.wav",
+    "seconds": 3.68,
+    "hash": "4a4ca75bb7a9",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s23-narrationOut": {
+    "file": "audio/subscription-economy-l2/s23-narrationOut.wav",
+    "seconds": 3.52,
+    "hash": "cd434666343d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s23-speech": {
+    "file": "audio/subscription-economy-l2/s23-speech.wav",
+    "seconds": 3.2,
+    "hash": "1a9e8c919bbc",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s24-narration": {
+    "file": "audio/subscription-economy-l2/s24-narration.wav",
+    "seconds": 2.32,
+    "hash": "e0edb328af5c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s25-narration": {
+    "file": "audio/subscription-economy-l2/s25-narration.wav",
+    "seconds": 4,
+    "hash": "5c66a598acd6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s26-narration": {
+    "file": "audio/subscription-economy-l2/s26-narration.wav",
+    "seconds": 4.56,
+    "hash": "9af9b5ae78f9",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s27-narration": {
+    "file": "audio/subscription-economy-l2/s27-narration.wav",
+    "seconds": 4.4,
+    "hash": "41f9c6991efa",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s28-narration": {
+    "file": "audio/subscription-economy-l2/s28-narration.wav",
+    "seconds": 3.64,
+    "hash": "ada81946ef25",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s29-narration": {
+    "file": "audio/subscription-economy-l2/s29-narration.wav",
+    "seconds": 3.4,
+    "hash": "4ff115570337",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s29-narrationOut": {
+    "file": "audio/subscription-economy-l2/s29-narrationOut.wav",
+    "seconds": 4.12,
+    "hash": "010429290295",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s29-line0": {
+    "file": "audio/subscription-economy-l2/s29-line0.wav",
+    "seconds": 3.28,
+    "hash": "65cbe7f86ce7",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s29-line1": {
+    "file": "audio/subscription-economy-l2/s29-line1.wav",
+    "seconds": 4.3133333333333335,
+    "hash": "ce85982cc52d",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s29-line2": {
+    "file": "audio/subscription-economy-l2/s29-line2.wav",
+    "seconds": 2.32,
+    "hash": "ac6235a45c9a",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s29-line3": {
+    "file": "audio/subscription-economy-l2/s29-line3.wav",
+    "seconds": 4.013333333333334,
+    "hash": "15ca76446039",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s30-narration": {
+    "file": "audio/subscription-economy-l2/s30-narration.wav",
+    "seconds": 4,
+    "hash": "f46bd9b1d680",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s31-narration": {
+    "file": "audio/subscription-economy-l2/s31-narration.wav",
+    "seconds": 3.84,
+    "hash": "6f042e42863e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

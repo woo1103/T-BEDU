@@ -1,0 +1,92 @@
+{
+  "s0-narration": {
+    "file": "audio/star-trek-abundance/s0-narration.wav",
+    "seconds": 4.64,
+    "hash": "8b6aa7065561",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/star-trek-abundance/s1-narration.wav",
+    "seconds": 4.36,
+    "hash": "b532448d9ee9",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/star-trek-abundance/s1-narrationOut.wav",
+    "seconds": 4.24,
+    "hash": "ebd76ce1c3f3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/star-trek-abundance/s1-question.wav",
+    "seconds": 2.7403333333333335,
+    "hash": "52d859fce683",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s2-narration": {
+    "file": "audio/star-trek-abundance/s2-narration.wav",
+    "seconds": 4.32,
+    "hash": "37a97b8ef859",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/star-trek-abundance/s3-narration.wav",
+    "seconds": 4.72,
+    "hash": "9fed80dc0da2",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/star-trek-abundance/s4-narration.wav",
+    "seconds": 4.84,
+    "hash": "1d10a3b077fb",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/star-trek-abundance/s5-narration.wav",
+    "seconds": 4.08,
+    "hash": "53566dd211aa",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/star-trek-abundance/s5-narrationOut.wav",
+    "seconds": 4.52,
+    "hash": "89c361560182",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/star-trek-abundance/s5-line0.wav",
+    "seconds": 3.0083333333333333,
+    "hash": "404016b5f865",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s5-line1": {
+    "file": "audio/star-trek-abundance/s5-line1.wav",
+    "seconds": 4.493333333333333,
+    "hash": "57b7501d0ab8",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/star-trek-abundance/s5-line2.wav",
+    "seconds": 2.6733333333333333,
+    "hash": "8fa32737963e",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s5-line3": {
+    "file": "audio/star-trek-abundance/s5-line3.wav",
+    "seconds": 4.913333333333333,
+    "hash": "b1098e941dcc",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s6-narration": {
+    "file": "audio/star-trek-abundance/s6-narration.wav",
+    "seconds": 3.36,
+    "hash": "f4f53ec4ca5d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/star-trek-abundance/s7-narration.wav",
+    "seconds": 4.12,
+    "hash": "5887c3c40326",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

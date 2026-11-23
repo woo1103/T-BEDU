@@ -1,0 +1,92 @@
+{
+  "s0-narration": {
+    "file": "audio/simplifying-assumptions/s0-narration.wav",
+    "seconds": 4.44,
+    "hash": "5ef716ee9b8b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/simplifying-assumptions/s1-narration.wav",
+    "seconds": 3.48,
+    "hash": "f72174a551bb",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/simplifying-assumptions/s1-narrationOut.wav",
+    "seconds": 4,
+    "hash": "6ccc1ce53a9c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/simplifying-assumptions/s1-question.wav",
+    "seconds": 2.7403333333333335,
+    "hash": "d5f4da7c8d70",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s2-narration": {
+    "file": "audio/simplifying-assumptions/s2-narration.wav",
+    "seconds": 4.36,
+    "hash": "d80776107512",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/simplifying-assumptions/s3-narration.wav",
+    "seconds": 3.84,
+    "hash": "f615f43f9247",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/simplifying-assumptions/s4-narration.wav",
+    "seconds": 4.08,
+    "hash": "483a65d6262e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/simplifying-assumptions/s5-narration.wav",
+    "seconds": 3.72,
+    "hash": "e7c33d9e6a21",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/simplifying-assumptions/s5-narrationOut.wav",
+    "seconds": 4.16,
+    "hash": "da7ae149361e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/simplifying-assumptions/s5-line0.wav",
+    "seconds": 3.2093333333333334,
+    "hash": "e76a35e4e2c7",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s5-line1": {
+    "file": "audio/simplifying-assumptions/s5-line1.wav",
+    "seconds": 4.673333333333333,
+    "hash": "3e682a9d3998",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/simplifying-assumptions/s5-line2.wav",
+    "seconds": 3.0083333333333333,
+    "hash": "ccc676528979",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s5-line3": {
+    "file": "audio/simplifying-assumptions/s5-line3.wav",
+    "seconds": 3.2333333333333334,
+    "hash": "19c58e5080bb",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s6-narration": {
+    "file": "audio/simplifying-assumptions/s6-narration.wav",
+    "seconds": 2.88,
+    "hash": "77c6489544a5",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/simplifying-assumptions/s7-narration.wav",
+    "seconds": 4.4,
+    "hash": "0bef290a058c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

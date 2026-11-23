@@ -1,0 +1,92 @@
+{
+  "s0-narration": {
+    "file": "audio/whistleblower-protection/s0-narration.wav",
+    "seconds": 4.28,
+    "hash": "3710a7d641d7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/whistleblower-protection/s1-narration.wav",
+    "seconds": 3.4,
+    "hash": "70bd430e4199",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/whistleblower-protection/s1-narrationOut.wav",
+    "seconds": 4.08,
+    "hash": "c3392214faba",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/whistleblower-protection/s1-question.wav",
+    "seconds": 3.6,
+    "hash": "43313a6803c7",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/whistleblower-protection/s2-narration.wav",
+    "seconds": 4.24,
+    "hash": "1a1b03f24dbb",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/whistleblower-protection/s3-narration.wav",
+    "seconds": 4.12,
+    "hash": "6b6eae941dbd",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/whistleblower-protection/s4-narration.wav",
+    "seconds": 4.48,
+    "hash": "748312a910ee",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/whistleblower-protection/s5-narration.wav",
+    "seconds": 2.48,
+    "hash": "27d380958e1e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/whistleblower-protection/s5-narrationOut.wav",
+    "seconds": 4.72,
+    "hash": "f7901d13521a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/whistleblower-protection/s5-line0.wav",
+    "seconds": 2.68,
+    "hash": "910b311d76b9",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/whistleblower-protection/s5-line1.wav",
+    "seconds": 4.013333333333334,
+    "hash": "aca0bbb02d88",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/whistleblower-protection/s5-line2.wav",
+    "seconds": 3.16,
+    "hash": "840a6f911c43",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line3": {
+    "file": "audio/whistleblower-protection/s5-line3.wav",
+    "seconds": 4.3133333333333335,
+    "hash": "04bf1c3bc474",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s6-narration": {
+    "file": "audio/whistleblower-protection/s6-narration.wav",
+    "seconds": 3.72,
+    "hash": "9463bb3fa612",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/whistleblower-protection/s7-narration.wav",
+    "seconds": 3.36,
+    "hash": "ad3d82de0f36",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

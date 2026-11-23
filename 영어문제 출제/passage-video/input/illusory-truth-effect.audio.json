@@ -1,0 +1,98 @@
+{
+  "s0-narration": {
+    "file": "audio/illusory-truth-effect/s0-narration.wav",
+    "seconds": 4.76,
+    "hash": "917038b0fe81",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/illusory-truth-effect/s1-narration.wav",
+    "seconds": 4.32,
+    "hash": "f88323845ca4",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/illusory-truth-effect/s1-narrationOut.wav",
+    "seconds": 4.24,
+    "hash": "1e918008600f",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/illusory-truth-effect/s1-question.wav",
+    "seconds": 2.4,
+    "hash": "5cccd20cf2f9",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/illusory-truth-effect/s2-narration.wav",
+    "seconds": 4.28,
+    "hash": "a1caa39a7740",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/illusory-truth-effect/s3-narration.wav",
+    "seconds": 5.2,
+    "hash": "222cca53f167",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/illusory-truth-effect/s4-narration.wav",
+    "seconds": 3.04,
+    "hash": "e7e45bf61d4c",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/illusory-truth-effect/s5-narration.wav",
+    "seconds": 4.96,
+    "hash": "e15a2e8d8168",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/illusory-truth-effect/s6-narration.wav",
+    "seconds": 3.04,
+    "hash": "4552cdd3b296",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narrationOut": {
+    "file": "audio/illusory-truth-effect/s6-narrationOut.wav",
+    "seconds": 4,
+    "hash": "742864cc85c8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-line0": {
+    "file": "audio/illusory-truth-effect/s6-line0.wav",
+    "seconds": 3.04,
+    "hash": "52f500e28db7",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-line1": {
+    "file": "audio/illusory-truth-effect/s6-line1.wav",
+    "seconds": 4.133333333333334,
+    "hash": "73b7ba2c2161",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s6-line2": {
+    "file": "audio/illusory-truth-effect/s6-line2.wav",
+    "seconds": 2.76,
+    "hash": "c6974569de4e",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s6-line3": {
+    "file": "audio/illusory-truth-effect/s6-line3.wav",
+    "seconds": 4.133333333333334,
+    "hash": "d5ef9a91b3be",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s7-narration": {
+    "file": "audio/illusory-truth-effect/s7-narration.wav",
+    "seconds": 3.4,
+    "hash": "6f8ca67f2727",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-narration": {
+    "file": "audio/illusory-truth-effect/s8-narration.wav",
+    "seconds": 3.76,
+    "hash": "c4d588539c97",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

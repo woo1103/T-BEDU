@@ -1,0 +1,110 @@
+{
+  "s0-narration": {
+    "file": "audio/last-day-lab-report/s0-narration.wav",
+    "seconds": 4.28,
+    "hash": "c1d42e16bf24",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/last-day-lab-report/s1-narration.wav",
+    "seconds": 4.48,
+    "hash": "e6d6b418226e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/last-day-lab-report/s1-narrationOut.wav",
+    "seconds": 3.28,
+    "hash": "b71113fbd0c3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-speech": {
+    "file": "audio/last-day-lab-report/s1-speech.wav",
+    "seconds": 2.2043333333333335,
+    "hash": "bb55083c0e35",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s2-narration": {
+    "file": "audio/last-day-lab-report/s2-narration.wav",
+    "seconds": 4.32,
+    "hash": "33bf57e05594",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s2-narrationOut": {
+    "file": "audio/last-day-lab-report/s2-narrationOut.wav",
+    "seconds": 3.88,
+    "hash": "9f80546fb611",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/last-day-lab-report/s3-narration.wav",
+    "seconds": 4.36,
+    "hash": "1f8913eb0417",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narrationOut": {
+    "file": "audio/last-day-lab-report/s3-narrationOut.wav",
+    "seconds": 3.56,
+    "hash": "d142d5f18f29",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-speech": {
+    "file": "audio/last-day-lab-report/s3-speech.wav",
+    "seconds": 5.213333333333333,
+    "hash": "25b4ad00f9b0",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s4-narration": {
+    "file": "audio/last-day-lab-report/s4-narration.wav",
+    "seconds": 5.16,
+    "hash": "2faa1fef1c0e",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narrationOut": {
+    "file": "audio/last-day-lab-report/s4-narrationOut.wav",
+    "seconds": 3.16,
+    "hash": "36adfd05eb5a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-speech": {
+    "file": "audio/last-day-lab-report/s4-speech.wav",
+    "seconds": 2.3383333333333334,
+    "hash": "e6dec7ac55fb",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s5-narration": {
+    "file": "audio/last-day-lab-report/s5-narration.wav",
+    "seconds": 2.92,
+    "hash": "6ca3553380b0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/last-day-lab-report/s5-narrationOut.wav",
+    "seconds": 3.48,
+    "hash": "10379365cb15",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-speech": {
+    "file": "audio/last-day-lab-report/s5-speech.wav",
+    "seconds": 3.8933333333333335,
+    "hash": "5519eef779d0",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s6-narration": {
+    "file": "audio/last-day-lab-report/s6-narration.wav",
+    "seconds": 4.36,
+    "hash": "da7c5d1d15f7",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/last-day-lab-report/s7-narration.wav",
+    "seconds": 3.84,
+    "hash": "6c5342cea3c8",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-narration": {
+    "file": "audio/last-day-lab-report/s8-narration.wav",
+    "seconds": 3.84,
+    "hash": "880959427f78",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

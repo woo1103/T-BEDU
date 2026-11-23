@@ -1,0 +1,92 @@
+{
+  "s0-narration": {
+    "file": "audio/romanticizing-the-goal/s0-narration.wav",
+    "seconds": 4.36,
+    "hash": "89cb5075dcf6",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/romanticizing-the-goal/s1-narration.wav",
+    "seconds": 4.48,
+    "hash": "2e397782d85a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/romanticizing-the-goal/s1-narrationOut.wav",
+    "seconds": 3.88,
+    "hash": "4086c0772924",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/romanticizing-the-goal/s1-question.wav",
+    "seconds": 3.36,
+    "hash": "6242b0346931",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s2-narration": {
+    "file": "audio/romanticizing-the-goal/s2-narration.wav",
+    "seconds": 4.24,
+    "hash": "610888ce1a7b",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/romanticizing-the-goal/s3-narration.wav",
+    "seconds": 4.84,
+    "hash": "8ef8a0a6a244",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/romanticizing-the-goal/s4-narration.wav",
+    "seconds": 4.4,
+    "hash": "e760017edd33",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/romanticizing-the-goal/s5-narration.wav",
+    "seconds": 3.8,
+    "hash": "4cfd51949860",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narrationOut": {
+    "file": "audio/romanticizing-the-goal/s5-narrationOut.wav",
+    "seconds": 3.84,
+    "hash": "9203bdea2957",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-line0": {
+    "file": "audio/romanticizing-the-goal/s5-line0.wav",
+    "seconds": 2.68,
+    "hash": "b8ed0953efd8",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line1": {
+    "file": "audio/romanticizing-the-goal/s5-line1.wav",
+    "seconds": 4.553333333333334,
+    "hash": "8d52c5aba602",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s5-line2": {
+    "file": "audio/romanticizing-the-goal/s5-line2.wav",
+    "seconds": 3.2,
+    "hash": "fac595c03266",
+    "voice": "ko-KR-Chirp3-HD-Zephyr"
+  },
+  "s5-line3": {
+    "file": "audio/romanticizing-the-goal/s5-line3.wav",
+    "seconds": 3.6533333333333333,
+    "hash": "92e6a1a40933",
+    "voice": "ko-KR-Chirp3-HD-Charon"
+  },
+  "s6-narration": {
+    "file": "audio/romanticizing-the-goal/s6-narration.wav",
+    "seconds": 2.96,
+    "hash": "3fcb830e5a36",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s7-narration": {
+    "file": "audio/romanticizing-the-goal/s7-narration.wav",
+    "seconds": 4.36,
+    "hash": "e157d5f4b335",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}

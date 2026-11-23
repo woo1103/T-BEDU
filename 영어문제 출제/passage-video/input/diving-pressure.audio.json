@@ -1,0 +1,98 @@
+{
+  "s0-narration": {
+    "file": "audio/diving-pressure/s0-narration.wav",
+    "seconds": 3.8,
+    "hash": "aaef4c3fc27d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narration": {
+    "file": "audio/diving-pressure/s1-narration.wav",
+    "seconds": 4,
+    "hash": "da96d1ad40e0",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-narrationOut": {
+    "file": "audio/diving-pressure/s1-narrationOut.wav",
+    "seconds": 4.92,
+    "hash": "6eaa617f8d1d",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s1-question": {
+    "file": "audio/diving-pressure/s1-question.wav",
+    "seconds": 3.142333333333333,
+    "hash": "8a004de5da10",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s2-narration": {
+    "file": "audio/diving-pressure/s2-narration.wav",
+    "seconds": 4.08,
+    "hash": "b9523af8770a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s3-narration": {
+    "file": "audio/diving-pressure/s3-narration.wav",
+    "seconds": 3.92,
+    "hash": "5fe0bb67a5c3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s4-narration": {
+    "file": "audio/diving-pressure/s4-narration.wav",
+    "seconds": 4.96,
+    "hash": "9656cae1354a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s5-narration": {
+    "file": "audio/diving-pressure/s5-narration.wav",
+    "seconds": 5.04,
+    "hash": "1850d487825a",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narration": {
+    "file": "audio/diving-pressure/s6-narration.wav",
+    "seconds": 3.36,
+    "hash": "4c1a22e81ae3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-narrationOut": {
+    "file": "audio/diving-pressure/s6-narrationOut.wav",
+    "seconds": 4.16,
+    "hash": "86ef38e31ae1",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s6-line0": {
+    "file": "audio/diving-pressure/s6-line0.wav",
+    "seconds": 3.0083333333333333,
+    "hash": "40761a91dcea",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s6-line1": {
+    "file": "audio/diving-pressure/s6-line1.wav",
+    "seconds": 4.6,
+    "hash": "14e2bb8ae9bb",
+    "voice": "ko-KR-Chirp3-HD-Algenib"
+  },
+  "s6-line2": {
+    "file": "audio/diving-pressure/s6-line2.wav",
+    "seconds": 2.070333333333333,
+    "hash": "5faf4e795a0a",
+    "voice": "ko-KR-Chirp3-HD-Fenrir"
+  },
+  "s6-line3": {
+    "file": "audio/diving-pressure/s6-line3.wav",
+    "seconds": 3.52,
+    "hash": "1f5efc9414a6",
+    "voice": "ko-KR-Chirp3-HD-Algenib"
+  },
+  "s7-narration": {
+    "file": "audio/diving-pressure/s7-narration.wav",
+    "seconds": 2.92,
+    "hash": "b62e0b7439f3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  },
+  "s8-narration": {
+    "file": "audio/diving-pressure/s8-narration.wav",
+    "seconds": 3.4,
+    "hash": "2eb68eb0b6a3",
+    "voice": "ko-KR-Chirp3-HD-Achernar"
+  }
+}
