@@ -45,14 +45,19 @@ export async function GET(request: NextRequest) {
   });
 
   // 문항별 누적 정답률(학생 답 기준). 답이 없는 문항은 stats 없음.
+  // 운영 DB(Turso)는 한 쿼리에 넣을 수 있는 값 개수에 한도가 있다 → 문항 id를 500개씩 나눠 묻는다
+  // (문항이 늘어 한도를 넘자 목록 전체가 500 오류로 안 뜨던 문제, 2026-11)
   const ids = questions.map((q) => q.id);
-  const grouped = ids.length
-    ? await prisma.answer.groupBy({
+  const grouped = [];
+  for (let i = 0; i < ids.length; i += 500) {
+    grouped.push(
+      ...(await prisma.answer.groupBy({
         by: ["refId", "isCorrect"],
-        where: { refType: "question", refId: { in: ids } },
+        where: { refType: "question", refId: { in: ids.slice(i, i + 500) } },
         _count: { _all: true },
-      })
-    : [];
+      }))
+    );
+  }
   const stats = new Map<string, { answered: number; correct: number }>();
   for (const g of grouped) {
     const cur = stats.get(g.refId) ?? { answered: 0, correct: 0 };
