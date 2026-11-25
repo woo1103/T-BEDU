@@ -6,6 +6,7 @@ import { EXAM_TYPE_MAP, getQuestionTypeInfo, getQuestionTypes, DIFFICULTY_MAP, c
 import { pickFromBank, SUNEUNG_PRESETS, type ComposePreset } from "@/lib/auto-compose";
 import { withSetMembers } from "@/lib/question-sets";
 import { VARIATIONS } from "@/lib/variations";
+import ExamComposer from "@/components/exams/ExamComposer";
 import type { ExamType, Choice, Difficulty } from "@/types";
 
 const CIRCLE_LABELS = ["①", "②", "③", "④", "⑤"];
@@ -60,13 +61,11 @@ interface QuestionRow {
   } | null;
 }
 
-type SortMode = "tree" | "date" | "grade" | "textbook";
-
 interface SelectedItem {
   questionId: string;
   question: QuestionRow;
   orderNum: number;
-  customPoints?: number;
+  customPoints?: number | null;
 }
 
 export default function NewExamPage() {
@@ -89,7 +88,6 @@ export default function NewExamPage() {
   const [availableQuestions, setAvailableQuestions] = useState<QuestionRow[]>([]);
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
-  const [detailQuestion, setDetailQuestion] = useState<QuestionRow | null>(null);
 
   // ===== AI 문제 생성 (시험지 구성 내부) =====
   const [showAi, setShowAi] = useState(false);
@@ -367,110 +365,6 @@ export default function NewExamPage() {
     alert(`${savedIds.length}개 문제를 생성해 시험지에 추가했습니다.`);
   }
 
-  // 트리 펼침 상태 (학년 / 교과서 / 과 / 지문 / 유형)
-  const [expanded, setExpanded] = useState<Set<string>>(new Set());
-  // 일괄선택용 체크된 문제 id
-  const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
-  const [sortMode, setSortMode] = useState<SortMode>("tree");
-  const [bankSearch, setBankSearch] = useState("");
-
-  const filteredQuestions = bankSearch.trim()
-    ? availableQuestions.filter(
-        (q) =>
-          q.question.toLowerCase().includes(bankSearch.toLowerCase()) ||
-          q.passage.toLowerCase().includes(bankSearch.toLowerCase())
-      )
-    : availableQuestions;
-
-  function flatGroups(): { key: string; label: string; items: QuestionRow[] }[] {
-    if (sortMode === "date") {
-      const m = new Map<string, QuestionRow[]>();
-      for (const q of filteredQuestions) {
-        const day = q.createdAt ? new Date(q.createdAt).toLocaleDateString("ko-KR") : "날짜 미상";
-        if (!m.has(day)) m.set(day, []);
-        m.get(day)!.push(q);
-      }
-      return Array.from(m.entries())
-        .sort((a, b) => (a[0] < b[0] ? 1 : -1))
-        .map(([k, v]) => ({ key: `d::${k}`, label: k, items: v }));
-    }
-    if (sortMode === "grade") {
-      const m = new Map<string, QuestionRow[]>();
-      for (const q of filteredQuestions) {
-        const g = q.passageRef?.grade || "학년 미연결";
-        if (!m.has(g)) m.set(g, []);
-        m.get(g)!.push(q);
-      }
-      return Array.from(m.entries())
-        .sort((a, b) => a[0].localeCompare(b[0]))
-        .map(([k, v]) => ({ key: `g::${k}`, label: k, items: v }));
-    }
-    if (sortMode === "textbook") {
-      const m = new Map<string, QuestionRow[]>();
-      for (const q of filteredQuestions) {
-        const t = q.passageRef?.textbook || "교과서 미연결";
-        if (!m.has(t)) m.set(t, []);
-        m.get(t)!.push(q);
-      }
-      return Array.from(m.entries())
-        .sort((a, b) => a[0].localeCompare(b[0]))
-        .map(([k, v]) => ({ key: `t::${k}`, label: k, items: v }));
-    }
-    return [];
-  }
-
-  function toggleCheck(id: string) {
-    setCheckedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
-
-  function toggle(key: string) {
-    setExpanded((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
-  }
-
-  // 학년 → 교과서 → 과 → 지문 → 유형 → Question[] 트리 (5단계)
-  type L5 = Map<string, QuestionRow[]>;
-  type L4 = Map<string, L5>;
-  type L3 = Map<string, L4>;
-  type L2 = Map<string, L3>;
-  type QuestionTree = Map<string, L2>;
-
-  function buildQuestionTree(): { tree: QuestionTree; orphans: QuestionRow[] } {
-    const tree: QuestionTree = new Map();
-    const orphans: QuestionRow[] = [];
-    for (const q of filteredQuestions) {
-      if (!q.passageRef) {
-        orphans.push(q);
-        continue;
-      }
-      const { grade, textbook, lesson, title, id: passageId } = q.passageRef;
-      const passageLabel = title || `지문 ${passageId.slice(-4)}`;
-      const typeInfo = getQuestionTypeInfo(q.examType, q.questionType);
-      const typeLabel = typeInfo ? `${typeInfo.number}번 ${typeInfo.name}` : q.questionType;
-
-      if (!tree.has(grade)) tree.set(grade, new Map());
-      const l2 = tree.get(grade)!;
-      if (!l2.has(textbook)) l2.set(textbook, new Map());
-      const l3 = l2.get(textbook)!;
-      if (!l3.has(lesson)) l3.set(lesson, new Map());
-      const l4 = l3.get(lesson)!;
-      if (!l4.has(passageLabel)) l4.set(passageLabel, new Map());
-      const l5 = l4.get(passageLabel)!;
-      if (!l5.has(typeLabel)) l5.set(typeLabel, []);
-      l5.get(typeLabel)!.push(q);
-    }
-    return { tree, orphans };
-  }
-
   // 문제 목록 불러오기: 실패(로그인 만료·서버 오류·시간 초과)해도 "불러오는 중"에 멈추지 않고 이유와 다시 시도 버튼을 보인다
   const [questionsError, setQuestionsError] = useState("");
   async function loadQuestions() {
@@ -510,10 +404,6 @@ export default function NewExamPage() {
     loadQuestions();
   }, []);
 
-  function addQuestion(q: QuestionRow) {
-    addQuestions([q]);
-  }
-
   // 장문 세트 문항은 세트 전체가 번호 순으로 함께 들어간다
   function addQuestions(qs: QuestionRow[], bank: QuestionRow[] = availableQuestions) {
     const expanded = withSetMembers(qs, [...bank, ...qs]);
@@ -530,43 +420,6 @@ export default function NewExamPage() {
       ];
       return merged.map((item, i) => ({ ...item, orderNum: i + 1 }));
     });
-  }
-
-  function addCheckedQuestions() {
-    const qs = availableQuestions.filter((q) => checkedIds.has(q.id));
-    addQuestions(qs);
-    setCheckedIds(new Set());
-  }
-
-  // 트리 노드 하위의 모든 문제를 재귀적으로 수집
-  function collectQuestions(node: unknown): QuestionRow[] {
-    if (Array.isArray(node)) return node as QuestionRow[];
-    if (node instanceof Map) {
-      const out: QuestionRow[] = [];
-      for (const v of node.values()) out.push(...collectQuestions(v));
-      return out;
-    }
-    return [];
-  }
-
-  function removeQuestion(questionId: string) {
-    setSelectedItems((prev) => {
-      // 장문 세트는 함께 뺀다
-      const setId = prev.find((item) => item.questionId === questionId)?.question.setId;
-      return prev
-        .filter((item) => item.questionId !== questionId && !(setId && item.question.setId === setId))
-        .map((item, i) => ({ ...item, orderNum: i + 1 }));
-    });
-  }
-
-  function moveItem(index: number, direction: "up" | "down") {
-    const newItems = [...selectedItems];
-    const swapIndex = direction === "up" ? index - 1 : index + 1;
-    if (swapIndex < 0 || swapIndex >= newItems.length) return;
-    [newItems[index], newItems[swapIndex]] = [newItems[swapIndex], newItems[index]];
-    setSelectedItems(
-      newItems.map((item, i) => ({ ...item, orderNum: i + 1 }))
-    );
   }
 
   const calculatedTotal = selectedItems.reduce(
@@ -809,311 +662,34 @@ export default function NewExamPage() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 문제 은행 (왼쪽) */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <h3 className="font-semibold text-gray-800">
-                문제 은행 ({availableQuestions.length}개)
-              </h3>
-              <button
-                onClick={() => setShowAi(true)}
-                className="text-xs bg-purple-600 text-white hover:bg-purple-700 font-medium px-3 py-1.5 rounded"
-                title="AI로 새 영어 문제를 생성해 이 시험지에 바로 추가합니다"
-              >
-                ✨ AI 문제 생성
-              </button>
-            </div>
-            {checkedIds.size > 0 && (
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500">
-                  {checkedIds.size}개 선택됨
-                </span>
-                <button
-                  onClick={() => setCheckedIds(new Set())}
-                  className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1"
-                >
-                  해제
-                </button>
-                <button
-                  onClick={addCheckedQuestions}
-                  className="text-xs bg-blue-600 text-white hover:bg-blue-700 font-medium px-3 py-1.5 rounded"
-                >
-                  + 선택한 문제 추가
-                </button>
-              </div>
-            )}
-          </div>
-          {/* 정렬 토글 + 검색 */}
-          {!loadingQuestions && availableQuestions.length > 0 && (
-            <div className="flex items-center gap-2 mb-3">
-              <div className="flex bg-gray-100 rounded-lg p-1 text-xs">
-                {(
-                  [
-                    ["tree", "트리"],
-                    ["date", "날짜순"],
-                    ["grade", "학년순"],
-                    ["textbook", "교과서순"],
-                  ] as [SortMode, string][]
-                ).map(([mode, label]) => (
-                  <button
-                    key={mode}
-                    onClick={() => setSortMode(mode)}
-                    className={`px-2.5 py-1 rounded ${
-                      sortMode === mode ? "bg-white text-gray-800 shadow-sm" : "text-gray-500"
-                    }`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-              <input
-                type="text"
-                value={bankSearch}
-                onChange={(e) => setBankSearch(e.target.value)}
-                placeholder="발문/지문 검색"
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-xs"
-              />
-            </div>
-          )}
-
-          {loadingQuestions ? (
-            <p className="text-sm text-gray-400">불러오는 중...</p>
-          ) : questionsError ? (
-            <div className="text-sm text-red-600 space-y-2">
-              <p>{questionsError}</p>
-              <button
-                onClick={loadQuestions}
-                className="px-3 py-1.5 text-xs rounded-lg border border-red-200 hover:bg-red-50"
-              >
-                다시 불러오기
-              </button>
-            </div>
-          ) : availableQuestions.length === 0 ? (
-            <p className="text-sm text-gray-400">
-              등록된 문제가 없습니다. 먼저 문제를 만들어주세요.
-            </p>
-          ) : (() => {
-            const { tree, orphans } = buildQuestionTree();
-
-            function countTree(m: Map<string, unknown>): number {
-              let n = 0;
-              for (const v of m.values()) {
-                if (v instanceof Map) n += countTree(v);
-                else if (Array.isArray(v)) n += v.length;
-              }
-              return n;
-            }
-
-            const renderQuestion = (q: QuestionRow) => {
-              const isSelected = selectedItems.some((item) => item.questionId === q.id);
-              const isChecked = checkedIds.has(q.id);
-              const diffLabel = { easy: "하", medium: "중", hard: "상" }[q.difficulty] || q.difficulty;
-              return (
-                <li
-                  key={q.id}
-                  className={`p-2 rounded border text-sm transition-colors ${
-                    isSelected ? "border-blue-300 bg-blue-50 opacity-60" : "border-gray-200 hover:border-blue-300"
-                  }`}
-                >
-                  <div className="flex items-start gap-2">
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      disabled={isSelected}
-                      onChange={() => toggleCheck(q.id)}
-                      className="mt-1"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex gap-1.5 flex-wrap mb-1">
-                        <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
-                          {diffLabel} · {q.points}점
-                        </span>
-                        {q.aiGenerated && (
-                          <span className="text-xs text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded">AI</span>
-                        )}
-                      </div>
-                      <p className="text-gray-700 truncate">{q.question}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <button
-                          onClick={() => setDetailQuestion(q)}
-                          className="text-xs text-gray-500 hover:text-blue-600 underline"
-                        >
-                          상세보기
-                        </button>
-                        {!isSelected ? (
-                          <button
-                            onClick={() => addQuestion(q)}
-                            className="text-xs text-blue-600 hover:text-blue-800 font-medium ml-auto"
-                          >
-                            + 추가
-                          </button>
-                        ) : (
-                          <span className="text-xs text-gray-400 ml-auto">추가됨</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              );
-            };
-
-            const treeRow = (
-              key: string,
-              label: string,
-              count: number,
-              depth: number,
-              nodeQuestions: QuestionRow[],
-              children: React.ReactNode
-            ) => {
-              const colors = [
-                "text-gray-800 font-semibold hover:bg-gray-50",
-                "text-blue-700 font-medium hover:bg-blue-50",
-                "text-amber-700 hover:bg-amber-50",
-                "text-emerald-700 hover:bg-emerald-50",
-                "text-purple-700 hover:bg-purple-50",
-              ];
-              const isOpen = expanded.has(key);
-              const addableCount = nodeQuestions.filter(
-                (q) => !selectedItems.some((it) => it.questionId === q.id)
-              ).length;
-              return (
-                <div key={key} className={depth > 0 ? "border-t border-gray-50" : "border-b border-gray-100 last:border-b-0"}>
-                  <div
-                    className={`w-full flex items-center gap-2 pr-2 text-sm ${colors[depth] || colors[4]}`}
-                  >
-                    <button
-                      onClick={() => toggle(key)}
-                      className="flex-1 flex items-center gap-2 px-3 py-1.5 text-left"
-                      style={{ paddingLeft: `${12 + depth * 16}px` }}
-                    >
-                      <span className="text-gray-400 text-xs w-4">{isOpen ? "▼" : "▶"}</span>
-                      <span>{label}</span>
-                      <span className="text-xs text-gray-400 ml-auto">{count}문제</span>
-                    </button>
-                    {addableCount > 0 && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          addQuestions(nodeQuestions);
-                        }}
-                        className="text-xs text-blue-600 hover:text-blue-800 whitespace-nowrap px-2 py-0.5 rounded hover:bg-blue-50"
-                        title="이 그룹의 모든 문제를 시험지에 추가"
-                      >
-                        + 전체 {addableCount}
-                      </button>
-                    )}
-                  </div>
-                  {isOpen && children}
-                </div>
-              );
-            };
-
-            if (sortMode !== "tree") {
-              return (
-                <div className="max-h-[500px] overflow-y-auto border border-gray-100 rounded-lg">
-                  {flatGroups().map((g) =>
-                    treeRow(g.key, g.label, g.items.length, 0, g.items,
-                      <ul className="space-y-1.5 py-2 px-4">{g.items.map(renderQuestion)}</ul>
-                    )
-                  )}
-                </div>
-              );
-            }
-
-            return (
-              <div className="max-h-[500px] overflow-y-auto border border-gray-100 rounded-lg">
-                {Array.from(tree.entries()).map(([gradeKey, l2]) =>
-                  treeRow(`g::${gradeKey}`, gradeKey, countTree(l2), 0, collectQuestions(l2),
-                    <>{Array.from(l2.entries()).map(([textbook, l3]) =>
-                      treeRow(`t::${gradeKey}::${textbook}`, textbook, countTree(l3), 1, collectQuestions(l3),
-                        <>{Array.from(l3.entries()).map(([lesson, l4]) =>
-                          treeRow(`l::${gradeKey}::${textbook}::${lesson}`, lesson, countTree(l4), 2, collectQuestions(l4),
-                            <>{Array.from(l4.entries()).map(([passage, l5]) =>
-                              treeRow(`p::${gradeKey}::${textbook}::${lesson}::${passage}`, passage, countTree(l5), 3, collectQuestions(l5),
-                                <>{Array.from(l5.entries()).map(([qtype, qs]) =>
-                                  treeRow(`q::${gradeKey}::${textbook}::${lesson}::${passage}::${qtype}`, qtype, qs.length, 4, qs,
-                                    <ul className="space-y-1.5 py-2 px-2" style={{ paddingLeft: `${12 + 5 * 16}px` }}>
-                                      {qs.map(renderQuestion)}
-                                    </ul>
-                                  )
-                                )}</>
-                              )
-                            )}</>
-                          )
-                        )}</>
-                      )
-                    )}</>
-                  )
-                )}
-                {orphans.length > 0 &&
-                  treeRow("__orphans__", "지문 미연결", orphans.length, 0, orphans,
-                    <ul className="space-y-1.5 py-2 px-4">{orphans.map(renderQuestion)}</ul>
-                  )
-                }
-              </div>
-            );
-          })()}
+      {/* 문제 고르기: 왼쪽 문제 카드 · 오른쪽 시험지 미리보기 */}
+      {loadingQuestions ? (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-sm text-gray-400">문제 은행 불러오는 중...</div>
+      ) : questionsError ? (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-sm text-red-600 space-y-2">
+          <p>{questionsError}</p>
+          <button onClick={loadQuestions} className="px-3 py-1.5 text-xs rounded-lg border border-red-200 hover:bg-red-50">
+            다시 불러오기
+          </button>
         </div>
-
-        {/* 시험지 구성 (오른쪽) */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-semibold text-gray-800">
-              시험지 구성 ({selectedItems.length}문항)
-            </h3>
-            <span className="text-sm font-medium text-blue-600">
-              총 {calculatedTotal}점
-            </span>
-          </div>
-          {selectedItems.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-8">
-              왼쪽에서 문제를 클릭하여 추가하세요
-            </p>
-          ) : (
-            <ul className="space-y-2 max-h-96 overflow-y-auto">
-              {selectedItems.map((item, index) => (
-                <li
-                  key={item.questionId}
-                  className="p-3 rounded-lg border border-gray-200 text-sm"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-gray-700">
-                      {item.orderNum}번
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => moveItem(index, "up")}
-                        disabled={index === 0}
-                        className="text-gray-400 hover:text-gray-600 disabled:opacity-30 px-1"
-                      >
-                        ▲
-                      </button>
-                      <button
-                        onClick={() => moveItem(index, "down")}
-                        disabled={index === selectedItems.length - 1}
-                        className="text-gray-400 hover:text-gray-600 disabled:opacity-30 px-1"
-                      >
-                        ▼
-                      </button>
-                      <button
-                        onClick={() => removeQuestion(item.questionId)}
-                        className="text-red-400 hover:text-red-600 px-1 ml-2"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 mt-1 truncate">
-                    {item.question.question}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
+      ) : (
+        <ExamComposer
+          questions={availableQuestions}
+          items={selectedItems}
+          onItemsChange={setSelectedItems}
+          onQuestionUpdated={(q) => setAvailableQuestions((list) => list.map((x) => (x.id === q.id ? q : x)))}
+          header={{ title, school, grade }}
+          bankActions={
+            <button
+              onClick={() => setShowAi(true)}
+              className="text-xs bg-purple-600 text-white hover:bg-purple-700 font-medium px-3 py-1.5 rounded"
+              title="AI로 새 영어 문제를 생성해 이 시험지에 바로 추가합니다"
+            >
+              ✨ AI 문제 생성
+            </button>
+          }
+        />
+      )}
 
       {/* 저장 */}
       <div className="flex justify-end gap-3">
@@ -1131,120 +707,6 @@ export default function NewExamPage() {
           {saving ? "저장 중..." : "시험지 저장 및 미리보기"}
         </button>
       </div>
-
-      {/* 상세보기 모달 */}
-      {detailQuestion && (
-        <div
-          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
-          onClick={() => setDetailQuestion(null)}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto p-6 space-y-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold text-gray-800">문제 상세보기</h3>
-              <button
-                onClick={() => setDetailQuestion(null)}
-                className="text-gray-400 hover:text-gray-600 text-xl"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="flex gap-2 flex-wrap">
-              {(() => {
-                const ti = getQuestionTypeInfo(detailQuestion.examType, detailQuestion.questionType);
-                return (
-                  <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                    {ti ? `${ti.number}번 ${ti.name}` : detailQuestion.questionType}
-                  </span>
-                );
-              })()}
-              <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">
-                {{ easy: "하", medium: "중", hard: "상" }[detailQuestion.difficulty] || detailQuestion.difficulty} · {detailQuestion.points}점
-              </span>
-              {detailQuestion.aiGenerated && (
-                <span className="text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded">AI 생성</span>
-              )}
-              {detailQuestion.source && (
-                <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">{detailQuestion.source}</span>
-              )}
-            </div>
-
-            <div>
-              <p className="text-sm font-semibold text-gray-700 mb-1">발문</p>
-              <p className="text-sm text-gray-800">{detailQuestion.question}</p>
-            </div>
-
-            {detailQuestion.passage && (
-              <div>
-                <p className="text-sm font-semibold text-gray-700 mb-1">지문</p>
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap font-mono text-gray-700">
-                    {detailQuestion.passage}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            <div>
-              <p className="text-sm font-semibold text-gray-700 mb-1">선지</p>
-              <div className="space-y-1">
-                {(() => {
-                  try {
-                    const choices: Choice[] = JSON.parse(detailQuestion.choices);
-                    return choices.map((c, i) => (
-                      <p
-                        key={i}
-                        className={`text-sm py-1 px-2 rounded ${
-                          c.isCorrect
-                            ? "bg-green-50 text-green-700 font-semibold"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        {c.label} {c.text}
-                        {c.isCorrect && " (정답)"}
-                      </p>
-                    ));
-                  } catch {
-                    return <p className="text-sm text-gray-400">선지 파싱 오류</p>;
-                  }
-                })()}
-              </div>
-            </div>
-
-            {detailQuestion.explanation && (
-              <div>
-                <p className="text-sm font-semibold text-gray-700 mb-1">해설</p>
-                <p className="text-sm text-gray-600 bg-blue-50 rounded-lg p-3">
-                  {detailQuestion.explanation}
-                </p>
-              </div>
-            )}
-
-            <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
-              <button
-                onClick={() => setDetailQuestion(null)}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300"
-              >
-                닫기
-              </button>
-              {!selectedItems.some((item) => item.questionId === detailQuestion.id) && (
-                <button
-                  onClick={() => {
-                    addQuestion(detailQuestion);
-                    setDetailQuestion(null);
-                  }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
-                >
-                  시험지에 추가
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* AI 문제 생성 모달 */}
       {showAi && (
