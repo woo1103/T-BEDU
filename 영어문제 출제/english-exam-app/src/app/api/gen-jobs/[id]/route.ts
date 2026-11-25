@@ -56,6 +56,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 // action "retry": 실패한 문항(멈춘 작업이면 남은 문항도) 다시 / "cancel": 남은 문항 멈추기
+//        "discard": 멈춘 작업의 남은 문항 지우기
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { job, error } = await loadOwned(id);
@@ -86,6 +87,24 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       prisma.genJob.update({ where: { id }, data: { status: "cancelled" } }),
     ]);
     return NextResponse.json({ ok: true });
+  }
+
+  // 멈춘(또는 끝난) 작업에서 아직 안 만든 문항(멈춤·실패·기다리는 중)을 지운다.
+  // 이미 만든 문항은 문제 은행에 그대로 남는다. 남은 문항이 하나도 없으면 작업 자체를 목록에서 지운다.
+  if (action === "discard") {
+    if (job.status === "running") {
+      return NextResponse.json({ error: "만드는 중인 작업은 먼저 멈춰 주세요." }, { status: 400 });
+    }
+    const removed = await prisma.genJobItem.deleteMany({
+      where: { jobId: id, status: { in: ["cancelled", "failed", "pending"] } },
+    });
+    const left = await prisma.genJobItem.count({ where: { jobId: id } });
+    if (left === 0) {
+      await prisma.genJob.delete({ where: { id } });
+      return NextResponse.json({ ok: true, removed: removed.count, jobDeleted: true });
+    }
+    await prisma.genJob.update({ where: { id }, data: { status: "done" } });
+    return NextResponse.json({ ok: true, removed: removed.count, jobDeleted: false });
   }
 
   return NextResponse.json({ error: "알 수 없는 요청" }, { status: 400 });

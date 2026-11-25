@@ -4,6 +4,8 @@ import { getQuestionTypeInfo, isSetLeadType, SET_DEFS } from "@/lib/question-typ
 import { prisma } from "@/lib/db";
 import {
   isMarkerMappedType,
+  ORDER_TYPES,
+  orderChoiceText,
   reconcileCorrect,
   validateQuestionStructure,
   validateSingleAnswer,
@@ -91,6 +93,9 @@ type CheckOutcome = { ok: true; verified: boolean } | { ok: false; reason: strin
 // 생성물 하나 검사: (1) 마커 구조 (2) 정답 1개 (3) 독립 풀이 검수. result의 선지·정답을 정리한다.
 async function checkGenerated(questionType: string, result: GeneratedQuestion): Promise<CheckOutcome> {
   result.choices = normalizeChoices(reconcileCorrect(result.choices, result.answer));
+  if (ORDER_TYPES.includes(questionType)) {
+    result.choices = result.choices.map((c) => ({ ...c, text: orderChoiceText(c.text) }));
+  }
   const valChoices = result.choices.map((c, i) => ({ label: CIRCLE[i] ?? "", isCorrect: c.isCorrect }));
 
   if (isMarkerMappedType(questionType)) {

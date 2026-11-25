@@ -1,7 +1,7 @@
 import { getSuneungPrompt, getSuneungDifficulty } from "./suneung";
 import { getNaesinPrompt } from "./naesin";
 import { getGrammarPrompt } from "./grammar";
-import { buildVariationBlock } from "../variations";
+import { buildVariationBlock, PASSAGE_VARIATION_KEYS } from "../variations";
 
 export function getSystemPrompt(
   examType: string,
@@ -38,7 +38,9 @@ export function getSystemPrompt(
 
   // 내신 지문 학습: 원본 지문이 제공된 경우 프롬프트에 추가
   if (basePrompt && sourcePassage) {
-    const mode = passageMode || "original";
+    // 소재 변형(소재 일부만 남기기·소재 바꾸기)을 고르면 지문을 다시 써야 하므로 "원문 그대로"보다 앞선다
+    const rewritesPassage = (variations ?? []).some((k) => PASSAGE_VARIATION_KEYS.includes(k));
+    const mode = rewritesPassage ? "variant" : passageMode || "original";
 
     if (mode === "original") {
       basePrompt += `

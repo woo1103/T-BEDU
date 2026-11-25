@@ -2,6 +2,7 @@
 
 import { use, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface JobRow {
   id: string;
@@ -44,6 +45,7 @@ const ITEM_LABEL: Record<string, { label: string; cls: string }> = {
 // 서버 백그라운드 생성 작업 — 창을 닫아도 서버가 이어서 만들고, 여기서 진행 상황을 본다
 export default function GenJobsPage({ searchParams }: { searchParams: Promise<{ id?: string }> }) {
   const { id: selectedId } = use(searchParams);
+  const router = useRouter();
   const [jobs, setJobs] = useState<JobRow[] | null>(null);
   const [detail, setDetail] = useState<JobDetail | null>(null);
   const [busy, setBusy] = useState(false);
@@ -71,16 +73,28 @@ export default function GenJobsPage({ searchParams }: { searchParams: Promise<{ 
     return () => clearInterval(t);
   }, [load, anyRunning]);
 
-  async function act(action: "retry" | "cancel") {
+  async function act(action: "retry" | "cancel" | "discard") {
     if (!detail) return;
     if (action === "cancel" && !confirm("남은 문항 만들기를 멈출까요? (이미 만든 문항은 문제 은행에 남아요)")) return;
+    if (
+      action === "discard" &&
+      !confirm(
+        detail.done > 0
+          ? "아직 안 만든 문항을 이 작업에서 지울까요? (이미 만든 문항은 문제 은행에 남아요)"
+          : "이 작업을 목록에서 지울까요? (만든 문항이 없어요)"
+      )
+    )
+      return;
     setBusy(true);
     const res = await fetch(`/api/gen-jobs/${detail.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action }),
     });
-    if (!res.ok) alert((await res.json()).error || "실패");
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok) alert(d.error || "실패");
+    // 작업이 통째로 지워졌으면 목록 화면으로
+    if (action === "discard" && d.jobDeleted) router.replace("/gen-jobs");
     await load();
     setBusy(false);
   }
@@ -145,6 +159,15 @@ export default function GenJobsPage({ searchParams }: { searchParams: Promise<{ 
                       className="px-3 py-1.5 rounded-lg bg-purple-600 text-white text-sm disabled:opacity-50"
                     >
                       {detail.status === "cancelled" ? "이어서 만들기" : "실패한 것만 다시"}
+                    </button>
+                  )}
+                  {detail.status !== "running" && detail.items.some((it) => ["cancelled", "failed", "pending"].includes(it.status)) && (
+                    <button
+                      onClick={() => act("discard")}
+                      disabled={busy}
+                      className="px-3 py-1.5 rounded-lg border border-red-200 text-red-500 text-sm hover:bg-red-50 disabled:opacity-50"
+                    >
+                      {detail.done > 0 ? "남은 문항 지우기" : "작업 지우기"}
                     </button>
                   )}
                   {detail.status === "running" && (

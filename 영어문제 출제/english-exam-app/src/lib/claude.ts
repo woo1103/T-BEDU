@@ -25,6 +25,35 @@ async function logUsage(kind: AiKind, message: Anthropic.Message) {
   }
 }
 
+// 모델에게 JSON 답을 받아 읽는다. 지문·수식 속 따옴표 때문에 가끔 JSON 형식이 깨지므로
+// 읽지 못하면 같은 요청을 다시 보낸다(최대 3번). 3번 모두 실패하면 마지막 이유로 오류를 낸다.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function askJson<T = any>(
+  kind: AiKind,
+  params: Anthropic.MessageCreateParamsNonStreaming,
+  noJsonMessage: string,
+  attempts = 3
+): Promise<T> {
+  let lastError = noJsonMessage;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    const message = await client.messages.create(params);
+    await logUsage(kind, message);
+    const block = message.content.find((b) => b.type === "text");
+    const text = block?.type === "text" ? block.text : "";
+    const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
+    if (!m) {
+      lastError = noJsonMessage;
+      continue;
+    }
+    try {
+      return JSON.parse(m[1] || m[0]) as T;
+    } catch (e) {
+      lastError = `AI 결과 형식 오류(${attempt}번 시도): ${e instanceof Error ? e.message : e}`;
+    }
+  }
+  throw new Error(lastError);
+}
+
 export async function generateQuestion(
   systemPrompt: string,
   userPrompt: string
@@ -36,25 +65,16 @@ export async function generateQuestion(
   explanation: string;
   points: number;
 }> {
-  const message = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 4096,
-    system: systemPrompt,
-    messages: [{ role: "user", content: userPrompt }],
-  });
-  await logUsage("generate", message);
-
-  const text =
-    message.content[0].type === "text" ? message.content[0].text : "";
-
-  // JSON 블록 추출
-  const jsonMatch = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error("AI 응답에서 문제 데이터를 파싱할 수 없습니다.");
-  }
-
-  const jsonStr = jsonMatch[1] || jsonMatch[0];
-  const parsed = JSON.parse(jsonStr);
+  const parsed = await askJson(
+    "generate",
+    {
+      model: "claude-sonnet-4-6",
+      max_tokens: 4096,
+      system: systemPrompt,
+      messages: [{ role: "user", content: userPrompt }],
+    },
+    "AI 응답에서 문제 데이터를 파싱할 수 없습니다."
+  );
 
   return {
     passage: parsed.passage || "",
@@ -81,18 +101,18 @@ export async function generateQuestionSet(
     points: number;
   }[];
 }> {
-  const message = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 8192,
-    system: systemPrompt,
-    messages: [{ role: "user", content: userPrompt }],
-  });
-  await logUsage("generate", message);
-
-  const text = message.content[0].type === "text" ? message.content[0].text : "";
-  const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
-  if (!m) throw new Error("AI 응답에서 장문 세트를 파싱할 수 없습니다.");
-  const parsed = JSON.parse(m[1] || m[0]);
+  // 세트는 한 번에 1~2분 걸려 서버 한 단계(300초) 안에 들도록 2번까지만
+  const parsed = await askJson(
+    "generate",
+    {
+      model: "claude-sonnet-4-6",
+      max_tokens: 8192,
+      system: systemPrompt,
+      messages: [{ role: "user", content: userPrompt }],
+    },
+    "AI 응답에서 장문 세트를 파싱할 수 없습니다.",
+    2
+  );
   const questions = Array.isArray(parsed.questions) ? parsed.questions : [];
   return {
     passage: typeof parsed.passage === "string" ? parsed.passage : "",
@@ -136,17 +156,16 @@ ${input.question}
 [선지]
 ${choiceLines}`;
 
-  const message = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 2048, // 장문(43~45번) 지칭처럼 따져 볼 게 많으면 답이 길어져 JSON이 잘리지 않게
-    system,
-    messages: [{ role: "user", content: user }],
-  });
-  await logUsage("verify", message);
-  const text = message.content[0].type === "text" ? message.content[0].text : "";
-  const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
-  if (!m) throw new Error("검수 응답을 파싱할 수 없습니다.");
-  const parsed = JSON.parse(m[1] || m[0]);
+  const parsed = await askJson(
+    "verify",
+    {
+      model: "claude-sonnet-4-6",
+      max_tokens: 2048, // 장문(43~45번) 지칭처럼 따져 볼 게 많으면 답이 길어져 JSON이 잘리지 않게
+      system,
+      messages: [{ role: "user", content: user }],
+    },
+    "검수 응답을 파싱할 수 없습니다."
+  );
   const n = Number(parsed.answer);
   const valid = parsed.valid === "none" || parsed.valid === "multiple" ? parsed.valid : "one";
   return {
@@ -190,22 +209,16 @@ ${studentAnswer || "(빈 답안)"}
 
 위 기준으로 채점하여 JSON으로만 답하세요.`;
 
-  const message = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 1024,
-    system,
-    messages: [{ role: "user", content: user }],
-  });
-  await logUsage("grade", message);
-
-  const text =
-    message.content[0].type === "text" ? message.content[0].text : "";
-  const jsonMatch =
-    text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error("AI 채점 응답을 파싱할 수 없습니다.");
-  }
-  const parsed = JSON.parse(jsonMatch[1] || jsonMatch[0]);
+  const parsed = await askJson(
+    "grade",
+    {
+      model: "claude-sonnet-4-6",
+      max_tokens: 1024,
+      system,
+      messages: [{ role: "user", content: user }],
+    },
+    "AI 채점 응답을 파싱할 수 없습니다."
+  );
   let awarded = Number(parsed.awardedPoints);
   if (!Number.isFinite(awarded)) awarded = 0;
   awarded = Math.max(0, Math.min(maxPoints, Math.round(awarded)));
@@ -255,20 +268,15 @@ ${expectedCount ? `- 정답지에는 총 ${expectedCount}문항이 있습니다.
 반드시 아래 JSON 형식만 출력하세요(다른 텍스트 금지):
 {"items":[{"number":1,"answer":"③","objective":true},{"number":2,"answer":"42","objective":false}]}`;
 
-  const message = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 4096,
-    messages: [
-      { role: "user", content: [mediaBlock, { type: "text", text: instruction }] },
-    ],
-  });
-  await logUsage("answerKey", message);
-
-  const text =
-    message.content[0].type === "text" ? message.content[0].text : "";
-  const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
-  if (!m) throw new Error("정답 인식 결과를 파싱할 수 없습니다.");
-  const parsed = JSON.parse(m[1] || m[0]);
+  const parsed = await askJson(
+    "answerKey",
+    {
+      model: "claude-sonnet-4-6",
+      max_tokens: 4096,
+      messages: [{ role: "user", content: [mediaBlock, { type: "text", text: instruction }] }],
+    },
+    "정답 인식 결과를 파싱할 수 없습니다."
+  );
   const rawItems = Array.isArray(parsed.items) ? parsed.items : [];
   const items = rawItems.map(
     (it: { number?: number; answer?: string; objective?: boolean }, i: number) => ({
@@ -341,26 +349,15 @@ ${hint?.source ? `- 출처 힌트: ${hint.source}` : ""}
 반드시 아래 JSON만 출력(다른 텍스트 금지):
 {"problems":[{"number":1,"problemLatex":"...","solution":"...","unit":"...","difficulty":"중","box":[60,120,480,430],"figureBox":[120,260,420,400]}]}`;
 
-  // 수식·따옴표 때문에 가끔 JSON 형식이 깨진다 → 같은 쪽을 다시 읽는다(최대 3번)
-  let parsed: { problems?: unknown } | null = null;
-  let lastError = "문제 인식 결과를 파싱할 수 없습니다.";
-  for (let attempt = 1; attempt <= 3 && !parsed; attempt++) {
-    const message = await client.messages.create({
+  const parsed = await askJson(
+    "mathExtract",
+    {
       model: "claude-sonnet-4-6",
       max_tokens: 8192,
       messages: [{ role: "user", content: [mediaBlock, { type: "text", text: instruction }] }],
-    });
-    await logUsage("mathExtract", message);
-    const text = message.content[0]?.type === "text" ? message.content[0].text : "";
-    const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
-    if (!m) continue;
-    try {
-      parsed = JSON.parse(m[1] || m[0]);
-    } catch (e) {
-      lastError = `AI 결과 형식 오류(${attempt}번 읽음): ${e instanceof Error ? e.message : e}`;
-    }
-  }
-  if (!parsed) throw new Error(lastError);
+    },
+    "문제 인식 결과를 파싱할 수 없습니다."
+  );
   const raw = Array.isArray(parsed.problems) ? parsed.problems : [];
   const problems: ExtractedMathProblem[] = raw
     .filter((p: { problemLatex?: string }) => (p.problemLatex ?? "").trim())
@@ -401,32 +398,30 @@ export async function extractPassages(input: { base64: string; mediaType: string
 반드시 아래 JSON만 출력(다른 텍스트 금지):
 {"passages":[{"lesson":"Lesson 3","title":"...","content":"...","continued":false}]}`;
 
-  const message = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 8192,
-    messages: [
-      {
-        role: "user",
-        content: [
-          {
-            type: "image",
-            source: {
-              type: "base64",
-              media_type: input.mediaType as "image/png" | "image/jpeg" | "image/webp" | "image/gif",
-              data: input.base64,
+  const parsed = await askJson(
+    "passageExtract",
+    {
+      model: "claude-sonnet-4-6",
+      max_tokens: 8192,
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image",
+              source: {
+                type: "base64",
+                media_type: input.mediaType as "image/png" | "image/jpeg" | "image/webp" | "image/gif",
+                data: input.base64,
+              },
             },
-          },
-          { type: "text", text: instruction },
-        ],
-      },
-    ],
-  });
-  await logUsage("passageExtract", message);
-
-  const text = message.content[0].type === "text" ? message.content[0].text : "";
-  const m = text.match(/```json\s*([\s\S]*?)```/) || text.match(/\{[\s\S]*\}/);
-  if (!m) throw new Error("지문 인식 결과를 읽을 수 없습니다.");
-  const parsed = JSON.parse(m[1] || m[0]);
+            { type: "text", text: instruction },
+          ],
+        },
+      ],
+    },
+    "지문 인식 결과를 읽을 수 없습니다."
+  );
   const raw: Record<string, unknown>[] = Array.isArray(parsed.passages) ? parsed.passages : [];
   return {
     passages: raw

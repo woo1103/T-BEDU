@@ -180,3 +180,11 @@ export function validateStoredQuestion(q: {
   }
   return validateQuestionStructure(q.questionType, q.passage, parsed, q.answer);
 }
+
+// 순서 배열 선지는 순서만 적는다: "(B) — (C) — (A): The passage first ..." → "(B) - (C) - (A)"
+// 모델이 순서 옆에 풀이 문장을 붙이는 경우가 있어 생성 직후 잘라 낸다. 순서를 못 찾으면 그대로 둔다.
+export function orderChoiceText(text: string): string {
+  const m = text.match(/^\s*\(([A-E])\)\s*[-–—~→]+\s*\(([A-E])\)\s*[-–—~→]+\s*\(([A-E])\)(?:\s*[-–—~→]+\s*\(([A-E])\))?/);
+  if (!m) return text;
+  return [m[1], m[2], m[3], m[4]].filter(Boolean).map((l) => `(${l})`).join(" - ");
+}
