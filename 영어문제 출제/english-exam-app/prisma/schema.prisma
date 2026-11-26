@@ -77,6 +77,7 @@ model ExamItem {
   question Question @relation(fields: [questionId], references: [id])
 
   @@unique([examId, orderNum])
+  @@index([questionId]) // 문제 목록의 출제 이력 조회용
 }
 
 model Passage {
@@ -526,6 +527,7 @@ model Answer {
   wrongNote    WrongNote?
 
   @@index([submissionId])
+  @@index([refType, refId]) // 문항별 정답률 집계가 답안 표 전체를 읽지 않게
 }
 
 // 성취도 스냅샷 (제출 채점 시 저장 → 성적 추이/성능)
