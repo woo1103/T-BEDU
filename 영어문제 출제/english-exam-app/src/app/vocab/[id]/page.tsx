@@ -3,7 +3,7 @@
 import { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { parseVocabText, rowsToVocab, type VocabRow } from "@/lib/vocab";
+import { parseVocabText, partsOf, rowsToVocab, splitIntoParts, type VocabRow } from "@/lib/vocab";
 import { openPages, pageToJpeg } from "@/lib/page-images";
 
 interface ClassRow {
@@ -55,6 +55,10 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
   const [count, setCount] = useState("");
   const [shuffle, setShuffle] = useState(true);
   const [withKey, setWithKey] = useState(true);
+  const [printBy, setPrintBy] = useState<"part" | "number">("part");
+  const [partFrom, setPartFrom] = useState("1");
+  const [partTo, setPartTo] = useState("1");
+  const [splitSize, setSplitSize] = useState("20");
 
   useEffect(() => {
     if (isNew) return;
@@ -69,7 +73,7 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
       setTitle(d.title);
       setGrade(d.grade ?? "");
       setDescription(d.description ?? "");
-      setWords(d.words.map((w: VocabRow & { id: string }) => ({ id: w.id, word: w.word, meaning: w.meaning, example: w.example })));
+      setWords(d.words.map((w: VocabRow & { id: string }) => ({ id: w.id, part: w.part, word: w.word, meaning: w.meaning, example: w.example })));
       setAssigned(d.classIds ?? []);
       setTo(String(d.words.length || ""));
       setLoading(false);
@@ -97,9 +101,16 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
       setMsg(`${label}에서 단어를 찾지 못했어요. 1열=단어, 2열=뜻 모양인지 확인해 주세요.`);
       return;
     }
-    setWords((cur) => (importMode === "replace" ? rows : [...cur, ...rows]));
+    setWords((cur) => {
+      if (importMode === "replace") return rows;
+      // 덧붙일 때: 범위가 적힌 파일이면 기존 마지막 범위 뒤로 이어 붙이고(1,2 → 기존이 3까지면 4,5), 없으면 마지막 범위에 넣는다
+      const last = cur.reduce((m, w) => Math.max(m, w.part ?? 1), 0);
+      const hasParts = rows.some((r) => r.part);
+      return [...cur, ...rows.map((r) => ({ ...r, part: hasParts ? (r.part ?? 1) + last : Math.max(1, last) }))];
+    });
     setDirty(true);
-    setMsg(`${label}에서 단어 ${rows.length}개를 ${importMode === "replace" ? "새로 채웠어요" : "아래에 덧붙였어요"}. 확인 후 저장하세요.`);
+    const np = partsOf(rows).length;
+    setMsg(`${label}에서 단어 ${rows.length}개${rows.some((r) => r.part) ? `(범위 ${np}개)` : ""}를 ${importMode === "replace" ? "새로 채웠어요" : "아래에 덧붙였어요"}. 확인 후 저장하세요.`);
   }
 
   async function onExcel(file: File) {
@@ -151,13 +162,19 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
   }
 
   function downloadTemplate() {
-    const csv = "﻿단어,뜻,예문(선택)\nabandon,버리다,He abandoned the plan.\nbenefit,이익; 혜택,\n";
+    const csv = "\uFEFF범위,단어,뜻,예문(선택)\n1,abandon,버리다,He abandoned the plan.\n1,benefit,이익; 혜택,\n2,consider,고려하다,\n";
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     const a = document.createElement("a");
     a.href = url;
     a.download = "단어세트_양식.csv";
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  function setPart(i: number, v: string) {
+    const n = Math.max(1, Math.floor(Number(v) || 1));
+    setWords((ws) => ws.map((w, j) => (j === i ? { ...w, part: n } : w)));
+    setDirty(true);
   }
 
   function update(i: number, field: "word" | "meaning" | "example", v: string) {
@@ -186,7 +203,7 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
       }
       // 새로 생긴 단어의 id를 받으려고 다시 불러온다
       const fresh = await (await fetch(`/api/vocab-sets/${id}`)).json();
-      setWords(fresh.words.map((w: VocabRow & { id: string }) => ({ id: w.id, word: w.word, meaning: w.meaning, example: w.example })));
+      setWords(fresh.words.map((w: VocabRow & { id: string }) => ({ id: w.id, part: w.part, word: w.word, meaning: w.meaning, example: w.example })));
       setMsg(`저장했어요 · 단어 ${fresh.words.length}개`);
     } finally {
       setSaving(false);
@@ -207,7 +224,14 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
     const n = words.length;
     const f = Math.max(1, Math.min(n, Number(from) || 1));
     const t = Math.max(f, Math.min(n, Number(to) || n));
-    const sp = new URLSearchParams({ from: String(f), to: String(t), shuffle: shuffle ? "1" : "0", key: withKey ? "1" : "0" });
+    const sp = new URLSearchParams({ shuffle: shuffle ? "1" : "0", key: withKey ? "1" : "0" });
+    if (printBy === "part") {
+      sp.set("partFrom", partFrom);
+      sp.set("partTo", String(Math.max(Number(partFrom), Number(partTo))));
+    } else {
+      sp.set("from", String(f));
+      sp.set("to", String(t));
+    }
     if (count.trim()) sp.set("count", String(Math.max(1, Number(count) || 0)));
     if (shuffle) sp.set("seed", String(Date.now() % 1_000_000));
     window.open(`/vocab/${id}/print?${sp}`, "_blank");
@@ -275,7 +299,7 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
           </button>
         </div>
         {importing && <p className="text-xs text-purple-700">{importing}</p>}
-        <p className="text-xs text-gray-400">엑셀은 1열=단어, 2열=뜻, 3열=예문(선택). 첫 줄이 머리글이어도 괜찮아요.</p>
+        <p className="text-xs text-gray-400">엑셀은 1열=단어, 2열=뜻, 3열=예문(선택). 맨 앞에 범위 열(1, 1, 2, 2… 또는 Day 1)을 두면 범위별로 나눠져요. 첫 줄이 머리글이어도 괜찮아요.</p>
         <div className="flex gap-2 items-start">
           <textarea
             value={paste}
@@ -299,7 +323,27 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
       {/* 단어 표 */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
         <div className="p-4 border-b border-gray-100 flex items-center gap-3">
-          <h3 className="font-semibold text-gray-800">단어 {words.length}개</h3>
+          <h3 className="font-semibold text-gray-800">
+            단어 {words.length}개 <span className="text-sm font-normal text-gray-500">· 범위 {partsOf(words).length}개</span>
+          </h3>
+          {words.length > 0 && (
+            <span className="flex items-center gap-1 text-xs text-gray-500">
+              <input value={splitSize} onChange={(e) => setSplitSize(e.target.value.replace(/\D/g, ""))} className="w-12 border border-gray-300 rounded px-1.5 py-1" inputMode="numeric" aria-label="범위당 단어 수" />
+              단어씩
+              <button
+                onClick={() => {
+                  const n = Number(splitSize) || 0;
+                  if (n < 1) return;
+                  if (!confirm(`지금 범위를 지우고 ${n}단어씩 1, 2, 3… 범위로 나눌까요?`)) return;
+                  setWords((ws) => splitIntoParts(ws, n));
+                  setDirty(true);
+                }}
+                className="px-2 py-1 rounded border border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+              >
+                범위 나누기
+              </button>
+            </span>
+          )}
           {words.length > 0 && (
             <button onClick={() => { if (confirm("단어를 모두 지울까요? (저장해야 반영돼요)")) { setWords([]); setDirty(true); } }} className="text-xs text-gray-400 hover:text-red-500">
               모두 지우기
@@ -314,6 +358,7 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
             <thead className="sticky top-0 bg-gray-50 text-xs text-gray-500">
               <tr>
                 <th className="w-12 py-2">번호</th>
+                <th className="w-16 py-2">범위</th>
                 <th className="text-left py-2">단어</th>
                 <th className="text-left py-2">뜻</th>
                 <th className="text-left py-2 hidden md:table-cell">예문</th>
@@ -322,8 +367,11 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
             </thead>
             <tbody>
               {words.map((w, i) => (
-                <tr key={w.id ?? `n${i}`} className="border-t border-gray-50">
+                <tr key={w.id ?? `n${i}`} className={`border-t ${i > 0 && (words[i - 1].part ?? 1) !== (w.part ?? 1) ? "border-t-2 border-emerald-300" : "border-gray-50"}`}>
                   <td className="text-center text-xs text-gray-400">{i + 1}</td>
+                  <td className="py-1 px-1">
+                    <input value={w.part ?? 1} onChange={(e) => setPart(i, e.target.value)} inputMode="numeric" className="w-full text-center border border-transparent hover:border-gray-200 focus:border-emerald-400 rounded px-1 py-1 text-xs" aria-label={`${i + 1}번 범위`} />
+                  </td>
                   <td className="py-1 pr-2"><input value={w.word} onChange={(e) => update(i, "word", e.target.value)} className="w-full border border-transparent hover:border-gray-200 focus:border-emerald-400 rounded px-2 py-1" aria-label={`${i + 1}번 단어`} /></td>
                   <td className="py-1 pr-2"><input value={w.meaning} onChange={(e) => update(i, "meaning", e.target.value)} className="w-full border border-transparent hover:border-gray-200 focus:border-emerald-400 rounded px-2 py-1" aria-label={`${i + 1}번 뜻`} /></td>
                   <td className="py-1 pr-2 hidden md:table-cell"><input value={w.example ?? ""} onChange={(e) => update(i, "example", e.target.value)} className="w-full border border-transparent hover:border-gray-200 focus:border-emerald-400 rounded px-2 py-1 text-xs text-gray-500" aria-label={`${i + 1}번 예문`} /></td>
@@ -336,7 +384,7 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
           </table>
         </div>
         <div className="p-3 border-t border-gray-100">
-          <button onClick={() => { setWords((ws) => [...ws, { word: "", meaning: "" }]); setDirty(true); }} className="text-sm text-emerald-700 hover:underline">
+          <button onClick={() => { setWords((ws) => [...ws, { word: "", meaning: "", part: ws[ws.length - 1]?.part ?? 1 }]); setDirty(true); }} className="text-sm text-emerald-700 hover:underline">
             + 한 줄 추가
           </button>
         </div>
@@ -373,11 +421,31 @@ export default function VocabSetPage({ params }: { params: Promise<{ id: string 
           <div id="print" className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 space-y-3">
             <h3 className="font-semibold text-gray-800">단어 시험지 만들기 <span className="text-xs font-normal text-gray-400">영어 → 뜻 쓰기</span></h3>
             {dirty && <p className="text-xs text-amber-700">저장하지 않은 변경이 있어요. 시험지는 저장된 단어로 만들어져요.</p>}
+            <div className="flex items-center gap-3 text-sm">
+              <label className="flex items-center gap-1"><input type="radio" checked={printBy === "part"} onChange={() => setPrintBy("part")} /> 범위로</label>
+              <label className="flex items-center gap-1"><input type="radio" checked={printBy === "number"} onChange={() => setPrintBy("number")} /> 단어 번호로</label>
+            </div>
             <div className="flex flex-wrap items-center gap-2 text-sm">
+              {printBy === "part" ? (
+                <>
+                  범위
+                  <select value={partFrom} onChange={(e) => { setPartFrom(e.target.value); if (Number(partTo) < Number(e.target.value)) setPartTo(e.target.value); }} className="border border-gray-300 rounded-lg px-2 py-1.5" aria-label="시작 범위">
+                    {partsOf(words).map((p) => <option key={p.part} value={p.part}>{p.part}</option>)}
+                  </select>
+                  ~
+                  <select value={partTo} onChange={(e) => setPartTo(e.target.value)} className="border border-gray-300 rounded-lg px-2 py-1.5" aria-label="끝 범위">
+                    {partsOf(words).filter((p) => p.part >= Number(partFrom)).map((p) => <option key={p.part} value={p.part}>{p.part}</option>)}
+                  </select>
+                  ({words.filter((w) => (w.part ?? 1) >= Number(partFrom) && (w.part ?? 1) <= Number(partTo)).length}단어) 중
+                </>
+              ) : (
+                <>
               <input value={from} onChange={(e) => setFrom(e.target.value.replace(/\D/g, ""))} className="w-16 border border-gray-300 rounded-lg px-2 py-1.5" inputMode="numeric" aria-label="시작 번호" />
               번부터
               <input value={to} onChange={(e) => setTo(e.target.value.replace(/\D/g, ""))} className="w-16 border border-gray-300 rounded-lg px-2 py-1.5" inputMode="numeric" aria-label="끝 번호" />
               번까지 중
+                </>
+              )}
               <input value={count} onChange={(e) => setCount(e.target.value.replace(/\D/g, ""))} placeholder="전부" className="w-16 border border-gray-300 rounded-lg px-2 py-1.5" inputMode="numeric" aria-label="문항 수" />
               문항
               <label className="flex items-center gap-1 ml-2"><input type="checkbox" checked={shuffle} onChange={(e) => setShuffle(e.target.checked)} /> 순서 섞기</label>

@@ -6,6 +6,7 @@ import { seededShuffle } from "@/lib/vocab";
 interface Word {
   id: string;
   order: number;
+  part: number;
   word: string;
   meaning: string;
 }
@@ -39,7 +40,10 @@ export default function VocabPrintPage({
     if (!words) return [];
     const from = Math.max(1, Number(sp.from) || 1);
     const to = Math.max(from, Number(sp.to) || words.length);
-    let list = words.filter((w) => w.order >= from && w.order <= to);
+    // 범위(partFrom~partTo)로 고르면 범위 번호로, 아니면 단어 번호(from~to)로
+    const pf = Number(sp.partFrom) || 0;
+    const pt = Math.max(pf, Number(sp.partTo) || pf);
+    let list = pf ? words.filter((w) => (w.part ?? 1) >= pf && (w.part ?? 1) <= pt) : words.filter((w) => w.order >= from && w.order <= to);
     const seed = Number(sp.seed) || 1;
     if (sp.shuffle === "1") list = seededShuffle(list, seed);
     const count = Number(sp.count) || 0;
@@ -48,12 +52,14 @@ export default function VocabPrintPage({
       list = sp.shuffle === "1" ? list.slice(0, count) : seededShuffle(list, seed + 7).slice(0, count).sort((a, b) => a.order - b.order);
     }
     return list;
-  }, [words, sp.from, sp.to, sp.shuffle, sp.seed, sp.count]);
+  }, [words, sp.from, sp.to, sp.partFrom, sp.partTo, sp.shuffle, sp.seed, sp.count]);
 
   if (error) return <p className="p-8 text-red-600">{error}</p>;
   if (!words) return <p className="p-8 text-gray-400">불러오는 중...</p>;
 
-  const range = `${Math.max(1, Number(sp.from) || 1)}~${Number(sp.to) || words.length}번`;
+  const pf = Number(sp.partFrom) || 0;
+  const pt = Math.max(pf, Number(sp.partTo) || pf);
+  const range = pf ? (pf === pt ? `범위 ${pf}` : `범위 ${pf}~${pt}`) : `${Math.max(1, Number(sp.from) || 1)}~${Number(sp.to) || words.length}번`;
   const half = Math.ceil(items.length / 2);
   const cols = [items.slice(0, half), items.slice(half)];
 
@@ -63,7 +69,7 @@ export default function VocabPrintPage({
         <div className="flex items-end justify-between gap-4">
           <div>
             <h1 className="text-xl font-bold">{title} {answer ? "· 정답" : "· 단어 시험"}</h1>
-            <p className="text-xs text-gray-600 mt-0.5">범위 {range} · {items.length}문항 · 영어 단어의 뜻을 쓰시오.</p>
+            <p className="text-xs text-gray-600 mt-0.5">{range} · {items.length}문항 · 영어 단어의 뜻을 쓰시오.</p>
           </div>
           {!answer && (
             <div className="text-sm flex gap-4 whitespace-nowrap">

@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       description: body?.description ? String(body.description).trim() || null : null,
       createdById: staff.sub,
       words: {
-        create: words.map((w, i) => ({ order: i + 1, word: w.word, meaning: w.meaning, example: w.example ?? null })),
+        create: words.map((w, i) => ({ order: i + 1, part: w.part ?? 1, word: w.word, meaning: w.meaning, example: w.example ?? null })),
       },
     },
   });

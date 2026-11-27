@@ -47,9 +47,9 @@ export async function PUT(request: NextRequest, { params }: Ctx) {
         },
       });
       if (removeIds.length) await tx.vocabWord.deleteMany({ where: { id: { in: removeIds } } });
-      const fresh: { setId: string; order: number; word: string; meaning: string; example: string | null }[] = [];
+      const fresh: { setId: string; order: number; part: number; word: string; meaning: string; example: string | null }[] = [];
       for (const [i, w] of words.entries()) {
-        const data = { order: i + 1, word: w.word, meaning: w.meaning, example: w.example ?? null };
+        const data = { order: i + 1, part: w.part ?? 1, word: w.word, meaning: w.meaning, example: w.example ?? null };
         if (w.id && keepIds.has(w.id)) await tx.vocabWord.update({ where: { id: w.id }, data });
         else fresh.push({ ...data, setId: id });
       }

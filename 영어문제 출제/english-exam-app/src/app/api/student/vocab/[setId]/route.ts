@@ -27,7 +27,7 @@ export async function GET(request: NextRequest, { params }: Ctx) {
 
   const set = await prisma.vocabSet.findUnique({
     where: { id: setId },
-    select: { id: true, title: true, words: { orderBy: { order: "asc" }, select: { id: true, order: true, word: true, meaning: true, example: true } } },
+    select: { id: true, title: true, words: { orderBy: { order: "asc" }, select: { id: true, order: true, part: true, word: true, meaning: true, example: true } } },
   });
   if (!set) return NextResponse.json({ error: "세트를 찾을 수 없어요" }, { status: 404 });
   const progress = await prisma.vocabProgress.findMany({

@@ -672,6 +672,7 @@ model VocabWord {
   id      String  @id @default(cuid())
   setId   String
   order   Int // 세트 안 번호(1부터) — 시험지 범위 지정에 쓴다
+  part    Int     @default(1) // 범위(Day·Unit) 번호 — 학생 앱에서 범위별로 외운다
   word    String
   meaning String
   example String?

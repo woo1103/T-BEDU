@@ -365,6 +365,7 @@ export interface VocabSetRow {
 export interface VocabWordRow {
   id: string;
   order: number;
+  part: number;
   word: string;
   meaning: string;
   example: string | null;

@@ -20,6 +20,8 @@ export default function Vocab({ onDone }: { onDone: () => void }) {
   const [open, setOpen] = useState<{ id: string; title: string; words: VocabWordRow[] } | null>(null);
   const [study, setStudy] = useState<{ mode: Mode; words: VocabWordRow[] } | null>(null);
   const [onlyUnknown, setOnlyUnknown] = useState(true);
+  // 범위(Day·Unit): null=범위 목록 보기, "all"=전체, 숫자=그 범위만
+  const [part, setPart] = useState<number | "all" | null>(null);
 
   async function loadSets() {
     try {
@@ -33,8 +35,9 @@ export default function Vocab({ onDone }: { onDone: () => void }) {
     loadSets();
   }, []);
 
-  async function openSet(id: string) {
+  async function openSet(id: string, keepPart = false) {
     try {
+      if (!keepPart) setPart(null);
       setOpen(await getVocabSet(id));
     } catch (e) {
       alert(e instanceof Error ? e.message : "불러오지 못했어요");
@@ -51,28 +54,67 @@ export default function Vocab({ onDone }: { onDone: () => void }) {
         allWords={open.words}
         onExit={async () => {
           setStudy(null);
-          await openSet(open.id);
+          await openSet(open.id, true);
           loadSets();
         }}
       />
     );
   }
 
-  if (open) {
-    const known = open.words.filter((w) => w.known).length;
-    const pool = onlyUnknown ? open.words.filter((w) => !w.known) : open.words;
+  // 범위가 여럿이면 먼저 범위 목록(1, 2, 3…)을 보여 준다
+  const parts = open ? [...new Set(open.words.map((w) => w.part ?? 1))].sort((a, b) => a - b) : [];
+  if (open && part === null && parts.length > 1) {
+    const totalKnown = open.words.filter((w) => w.known).length;
     return (
       <Shell title={open.title} onBack={() => setOpen(null)}>
+        <p className="text-sm text-gray-600 px-1">
+          외운 단어 <b className="text-[#245B3E]">{totalKnown}</b> / {open.words.length} · 범위를 골라 외워요
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          {parts.map((p) => {
+            const ws = open.words.filter((w) => (w.part ?? 1) === p);
+            const k = ws.filter((w) => w.known).length;
+            const done = k === ws.length;
+            return (
+              <button key={p} onClick={() => setPart(p)} className={`rounded-2xl p-4 shadow-sm text-left ${done ? "bg-[#245B3E] text-white" : "bg-white"}`}>
+                <span className={`block text-xs ${done ? "text-white/70" : "text-gray-400"}`}>범위</span>
+                <span className="block text-2xl font-bold">{p}</span>
+                <span className={`block text-xs mt-1 ${done ? "text-white/80" : "text-gray-500"}`}>
+                  {done ? "다 외웠어요 ✓" : `${k} / ${ws.length}단어`}
+                </span>
+                {!done && (
+                  <span className="block mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <span className="block h-full bg-[#245B3E]" style={{ width: `${ws.length ? (k / ws.length) * 100 : 0}%` }} />
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+        <button onClick={() => setPart("all")} className="w-full bg-white rounded-2xl p-4 shadow-sm text-left text-sm text-gray-700">
+          전체 범위 한꺼번에 ›
+        </button>
+      </Shell>
+    );
+  }
+
+  if (open) {
+    const inPart = part === null || part === "all" ? open.words : open.words.filter((w) => (w.part ?? 1) === part);
+    const known = inPart.filter((w) => w.known).length;
+    const pool = onlyUnknown ? inPart.filter((w) => !w.known) : inPart;
+    const heading = part === null || part === "all" || parts.length <= 1 ? open.title : `${open.title} · 범위 ${part}`;
+    return (
+      <Shell title={heading} onBack={() => (parts.length > 1 && part !== null ? setPart(null) : setOpen(null))}>
         <div className="bg-white rounded-2xl p-5 shadow-sm space-y-3">
           <p className="text-sm text-gray-600">
-            외운 단어 <b className="text-[#245B3E]">{known}</b> / {open.words.length}
+            외운 단어 <b className="text-[#245B3E]">{known}</b> / {inPart.length}
           </p>
           <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-            <div className="h-full bg-[#245B3E]" style={{ width: `${open.words.length ? (known / open.words.length) * 100 : 0}%` }} />
+            <div className="h-full bg-[#245B3E]" style={{ width: `${inPart.length ? (known / inPart.length) * 100 : 0}%` }} />
           </div>
           <label className="flex items-center gap-2 text-sm text-gray-600">
             <input type="checkbox" checked={onlyUnknown} onChange={(e) => setOnlyUnknown(e.target.checked)} />
-            아직 못 외운 단어만 ({open.words.length - known}개)
+            아직 못 외운 단어만 ({inPart.length - known}개)
           </label>
         </div>
         {pool.length === 0 ? (
@@ -98,7 +140,7 @@ export default function Vocab({ onDone }: { onDone: () => void }) {
           </div>
         )}
         <div className="bg-white rounded-2xl shadow-sm divide-y divide-gray-50">
-          {open.words.map((w) => (
+          {inPart.map((w) => (
             <div key={w.id} className="px-4 py-2 flex items-center gap-2 text-sm">
               <span className={`w-4 ${w.known ? "text-[#245B3E]" : "text-gray-200"}`}>●</span>
               <span className="font-medium text-gray-800">{w.word}</span>
