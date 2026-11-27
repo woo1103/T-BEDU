@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Solve from "./pages/Solve";
 import WrongNotes from "./pages/WrongNotes";
 import Videos from "./pages/Videos";
+import Vocab from "./pages/Vocab";
 import Notifications from "./pages/Notifications";
 import InstallPrompt from "./components/InstallPrompt";
 
@@ -14,6 +15,7 @@ type View =
   | { name: "solve"; assignmentId: string; title: string; done: boolean }
   | { name: "wrongnotes" }
   | { name: "videos" }
+  | { name: "vocab" }
   | { name: "notifications" };
 
 export default function App() {
@@ -48,6 +50,10 @@ export default function App() {
     return <Videos onDone={() => setView({ name: "home" })} />;
   }
 
+  if (view.name === "vocab") {
+    return <Vocab onDone={() => setView({ name: "home" })} />;
+  }
+
   if (view.name === "notifications") {
     return <Notifications onDone={() => setView({ name: "home" })} />;
   }
@@ -68,6 +74,7 @@ export default function App() {
         }
         onWrongNotes={() => setView({ name: "wrongnotes" })}
         onVideos={() => setView({ name: "videos" })}
+        onVocab={() => setView({ name: "vocab" })}
         onNotifications={() => setView({ name: "notifications" })}
       />
     </>

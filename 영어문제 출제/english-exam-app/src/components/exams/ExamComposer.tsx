@@ -277,6 +277,9 @@ export default function ExamComposer<Q extends ComposerQuestion>({
                         <span className="px-1.5 py-0.5 rounded bg-purple-50 text-purple-700">{typeName(x)}</span>
                         <span className="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600">{DIFF[x.difficulty] ?? x.difficulty} · {x.points}점</span>
                         {x.aiGenerated && <span className="px-1.5 py-0.5 rounded bg-purple-50 text-purple-500">AI</span>}
+                        {x.source && !["직접 작성", "AI 생성 (Claude)"].includes(x.source) && (
+                          <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700">{x.source}</span>
+                        )}
                         {rate !== null && <span className={`px-1.5 py-0.5 rounded ${rate < 50 ? "bg-red-50 text-red-600" : "bg-gray-50 text-gray-500"}`}>정답률 {rate}%</span>}
                       </div>
                       <p className="font-medium text-gray-800">{x.question}</p>

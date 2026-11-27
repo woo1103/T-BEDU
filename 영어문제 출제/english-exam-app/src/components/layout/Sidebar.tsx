@@ -21,6 +21,7 @@ const navItems = [
   { href: "/math-bank", label: "수학 문제 은행", icon: "🏦" },
   { href: "/math-types", label: "수학 유형코드표", icon: "🔢" },
   { href: "/videos", label: "영상 강의", icon: "🎬" },
+  { href: "/vocab", label: "단어 학습", icon: "🔤" },
   { href: "/assignments", label: "과제 관리", icon: "🗓️" },
 ];
 

@@ -11,6 +11,7 @@ const pageTitles: Record<string, string> = {
   "/exams/new": "시험지 구성",
   "/textbooks": "교재 관리",
   "/admin/users": "계정 관리",
+  "/vocab": "단어 학습",
 };
 
 interface Me {
@@ -38,6 +39,7 @@ export default function Header() {
     (pathname.startsWith("/questions/") ? "문제 상세" : "") ||
     (pathname.startsWith("/exams/") ? "시험지 상세" : "") ||
     (pathname.startsWith("/textbooks/") ? "교재 편집" : "") ||
+    (pathname.startsWith("/vocab/") ? "단어 세트" : "") ||
     "영어 문제 출제";
 
   async function handleLogout() {

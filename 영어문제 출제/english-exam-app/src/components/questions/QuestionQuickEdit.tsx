@@ -44,6 +44,7 @@ export default function QuestionQuickEdit({
   const [choices, setChoices] = useState<EditChoice[]>([]);
   const [answerText, setAnswerText] = useState(""); // 서술형 모범답안
   const [explanation, setExplanation] = useState("");
+  const [source, setSource] = useState(""); // 출처(예: 2025 수능 31번)
   const [busy, setBusy] = useState<"" | "save" | "verify">("");
   const [status, setStatus] = useState<{ kind: string; note: string } | null>(null);
   const [error, setError] = useState("");
@@ -68,6 +69,7 @@ export default function QuestionQuickEdit({
         setChoices(norm.map((c) => ({ text: c.text, isCorrect: c.isCorrect })));
         setAnswerText(data.answer);
         setExplanation(data.explanation ?? "");
+        setSource(data.source ?? "");
         if (data.verifyStatus) setStatus({ kind: data.verifyStatus, note: data.verifyNote ?? "" });
       });
   }, [id]);
@@ -96,7 +98,7 @@ export default function QuestionQuickEdit({
         explanation,
         difficulty: q.difficulty,
         tags: q.tags ? JSON.parse(q.tags) : null,
-        source: q.source,
+        source: source.trim() || null,
       };
       const res = await fetch(`/api/questions/${id}`, {
         method: "PUT",
@@ -226,6 +228,16 @@ export default function QuestionQuickEdit({
                 value={explanation}
                 onChange={(e) => setExplanation(e.target.value)}
                 rows={3}
+                className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              />
+            </label>
+
+            <label className="block">
+              <span className="text-xs text-gray-500">출처 (예: 2025 수능 31번, 2024 고2 9월 교육청 학력평가 33번)</span>
+              <input
+                id="qe-source"
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
                 className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
               />
             </label>

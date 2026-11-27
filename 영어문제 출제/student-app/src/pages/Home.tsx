@@ -19,6 +19,7 @@ interface Props {
   onSolve: (assignmentId: string, title: string, done: boolean) => void;
   onWrongNotes: () => void;
   onVideos: () => void;
+  onVocab: () => void;
   onNotifications: () => void;
 }
 
@@ -47,6 +48,7 @@ export default function Home({
   onSolve,
   onWrongNotes,
   onVideos,
+  onVocab,
   onNotifications,
 }: Props) {
   const enrolled = student.status === "enrolled";
@@ -258,6 +260,13 @@ export default function Home({
             >
               <span className="block font-medium text-gray-800">영상 강의</span>
               <span className="text-sm text-[#245B3E]">시청하기 ›</span>
+            </button>
+            <button
+              onClick={onVocab}
+              className="bg-white rounded-2xl p-4 shadow-sm text-left col-span-2"
+            >
+              <span className="block font-medium text-gray-800">단어 학습</span>
+              <span className="text-sm text-[#245B3E]">카드·뜻 고르기로 외우기 ›</span>
             </button>
           </div>
         )}

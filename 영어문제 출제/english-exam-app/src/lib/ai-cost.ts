@@ -1,5 +1,5 @@
 // AI 사용량 → 금액 계산(관리자 'AI 사용량' 화면). 단가는 Anthropic 공개 가격(100만 토큰당 달러).
-export type AiKind = "generate" | "verify" | "grade" | "answerKey" | "mathExtract" | "passageExtract";
+export type AiKind = "generate" | "verify" | "grade" | "answerKey" | "mathExtract" | "passageExtract" | "vocabExtract";
 
 export const AI_KIND_LABEL: Record<AiKind, string> = {
   generate: "문제 만들기",
@@ -8,6 +8,7 @@ export const AI_KIND_LABEL: Record<AiKind, string> = {
   answerKey: "정답지 읽기",
   mathExtract: "수학 문제 인식",
   passageExtract: "지문 PDF 읽기",
+  vocabExtract: "단어장 PDF 읽기",
 };
 
 interface Price {

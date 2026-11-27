@@ -6,6 +6,7 @@ import { EXAM_TYPE_MAP, getQuestionTypes, DIFFICULTY_MAP, canGenerateWithAi, isS
 import { isMarkerMappedType } from "@/lib/question-validate";
 import { isMarkerOnlyChoices } from "@/lib/passage-parser";
 import { VARIATIONS } from "@/lib/variations";
+import { composeSource, SOURCE_KINDS, type SourceParts } from "@/lib/question-source";
 import type { Choice, ExamType, Difficulty, PassageMode } from "@/types";
 
 interface SavedPassage {
@@ -105,6 +106,9 @@ export default function NewQuestionPage() {
   );
   const [explanation, setExplanation] = useState("");
   const [points, setPoints] = useState(2);
+  // 외부 문항 출처(수능·모의고사 등) — 비우면 "직접 작성"
+  const [src, setSrc] = useState<SourceParts>({ kind: "" });
+  const sourceText = composeSource(src);
 
   const questionTypes = getQuestionTypes(examType);
 
@@ -611,7 +615,7 @@ export default function NewQuestionPage() {
           explanation,
           difficulty,
           aiGenerated: false,
-          source: "직접 작성",
+          source: sourceText || "직접 작성",
         }),
       });
       if (!res.ok) throw new Error("저장 실패");
@@ -1386,6 +1390,43 @@ export default function NewQuestionPage() {
                 />
                 <span className="text-sm text-gray-500 ml-1">점</span>
               </div>
+            </div>
+
+            {/* 출처: 수능·모의고사 등 외부 문항을 옮겨 넣을 때 */}
+            <div className="rounded-lg border border-amber-100 bg-amber-50/40 p-3 space-y-2">
+              <label className="block text-sm text-gray-600">
+                문제 출처 <span className="text-xs text-gray-400">(외부 문항일 때 · 비우면 &quot;직접 작성&quot;)</span>
+              </label>
+              <div className="flex flex-wrap gap-2 items-center">
+                <select
+                  value={src.kind}
+                  onChange={(e) => setSrc((p) => ({ ...p, kind: e.target.value as SourceParts["kind"] }))}
+                  className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm"
+                  aria-label="출처 종류"
+                >
+                  <option value="">직접 작성</option>
+                  {SOURCE_KINDS.map((k) => (
+                    <option key={k.key} value={k.key}>{k.label}</option>
+                  ))}
+                </select>
+                {src.kind && (
+                  <>
+                    <input value={src.year ?? ""} onChange={(e) => setSrc((p) => ({ ...p, year: e.target.value }))} placeholder="연도 (2025)" inputMode="numeric" className="w-24 border border-gray-300 rounded-lg px-2 py-1.5 text-sm" aria-label="연도" />
+                    <select value={src.grade ?? ""} onChange={(e) => setSrc((p) => ({ ...p, grade: e.target.value }))} className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm" aria-label="학년">
+                      <option value="">학년</option>
+                      {["고1", "고2", "고3", "중1", "중2", "중3"].map((g) => <option key={g} value={g}>{g}</option>)}
+                    </select>
+                    {SOURCE_KINDS.find((k) => k.key === src.kind)?.needsMonth && (
+                      <input value={src.month ?? ""} onChange={(e) => setSrc((p) => ({ ...p, month: e.target.value }))} placeholder="월 (9)" inputMode="numeric" className="w-20 border border-gray-300 rounded-lg px-2 py-1.5 text-sm" aria-label="월" />
+                    )}
+                    {["private", "textbook", "school", "etc"].includes(src.kind) && (
+                      <input value={src.memo ?? ""} onChange={(e) => setSrc((p) => ({ ...p, memo: e.target.value }))} placeholder={src.kind === "school" ? "학교 이름·시험 (예: OO고 1학기 중간)" : "이름 (예: 이감 모의고사 3회)"} className="flex-1 min-w-[12rem] border border-gray-300 rounded-lg px-2 py-1.5 text-sm" aria-label="출처 이름" />
+                    )}
+                    <input value={src.number ?? ""} onChange={(e) => setSrc((p) => ({ ...p, number: e.target.value }))} placeholder="번호 (31)" inputMode="numeric" className="w-20 border border-gray-300 rounded-lg px-2 py-1.5 text-sm" aria-label="문항 번호" />
+                  </>
+                )}
+              </div>
+              {sourceText && <p className="text-xs text-amber-800">저장될 출처: <b>{sourceText}</b></p>}
             </div>
 
             <div>

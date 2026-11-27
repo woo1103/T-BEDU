@@ -352,3 +352,38 @@ export async function updateWatchProgress(
     /* 진도 저장 실패는 무시 */
   }
 }
+
+// ── 단어 학습 ──
+export interface VocabSetRow {
+  id: string;
+  title: string;
+  grade: string | null;
+  total: number;
+  known: number;
+}
+
+export interface VocabWordRow {
+  id: string;
+  order: number;
+  word: string;
+  meaning: string;
+  example: string | null;
+  correct: number;
+  wrong: number;
+  known: boolean;
+}
+
+export function getVocabSets(): Promise<{ sets: VocabSetRow[] }> {
+  return authGet("/api/student/vocab");
+}
+
+export function getVocabSet(setId: string): Promise<{ id: string; title: string; words: VocabWordRow[] }> {
+  return authGet(`/api/student/vocab/${setId}`);
+}
+
+export function saveVocabResults(
+  setId: string,
+  results: { wordId: string; correct?: boolean; known?: boolean }[]
+): Promise<{ ok: boolean; saved: number }> {
+  return authPost(`/api/student/vocab/${setId}`, { results });
+}

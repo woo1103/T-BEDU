@@ -220,6 +220,7 @@ model StudentProfile {
   teacherComments TeacherComment[]
   wrongNotes      WrongNote[]
   watchProgress   WatchProgress[]
+  vocabProgress   VocabProgress[]
 
   @@index([centerId])
   @@index([status])
@@ -255,6 +256,7 @@ model Class {
   enrollments Enrollment[]
   assignments Assignment[]
   videoAssignments VideoAssignment[]
+  vocabAssignments VocabAssignment[]
 
   @@index([centerId])
   @@index([code])
@@ -650,4 +652,63 @@ model PracticeAttempt {
 
   @@index([studentId, createdAt])
   @@index([wrongNoteId])
+}
+
+// ───── 단어 학습: 선생님이 만든 단어 세트 → 반에 배정 → 학생 앱에서 카드·뜻 고르기로 외움 ─────
+model VocabSet {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  grade       String?
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  words       VocabWord[]
+  assignments VocabAssignment[]
+}
+
+model VocabWord {
+  id      String  @id @default(cuid())
+  setId   String
+  order   Int // 세트 안 번호(1부터) — 시험지 범위 지정에 쓴다
+  word    String
+  meaning String
+  example String?
+
+  set      VocabSet        @relation(fields: [setId], references: [id], onDelete: Cascade)
+  progress VocabProgress[]
+
+  @@index([setId, order])
+}
+
+model VocabAssignment {
+  id        String   @id @default(cuid())
+  setId     String
+  classId   String
+  createdAt DateTime @default(now())
+
+  set   VocabSet @relation(fields: [setId], references: [id], onDelete: Cascade)
+  class Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@unique([setId, classId])
+  @@index([classId])
+}
+
+// 학생 × 단어별 학습 기록(맞힘·틀림 횟수, 외웠음 표시)
+model VocabProgress {
+  id        String   @id @default(cuid())
+  studentId String
+  wordId    String
+  setId     String
+  correct   Int      @default(0)
+  wrong     Int      @default(0)
+  known     Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+
+  student StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  word    VocabWord      @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, wordId])
+  @@index([setId, studentId])
 }

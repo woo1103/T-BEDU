@@ -30,3 +30,13 @@ describe("소재 변형은 원문 그대로 출제보다 앞선다", () => {
     expect(p).toContain("원문 그대로 활용");
   });
 });
+
+import { composeSource } from "@/lib/question-source";
+describe("문제 출처 한 줄", () => {
+  it("수능·모의평가·사설", () => {
+    expect(composeSource({ kind: "suneung", year: "2025", number: "31" })).toBe("2025 수능 31번");
+    expect(composeSource({ kind: "kice", year: "2024", month: "9", grade: "고3", number: "33번" })).toBe("2024 고3 9월 평가원 모의평가 33번");
+    expect(composeSource({ kind: "private", memo: "이감 모의고사 3회", number: "21" })).toBe("이감 모의고사 3회 21번");
+    expect(composeSource({ kind: "" })).toBe("");
+  });
+});

@@ -434,3 +434,50 @@ export async function extractPassages(input: { base64: string; mediaType: string
       .filter((p) => p.content),
   };
 }
+
+// 단어장 한 쪽(이미지) → 영어 단어와 한국어 뜻 목록(선생님이 확인·수정 후 저장)
+export async function extractVocab(input: { base64: string; mediaType: string }): Promise<{ words: { word: string; meaning: string; example?: string }[] }> {
+  const instruction = `이 이미지는 영어 단어장의 한 쪽입니다. 쪽에 있는 영어 단어(또는 숙어)와 그 한국어 뜻을 순서대로 모두 옮겨 적으세요.
+- word: 영어 단어·숙어 그대로(철자 고치지 않음). 품사 표시(n., v. 등)는 빼고 뜻에 붙인다.
+- meaning: 한국어 뜻. 뜻이 여럿이면 쉼표로 이어 한 줄로(예: "v. 버리다, 포기하다").
+- example: 예문이 인쇄돼 있으면 영어 예문 한 문장(없으면 생략).
+- 쪽 번호, 머리말, 발음기호, 유의어·반의어 목록, 연습문제는 넣지 않는다.
+- 단어가 없는 쪽이면 {"words":[]}
+반드시 아래 JSON만 출력(다른 텍스트 금지):
+{"words":[{"word":"abandon","meaning":"v. 버리다, 포기하다","example":"..."}]}`;
+
+  const parsed = await askJson(
+    "vocabExtract",
+    {
+      model: "claude-sonnet-4-6",
+      max_tokens: 8192,
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image",
+              source: {
+                type: "base64",
+                media_type: input.mediaType as "image/png" | "image/jpeg" | "image/webp" | "image/gif",
+                data: input.base64,
+              },
+            },
+            { type: "text", text: instruction },
+          ],
+        },
+      ],
+    },
+    "단어장 인식 결과를 읽을 수 없습니다."
+  );
+  const raw: Record<string, unknown>[] = Array.isArray(parsed.words) ? parsed.words : [];
+  return {
+    words: raw
+      .map((w) => ({
+        word: typeof w.word === "string" ? w.word.trim() : "",
+        meaning: typeof w.meaning === "string" ? w.meaning.trim() : "",
+        example: typeof w.example === "string" && w.example.trim() ? w.example.trim() : undefined,
+      }))
+      .filter((w) => w.word && w.meaning),
+  };
+}

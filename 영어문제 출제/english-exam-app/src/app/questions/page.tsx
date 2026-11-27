@@ -33,6 +33,7 @@ interface QuestionRow {
   difficulty: string;
   points: number;
   aiGenerated: boolean;
+  source?: string | null;
   createdAt: string;
   verifyStatus?: string | null;
   stats?: { answered: number; correct: number } | null; // 학생 답 누적
@@ -402,6 +403,9 @@ export default function QuestionsPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-xs text-gray-500">
+                      {q.source && !["직접 작성", "AI 생성 (Claude)"].includes(q.source) && (
+                        <span className="block mb-0.5 text-amber-700" title="문제 출처">{q.source}</span>
+                      )}
                       {q.passageRef ? (
                         <span>
                           {q.passageRef.textbook}
