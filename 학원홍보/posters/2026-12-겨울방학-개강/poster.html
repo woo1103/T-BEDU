@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -68,16 +68,20 @@
   .card .who span{font-weight:700;font-size:20px;color:var(--navy-2);background:var(--ice);
     border:1.5px solid var(--line);padding:4px 10px;border-radius:10px}
 
-  /* 강좌 특징 (A4에서만) */
-  .feat{display:grid;margin-bottom:0;margin-top:34px;grid-template-columns:repeat(3,1fr);gap:16px}
-  body.insta .feat div{padding:14px 18px}
-  body.insta .feat b{font-size:24px}
-  body.insta .feat small{font-size:17px}
-  .feat div{background:rgba(255,255,255,.78);border-radius:18px;padding:18px 22px;
-    box-shadow:0 8px 24px rgba(40,90,170,.12),inset 0 0 0 1px var(--line)}
-  .feat b{display:block;font-size:26px;font-weight:800;color:var(--navy)}
-  .feat b i{font-style:normal;color:var(--blue);margin-right:8px}
-  .feat small{display:block;margin-top:4px;font-size:19px;color:var(--ink-dim)}
+  /* 강좌 특징: 아이콘 카드 3개 + 단계 화살표 (크기는 --feat-* 로 인스타/A4 조절) */
+  .feat{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:10px;margin-top:var(--feat-top,30px)}
+  .step{height:var(--feat-h,252px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    background:rgba(255,255,255,.88);border:2px solid #fff;border-radius:26px;padding:0 14px;
+    box-shadow:0 12px 30px rgba(40,90,170,.16),inset 0 0 0 1px var(--line)}
+  .step .ico{width:var(--ico,64px);height:var(--ico,64px);border-radius:50%;display:grid;place-items:center;
+    background:linear-gradient(145deg,#4f8dff,#2f6bff);box-shadow:0 8px 18px rgba(47,107,255,.35)}
+  .step:nth-child(5) .ico{background:linear-gradient(145deg,#2a4b93,#17306b);box-shadow:0 8px 18px rgba(23,48,107,.35)}
+  .step .ico svg{width:52%;height:52%}
+  .step .n{margin-top:14px;font-size:var(--n-size,17px);font-weight:800;letter-spacing:3px;color:var(--blue)}
+  .step b{display:block;margin-top:2px;font-size:var(--t-size,33px);font-weight:900;letter-spacing:-1px;color:var(--navy)}
+  .step small{display:block;margin-top:6px;font-size:var(--d-size,19px);font-weight:500;color:var(--ink-dim);line-height:1.35}
+  .arrow{width:26px;height:26px;border-top:5px solid var(--sky);border-right:5px solid var(--sky);transform:rotate(45deg);
+    margin:0 4px 0 -4px;border-radius:3px;filter:drop-shadow(0 2px 4px rgba(47,107,255,.25))}
 
   footer{position:absolute;left:0;right:0;bottom:0;z-index:5;height:122px;display:flex;align-items:center;justify-content:space-between;
     padding:0 72px;color:#fff;background:linear-gradient(90deg,var(--navy),#1f4fb8)}
@@ -107,9 +111,20 @@
   </section>
 
   <section class="feat">
-    <div><b><i>01</i>개념 이해</b><small>핵심 개념부터 탄탄하게</small></div>
-    <div><b><i>02</i>유형 연습</b><small>배운 개념을 문제에 적용</small></div>
-    <div><b><i>03</i>오답 점검</b><small>틀린 이유를 짚고 다시 풀기</small></div>
+    <div class="step">
+      <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1.1 2.2h5c.1-1 .5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></svg></span>
+      <span class="n">STEP 01</span><b>개념 이해</b><small>핵심 개념부터<br>탄탄하게</small>
+    </div>
+    <i class="arrow"></i>
+    <div class="step">
+      <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-5L16 4l4 4L9 19z"/><path d="M14 6l4 4"/></svg></span>
+      <span class="n">STEP 02</span><b>유형 연습</b><small>배운 개념을<br>문제에 적용</small>
+    </div>
+    <i class="arrow"></i>
+    <div class="step">
+      <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16.5 9"/></svg></span>
+      <span class="n">STEP 03</span><b>오답 점검</b><small>틀린 이유를 짚고<br>다시 풀기</small>
+    </div>
   </section>
 
   <section class="sched">
@@ -139,6 +154,8 @@
   if (size === 'a4') {
     const r = document.documentElement.style;
     r.setProperty('--h-size','158px'); r.setProperty('--hero-top','90px'); r.setProperty('--land-h','520px');
+    r.setProperty('--feat-h','330px'); r.setProperty('--feat-top','52px'); r.setProperty('--ico','100px');
+    r.setProperty('--t-size','42px'); r.setProperty('--d-size','22px'); r.setProperty('--n-size','19px');
   }
 
   // 같은 결과가 매번 나오도록 고정 시드 난수
